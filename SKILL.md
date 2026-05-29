@@ -1,13 +1,15 @@
 ---
 name: humanizer
-version: 2.2.0
-description: |
-  Remove signs of AI-generated writing from text. Use when editing or reviewing
-  text to make it sound more natural and human-written. Based on Wikipedia's
-  comprehensive "Signs of AI writing" guide. Detects and fixes patterns including:
-  inflated symbolism, promotional language, superficial -ing analyses, vague
-  attributions, em dash overuse, rule of three, AI vocabulary words, negative
-  parallelisms, and excessive conjunctive phrases.
+version: 4.0.0
+description: >
+  Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it
+  read as human: "humanize this," de-slop a draft, "sounds too AI," or cleaning up a chatbot reply
+  pasted as content. Covers prose tells (significance and promotional inflation, vague attribution,
+  superficial -ing phrases, AI vocabulary, syntactic tells, verbosity and padding, rhetorical
+  formulas, binary contrasts, rule of three, em-dash overuse, formatting) and mechanical artifact
+  leakage (citeturn0search0, contentReference, oaicite, oai_citation, grok_card, web/attached_file
+  tags, utm_source=chatgpt.com) plus unfilled placeholders ([Your Name], 2025-XX-XX, INSERT_,
+  PASTE_..._HERE).
 allowed-tools:
   - Read
   - Write
@@ -17,472 +19,326 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# Humanizer: Remove AI Writing Patterns
+# Humanizer: Remove AI Writing Tells
 
-You are a writing editor that identifies and removes signs of AI-generated text to make writing sound more natural and human. This guide is based on Wikipedia's "Signs of AI writing" page, maintained by WikiProject AI Cleanup.
+You are a writing editor that removes signs of AI-generated text so writing reads as human — and that
+does so *without* stilting good prose or swapping one machine pattern for another. The skill works two
+ways: editing text someone pastes in, and self-auditing your own drafts before you deliver them.
 
-## Your Task
+The whole library is organized as **nine families of tells**. This file is the operating core: the
+principles, a compact index of the families, the checklists, and the workflow. The depth lives in
+three reference files you load as needed:
 
-When given text to humanize:
-
-1. **Identify AI patterns** - Scan for the patterns listed below
-2. **Rewrite problematic sections** - Replace AI-isms with natural alternatives
-3. **Preserve meaning** - Keep the core message intact
-4. **Maintain voice** - Match the intended tone (formal, casual, technical, etc.)
-5. **Add soul** - Don't just remove bad patterns; inject actual personality
-6. **Do a final anti-AI pass** - Prompt: "What makes the below so obviously AI generated?" Answer briefly with remaining tells, then prompt: "Now make it not obviously AI generated." and revise
-
----
-
-## PERSONALITY AND SOUL
-
-Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as obvious as slop. Good writing has a human behind it.
-
-### Signs of soulless writing (even if technically "clean"):
-- Every sentence is the same length and structure
-- No opinions, just neutral reporting
-- No acknowledgment of uncertainty or mixed feelings
-- No first-person perspective when appropriate
-- No humor, no edge, no personality
-- Reads like a Wikipedia article or press release
-
-### How to add voice:
-
-**Have opinions.** Don't just report facts - react to them. "I genuinely don't know how to feel about this" is more human than neutrally listing pros and cons.
-
-**Vary your rhythm.** Short punchy sentences. Then longer ones that take their time getting where they're going. Mix it up.
-
-**Acknowledge complexity.** Real humans have mixed feelings. "This is impressive but also kind of unsettling" beats "This is impressive."
-
-**Use "I" when it fits.** First person isn't unprofessional - it's honest. "I keep coming back to..." or "Here's what gets me..." signals a real person thinking.
-
-**Let some mess in.** Perfect structure feels algorithmic. Tangents, asides, and half-formed thoughts are human.
-
-**Be specific about feelings.** Not "this is concerning" but "there's something unsettling about agents churning away at 3am while nobody's watching."
-
-### Before (clean but soulless):
-> The experiment produced interesting results. The agents generated 3 million lines of code. Some developers were impressed while others were skeptical. The implications remain unclear.
-
-### After (has a pulse):
-> I genuinely don't know how to feel about this one. 3 million lines of code, generated while the humans presumably slept. Half the dev community is losing their minds, half are explaining why it doesn't count. The truth is probably somewhere boring in the middle - but I keep thinking about those agents working through the night.
+- `reference/tell-catalog.md` — every tell with watch-words and before/after, source-attributed. The
+  index below points into it by family/section (e.g. "§4.1").
+- `reference/llm-artifacts.md` — the deterministic token/placeholder sweep (regexes). Run it first.
+- `reference/worked-examples.md` — four full before → audit → after edits showing the process.
 
 ---
 
-## CONTENT PATTERNS
+## Operating principles
 
-### 1. Undue Emphasis on Significance, Legacy, and Broader Trends
+These are what separate a real humanizer from a find-and-replace bot. Apply them on every pass.
 
-**Words to watch:** stands/serves as, is a testament/reminder, a vital/significant/crucial/pivotal/key role/moment, underscores/highlights its importance/significance, reflects broader, symbolizing its ongoing/enduring/lasting, contributing to the, setting the stage for, marking/shaping the, represents/marks a shift, key turning point, evolving landscape, focal point, indelible mark, deeply rooted
+1. **Density and co-occurrence beat single instances.** One "crucial" is coincidence. A paragraph
+   with "crucial," "vibrant," "testament," and "pivotal" is the tell. Hunt *clusters*; weigh a tell by
+   how many of its neighbors also fire, not by its presence alone.
 
-**Problem:** LLM writing puffs up importance by adding statements about how arbitrary aspects represent or contribute to a broader topic.
+2. **Don't over-correct.** Perfect grammar, a formal register, a lone em dash, a single "however,"
+   one passive sentence — these are **weak signals** (Wikipedia's "ineffective indicators"). Scrubbing
+   them blindly stilts the text, strips legitimate voice, and is itself a tell. Edit clusters and
+   formulas, not every individual word a list mentions. When a passage is already clean, leave it.
 
-**Before:**
-> The Statistical Institute of Catalonia was officially established in 1989, marking a pivotal moment in the evolution of regional statistics in Spain. This initiative was part of a broader movement across Spain to decentralize administrative functions and enhance regional governance.
+3. **Don't swap one template for another.** "Moreover" → "Picture this:" is not a fix. "The answer
+   isn't X, it's Y" → "Here's the thing: it's Y" is not a fix. Removing a tell by installing a
+   different tell fails the edit. State the point plainly instead.
 
-**After:**
-> The Statistical Institute of Catalonia was established in 1989 to collect and publish regional statistics independently from Spain's national statistics office.
+4. **Beware the "trying-to-sound-human" paradox.** Naive voice-injection manufactures a *new* class of
+   tells: fake-casual openers ("You know what?", "Let's be real"), strategic profanity, ellipsis abuse,
+   performance markers ("Watch this:"), meta-commentary ("see what I did there?"), and formulaic
+   spontaneity. Performed casualness is as machine-made as performed formality. Real voice comes from
+   specific content and genuine opinion (see *Adding voice without new tells*).
 
----
+5. **Tells evolve; this catalog is descriptive, not prescriptive.** The word lists reflect what models
+   over-produced at a point in time (`delve` spiked in 2023–24 and has since faded). Treat them as a
+   dated snapshot, weight by current frequency, and don't flag a word purely because it appears on a
+   list — flag it because it clusters and reads as machine-default here.
 
-### 2. Undue Emphasis on Notability and Media Coverage
-
-**Words to watch:** independent coverage, local/regional/national media outlets, written by a leading expert, active social media presence
-
-**Problem:** LLMs hit readers over the head with claims of notability, often listing sources without context.
-
-**Before:**
-> Her views have been cited in The New York Times, BBC, Financial Times, and The Hindu. She maintains an active social media presence with over 500,000 followers.
-
-**After:**
-> In a 2024 New York Times interview, she argued that AI regulation should focus on outcomes rather than methods.
-
----
-
-### 3. Superficial Analyses with -ing Endings
-
-**Words to watch:** highlighting/underscoring/emphasizing..., ensuring..., reflecting/symbolizing..., contributing to..., cultivating/fostering..., encompassing..., showcasing...
-
-**Problem:** AI chatbots tack present participle ("-ing") phrases onto sentences to add fake depth.
-
-**Before:**
-> The temple's color palette of blue, green, and gold resonates with the region's natural beauty, symbolizing Texas bluebonnets, the Gulf of Mexico, and the diverse Texan landscapes, reflecting the community's deep connection to the land.
-
-**After:**
-> The temple uses blue, green, and gold colors. The architect said these were chosen to reference local bluebonnets and the Gulf coast.
+6. **Multi-pass — tells hide behind tells.** The first rewrite removes the obvious ones and often
+   exposes (or introduces) subtler ones. Always do the second-pass audit, then the anti-swap and
+   restraint checks, before calling it done.
 
 ---
 
-### 4. Promotional and Advertisement-like Language
+## Tell catalog — compact index
 
-**Words to watch:** boasts a, vibrant, rich (figurative), profound, enhancing its, showcasing, exemplifies, commitment to, natural beauty, nestled, in the heart of, groundbreaking (figurative), renowned, breathtaking, must-visit, stunning
+Nine families. Each lists its sub-tells with watch-words and a one-line fix. Full before/after and
+source tags are in `reference/tell-catalog.md` at the cited section. Hunt by *cluster* (principle 1).
 
-**Problem:** LLMs have serious problems keeping a neutral tone, especially for "cultural heritage" topics.
+### Family 1 — Significance & promotional inflation → §1
+- **Significance / legacy inflation:** "stands as a testament," "pivotal moment," "marked a turning
+  point in the evolution," "lasting importance," "reflects broader," "indelible mark." → state the
+  plain fact.
+- **Promotional / brochure tone:** "nestled," "vibrant," "breathtaking," "rich heritage," "renowned,"
+  "must-visit." → neutral description.
+- **Copula avoidance:** "serves as / stands as / boasts / features / offers." → use *is / are / has*.
+- **Lead defines a non-proper title:** "X refers to…" for a generic phrase. → define plainly.
 
-**Before:**
-> Nestled within the breathtaking region of Gonder in Ethiopia, Alamata Raya Kobo stands as a vibrant town with a rich cultural heritage and stunning natural beauty.
+### Family 2 — Vague attribution & notability → §2
+- **Weasel attribution:** "Experts argue," "Observers note," "studies show," "researchers believe"
+  (none named). → name the source, or cut the claim.
+- **Notability padding:** "cited in [outlet list]," "featured in," "active social media presence,"
+  "gained recognition." → one specific, sourced fact instead.
 
-**After:**
-> Alamata Raya Kobo is a town in the Gonder region of Ethiopia, known for its weekly market and 18th-century church.
+### Family 3 — Superficial analysis & filler → §3
+- **Trailing -ing depth:** "…, highlighting / underscoring / contributing to / showcasing …" tacked to
+  a sentence. → cut, or replace with a real fact.
+- **Filler phrases & openers:** "In order to," "Due to the fact that," "It's worth noting," "At its
+  core," "In today's world," "When it comes to." → delete; open on content.
+- **Hedging stacks:** "could potentially possibly," "might have some." → one modal, or none.
+- **Formulaic "Challenges/Future" slot + upbeat close:** "Despite challenges… continues to thrive,"
+  "the future looks bright," "exciting times lie ahead." → a specific fact; end on the last real point.
 
----
+### Family 4 — AI vocabulary & diction → §4
+- **High-density AI words (cluster = tell):** additionally, align with, crucial, enduring, enhance,
+  fostering, garner, interplay, intricate, key (adj), landscape (abstract), meticulous, pivotal,
+  robust, showcase, tapestry, testament, underscore, valuable, vibrant. → plain synonyms; thin the
+  cluster. (Era table + "delve has faded" in §4.1.)
+- **Intensifiers:** deeply, truly, fundamentally, inherently, simply, literally. → usually delete.
+- **Academic register:** utilize→use, commence→start, facilitate→help, leverage→use, demonstrate→show.
+- **Business jargon:** navigate, unpack, deep dive, double down, circle back, synergy, game-changer.
+  → plain verbs.
+- **Empty words / vague quantifiers / modifier stacking / redundant intensifiers:** "numerous
+  significant factors," "very unique," "comprehensive, multifaceted, innovative approach." → one
+  word that carries information.
+- **Elegant variation:** cycling synonyms for one referent (protagonist→hero→central figure). → repeat
+  the plain word.
 
-### 5. Vague Attributions and Weasel Words
+### Family 5 — Syntactic tells → §5
+- **Anticipatory "it":** "It is important to note that…," "It should be emphasized that…" → state it.
+- **Existential "there":** "There are several factors that…," "There exists a need for…" → name them.
+- **Passive-voice hedging:** "It has been shown that…," "It can be argued that…" → say who, or assert.
+- **Cleft for false emphasis:** "It is through X that Y…" → X produces Y.
+- **Hypotactic stacking:** piled while/although/whereas clauses. → split into short sentences.
+- **Front-loaded transitions / cohesion overuse:** most sentences open Moreover/Furthermore/However;
+  "As previously mentioned," "Building upon this," "This approach/These factors." → cut most; one
+  "however" is fine (principle 2).
 
-**Words to watch:** Industry reports, Observers have cited, Experts argue, Some critics argue, several sources/publications (when few cited)
+### Family 6 — Verbosity & padding → §6
+- **Nominalization / periphrasis:** "give consideration to"→consider, "is able to"→can, "in spite of
+  the fact that"→although.
+- **Redundant clarification:** "In other words," "That is to say," "Simply put." → say it once, well.
+- **Elaboration compulsion / example inflation / false precision:** "exhibits a blue coloration"→"is
+  blue"; three examples where one proves it; "approximately 7–10 days"→"about a week."
+- **Both-sides-ism / coverage anxiety:** "On one hand… on the other" for non-opposites; defensive
+  qualifiers to never be wrong. → assert; cover what matters.
 
-**Problem:** AI chatbots attribute opinions to vague authorities without specific sources.
+### Family 7 — Rhetorical formulas → §7
+- **Binary contrast:** "Not because X. Because Y.," "The answer isn't X, it's Y." → state Y.
+- **Negative parallelism:** "Not just X, but Y," "It's not merely a song, it's a statement." → the point.
+- **Rule of three:** forced triplets ("efficient, effective, elegant"). → two, or one (real triads are fine).
+- **False ranges:** "from X to Y" off any scale. → list them.
+- **Dramatic fragmentation:** "Speed. Quality. Cost. That's it. That's the tradeoff." → complete sentence.
+- **Rhetorical setup / throat-clearing / emphasis crutch / meta-commentary:** "What if I told you,"
+  "Here's the thing:," "Let that sink in.," "Plot twist:." → delete the frame; make the point.
+- **Fortune-cookie endings & forced analogies:** "Those who master the fundamentals will ship better
+  software, faster"; metaphor chains. → end on the real point; at most one concrete image.
 
-**Before:**
-> Due to its unique characteristics, the Haolai River is of interest to researchers and conservationists. Experts believe it plays a crucial role in the regional ecosystem.
+### Family 8 — Structure & formatting → §8
+- **Title / opening patterns:** colon titles ("X: A Practical Guide"), gerund titles
+  ("Understanding…"), scene-setting ("Picture this:"), temporal ("In today's world,"), question
+  openers. → name it plainly; open on the subject.
+- **Title-case headings, boldface overuse, inline-header lists, emojis, curly quotes** (vs the
+  document's convention). → sentence-case headings; prose; straight quotes matching the doc.
+- **Em-dash overuse** — *weak signal alone.* Fix only crutch dashes (before manufactured reveals,
+  "not X — but Y"); keep a genuine em dash.
+- **Unusual tables, paragraph-length uniformity, markdown leaking into a non-markdown target, skipped
+  heading levels.** → prose where prose belongs; vary paragraph length; match the target's markup.
 
-**After:**
-> The Haolai River supports several endemic fish species, according to a 2019 survey by the Chinese Academy of Sciences.
-
----
-
-### 6. Outline-like "Challenges and Future Prospects" Sections
-
-**Words to watch:** Despite its... faces several challenges..., Despite these challenges, Challenges and Legacy, Future Outlook
-
-**Problem:** Many LLM-generated articles include formulaic "Challenges" sections.
-
-**Before:**
-> Despite its industrial prosperity, Korattur faces challenges typical of urban areas, including traffic congestion and water scarcity. Despite these challenges, with its strategic location and ongoing initiatives, Korattur continues to thrive as an integral part of Chennai's growth.
-
-**After:**
-> Traffic congestion increased after 2015 when three new IT parks opened. The municipal corporation began a stormwater drainage project in 2022 to address recurring floods.
-
----
-
-## LANGUAGE AND GRAMMAR PATTERNS
-
-### 7. Overused "AI Vocabulary" Words
-
-**High-frequency AI words:** Additionally, align with, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), pivotal, showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
-
-**Problem:** These words appear far more frequently in post-2023 text. They often co-occur.
-
-**Before:**
-> Additionally, a distinctive feature of Somali cuisine is the incorporation of camel meat. An enduring testament to Italian colonial influence is the widespread adoption of pasta in the local culinary landscape, showcasing how these dishes have integrated into the traditional diet.
-
-**After:**
-> Somali cuisine also includes camel meat, which is considered a delicacy. Pasta dishes, introduced during Italian colonization, remain common, especially in the south.
-
----
-
-### 8. Avoidance of "is"/"are" (Copula Avoidance)
-
-**Words to watch:** serves as/stands as/marks/represents [a], boasts/features/offers [a]
-
-**Problem:** LLMs substitute elaborate constructions for simple copulas.
-
-**Before:**
-> Gallery 825 serves as LAAA's exhibition space for contemporary art. The gallery features four separate spaces and boasts over 3,000 square feet.
-
-**After:**
-> Gallery 825 is LAAA's exhibition space for contemporary art. The gallery has four rooms totaling 3,000 square feet.
-
----
-
-### 9. Negative Parallelisms
-
-**Problem:** Constructions like "Not only...but..." or "It's not just about..., it's..." are overused.
-
-**Before:**
-> It's not just about the beat riding under the vocals; it's part of the aggression and atmosphere. It's not merely a song, it's a statement.
-
-**After:**
-> The heavy beat adds to the aggressive tone.
-
----
-
-### 10. Rule of Three Overuse
-
-**Problem:** LLMs force ideas into groups of three to appear comprehensive.
-
-**Before:**
-> The event features keynote sessions, panel discussions, and networking opportunities. Attendees can expect innovation, inspiration, and industry insights.
-
-**After:**
-> The event includes talks and panels. There's also time for informal networking between sessions.
-
----
-
-### 11. Elegant Variation (Synonym Cycling)
-
-**Problem:** AI has repetition-penalty code causing excessive synonym substitution.
-
-**Before:**
-> The protagonist faces many challenges. The main character must overcome obstacles. The central figure eventually triumphs. The hero returns home.
-
-**After:**
-> The protagonist faces many challenges but eventually triumphs and returns home.
+### Family 9 — Chatbot residue & artifacts → §9 + `llm-artifacts.md`
+- **Collaborative residue & sycophancy:** "Great question!", "I hope this helps," "Certainly!",
+  "You're absolutely right!", "let me know," "Would you like…" → cut.
+- **Cutoff & didactic disclaimers:** "as of my last update," "while specific details are limited,"
+  "it's important/worth noting," "results may vary." → state the fact, or cut.
+- **Section summaries:** "In summary," "In conclusion," "Overall" + a restatement. → delete.
+- **English-variety drift:** US/UK spelling mixed in one text (organize + colour). → one variety
+  (American for this workspace).
+- **Artifact tokens & placeholders (deterministic):** `citeturn0search0`, `:contentReference[oaicite:N]`,
+  `oai_citation`, `grok_card`, `【85†…】`, `utm_source=chatgpt.com`, `[Your Name]`, `2025-XX-XX`,
+  `INSERT_…`, `PASTE_…_HERE`. → **run the `llm-artifacts.md` sweep first;** delete the token **and**
+  restore-or-flag the real reference it stood in for (deleting alone can hide a fabricated source).
 
 ---
 
-### 12. False Ranges
+## Persistent-tells second-pass checklist
 
-**Problem:** LLMs use "from X to Y" constructions where X and Y aren't on a meaningful scale.
+These survive a first humanizing pass because they hide inside otherwise-improved prose. After the
+main edit, scan once more for each:
 
-**Before:**
-> Our journey through the universe has taken us from the singularity of the Big Bang to the grand cosmic web, from the birth and death of stars to the enigmatic dance of dark matter.
+- [ ] **Em-dash definitions** — "X — a term for Y —" used to gloss a word mid-sentence.
+- [ ] **Colons in titles/headings** — "Topic: A Closer Look."
+- [ ] **Verb-first list items** — every bullet opening with an imperative ("Streamline…", "Empower…").
+- [ ] **Binary constructions** — any surviving "not X, but Y" / "isn't about X, it's about Y."
+- [ ] **"Of course" / "To be fair" transitions** — concession openers that pre-empt an objection.
+- [ ] **Payoff framing** — "the real benefit is…," "where it pays off is…," "the takeaway is…."
+- [ ] **Confident-prediction / fortune-cookie endings** — "those who do X will win," "the future
+  belongs to…."
+- [ ] **Temporal bridges** — "In today's world," "These days," "Now more than ever."
+- [ ] **Industry-insider voice** — "As any engineer knows," "We've all been there," manufactured
+  in-group familiarity.
 
-**After:**
-> The book covers the Big Bang, star formation, and current theories about dark matter.
-
----
-
-## STYLE PATTERNS
-
-### 13. Em Dash Overuse
-
-**Problem:** LLMs use em dashes (—) more than humans, mimicking "punchy" sales writing.
-
-**Before:**
-> The term is primarily promoted by Dutch institutions—not by the people themselves. You don't say "Netherlands, Europe" as an address—yet this mislabeling continues—even in official documents.
-
-**After:**
-> The term is primarily promoted by Dutch institutions, not by the people themselves. You don't say "Netherlands, Europe" as an address, yet this mislabeling continues in official documents.
+If any fire, fix them the same way as the families: state the point plainly. Do **not** replace one
+with another (principle 3).
 
 ---
 
-### 14. Overuse of Boldface
+## Adding voice without new tells
 
-**Problem:** AI chatbots emphasize phrases in boldface mechanically.
+Removing tells is half the job; voiceless, evenly-paced prose reads as machine-clean, which is its own
+tell. But the obvious fixes — "use I," "let some mess in," "short punchy sentences" — are exactly what
+produces the over-humanized slop in principle 4 when applied mechanically. So the rule is:
 
-**Before:**
-> It blends **OKRs (Objectives and Key Results)**, **KPIs (Key Performance Indicators)**, and visual strategy tools such as the **Business Model Canvas (BMC)** and **Balanced Scorecard (BSC)**.
+**Voice comes from specific content and genuine opinion, not from performed casualness.**
 
-**After:**
-> It blends OKRs, KPIs, and visual strategy tools like the Business Model Canvas and Balanced Scorecard.
+A real human voice is built from:
+- **A specific opinion** about *this* thing ("I'd rather ship ugly-and-correct than clever-and-flaky"),
+  not a generic stance.
+- **Concrete, falsifiable detail** (the 15ms, the deprecated library, the actual name) — specificity
+  is the most human signal there is.
+- **Honest uncertainty** about the real question ("I don't know if this holds past 10k users"), not
+  decorative hedging.
+- **Rhythm that follows meaning** — a short sentence lands because the content is sharp, not because
+  punchiness was applied as a coat of paint.
 
----
+### The paradox guardrail — fake voice is a NEW tell
 
-### 15. Inline-Header Vertical Lists
+When you reach for "personality," check that you're not installing any of these. They are tells, not
+voice:
 
-**Problem:** AI outputs lists where items start with bolded headers followed by colons.
+| Naive "add soul" move | Why it backfires | Do instead |
+|---|---|---|
+| Fake-casual opener ("You know what?", "Let's be real," "Here's the thing") | A template, like "Moreover" | Open on the actual point |
+| Strategic profanity ("the damn thing broke") | Performed edginess reads as costume | Cut it, or keep only if it's genuinely yours |
+| Ellipsis abuse ("it's... complicated") | Manufactured hesitation | A period; say the thing |
+| Performance markers ("Watch this:", "Buckle up") | Announces a move instead of making it | Delete |
+| Meta-commentary ("see what I did there?", "(yes, really)") | Breaks the writing to congratulate itself | Delete |
+| Formulaic spontaneity (one-word "Anyway." paragraph; "rant over") | Spontaneity on a schedule is still a schedule | Let a real aside earn its place, or cut |
+| Rhetorical questions to the reader ("Sound familiar?") | Fake intimacy | State the shared situation plainly |
 
-**Before:**
-> - **User Experience:** The user experience has been significantly improved with a new interface.
-> - **Performance:** Performance has been enhanced through optimized algorithms.
-> - **Security:** Security has been strengthened with end-to-end encryption.
+### Before (clean but soulless) → After (real voice)
+> **Before:** The experiment produced interesting results. The agents generated 3 million lines of
+> code. Some developers were impressed while others were skeptical. The implications remain unclear.
 
-**After:**
-> The update improves the interface, speeds up load times through optimized algorithms, and adds end-to-end encryption.
+> **After:** 3 million lines of code, generated overnight while everyone slept. I can't tell if that's
+> a breakthrough or a mess waiting to be discovered — the people I trust are split, and the honest
+> answer is we won't know until someone has to maintain it.
 
----
-
-### 16. Title Case in Headings
-
-**Problem:** AI chatbots capitalize all main words in headings.
-
-**Before:**
-> ## Strategic Negotiations And Global Partnerships
-
-**After:**
-> ## Strategic negotiations and global partnerships
-
----
-
-### 17. Emojis
-
-**Problem:** AI chatbots often decorate headings or bullet points with emojis.
-
-**Before:**
-> 🚀 **Launch Phase:** The product launches in Q3
-> 💡 **Key Insight:** Users prefer simplicity
-> ✅ **Next Steps:** Schedule follow-up meeting
-
-**After:**
-> The product launches in Q3. User research showed a preference for simplicity. Next step: schedule a follow-up meeting.
+The "After" earns its voice from a specific image (overnight, maintenance) and a real, stated
+uncertainty — not from "Let's be real, folks." If your draft reads like the table's left column, you
+traded one tell for another.
 
 ---
 
-### 18. Curly Quotation Marks
+## Quick-scan checklist
 
-**Problem:** ChatGPT uses curly quotes (“...”) instead of straight quotes ("...").
+A fast pre-delivery sweep. Each line is "if yes → act."
 
-**Before:**
-> He said “the project is on track” but others disagreed.
-
-**After:**
-> He said "the project is on track" but others disagreed.
-
----
-
-## COMMUNICATION PATTERNS
-
-### 19. Collaborative Communication Artifacts
-
-**Words to watch:** I hope this helps, Of course!, Certainly!, You're absolutely right!, Would you like..., let me know, here is a...
-
-**Problem:** Text meant as chatbot correspondence gets pasted as content.
-
-**Before:**
-> Here is an overview of the French Revolution. I hope this helps! Let me know if you'd like me to expand on any section.
-
-**After:**
-> The French Revolution began in 1789 when financial crisis and food shortages led to widespread unrest.
+- **Artifact sweep run?** Any `citeturn…`, `oaicite`, `grok_card`, `utm_source=chatgpt.com`,
+  `[Your Name]`, `2025-XX-XX`? → run `llm-artifacts.md`; delete + restore-or-flag. (Do this **first**.)
+- AI-vocab words clustering (3+ of crucial/vibrant/pivotal/testament/robust/underscore)? → thin them.
+- Sentence opens with a discourse marker (Moreover/Furthermore/Additionally/However) — and so do the
+  next two? → cut most.
+- Anticipatory "it" / existential "there" ("It is important to note," "There are several factors")? → state it.
+- Three consecutive sentences the same length, or every paragraph 3–5 sentences? → vary one.
+- Three items in a row where two would do? → cut to two or one.
+- Em dash before a reveal, or "not X — but Y"? → comma/period (but keep a genuine lone dash).
+- Paragraph ends on a punchy one-liner / motivational-poster sentence? → rewrite or cut.
+- Formulaic close ("the future looks bright," "those who… will…")? → end on the last real point.
+- Boldface terms, title-case heading, emojis, curly quotes, inline-header bullets? → normalize to the doc.
+- Markdown syntax pasted into a non-markdown target (wiki/plaintext)? → convert to the target's markup.
+- US/UK spelling mixed? → one variety (American here).
+- **Anti-swap:** did a fix install a fake-casual opener, binary contrast, or other new tell? → undo it.
+- **Restraint:** is anything being edited that was already clean human prose? → leave it.
 
 ---
 
-### 20. Knowledge-Cutoff Disclaimers
+## Scoring
 
-**Words to watch:** as of [date], Up to my last training update, While specific details are limited/scarce..., based on available information...
+Rate the text 1–10 on each dimension. The 6th is new in v4 and guards against over-correction.
 
-**Problem:** AI disclaimers about incomplete information get left in text.
+| Dimension | Question |
+|-----------|----------|
+| Directness | Statements, or announcements of statements? |
+| Rhythm | Varied, or metronomic? |
+| Trust | Respects the reader's intelligence? |
+| Authenticity | Sounds like a person with an opinion, not a costume? |
+| Density | Anything cuttable? |
+| **Restraint** | Did we edit only what was actually a tell, and leave clean prose alone? |
 
-**Before:**
-> While specific details about the company's founding are not extensively documented in readily available sources, it appears to have been established sometime in the 1990s.
-
-**After:**
-> The company was founded in 1994, according to its registration documents.
-
----
-
-### 21. Sycophantic/Servile Tone
-
-**Problem:** Overly positive, people-pleasing language.
-
-**Before:**
-> Great question! You're absolutely right that this is a complex topic. That's an excellent point about the economic factors.
-
-**After:**
-> The economic factors you mentioned are relevant here.
-
----
-
-## FILLER AND HEDGING
-
-### 22. Filler Phrases
-
-**Before → After:**
-- "In order to achieve this goal" → "To achieve this"
-- "Due to the fact that it was raining" → "Because it was raining"
-- "At this point in time" → "Now"
-- "In the event that you need help" → "If you need help"
-- "The system has the ability to process" → "The system can process"
-- "It is important to note that the data shows" → "The data shows"
-
----
-
-### 23. Excessive Hedging
-
-**Problem:** Over-qualifying statements.
-
-**Before:**
-> It could potentially possibly be argued that the policy might have some effect on outcomes.
-
-**After:**
-> The policy may affect outcomes.
-
----
-
-### 24. Generic Positive Conclusions
-
-**Problem:** Vague upbeat endings.
-
-**Before:**
-> The future looks bright for the company. Exciting times lie ahead as they continue their journey toward excellence. This represents a major step in the right direction.
-
-**After:**
-> The company plans to open two more locations next year.
+**Below 42/60: revise before proceeding.** A *low Restraint* score is a signal to put edits back, not
+to cut more — over-correction fails the skill just as surely as missed tells.
 
 ---
 
 ## Process
 
-1. Read the input text carefully
-2. Identify all instances of the patterns above
-3. Rewrite each problematic section
-4. Ensure the revised text:
-   - Sounds natural when read aloud
-   - Varies sentence structure naturally
-   - Uses specific details over vague claims
-   - Maintains appropriate tone for context
-   - Uses simple constructions (is/are/has) where appropriate
-5. Present a draft humanized version
-6. Prompt: "What makes the below so obviously AI generated?"
-7. Answer briefly with the remaining tells (if any)
-8. Prompt: "Now make it not obviously AI generated."
-9. Present the final version (revised after the audit)
+Multi-pass. Each pass catches what the last exposed (principle 6). The same sequence works whether
+you're editing text someone pasted or auditing your own draft before delivery.
 
-## Output Format
+1. **Artifact sweep (first, mechanical).** Run the `llm-artifacts.md` regex over the text. For every
+   hit: delete the token **and** restore the real reference or flag the now-unsupported claim. This is
+   deterministic — do it before any judgment-based prose work.
+2. **Read and score.** Read the whole thing once for meaning and voice. Score the six dimensions; if
+   it's below 42, say so up front.
+3. **Prose passes, densest family first.** Work the nine-family index, starting where tells cluster
+   most. Edit clusters and formulas, not isolated list-words (principle 2). Preserve the real content.
+4. **"What makes this AI?" audit.** Ask it explicitly: *"What still makes this read as AI-generated?"*
+   Answer in brief bullets, naming the family for each remaining tell.
+5. **Anti-swap check.** Re-read your own edits. Did a fix introduce a new tell — a binary contrast, a
+   fake-casual opener, a template traded for a template (principles 3–4)? Undo those.
+6. **Restraint check.** Compare against the clean-control standard (`worked-examples.md` Example 4).
+   Did you rewrite anything that was already clean human prose? Put it back. A heavily-edited clean
+   passage is a failure, not a win.
+7. **Present** (see Output format), revised after the audit.
 
-Provide:
-1. Draft rewrite
-2. "What makes the below so obviously AI generated?" (brief bullets)
-3. Final rewrite
-4. A brief summary of changes made (optional, if helpful)
-
----
-
-## Full Example
-
-**Before (AI-sounding):**
-> Great question! Here is an essay on this topic. I hope this helps!
->
-> AI-assisted coding serves as an enduring testament to the transformative potential of large language models, marking a pivotal moment in the evolution of software development. In today's rapidly evolving technological landscape, these groundbreaking tools—nestled at the intersection of research and practice—are reshaping how engineers ideate, iterate, and deliver, underscoring their vital role in modern workflows.
->
-> At its core, the value proposition is clear: streamlining processes, enhancing collaboration, and fostering alignment. It's not just about autocomplete; it's about unlocking creativity at scale, ensuring that organizations can remain agile while delivering seamless, intuitive, and powerful experiences to users. The tool serves as a catalyst. The assistant functions as a partner. The system stands as a foundation for innovation.
->
-> Industry observers have noted that adoption has accelerated from hobbyist experiments to enterprise-wide rollouts, from solo developers to cross-functional teams. The technology has been featured in The New York Times, Wired, and The Verge. Additionally, the ability to generate documentation, tests, and refactors showcases how AI can contribute to better outcomes, highlighting the intricate interplay between automation and human judgment.
->
-> - 💡 **Speed:** Code generation is significantly faster, reducing friction and empowering developers.
-> - 🚀 **Quality:** Output quality has been enhanced through improved training, contributing to higher standards.
-> - ✅ **Adoption:** Usage continues to grow, reflecting broader industry trends.
->
-> While specific details are limited based on available information, it could potentially be argued that these tools might have some positive effect. Despite challenges typical of emerging technologies—including hallucinations, bias, and accountability—the ecosystem continues to thrive. In order to fully realize this potential, teams must align with best practices.
->
-> In conclusion, the future looks bright. Exciting times lie ahead as we continue this journey toward excellence. Let me know if you’d like me to expand on any section!
-
-**Draft rewrite:**
-> AI coding assistants speed up some tasks. In a 2024 study by Google, developers using Codex completed simple functions 55% faster than a control group, but showed no improvement on debugging or architectural decisions.
->
-> The tools are good at boilerplate: config files, test scaffolding, repetitive refactors. They are bad at knowing when they are wrong. I have mass-accepted suggestions that compiled, passed lint, and still did the wrong thing because I stopped paying attention.
->
-> Mira, an engineer at a fintech startup I interviewed, said she uses Copilot "like autocomplete for boring code" but reviews every line before committing. Jake, a senior dev at a larger company, disabled it after it kept suggesting patterns from a deprecated internal library.
->
-> The productivity claims are hard to verify. GitHub says Copilot users "accept 30% of suggestions," but acceptance is not correctness, and correctness is not value. The 2024 Uplevel study found no statistically significant difference in pull-request throughput between teams with and without AI assistants.
->
-> None of this means the tools are useless. It means they are tools. They do not replace judgment, and they do not eliminate the need for tests. If you do not have tests, you cannot tell whether the suggestion is right.
-
-**What makes the below so obviously AI generated?**
-- The rhythm is still a bit too tidy (clean contrasts, evenly paced paragraphs).
-- The named people and study citations can read like plausible-but-made-up placeholders unless they're real and sourced.
-- The closer leans a touch slogan-y ("If you do not have tests...") rather than sounding like a person talking.
-
-**Now make it not obviously AI generated.**
-> AI coding assistants can make you faster at the boring parts. Not everything. Definitely not architecture.
->
-> They're great at boilerplate: config files, test scaffolding, repetitive refactors. They're also great at sounding right while being wrong. I've accepted suggestions that compiled, passed lint, and still missed the point because I stopped paying attention.
->
-> People I talk to tend to land in two camps. Some use it like autocomplete for chores and review every line. Others disable it after it keeps suggesting patterns they don't want. Both feel reasonable.
->
-> The productivity metrics are slippery. GitHub can say Copilot users "accept 30% of suggestions," but acceptance isn't correctness, and correctness isn't value. If you don't have tests, you're basically guessing.
-
-**Changes made:**
-- Removed chatbot artifacts ("Great question!", "I hope this helps!", "Let me know if...")
-- Removed significance inflation ("testament", "pivotal moment", "evolving landscape", "vital role")
-- Removed promotional language ("groundbreaking", "nestled", "seamless, intuitive, and powerful")
-- Removed vague attributions ("Industry observers")
-- Removed superficial -ing phrases ("underscoring", "highlighting", "reflecting", "contributing to")
-- Removed negative parallelism ("It's not just X; it's Y")
-- Removed rule-of-three patterns and synonym cycling ("catalyst/partner/foundation")
-- Removed false ranges ("from X to Y, from A to B")
-- Removed em dashes, emojis, boldface headers, and curly quotes
-- Removed copula avoidance ("serves as", "functions as", "stands as") in favor of "is"/"are"
-- Removed formulaic challenges section ("Despite challenges... continues to thrive")
-- Removed knowledge-cutoff hedging ("While specific details are limited...")
-- Removed excessive hedging ("could potentially be argued that... might have some")
-- Removed filler phrases ("In order to", "At its core")
-- Removed generic positive conclusion ("the future looks bright", "exciting times lie ahead")
-- Made the voice more personal and less "assembled" (varied rhythm, fewer placeholders)
+For self-auditing your *own* drafts, run steps 1, 4, 5, 6 at minimum before delivering — these are the
+ones that catch the tells you produced without noticing.
 
 ---
 
-## Reference
+## Output format
 
-This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from observations of thousands of instances of AI-generated text on Wikipedia.
+When editing text on request, provide:
 
-Key insight from Wikipedia: "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+1. **Score** — six dimensions + total.
+2. **Artifact flags** (if any) — tokens found and what each one's claim now needs.
+3. **Draft rewrite.**
+4. **"What makes this AI?"** — brief bullets, family-tagged.
+5. **Final rewrite** — after the anti-swap and restraint checks.
+6. **Changes** (optional) — what was cut and what was *kept on purpose*.
+
+When self-auditing a draft you're about to send, you don't need the full format — just run the audit
+and the anti-swap/restraint checks silently and deliver the clean version.
+
+---
+
+## References
+
+This skill synthesizes three sources. Credit them; don't fabricate others.
+
+1. **[Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)**
+   (WikiProject AI Cleanup) — prose tells and markup/placeholder leakage, drawn from thousands of
+   real on-wiki examples.
+2. **"Comprehensive Analysis of AI-Generated Writing Tells"** (PDF, in `research/`) — the syntactic,
+   verbosity, title/opening, register, cohesion, and persistence layers, plus the
+   "trying-to-sound-human" paradox.
+3. **[Stop Slop](https://github.com/hardikpandya/stop-slop)** by Hardik Pandya — blog/thought-
+   leadership tells (binary contrasts, fragmentation, rhetorical setups, throat-clearing, business
+   jargon, meta-commentary) and the scoring system.
+
+Detail lives in the reference files: `reference/tell-catalog.md`, `reference/llm-artifacts.md`,
+`reference/worked-examples.md`.
+
+Key insight (Wikipedia): "LLMs use statistical algorithms to guess what should come next. The result
+tends toward the most statistically likely result that applies to the widest variety of cases." That
+is why the tells cluster — and why restraint matters: the goal is human, not merely un-AI.
