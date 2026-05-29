@@ -1,7 +1,9 @@
-# Humanizer
+# Humanizer Pro
 
 A Claude Code skill that removes signs of AI-generated writing from text, making it read as natural and
 human — without over-correcting clean prose or swapping one machine pattern for another.
+
+*A standalone rebuild of [blader/humanizer](https://github.com/blader/humanizer) (MIT). See [Credits & licensing](#credits--licensing).*
 
 ## Installation
 
@@ -9,7 +11,7 @@ human — without over-correcting clean prose or swapping one machine pattern fo
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer
+git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humanizer-pro
 ```
 
 The skill is split across `SKILL.md` (the operating core) and a `reference/` directory; clone the whole
@@ -20,7 +22,7 @@ repo so the reference files come with it.
 In Claude Code, invoke the skill and paste your text:
 
 ```
-/humanizer
+/humanizer-pro
 
 [paste your text here]
 ```
@@ -114,6 +116,17 @@ The full version (with score, the two-pass audit, and an anti-swap example) is i
 - **2.0.0** — Complete rewrite based on raw Wikipedia article content.
 - **1.0.0** — Initial release.
 
-## License
+## Credits & licensing
 
-MIT
+This project is released under the [MIT License](LICENSE).
+
+It is a standalone rebuild of [**blader/humanizer**](https://github.com/blader/humanizer) by Siqi Chen
+(MIT, Copyright © 2025), re-architected into a lean core plus a nine-family reference library and extended
+with new layers for syntactic tells, verbosity, deterministic artifact detection, and the over-humanizing
+paradox. The `LICENSE` file carries both the original and the new copyright.
+
+Pattern sources, with thanks:
+
+- **[blader/humanizer](https://github.com/blader/humanizer)** by Siqi Chen — MIT. The base this repo grew from.
+- **[Stop Slop](https://github.com/hardikpandya/stop-slop)** by Hardik Pandya — MIT. Thought-leadership tells and the scoring approach.
+- **[Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)** (WikiProject AI Cleanup) — available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Catalog entries here are original wording with synthetic examples; any passage reused directly from Wikipedia stays under CC BY-SA 4.0, and adaptations of it must be shared alike.

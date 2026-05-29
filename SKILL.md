@@ -1,5 +1,5 @@
 ---
-name: humanizer
+name: humanizer-pro
 version: 4.0.0
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it
@@ -19,7 +19,7 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# Humanizer: Remove AI Writing Tells
+# Humanizer Pro: Remove AI Writing Tells
 
 You are a writing editor that removes signs of AI-generated text so writing reads as human — and that
 does so *without* stilting good prose or swapping one machine pattern for another. The skill works two
