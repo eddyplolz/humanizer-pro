@@ -1,58 +1,77 @@
 # WARP.md
 
-This file provides guidance to WARP (warp.dev) when working with code in this repository.
+This file provides guidance to WARP (warp.dev) and other agents working in this repository.
 
-## What this repo is
-This repository is a **Claude Code skill** implemented entirely as Markdown.
+## What This Repo Is
 
-The “runtime” artifact is `SKILL.md`: Claude Code reads the YAML frontmatter (metadata + allowed tools) and the prompt/instructions that follow.
+This repository is a Claude Code skill implemented as Markdown plus progressively loaded references
+and manual eval fixtures.
 
-`README.md` is for humans: installation, usage, and a compact overview of the patterns.
+The runtime artifact is `SKILL.md`: Claude Code reads the YAML frontmatter and the prompt/instructions
+that follow. Keep it lean.
 
-## Key files (and how they relate)
+`README.md` is for humans: installation, usage, file layout, modes, validation, and version history.
+
+## Key Files
+
 - `SKILL.md`
-  - The actual skill definition and the lean operating core.
-  - Starts with YAML frontmatter (`---` … `---`) containing `name`, `version`, `description`, and `allowed-tools`.
-  - After the frontmatter: operating principles, a **compact 9-family index** (watch-words + one-line fixes), the checklists, scoring, and the multi-pass workflow. The detailed examples live in `reference/`, not here — keep this file lean (target under ~450 lines).
-- `reference/` (loaded on demand by the skill)
-  - `tell-catalog.md` — the full pattern library: every tell with watch-words and before/after, source-tagged. The index in `SKILL.md` points here by section (e.g. "§4.1").
-  - `llm-artifacts.md` — deterministic detector for leaked tokens/placeholders, each with a regex plus a one-pass union sweep.
-  - `worked-examples.md` — four full before → audit → after edits, including a restraint (don't-edit) case.
-- `README.md`
-  - Installation and usage instructions.
-  - Contains the 9-family overview, a file-layout table, and the version history.
+  - Source of truth for routing, operating principles, compact nine-family index, quick checklist,
+    scoring, workflow, and output formats.
+  - Keep under 350 lines for v4.1.
+  - Do not paste long examples, full Strunk guidance, or one-off improvement notes here.
+- `reference/`
+  - `tell-catalog.md` - full pattern library with watch-words and examples.
+  - `llm-artifacts.md` - deterministic detector for leaked tokens/placeholders.
+  - `worked-examples.md` - full before/audit/after edits, including the restraint case.
+  - `style-principles.md` - compact Elements of Style operating checklist.
+  - `elements-of-style-1918.md` - full public-domain Project Gutenberg text; do not load by default.
+  - `wiki-mode.md` - neutral, source-bound article and wikitext workflow.
+  - `improvement-loop.md` - controlled promotion process for recurring failures.
+- `eval/`
+  - `cases.md` - manual validation matrix.
+  - `fixtures/*.md` - regression samples for clean human prose, AI slop, wiki promotional tone,
+    over-humanizing, artifact leakage, and Elements-style edits.
 
-When changing behavior/content, treat `SKILL.md` as the source of truth. Add depth/examples to the matching `reference/` file (not into `SKILL.md`), and update `README.md` to stay consistent.
+## Common Commands
 
-## Common commands
-### Install the skill into Claude Code
-Recommended (clone directly into Claude Code skills directory):
+Install the skill:
+
 ```bash
 mkdir -p ~/.claude/skills
 git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humanizer-pro
 ```
 
-Manual install/update (skill core + reference library):
+Manual install/update:
+
 ```bash
 mkdir -p ~/.claude/skills/humanizer-pro
-cp -r SKILL.md reference/ ~/.claude/skills/humanizer-pro/
+cp -r SKILL.md reference/ eval/ ~/.claude/skills/humanizer-pro/
 ```
 
-## How to “run” it (Claude Code)
-Invoke the skill:
-- `/humanizer-pro` then paste text
+Invoke in Claude Code:
 
-## Making changes safely
-### Versioning (keep in sync)
-- `SKILL.md` has a `version:` field in its YAML frontmatter.
-- `README.md` has a “Version History” section.
+```text
+/humanizer-pro
+```
 
-If you bump the version, update both.
+## Making Changes Safely
 
-### Editing `SKILL.md`
-- Preserve valid YAML frontmatter formatting and indentation.
-- Keep the **family numbering** (1–9) and the `reference/tell-catalog.md` section numbers (e.g. §4.1) stable unless you’re intentionally re-numbering — the `SKILL.md` index, the README overview, and the catalog all cross-reference the same numbers.
-- Add new tells/examples to the relevant `reference/` file; keep `SKILL.md` to the compact index entry only.
+- Preserve valid YAML frontmatter in `SKILL.md`.
+- Keep the family numbering (1-9) and `reference/tell-catalog.md` section numbers stable unless the
+  whole catalog is intentionally renumbered.
+- Add depth and examples to `reference/`, not `SKILL.md`.
+- Add regression examples to `eval/fixtures/` and expectations to `eval/cases.md`.
+- Use `reference/improvement-loop.md` before promoting a recurring failure.
+- Do not add detector APIs, automatic memory accumulation, autonomous optimization loops, large
+  dependencies, or runtime scripts for v4.1.
+- If behavior changes, update `README.md` version history.
 
-### Documenting non-obvious fixes
-If you change the prompt to handle a tricky failure mode (e.g., a repeated mis-edit or an unexpected tone shift), add a short note to `README.md`’s version history describing what was fixed and why.
+## Validation
+
+Before claiming a skill behavior change is done:
+
+1. Check `SKILL.md` remains under 350 lines.
+2. Run the manual cases in `eval/cases.md`.
+3. Confirm `clean-human.md` is mostly unchanged.
+4. Confirm artifact fixtures produce source-risk notes.
+5. Confirm wiki/article mode stays neutral and source-bound.
