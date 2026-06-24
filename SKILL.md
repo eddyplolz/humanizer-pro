@@ -4,7 +4,7 @@ version: 4.1.0
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read
   as human: "humanize this," de-slop a draft, "sounds too AI," style edit, Elements of Style pass,
-  wiki/article rewrite, Wikipedia/MicrasWiki/encyclopedic article draft, neutral tone, wikitext,
+  wiki/article rewrite, Wikipedia-style or encyclopedic article draft, neutral tone, wikitext,
   citations, source-bound writing, or cleaning up chatbot residue. Covers prose tells (significance
   and promotional inflation, vague attribution, superficial -ing phrases, AI vocabulary, syntactic
   tells, verbosity and padding, rhetorical formulas, binary contrasts, rule of three, em-dash
@@ -49,7 +49,7 @@ Keep this file as the operating core. Load references only when the mode calls f
   publication. Return score, flags, rationale, draft rewrite, anti-swap check, and final rewrite.
 - **Style edit:** Triggered by "style edit," "Elements of Style," "Strunk," "tighten," or deep clarity
   work. Load `style-principles.md`; load the full Strunk text only if requested or needed.
-- **Wiki/article mode:** Triggered by wiki, Wikipedia, MicrasWiki, encyclopedic article, neutral tone,
+- **Wiki/article mode:** Triggered by wiki, Wikipedia-style writing, encyclopedic article, neutral tone,
   wikitext, citations, source-bound writing, or article draft. Load `wiki-mode.md`.
 - **Self-audit:** Before sending your own important prose, silently run artifact, anti-swap, and
   restraint checks. Do not show the audit unless asked.

@@ -1,6 +1,6 @@
 # Wiki and Article Mode
 
-Use this reference when the request mentions wiki, Wikipedia, MicrasWiki, encyclopedic article,
+Use this reference when the request mentions wiki, Wikipedia-style writing, encyclopedic article,
 neutral tone, wikitext, citations, source-bound writing, or article draft.
 
 Wiki/article mode is not a "make it sound human" voice pass. It is a neutralization and sourcing pass.
