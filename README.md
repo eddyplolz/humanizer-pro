@@ -1,11 +1,52 @@
 # Humanizer Pro
 
-A Claude Code skill that removes signs of AI-generated writing from text, making it read as natural
-and human without over-correcting clean prose, inventing sources, or swapping one machine pattern for
-another.
+Humanizer Pro is a Claude Code skill for turning AI-assisted drafts into publishable prose without
+fake-casual "make it sound human" tricks.
+
+It removes AI-writing tells, citation/artifact residue, promotional padding, wiki puffery, and
+formulaic rhythm while preserving clean human prose. It is not a synonym spinner, detector-bypass
+gimmick, or personality injector.
 
 *A standalone rebuild of [blader/humanizer](https://github.com/blader/humanizer) (MIT). See
 [Credits & licensing](#credits--licensing).*
+
+## Why Use This?
+
+- **De-slop drafts without over-editing.** The restraint check protects prose that already works.
+- **Catch AI residue before it ships.** Flags `turn0search0`, `contentReference`, `oaicite`,
+  `utm_source=chatgpt.com`, placeholder dates, and unfinished template fields.
+- **Avoid swapping one tell for another.** The anti-swap pass catches fake-casual voice, binary
+  contrasts, rule-of-three filler, and motivational-poster endings introduced during edits.
+- **Handle wiki and article prose.** Wiki/article mode neutralizes puffery, preserves citations, and
+  flags unsupported claims instead of laundering them.
+- **Stay local and simple.** No detector API, no external service, no autonomous optimization loop.
+
+## Quick Demo
+
+**Before**
+
+> In today's rapidly evolving digital landscape, effective collaboration serves as a crucial
+> cornerstone for organizations seeking to unlock their full potential. It is important to note that
+> this approach is not just about tools, but about creating a vibrant culture of innovation.
+
+**After**
+
+> Good collaboration depends less on the tool than on whether people know what decisions they own,
+> where work is tracked, and how quickly blockers get resolved.
+
+## What It Catches
+
+Humanizer Pro works from a nine-family catalog:
+
+- significance inflation and promotional tone
+- vague attribution and notability padding
+- superficial "-ing" analysis and filler
+- AI vocabulary clusters and inflated diction
+- syntactic tells such as anticipatory "it" and existential "there"
+- verbosity, nominalization, false precision, and both-sides anxiety
+- rhetorical formulas such as "not X, but Y" and forced triplets
+- structure and formatting tells, including Markdown leakage
+- chatbot residue, citation stubs, tracking links, and placeholders
 
 ## Installation
 
@@ -45,7 +86,7 @@ family-tagged rationale, and the final rewrite after anti-swap and restraint che
 - **Style edit** - uses the compact Elements of Style checklist in `reference/style-principles.md`.
   The full public-domain Strunk text is in `reference/elements-of-style-1918.md` and is loaded only on
   explicit request or deep style work.
-- **Wiki/article mode** - uses `reference/wiki-mode.md` for Wikipedia, MicrasWiki, encyclopedic
+- **Wiki/article mode** - uses `reference/wiki-mode.md` for Wikipedia-style, encyclopedic
   article, wikitext, neutral tone, citation, and source-bound writing requests.
 - **Self-audit** - silently checks drafts before delivery.
 - **Self-improvement** - uses `reference/improvement-loop.md` to review recurring failures before any
