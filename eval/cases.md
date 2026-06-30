@@ -1,7 +1,7 @@
 # Humanizer Pro v4.1 Manual Evaluation Cases
 
-Use these fixtures after skill changes. They are not automated tests; they are small regression prompts
-for checking behavior, restraint, and source discipline.
+Use these fixtures after skill changes. They serve two purposes: manual regression prompts for editing
+behavior and automated contracts for the deterministic audit CLI.
 
 ## Fixtures
 
@@ -16,6 +16,8 @@ for checking behavior, restraint, and source discipline.
 
 ## Required Checks
 
+- `py -3 -m pytest -q tests` passes for the automated `humanizer-audit` contracts.
+- `py -3 scripts/humanizer_audit.py eval/fixtures --json` returns schema `humanizer-audit.v1`.
 - Simple "humanize this" returns only the final rewrite plus serious source-risk notes.
 - Explicit "full audit" returns score, artifact flags, family-tagged rationale, draft rewrite, final
   rewrite, and what stayed on purpose.
