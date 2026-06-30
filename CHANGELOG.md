@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added score-only AI check mode documentation for "check this," "score this," "audit only," and
+  "do not rewrite" workflows.
+- Documented Claude Code installs to `~/.claude/skills/humanizer-pro`, Codex/generic agent installs
+  to `~/.agents/skills/humanizer-pro`, and Windows/POSIX audit CLI examples.
 - Added `--compare original.md revised.md` fidelity guards for protected-content drift in numbers,
   dates, names, URLs, citations, quotes, fenced code blocks, and source-dependent statements.
 
