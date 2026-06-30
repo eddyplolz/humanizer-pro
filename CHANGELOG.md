@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.2.2 - 2026-06-30
 
 - Added Codex-facing skill metadata in `agents/openai.yaml` and clarified Claude Code, Codex, and
   generic-agent install/invocation paths.
