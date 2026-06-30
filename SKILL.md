@@ -1,6 +1,6 @@
 ---
 name: humanizer-pro
-version: 4.1.0
+version: 4.2.0
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read
   as human: "humanize this," de-slop a draft, "sounds too AI," style edit, Elements of Style pass,
@@ -16,6 +16,7 @@ allowed-tools:
   - Read
   - Write
   - Edit
+  - Bash
   - Grep
   - Glob
   - AskUserQuestion
@@ -47,6 +48,9 @@ Keep this file as the operating core. Load references only when the mode calls f
   Run the artifact sweep, make the edit, and return only the cleaned text unless flags are serious.
 - **Deep edit / full audit:** Triggered by "full audit," "score this," "what makes this AI," or risky
   publication. Return score, flags, rationale, draft rewrite, anti-swap check, and final rewrite.
+- **Audit/check mode:** Triggered by file-based audit, "check only," "audit only," or CI/pre-publish
+  review. When the installed repo is available, run `scripts/humanizer_audit.py` for deterministic
+  artifact, source-risk, tell-family, rhythm, and JSON checks before any rewrite.
 - **Style edit:** Triggered by "style edit," "Elements of Style," "Strunk," "tighten," or deep clarity
   work. Load `style-principles.md`; load the full Strunk text only if requested or needed.
 - **Wiki/article mode:** Triggered by wiki, Wikipedia-style writing, encyclopedic article, neutral tone,
@@ -242,7 +246,8 @@ Below 42/60 means revise. A low Restraint score means put edits back, not cut mo
 1. **Artifact sweep.** Run `llm-artifacts.md` over the text. For every hit, delete the token and
    restore the real reference or flag the unsupported claim.
 2. **Choose mode.** Quick rewrite, full audit, style edit, wiki/article mode, self-audit, or
-   self-improvement.
+   self-improvement. For file-based audit/check requests, use the deterministic CLI instead of
+   rewriting.
 3. **Read for meaning.** Preserve the real content, authorial stance, and target format.
 4. **Prose pass.** Work the densest tell family first. Edit clusters and formulas, not isolated words.
 5. **Mode-specific pass.** Use `style-principles.md` for substantial style work and `wiki-mode.md` for
