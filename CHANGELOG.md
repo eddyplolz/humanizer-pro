@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added Codex-facing skill metadata in `agents/openai.yaml` and clarified Claude Code, Codex, and
+  generic-agent install/invocation paths.
+
 ## 4.2.1 - 2026-06-30
 
 - Added score-only AI check mode documentation for "check this," "score this," "audit only," and
