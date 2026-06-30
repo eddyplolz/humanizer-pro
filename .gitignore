@@ -9,3 +9,10 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# Local agent/session state
+.agent-state/
+
+# Python caches
+__pycache__/
+*.pyc

@@ -29,8 +29,13 @@ that follow. Keep it lean.
   - `improvement-loop.md` - controlled promotion process for recurring failures.
 - `eval/`
   - `cases.md` - manual validation matrix.
+  - `contracts/*.json` - automated expectations for deterministic audit behavior.
   - `fixtures/*.md` - regression samples for clean human prose, AI slop, wiki promotional tone,
     over-humanizing, artifact leakage, and Elements-style edits.
+- `scripts/`
+  - `humanizer_audit.py` - zero-dependency deterministic audit CLI.
+- `tests/`
+  - pytest coverage for the audit CLI and fixture contracts.
 
 ## Common Commands
 
@@ -54,6 +59,13 @@ Invoke in Claude Code:
 /humanizer-pro
 ```
 
+Run the deterministic audit CLI:
+
+```bash
+py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
+py -3 scripts/humanizer_audit.py eval/fixtures --json
+```
+
 ## Making Changes Safely
 
 - Preserve valid YAML frontmatter in `SKILL.md`.
@@ -62,8 +74,10 @@ Invoke in Claude Code:
 - Add depth and examples to `reference/`, not `SKILL.md`.
 - Add regression examples to `eval/fixtures/` and expectations to `eval/cases.md`.
 - Use `reference/improvement-loop.md` before promoting a recurring failure.
-- Do not add detector APIs, automatic memory accumulation, autonomous optimization loops, large
-  dependencies, or runtime scripts for v4.1.
+- Runtime scripts must stay deterministic and zero-dependency unless a later approved plan changes
+  that constraint.
+- Do not add detector APIs, automatic memory accumulation, autonomous optimization loops, or large
+  dependencies for this audit-tooling slice.
 - If behavior changes, update `README.md` version history.
 
 ## Validation
@@ -71,7 +85,9 @@ Invoke in Claude Code:
 Before claiming a skill behavior change is done:
 
 1. Check `SKILL.md` remains under 350 lines.
-2. Run the manual cases in `eval/cases.md`.
-3. Confirm `clean-human.md` is mostly unchanged.
-4. Confirm artifact fixtures produce source-risk notes.
-5. Confirm wiki/article mode stays neutral and source-bound.
+2. Run `py -3 -m pytest -q tests`.
+3. Run `py -3 scripts/humanizer_audit.py eval/fixtures --json`.
+4. Run the manual cases in `eval/cases.md` when edit behavior changes.
+5. Confirm `clean-human.md` is mostly unchanged.
+6. Confirm artifact fixtures produce source-risk notes.
+7. Confirm wiki/article mode stays neutral and source-bound.

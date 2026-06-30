@@ -77,6 +77,18 @@ Or ask directly: `Please humanize this text: [your text]`.
 Simple requests return a concise rewrite. Ask for a "full audit" to get scores, artifact flags,
 family-tagged rationale, and the final rewrite after anti-swap and restraint checks.
 
+### Deterministic Audit CLI
+
+For file-based checks, use the zero-dependency audit CLI:
+
+```bash
+py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
+py -3 scripts/humanizer_audit.py eval/fixtures --json
+```
+
+The CLI does not rewrite text. It reports artifact leakage, tell-family hits, source-risk flags,
+rhythm/structure stats, JSON output, and threshold exit codes for CI or pre-publish review.
+
 ## Modes
 
 - **Quick rewrite** - simple "humanize this" or "make this less AI" requests. Returns the cleaned text
@@ -121,8 +133,11 @@ over-humanizing paradox.
 | `reference/elements-of-style-1918.md` | Full public-domain Project Gutenberg text of Strunk's *The Elements of Style*. |
 | `reference/wiki-mode.md` | Neutral, source-bound article workflow for wiki and encyclopedic prose. |
 | `reference/improvement-loop.md` | Review gate for promoting recurring skill failures into durable rules. |
+| `scripts/humanizer_audit.py` | Deterministic CLI for artifact, source-risk, tell-family, rhythm, and JSON checks. |
 | `eval/cases.md` | Manual validation matrix. |
+| `eval/contracts/*.json` | Automated scenario contracts for the audit CLI. |
 | `eval/fixtures/*.md` | Regression fixtures for clean prose, AI slop, wiki promotion, over-humanizing, artifacts, and style edits. |
+| `tests/` | Pytest coverage for the deterministic audit CLI. |
 
 ## The Nine Families of Tells
 
@@ -165,6 +180,8 @@ Manual validation lives in `eval/cases.md` and `eval/fixtures/`.
 
 Expected checks include:
 
+- `py -3 -m pytest -q tests` passes.
+- `py -3 scripts/humanizer_audit.py eval/fixtures --json` emits schema `humanizer-audit.v1`.
 - General AI-slop becomes plainer and more specific.
 - Clean human prose remains mostly unchanged.
 - Over-humanized prose loses fake-casual performance without becoming stiff.
@@ -174,6 +191,9 @@ Expected checks include:
 
 ## Version History
 
+- **4.2.0** - Added the deterministic `humanizer-audit` CLI, JSON audit schema, threshold exit
+  codes, source-risk/artifact/tell-family checks, and automated scenario-contract tests for the
+  existing fixtures.
 - **4.1.0** - Added mode routing for quick rewrite, full audit, style edit, wiki/article mode,
   self-audit, and self-improvement. Added compact Elements guidance, full Strunk reference, neutral
   wiki/article workflow, review-based improvement loop, and manual eval fixtures. Kept `SKILL.md`
