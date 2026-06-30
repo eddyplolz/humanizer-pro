@@ -84,10 +84,13 @@ For file-based checks, use the zero-dependency audit CLI:
 ```bash
 py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
 py -3 scripts/humanizer_audit.py eval/fixtures --json
+py -3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ```
 
 The CLI does not rewrite text. It reports artifact leakage, tell-family hits, source-risk flags,
 rhythm/structure stats, JSON output, and threshold exit codes for CI or pre-publish review.
+Compare mode checks fidelity only: protected numbers, dates, names, URL targets, citations, quotes,
+code blocks, and source-dependent statements. It does not judge style or make detector claims.
 
 ## Modes
 
@@ -136,7 +139,7 @@ over-humanizing paradox.
 | `scripts/humanizer_audit.py` | Deterministic CLI for artifact, source-risk, tell-family, rhythm, and JSON checks. |
 | `eval/cases.md` | Manual validation matrix. |
 | `eval/contracts/*.json` | Automated scenario contracts for the audit CLI. |
-| `eval/fixtures/*.md` | Regression fixtures for clean prose, AI slop, wiki promotion, over-humanizing, artifacts, and style edits. |
+| `eval/fixtures/*.md` | Regression fixtures for clean prose, AI slop, wiki promotion, over-humanizing, artifacts, style edits, and fidelity compare checks. |
 | `tests/` | Pytest coverage for the deterministic audit CLI. |
 
 ## The Nine Families of Tells
@@ -182,6 +185,8 @@ Expected checks include:
 
 - `py -3 -m pytest -q tests` passes.
 - `py -3 scripts/humanizer_audit.py eval/fixtures --json` emits schema `humanizer-audit.v1`.
+- `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/original.md eval/fixtures/fidelity/revised-drift.md --json`
+  reports protected-content drift without style scoring.
 - General AI-slop becomes plainer and more specific.
 - Clean human prose remains mostly unchanged.
 - Over-humanized prose loses fake-casual performance without becoming stiff.
@@ -191,6 +196,9 @@ Expected checks include:
 
 ## Version History
 
+- **Unreleased** - Added `--compare` fidelity guards for protected-content drift in numbers, dates,
+  names, URLs, citations, quotes, fenced code blocks, and source-dependent statements. Compare mode
+  stays local and deterministic and does not score style.
 - **4.2.0** - Added the deterministic `humanizer-audit` CLI, JSON audit schema, threshold exit
   codes, source-risk/artifact/tell-family checks, and automated scenario-contract tests for the
   existing fixtures.

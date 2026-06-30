@@ -4,13 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
 import sys
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
 SCHEMA = "humanizer-audit.v1"
@@ -25,6 +28,14 @@ class Rule:
     message: str
     severity: str = "warning"
     source_risk: bool = False
+
+
+@dataclass(frozen=True)
+class ProtectedToken:
+    kind: str
+    value: str
+    evidence: str
+    offset: int
 
 
 ARTIFACT_RULES = [
@@ -270,6 +281,86 @@ SOURCE_RISK_RULES = [
     ),
 ]
 
+CODE_BLOCK_RE = re.compile(r"```[^\n`]*(?:\n.*?)?```", re.S)
+URL_RE = re.compile(r"https?://[^\s<>\]\)\"'|{}]+", re.I)
+MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[([^\]\n]+)\]\(([^)\s]+(?:\s+\"[^\"]*\")?)\)")
+FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]\n]+\]")
+FOOTNOTE_DEF_RE = re.compile(r"^\[\^[^\]\n]+\]:.*$", re.M)
+REF_TAG_RE = re.compile(r"<ref\b[^>]*(?:/>|>.*?</ref>)", re.I | re.S)
+CITE_TEMPLATE_RE = re.compile(r"{{\s*cite\b.*?}}", re.I | re.S)
+QUOTE_RE = re.compile(r'"[^"\n]{3,}"|“[^”\n]{3,}”')
+BLOCKQUOTE_RE = re.compile(r"^(?:>\s?.+(?:\n|$))+", re.M)
+DATE_RE = re.compile(
+    r"\b(?:20XX|\d{4}-(?:\d{2}|XX)-(?:\d{2}|XX)|"
+    r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
+    r"Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+"
+    r"\d{1,2},?\s+\d{4}|"
+    r"\d{1,2}\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|"
+    r"Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+"
+    r"\d{4}|"
+    r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
+    r"Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+\d{4}|"
+    r"(?:1[6-9]\d{2}|20\d{2}|21\d{2}))\b",
+    re.I,
+)
+CURRENCY_RE = re.compile(
+    r"(?:[$€£]|USD|EUR|GBP)\s?\d[\d,]*(?:\.\d+)?"
+    r"(?:\s?(?:million|billion|trillion|thousand|m|bn|k))?",
+    re.I,
+)
+PERCENT_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\s?%")
+RANGE_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\s*(?:-|–|—|to)\s*\d[\d,]*(?:\.\d+)?\b", re.I)
+NUMBER_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\b")
+NAME_RE = re.compile(
+    r"\b[A-Z][A-Za-z0-9'.&-]+(?:\s+(?:of|the|and|for|de|del|la|le|du|van|von|&|"
+    r"[A-Z][A-Za-z0-9'.&-]+)){1,}",
+)
+ORG_HINT_RE = re.compile(
+    r"\b(?:Agency|Association|Bureau|Committee|Commission|Company|Corporation|Council|Department|"
+    r"Foundation|Group|Institute|LLC|Ltd|Ministry|Office|Organization|Research|University)\b"
+)
+SOURCE_MARKER_RE = re.compile(
+    r"https?://|<ref\b|{{\s*cite\b|\[\^[^\]]+\]|\[[^\]]+\]\(|"
+    r"\b(?:according to|reported|reports|study|studies|survey|records|cited|evidence|data|"
+    r"researchers|observers|experts|said|announced|published|filed)\b",
+    re.I,
+)
+REPORTING_LANGUAGE_RE = re.compile(
+    r"\b(?:according to|reported|reports|study|studies|survey|records|cited|evidence|data|"
+    r"researchers|observers|experts|said|announced|published|filed)\b",
+    re.I,
+)
+NAME_CONNECTORS = {"and", "de", "del", "du", "for", "la", "le", "of", "the", "van", "von"}
+NAME_EXCLUDE_START = {"A", "An", "As", "At", "By", "For", "From", "If", "In", "It", "On", "Or", "The", "This", "To"}
+STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "by",
+    "for",
+    "from",
+    "has",
+    "have",
+    "in",
+    "is",
+    "it",
+    "of",
+    "on",
+    "or",
+    "that",
+    "the",
+    "their",
+    "this",
+    "to",
+    "was",
+    "were",
+    "with",
+}
+
 
 def line_starts(text: str) -> list[int]:
     starts = [0]
@@ -296,6 +387,495 @@ def evidence(value: str) -> str:
     if len(collapsed) <= 120:
         return collapsed
     return collapsed[:117] + "..."
+
+
+def regex_spans(text: str, regex: re.Pattern[str]) -> list[tuple[int, int]]:
+    return [(match.start(), match.end()) for match in regex.finditer(text)]
+
+
+def blank_spans(text: str, spans: Iterable[tuple[int, int]]) -> str:
+    chars = list(text)
+    for start, end in spans:
+        for index in range(start, min(end, len(chars))):
+            if chars[index] != "\n":
+                chars[index] = " "
+    return "".join(chars)
+
+
+def normalize_space(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def normalize_url(raw_url: str) -> str:
+    trimmed = raw_url.strip().rstrip(").,;:!?")
+    parsed = urlsplit(trimmed)
+    query = urlencode(
+        [
+            (key, value)
+            for key, value in parse_qsl(parsed.query, keep_blank_values=True)
+            if not key.lower().startswith("utm_")
+        ],
+        doseq=True,
+    )
+    return urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), parsed.path, query, parsed.fragment))
+
+
+def normalize_citation(value: str) -> str:
+    normalized = URL_RE.sub(lambda match: normalize_url(match.group(0)), value)
+    return normalize_space(normalized).lower()
+
+
+def normalize_date(value: str) -> str:
+    return normalize_space(value.replace(",", "")).lower()
+
+
+def normalize_number(value: str) -> str:
+    normalized = normalize_space(value).lower().replace(",", "")
+    return re.sub(r"\s*(?:-|–|—|to)\s*", "-", normalized)
+
+
+def normalize_name(value: str) -> str:
+    return normalize_space(value).strip(".,:;").lower()
+
+
+def normalize_quote(value: str) -> str:
+    return normalize_space(value)
+
+
+def citation_spans(text: str) -> list[tuple[int, int]]:
+    spans = []
+    for regex in (MARKDOWN_LINK_RE, FOOTNOTE_DEF_RE, FOOTNOTE_REF_RE, REF_TAG_RE, CITE_TEMPLATE_RE):
+        spans.extend(regex_spans(text, regex))
+    return spans
+
+
+def masked_for_prose(text: str) -> str:
+    return blank_spans(text, regex_spans(text, CODE_BLOCK_RE) + citation_spans(text) + regex_spans(text, URL_RE))
+
+
+def token_from_match(kind: str, match: re.Match[str], value: str | None = None) -> ProtectedToken:
+    raw = match.group(0)
+    return ProtectedToken(kind, value if value is not None else normalize_space(raw), evidence(raw), match.start())
+
+
+def extract_url_tokens(text: str) -> list[ProtectedToken]:
+    return [
+        token_from_match("url", match, normalize_url(match.group(0)))
+        for match in URL_RE.finditer(blank_spans(text, regex_spans(text, CODE_BLOCK_RE)))
+    ]
+
+
+def extract_date_tokens(text: str) -> list[ProtectedToken]:
+    masked = masked_for_prose(text)
+    return [token_from_match("date", match, normalize_date(match.group(0))) for match in DATE_RE.finditer(masked)]
+
+
+def extract_number_tokens(text: str) -> list[ProtectedToken]:
+    masked = blank_spans(masked_for_prose(text), regex_spans(masked_for_prose(text), DATE_RE))
+    tokens = []
+    occupied: list[tuple[int, int]] = []
+    for regex in (CURRENCY_RE, PERCENT_RE, RANGE_RE):
+        for match in regex.finditer(blank_spans(masked, occupied)):
+            tokens.append(token_from_match("number", match, normalize_number(match.group(0))))
+            occupied.append((match.start(), match.end()))
+    for match in NUMBER_RE.finditer(blank_spans(masked, occupied)):
+        tokens.append(token_from_match("number", match, normalize_number(match.group(0))))
+    return tokens
+
+
+def extract_name_tokens(text: str) -> list[ProtectedToken]:
+    prose = masked_for_prose(text)
+    masked_lines = []
+    for line in prose.splitlines(keepends=True):
+        if not line.lstrip().startswith("#"):
+            masked_lines.append(line)
+            continue
+        newline = "\n" if line.endswith("\n") else ""
+        body = line[:-1] if newline else line
+        masked_lines.append(" " * len(body) + newline)
+    prose = "".join(masked_lines)
+    tokens = []
+    for match in NAME_RE.finditer(prose):
+        raw = normalize_space(match.group(0))
+        words_in_name = re.findall(r"[A-Za-z][A-Za-z0-9'.&-]*", raw)
+        semantic_words = [word for word in words_in_name if word.lower() not in NAME_CONNECTORS]
+        if len(semantic_words) < 2:
+            continue
+        if semantic_words[0] in NAME_EXCLUDE_START and not ORG_HINT_RE.search(raw):
+            continue
+        tokens.append(ProtectedToken("name", normalize_name(raw), evidence(raw), match.start()))
+    return tokens
+
+
+def extract_citation_tokens(text: str) -> list[ProtectedToken]:
+    masked = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
+    tokens = []
+    for match in MARKDOWN_LINK_RE.finditer(masked):
+        label = normalize_space(match.group(1)).lower()
+        target = normalize_url(match.group(2).split()[0])
+        tokens.append(ProtectedToken("citation", f"markdown:{label}->{target}", evidence(match.group(0)), match.start()))
+    for regex, prefix in (
+        (FOOTNOTE_DEF_RE, "footnote_def"),
+        (FOOTNOTE_REF_RE, "footnote_ref"),
+        (REF_TAG_RE, "ref"),
+        (CITE_TEMPLATE_RE, "cite"),
+    ):
+        for match in regex.finditer(masked):
+            tokens.append(
+                ProtectedToken("citation", f"{prefix}:{normalize_citation(match.group(0))}", evidence(match.group(0)), match.start())
+            )
+    return tokens
+
+
+def extract_quote_tokens(text: str) -> list[ProtectedToken]:
+    masked = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
+    tokens = [token_from_match("quote", match, normalize_quote(match.group(0))) for match in QUOTE_RE.finditer(masked)]
+    for match in BLOCKQUOTE_RE.finditer(masked):
+        tokens.append(token_from_match("quote", match, normalize_quote(match.group(0))))
+    return tokens
+
+
+def extract_code_block_tokens(text: str) -> list[ProtectedToken]:
+    tokens = []
+    for match in CODE_BLOCK_RE.finditer(text):
+        block = match.group(0)
+        digest = hashlib.sha256(block.encode("utf-8")).hexdigest()
+        first_line = block.splitlines()[0] if block.splitlines() else "```"
+        tokens.append(ProtectedToken("code_block", digest, evidence(first_line), match.start()))
+    return tokens
+
+
+def compare_finding(
+    finding_id: str,
+    message: str,
+    token: ProtectedToken,
+    starts: list[int],
+    side: str,
+    source_risk: bool = False,
+) -> dict[str, object]:
+    line, column = line_column(starts, token.offset)
+    return {
+        "id": finding_id,
+        "family": None,
+        "severity": "error",
+        "line": line,
+        "column": column,
+        "evidence": token.evidence,
+        "message": message,
+        "source_risk": source_risk,
+        "side": side,
+    }
+
+
+def token_buckets(tokens: list[ProtectedToken]) -> dict[str, list[ProtectedToken]]:
+    buckets: dict[str, list[ProtectedToken]] = {}
+    for token in tokens:
+        buckets.setdefault(token.value, []).append(token)
+    return buckets
+
+
+def compare_token_sets(
+    kind: str,
+    original_tokens: list[ProtectedToken],
+    revised_tokens: list[ProtectedToken],
+    original_starts: list[int],
+    revised_starts: list[int],
+) -> list[dict[str, object]]:
+    labels = {
+        "citation": "citation marker",
+        "date": "date",
+        "name": "name",
+        "number": "number",
+        "url": "URL target",
+    }
+    source_kinds = {"citation", "url"}
+    original_counts = Counter(token.value for token in original_tokens)
+    revised_counts = Counter(token.value for token in revised_tokens)
+    original_buckets = token_buckets(original_tokens)
+    revised_buckets = token_buckets(revised_tokens)
+    findings = []
+    for value, count in (original_counts - revised_counts).items():
+        for token in original_buckets[value][:count]:
+            findings.append(
+                compare_finding(
+                    f"compare.{kind}.dropped",
+                    f"Dropped protected {labels[kind]}",
+                    token,
+                    original_starts,
+                    "original",
+                    kind in source_kinds,
+                )
+            )
+    for value, count in (revised_counts - original_counts).items():
+        for token in revised_buckets[value][:count]:
+            findings.append(
+                compare_finding(
+                    f"compare.{kind}.introduced",
+                    f"Introduced protected {labels[kind]}",
+                    token,
+                    revised_starts,
+                    "revised",
+                    kind in source_kinds,
+                )
+            )
+    return findings
+
+
+def markdown_link_targets(text: str) -> dict[str, ProtectedToken]:
+    masked = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
+    targets = {}
+    for match in MARKDOWN_LINK_RE.finditer(masked):
+        label = normalize_space(match.group(1)).lower()
+        target = normalize_url(match.group(2).split()[0])
+        targets[label] = ProtectedToken("citation", target, evidence(match.group(0)), match.start())
+    return targets
+
+
+def compare_markdown_targets(
+    original_text: str,
+    revised_text: str,
+    original_starts: list[int],
+) -> list[dict[str, object]]:
+    original_links = markdown_link_targets(original_text)
+    revised_links = markdown_link_targets(revised_text)
+    findings = []
+    for label, original_token in original_links.items():
+        revised_token = revised_links.get(label)
+        if revised_token and revised_token.value != original_token.value:
+            findings.append(
+                compare_finding(
+                    "compare.citation.changed_target",
+                    f"Changed Markdown link target for [{label}]",
+                    original_token,
+                    original_starts,
+                    "original",
+                    True,
+                )
+            )
+    return findings
+
+
+def compare_ordered_tokens(
+    kind: str,
+    original_tokens: list[ProtectedToken],
+    revised_tokens: list[ProtectedToken],
+    original_starts: list[int],
+    revised_starts: list[int],
+) -> list[dict[str, object]]:
+    changed_messages = {
+        "code_block": "Changed fenced code block",
+        "quote": "Changed quoted text or blockquote",
+    }
+    findings = []
+    for original_token, revised_token in zip(original_tokens, revised_tokens, strict=False):
+        if original_token.value != revised_token.value:
+            findings.append(
+                compare_finding(
+                    f"compare.{kind}.changed",
+                    changed_messages[kind],
+                    original_token,
+                    original_starts,
+                    "original",
+                    False,
+                )
+            )
+    if len(original_tokens) > len(revised_tokens):
+        for token in original_tokens[len(revised_tokens) :]:
+            findings.append(
+                compare_finding(
+                    f"compare.{kind}.dropped",
+                    f"Dropped protected {kind.replace('_', ' ')}",
+                    token,
+                    original_starts,
+                    "original",
+                    False,
+                )
+            )
+    elif len(revised_tokens) > len(original_tokens):
+        for token in revised_tokens[len(original_tokens) :]:
+            findings.append(
+                compare_finding(
+                    f"compare.{kind}.introduced",
+                    f"Introduced protected {kind.replace('_', ' ')}",
+                    token,
+                    revised_starts,
+                    "revised",
+                    False,
+                )
+            )
+    return findings
+
+
+def sentence_records(text: str) -> list[dict[str, object]]:
+    records = []
+    pattern = re.compile(r".+?(?:(?<=[.!?])\s+(?=[A-Z0-9\"“'])|\n{2,}|$)", re.S)
+    for match in pattern.finditer(text):
+        sentence = match.group(0).strip()
+        if not sentence or not SOURCE_MARKER_RE.search(sentence):
+            continue
+        records.append(
+            {
+                "text": sentence,
+                "normalized": normalize_sentence(sentence),
+                "terms": meaningful_terms(sentence),
+                "markers": evidence_markers(sentence),
+                "offset": match.start() + len(match.group(0)) - len(match.group(0).lstrip()),
+            }
+        )
+    return records
+
+
+def normalize_sentence(sentence: str) -> str:
+    normalized = MARKDOWN_LINK_RE.sub(lambda match: match.group(1), sentence)
+    normalized = URL_RE.sub(" ", normalized)
+    normalized = REF_TAG_RE.sub(" ", normalized)
+    normalized = CITE_TEMPLATE_RE.sub(" ", normalized)
+    normalized = FOOTNOTE_REF_RE.sub(" ", normalized)
+    return re.sub(r"[^a-z0-9]+", " ", normalized.lower()).strip()
+
+
+def meaningful_terms(sentence: str) -> set[str]:
+    return {
+        term
+        for term in re.findall(r"[a-z0-9]+", normalize_sentence(sentence))
+        if len(term) > 2 and term not in STOPWORDS
+    }
+
+
+def evidence_markers(sentence: str) -> set[str]:
+    markers = set()
+    if URL_RE.search(sentence):
+        markers.add("url")
+    if MARKDOWN_LINK_RE.search(sentence):
+        markers.add("markdown_link")
+    if REF_TAG_RE.search(sentence):
+        markers.add("ref")
+    if CITE_TEMPLATE_RE.search(sentence):
+        markers.add("cite_template")
+    if FOOTNOTE_REF_RE.search(sentence):
+        markers.add("footnote")
+    if REPORTING_LANGUAGE_RE.search(sentence):
+        markers.add("reporting_language")
+    return markers
+
+
+def overlap_score(left_terms: set[str], right_terms: set[str]) -> float:
+    if not left_terms or not right_terms:
+        return 0.0
+    return len(left_terms & right_terms) / len(left_terms | right_terms)
+
+
+def best_sentence_match(record: dict[str, object], candidates: list[dict[str, object]]) -> tuple[dict[str, object] | None, float]:
+    best_record = None
+    best_score = 0.0
+    for candidate in candidates:
+        score = overlap_score(set(record["terms"]), set(candidate["terms"]))
+        if score > best_score:
+            best_score = score
+            best_record = candidate
+    return best_record, best_score
+
+
+def source_statement_token(record: dict[str, object]) -> ProtectedToken:
+    return ProtectedToken("source_statement", str(record["normalized"]), evidence(str(record["text"])), int(record["offset"]))
+
+
+def compare_source_statements(
+    original_text: str,
+    revised_text: str,
+    original_starts: list[int],
+    revised_starts: list[int],
+) -> list[dict[str, object]]:
+    original_records = sentence_records(original_text)
+    revised_records = sentence_records(revised_text)
+    revised_norms = {record["normalized"] for record in revised_records}
+    original_norms = {record["normalized"] for record in original_records}
+    findings = []
+    for record in original_records:
+        if record["normalized"] in revised_norms:
+            continue
+        candidate, score = best_sentence_match(record, revised_records)
+        token = source_statement_token(record)
+        if candidate and score >= 0.4:
+            dropped_markers = set(record["markers"]) - set(candidate["markers"])
+            if dropped_markers:
+                findings.append(
+                    compare_finding(
+                        "compare.source_statement.evidence_marker_dropped",
+                        "Source-dependent sentence changed without preserving its evidence marker",
+                        token,
+                        original_starts,
+                        "original",
+                        True,
+                    )
+                )
+        else:
+            findings.append(
+                compare_finding(
+                    "compare.source_statement.dropped",
+                    "Dropped source-dependent statement",
+                    token,
+                    original_starts,
+                    "original",
+                    True,
+                )
+            )
+    for record in revised_records:
+        if record["normalized"] in original_norms:
+            continue
+        candidate, score = best_sentence_match(record, original_records)
+        if not candidate or score < 0.4:
+            findings.append(
+                compare_finding(
+                    "compare.source_statement.introduced",
+                    "Introduced source-dependent statement",
+                    source_statement_token(record),
+                    revised_starts,
+                    "revised",
+                    True,
+                )
+            )
+    return findings
+
+
+def compare_texts(original_text: str, revised_text: str, original_path: str, revised_path: str) -> dict[str, object]:
+    original_starts = line_starts(original_text)
+    revised_starts = line_starts(revised_text)
+    findings: list[dict[str, object]] = []
+    findings.extend(compare_markdown_targets(original_text, revised_text, original_starts))
+    for kind, extractor in (
+        ("number", extract_number_tokens),
+        ("date", extract_date_tokens),
+        ("name", extract_name_tokens),
+        ("url", extract_url_tokens),
+        ("citation", extract_citation_tokens),
+    ):
+        findings.extend(compare_token_sets(kind, extractor(original_text), extractor(revised_text), original_starts, revised_starts))
+    findings.extend(
+        compare_ordered_tokens(
+            "quote",
+            extract_quote_tokens(original_text),
+            extract_quote_tokens(revised_text),
+            original_starts,
+            revised_starts,
+        )
+    )
+    findings.extend(
+        compare_ordered_tokens(
+            "code_block",
+            extract_code_block_tokens(original_text),
+            extract_code_block_tokens(revised_text),
+            original_starts,
+            revised_starts,
+        )
+    )
+    findings.extend(compare_source_statements(original_text, revised_text, original_starts, revised_starts))
+    findings.sort(key=lambda item: (str(item["side"]), int(item["line"]), int(item["column"]), str(item["id"])))
+    return {
+        "original": original_path,
+        "revised": revised_path,
+        "findings": findings,
+    }
 
 
 def make_finding(rule: Rule, match: re.Match[str], starts: list[int]) -> dict[str, object]:
@@ -502,6 +1082,22 @@ def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, 
     }
 
 
+def summarize_compare(compare: dict[str, object]) -> dict[str, object]:
+    findings = list(compare["findings"])
+    exit_code = 2 if findings else 0
+    return {
+        "documents": 2,
+        "comparisons": 1,
+        "max_risk_score": 0,
+        "max_severity": severity_for(findings),
+        "artifact_count": 0,
+        "source_risk_count": sum(1 for finding in findings if finding["source_risk"]),
+        "family_hit_count": 0,
+        "compare_finding_count": len(findings),
+        "exit_code": exit_code,
+    }
+
+
 def iter_input_files(target: Path) -> list[Path]:
     if target.is_file():
         return [target]
@@ -516,6 +1112,12 @@ def audit_paths(paths: list[Path]) -> list[dict[str, object]]:
         text = path.read_text(encoding="utf-8")
         documents.append(audit_text(text, str(path)))
     return documents
+
+
+def compare_paths(original_path: Path, revised_path: Path) -> dict[str, object]:
+    original_text = original_path.read_text(encoding="utf-8")
+    revised_text = revised_path.read_text(encoding="utf-8")
+    return compare_texts(original_text, revised_text, str(original_path), str(revised_path))
 
 
 def render_text_report(result: dict[str, object]) -> str:
@@ -536,10 +1138,32 @@ def render_text_report(result: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+def render_compare_report(result: dict[str, object]) -> str:
+    summary = result["summary"]
+    compare = result["compare"]
+    lines = [
+        f"Humanizer compare: {compare['original']} -> {compare['revised']}, "
+        f"{summary['compare_finding_count']} finding(s), severity {summary['max_severity']}, "
+        f"exit {summary['exit_code']}"
+    ]
+    for finding in compare["findings"]:
+        lines.append(
+            f"  {finding['severity'].upper()} {finding['side']} L{finding['line']}:C{finding['column']} "
+            f"{finding['id']} — {finding['message']} [{finding['evidence']}]"
+        )
+    return "\n".join(lines)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Audit text for Humanizer Pro tells and source-risk artifacts.")
     parser.add_argument("target", nargs="?", help="File or directory to audit.")
     parser.add_argument("--stdin", action="store_true", help="Read text from stdin instead of a path.")
+    parser.add_argument(
+        "--compare",
+        nargs=2,
+        metavar=("ORIGINAL", "REVISED"),
+        help="Compare an original and revised file for protected-content drift.",
+    )
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of a text report.")
     parser.add_argument("--fail-score", type=int, default=60, help="Risk score that exits with review status 1.")
     return parser
@@ -548,21 +1172,29 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.stdin == bool(args.target):
-        parser.error("provide exactly one input: <file-or-dir> or --stdin")
+    if sum(1 for active in (args.stdin, bool(args.target), bool(args.compare)) if active) != 1:
+        parser.error("provide exactly one input: <file-or-dir>, --stdin, or --compare ORIGINAL REVISED")
     try:
-        if args.stdin:
+        if args.compare:
+            compare = compare_paths(Path(args.compare[0]), Path(args.compare[1]))
+            summary = summarize_compare(compare)
+            result = {"schema": SCHEMA, "summary": summary, "documents": [], "compare": compare}
+        elif args.stdin:
             documents = [audit_text(sys.stdin.read(), "<stdin>")]
+            summary = summarize(documents, args.fail_score)
+            result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
             documents = audit_paths(iter_input_files(Path(args.target)))
+            summary = summarize(documents, args.fail_score)
+            result = {"schema": SCHEMA, "summary": summary, "documents": documents}
     except (OSError, UnicodeDecodeError) as exc:
         print(f"humanizer-audit: {exc}", file=sys.stderr)
         return 3
 
-    summary = summarize(documents, args.fail_score)
-    result = {"schema": SCHEMA, "summary": summary, "documents": documents}
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
+    elif args.compare:
+        print(render_compare_report(result))
     else:
         print(render_text_report(result))
     return int(summary["exit_code"])
