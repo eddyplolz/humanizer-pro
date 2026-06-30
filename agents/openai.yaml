@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizer Pro"
+  short_description: "AI-tell audits and restrained prose edits"
+  default_prompt: "Use $humanizer-pro to check this draft for AI-writing tells without rewriting it."
