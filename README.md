@@ -1,7 +1,7 @@
 # Humanizer Pro
 
-Humanizer Pro is a Claude Code skill for turning AI-assisted drafts into publishable prose without
-fake-casual "make it sound human" tricks.
+Humanizer Pro is a Claude Code and Codex skill for turning AI-assisted drafts into publishable prose
+without fake-casual "make it sound human" tricks.
 
 It removes AI-writing tells, citation/artifact residue, promotional padding, wiki puffery, and
 formulaic rhythm while preserving clean human prose. It is not a synonym spinner, detector-bypass
@@ -52,7 +52,8 @@ Humanizer Pro works from a nine-family catalog:
 
 ## Installation
 
-Clone the whole repository so `SKILL.md`, `reference/`, `scripts/`, and `eval/` stay together.
+Clone the whole repository so `SKILL.md`, `agents/`, `reference/`, `scripts/`, and `eval/` stay
+together.
 
 ### Claude Code
 
@@ -86,12 +87,26 @@ mkdir "%USERPROFILE%\.agents\skills"
 git clone https://github.com/eddyplolz/humanizer-pro.git "%USERPROFILE%\.agents\skills\humanizer-pro"
 ```
 
+For standard Codex personal-skill installs, use `$CODEX_HOME/skills` when `CODEX_HOME` is set, or
+`~/.codex/skills` otherwise. This repo also includes `agents/openai.yaml` so Codex can show a
+friendly skill name, short description, and default `$humanizer-pro` prompt.
+
 ## Usage
 
-Invoke the skill and paste text:
+Invoke the skill and paste text.
+
+Claude Code:
 
 ```text
 /humanizer-pro
+
+[paste your text here]
+```
+
+Codex:
+
+```text
+Use $humanizer-pro to check this draft for AI-writing tells without rewriting it.
 
 [paste your text here]
 ```
@@ -169,6 +184,7 @@ over-humanizing paradox.
 | File | Role |
 |------|------|
 | `SKILL.md` | Lean operating core: routing, principles, nine-family index, quick checklist, scoring, workflow, output formats. |
+| `agents/openai.yaml` | Codex-facing display metadata and default `$humanizer-pro` prompt. |
 | `reference/tell-catalog.md` | Full pattern library with watch-words and before/after examples. |
 | `reference/llm-artifacts.md` | Deterministic detector for leaked tokens, placeholders, and AI citation residue. |
 | `reference/ai-check.md` | Score-only audit mode for "check this," "score this," "AI check," and "do not rewrite" requests. |
@@ -239,6 +255,8 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **Unreleased** - Added Codex skill metadata in `agents/openai.yaml` and clarified Claude Code,
+  Codex, and generic-agent installation and invocation paths.
 - **4.2.1** - Added score-only AI check routing and documentation for Claude Code and generic
   agent installs.
 - **4.2.1** - Added `--compare` fidelity guards for protected-content drift in numbers, dates,

@@ -4,11 +4,12 @@ This file provides guidance to WARP (warp.dev) and other agents working in this 
 
 ## What This Repo Is
 
-This repository is a Claude Code skill implemented as Markdown plus progressively loaded references
-and manual eval fixtures.
+This repository is a Claude Code and Codex skill implemented as Markdown plus progressively loaded
+references and manual eval fixtures.
 
-The runtime artifact is `SKILL.md`: Claude Code reads the YAML frontmatter and the prompt/instructions
-that follow. Keep it lean.
+The shared runtime artifact is `SKILL.md`: Claude Code reads the YAML frontmatter and the
+prompt/instructions that follow, while Codex uses the `name` and `description` fields plus
+`agents/openai.yaml` UI metadata. Keep `SKILL.md` lean.
 
 `README.md` is for humans: installation, usage, file layout, modes, validation, and version history.
 
@@ -19,6 +20,9 @@ that follow. Keep it lean.
     scoring, workflow, and output formats.
   - Keep under 350 lines for v4.x.
   - Do not paste long examples, full Strunk guidance, or one-off improvement notes here.
+- `agents/openai.yaml`
+  - Codex-facing display metadata and default `$humanizer-pro` prompt.
+  - Regenerate with `skill-creator` if the skill name, description, or primary invocation changes.
 - `reference/`
   - `tell-catalog.md` - full pattern library with watch-words and examples.
   - `llm-artifacts.md` - deterministic detector for leaked tokens/placeholders.
@@ -72,13 +76,19 @@ Manual install/update on POSIX:
 
 ```bash
 mkdir -p ~/.claude/skills/humanizer-pro
-cp -r SKILL.md reference/ scripts/ eval/ ~/.claude/skills/humanizer-pro/
+cp -r SKILL.md agents/ reference/ scripts/ eval/ ~/.claude/skills/humanizer-pro/
 ```
 
 Invoke in Claude Code:
 
 ```text
 /humanizer-pro
+```
+
+Invoke in Codex:
+
+```text
+Use $humanizer-pro to check this draft for AI-writing tells without rewriting it.
 ```
 
 Run the deterministic audit CLI on Windows:
@@ -100,6 +110,7 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ## Making Changes Safely
 
 - Preserve valid YAML frontmatter in `SKILL.md`.
+- Keep `agents/openai.yaml` aligned with `SKILL.md` when trigger wording or primary usage changes.
 - Keep the family numbering (1-9) and `reference/tell-catalog.md` section numbers stable unless the
   whole catalog is intentionally renumbered.
 - Add depth and examples to `reference/`, not `SKILL.md`.
