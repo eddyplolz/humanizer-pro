@@ -5,14 +5,32 @@ does not rewrite it.
 
 ## Usage
 
-```bash
-py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
-py -3 scripts/humanizer_audit.py eval/fixtures --json
-type draft.md | py -3 scripts/humanizer_audit.py --stdin --json
-py -3 scripts/humanizer_audit.py --compare original.md revised.md --json
+Windows:
+
+```bat
+py -3 scripts\humanizer_audit.py eval\fixtures\ai-slop-general.md
+py -3 scripts\humanizer_audit.py eval\fixtures --json
+type draft.md | py -3 scripts\humanizer_audit.py --stdin --json
+py -3 scripts\humanizer_audit.py --compare original.md revised.md --json
 ```
 
-Use `python3` instead of `py -3` on POSIX systems.
+POSIX:
+
+```bash
+python3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
+python3 scripts/humanizer_audit.py eval/fixtures --json
+cat draft.md | python3 scripts/humanizer_audit.py --stdin --json
+python3 scripts/humanizer_audit.py --compare original.md revised.md --json
+```
+
+## AI Check Workflows
+
+Use the CLI for score-only "AI check," "score this," "audit only," and "do not rewrite" requests.
+Return the risk score, pass/review/block status, blocker flags, tell-family hits, source-risk notes,
+and brief quoted evidence. Do not rewrite the text unless the user separately asks.
+
+The CLI is local and deterministic. It does not call detector APIs, make detector-bypass claims, or
+support optimize-until-green loops.
 
 ## Compare Mode
 
