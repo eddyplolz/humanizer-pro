@@ -239,9 +239,9 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
-- **Unreleased** - Added score-only AI check routing and documentation for Claude Code and generic
+- **4.2.1** - Added score-only AI check routing and documentation for Claude Code and generic
   agent installs.
-- **Unreleased** - Added `--compare` fidelity guards for protected-content drift in numbers, dates,
+- **4.2.1** - Added `--compare` fidelity guards for protected-content drift in numbers, dates,
   names, URLs, citations, quotes, fenced code blocks, and source-dependent statements. Compare mode
   stays local and deterministic and does not score style.
 - **4.2.0** - Added the deterministic `humanizer-audit` CLI, JSON audit schema, threshold exit

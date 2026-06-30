@@ -1,6 +1,6 @@
 ---
 name: humanizer-pro
-version: 4.2.0
+version: 4.2.1
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read
   as human: "humanize this," de-slop a draft, "sounds too AI," "check this," "score this,"
