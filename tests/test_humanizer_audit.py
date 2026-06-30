@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CLI = ROOT / "scripts" / "humanizer_audit.py"
 CONTRACT = ROOT / "eval" / "contracts" / "task1.json"
+COMPARE_CONTRACT = ROOT / "eval" / "contracts" / "task2_compare.json"
 
 
 def run_audit(*args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
@@ -58,6 +59,36 @@ def test_contract_fixtures() -> None:
             assert not any(finding_id.startswith(prefix) for finding_id in ids), contract["path"]
         if contract.get("requires_source_risk"):
             assert any(finding["source_risk"] for finding in document["findings"]), contract["path"]
+
+
+def test_compare_contract_fixtures() -> None:
+    contracts = json.loads(COMPARE_CONTRACT.read_text(encoding="utf-8"))["fixtures"]
+    for contract in contracts:
+        returncode, payload = audit_json("--compare", contract["original"], contract["revised"])
+        findings = payload["compare"]["findings"]
+        ids = {finding["id"] for finding in findings}
+        assert payload["schema"] == "humanizer-audit.v1"
+        assert payload["documents"] == []
+        assert payload["summary"]["comparisons"] == 1
+        assert payload["summary"]["exit_code"] == contract["expected_exit"]
+        assert payload["summary"]["compare_finding_count"] == len(findings)
+        assert returncode == contract["expected_exit"], contract["name"]
+        if "expected_findings" in contract:
+            assert len(findings) == contract["expected_findings"], contract["name"]
+        for required_id in contract.get("required_ids", []):
+            assert required_id in ids, contract["name"]
+
+
+def test_compare_mode_does_not_run_style_audit() -> None:
+    returncode, payload = audit_json(
+        "--compare",
+        "eval/fixtures/fidelity/original.md",
+        "eval/fixtures/fidelity/revised-good.md",
+    )
+    assert returncode == 0
+    assert payload["summary"]["family_hit_count"] == 0
+    assert payload["summary"]["max_risk_score"] == 0
+    assert payload["compare"]["findings"] == []
 
 
 def test_clean_human_has_no_artifact_or_source_risk_flags() -> None:
@@ -113,3 +144,14 @@ def test_text_report_is_available() -> None:
     assert result.returncode == 1
     assert "Humanizer audit:" in result.stdout
     assert "family4.ai_vocab_cluster" in result.stdout
+
+
+def test_compare_text_report_is_available() -> None:
+    result = run_audit(
+        "--compare",
+        "eval/fixtures/fidelity/original.md",
+        "eval/fixtures/fidelity/revised-drift.md",
+    )
+    assert result.returncode == 2
+    assert "Humanizer compare:" in result.stdout
+    assert "compare.code_block.changed" in result.stdout

@@ -64,6 +64,7 @@ Run the deterministic audit CLI:
 ```bash
 py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
 py -3 scripts/humanizer_audit.py eval/fixtures --json
+py -3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ```
 
 ## Making Changes Safely
@@ -76,6 +77,8 @@ py -3 scripts/humanizer_audit.py eval/fixtures --json
 - Use `reference/improvement-loop.md` before promoting a recurring failure.
 - Runtime scripts must stay deterministic and zero-dependency unless a later approved plan changes
   that constraint.
+- Compare mode is a fidelity guard only. It checks protected facts and evidence markers; it must not
+  become a style scorer or detector-bypass loop.
 - Do not add detector APIs, automatic memory accumulation, autonomous optimization loops, or large
   dependencies for this audit-tooling slice.
 - If behavior changes, update `README.md` version history.
@@ -87,7 +90,8 @@ Before claiming a skill behavior change is done:
 1. Check `SKILL.md` remains under 350 lines.
 2. Run `py -3 -m pytest -q tests`.
 3. Run `py -3 scripts/humanizer_audit.py eval/fixtures --json`.
-4. Run the manual cases in `eval/cases.md` when edit behavior changes.
-5. Confirm `clean-human.md` is mostly unchanged.
-6. Confirm artifact fixtures produce source-risk notes.
-7. Confirm wiki/article mode stays neutral and source-bound.
+4. Run `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/original.md eval/fixtures/fidelity/revised-drift.md --json` when compare behavior changes.
+5. Run the manual cases in `eval/cases.md` when edit behavior changes.
+6. Confirm `clean-human.md` is mostly unchanged.
+7. Confirm artifact fixtures produce source-risk notes.
+8. Confirm wiki/article mode stays neutral and source-bound.
