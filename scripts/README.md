@@ -9,9 +9,19 @@ does not rewrite it.
 py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
 py -3 scripts/humanizer_audit.py eval/fixtures --json
 type draft.md | py -3 scripts/humanizer_audit.py --stdin --json
+py -3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ```
 
 Use `python3` instead of `py -3` on POSIX systems.
+
+## Compare Mode
+
+`--compare original.md revised.md` checks protected-content fidelity only. It does not score style or
+tell families. It flags drift in numbers, dates, names, URL targets, citation markers, quoted text,
+fenced code blocks, and source-dependent sentences whose evidence markers were dropped.
+
+URL comparison normalizes tracking parameters such as `utm_source`, so removing tracking noise from an
+otherwise identical source URL is not treated as drift.
 
 ## Exit Codes
 
@@ -32,6 +42,6 @@ The default review threshold is `--fail-score 60`.
 - `documents[].stats`: rhythm and structure metrics.
 - `documents[].findings`: family hits, source-risk flags, artifacts, severity, line/column, and
   quoted evidence.
+- `compare.findings`: protected-content drift findings when `--compare` is used.
 
 The schema is intentionally compact so it can be used in CI, pre-publish checks, or agent workflows.
-

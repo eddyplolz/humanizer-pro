@@ -1,0 +1,31 @@
+{
+  "schema": "humanizer-audit-compare-contracts.v1",
+  "fixtures": [
+    {
+      "name": "tracking-parameters-normalized",
+      "original": "eval/fixtures/fidelity/original.md",
+      "revised": "eval/fixtures/fidelity/revised-good.md",
+      "expected_exit": 0,
+      "expected_findings": 0
+    },
+    {
+      "name": "protected-content-drift",
+      "original": "eval/fixtures/fidelity/original.md",
+      "revised": "eval/fixtures/fidelity/revised-drift.md",
+      "expected_exit": 2,
+      "required_ids": [
+        "compare.number.dropped",
+        "compare.number.introduced",
+        "compare.date.dropped",
+        "compare.date.introduced",
+        "compare.url.dropped",
+        "compare.url.introduced",
+        "compare.citation.changed_target",
+        "compare.citation.dropped",
+        "compare.quote.changed",
+        "compare.code_block.changed",
+        "compare.source_statement.evidence_marker_dropped"
+      ]
+    }
+  ]
+}
