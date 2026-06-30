@@ -15,6 +15,8 @@ gimmick, or personality injector.
 - **De-slop drafts without over-editing.** The restraint check protects prose that already works.
 - **Catch AI residue before it ships.** Flags `turn0search0`, `contentReference`, `oaicite`,
   `utm_source=chatgpt.com`, placeholder dates, and unfinished template fields.
+- **Check without rewriting.** AI check mode returns score, blocker flags, family hits, source-risk
+  notes, and quoted evidence when you ask for "check this," "score this," or "do not rewrite."
 - **Avoid swapping one tell for another.** The anti-swap pass catches fake-casual voice, binary
   contrasts, rule-of-three filler, and motivational-poster endings introduced during edits.
 - **Handle wiki and article prose.** Wiki/article mode neutralizes puffery, preserves citations, and
@@ -50,17 +52,39 @@ Humanizer Pro works from a nine-family catalog:
 
 ## Installation
 
-### Recommended
+Clone the whole repository so `SKILL.md`, `reference/`, `scripts/`, and `eval/` stay together.
 
-Clone the whole repository into the Claude Code skills directory:
+### Claude Code
+
+POSIX:
 
 ```bash
 mkdir -p ~/.claude/skills
 git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humanizer-pro
 ```
 
-The skill is split across `SKILL.md`, `reference/`, and `eval/`; clone the whole repo so the
-progressively loaded references and fixtures come with it.
+Windows:
+
+```bat
+mkdir "%USERPROFILE%\.claude\skills"
+git clone https://github.com/eddyplolz/humanizer-pro.git "%USERPROFILE%\.claude\skills\humanizer-pro"
+```
+
+### Codex And Generic Agents
+
+POSIX:
+
+```bash
+mkdir -p ~/.agents/skills
+git clone https://github.com/eddyplolz/humanizer-pro.git ~/.agents/skills/humanizer-pro
+```
+
+Windows:
+
+```bat
+mkdir "%USERPROFILE%\.agents\skills"
+git clone https://github.com/eddyplolz/humanizer-pro.git "%USERPROFILE%\.agents\skills\humanizer-pro"
+```
 
 ## Usage
 
@@ -77,14 +101,28 @@ Or ask directly: `Please humanize this text: [your text]`.
 Simple requests return a concise rewrite. Ask for a "full audit" to get scores, artifact flags,
 family-tagged rationale, and the final rewrite after anti-swap and restraint checks.
 
+Ask for "AI check," "score this," "audit only," or "do not rewrite" to get a score-only report with
+blockers, family hits, source-risk notes, and quoted evidence. AI check mode does not rewrite unless
+you separately ask for a rewrite.
+
 ### Deterministic Audit CLI
 
 For file-based checks, use the zero-dependency audit CLI:
 
+Windows:
+
+```bat
+py -3 scripts\humanizer_audit.py eval\fixtures\ai-slop-general.md
+py -3 scripts\humanizer_audit.py eval\fixtures --json
+py -3 scripts\humanizer_audit.py --compare original.md revised.md --json
+```
+
+POSIX:
+
 ```bash
-py -3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
-py -3 scripts/humanizer_audit.py eval/fixtures --json
-py -3 scripts/humanizer_audit.py --compare original.md revised.md --json
+python3 scripts/humanizer_audit.py eval/fixtures/ai-slop-general.md
+python3 scripts/humanizer_audit.py eval/fixtures --json
+python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ```
 
 The CLI does not rewrite text. It reports artifact leakage, tell-family hits, source-risk flags,
@@ -98,6 +136,8 @@ code blocks, and source-dependent statements. It does not judge style or make de
   plus serious source-risk notes.
 - **Deep edit / full audit** - scores the text, reports artifact flags, names the tell families, and
   shows the final rewrite.
+- **AI check / audit-only** - returns score, blocker flags, family hits, source-risk notes, and quoted
+  evidence without rewriting.
 - **Style edit** - uses the compact Elements of Style checklist in `reference/style-principles.md`.
   The full public-domain Strunk text is in `reference/elements-of-style-1918.md` and is loaded only on
   explicit request or deep style work.
@@ -131,6 +171,7 @@ over-humanizing paradox.
 | `SKILL.md` | Lean operating core: routing, principles, nine-family index, quick checklist, scoring, workflow, output formats. |
 | `reference/tell-catalog.md` | Full pattern library with watch-words and before/after examples. |
 | `reference/llm-artifacts.md` | Deterministic detector for leaked tokens, placeholders, and AI citation residue. |
+| `reference/ai-check.md` | Score-only audit mode for "check this," "score this," "AI check," and "do not rewrite" requests. |
 | `reference/worked-examples.md` | Four full before/audit/after examples, including a restraint case. |
 | `reference/style-principles.md` | Compact Elements of Style checklist for everyday style edits. |
 | `reference/elements-of-style-1918.md` | Full public-domain Project Gutenberg text of Strunk's *The Elements of Style*. |
@@ -194,8 +235,12 @@ Expected checks include:
 - Artifact leakage is flagged with source-risk notes.
 - Elements-style edits improve clarity without flattening legitimate voice.
 
+On POSIX systems, use `python3` in place of `py -3`.
+
 ## Version History
 
+- **Unreleased** - Added score-only AI check routing and documentation for Claude Code and generic
+  agent installs.
 - **Unreleased** - Added `--compare` fidelity guards for protected-content drift in numbers, dates,
   names, URLs, citations, quotes, fenced code blocks, and source-dependent statements. Compare mode
   stays local and deterministic and does not score style.

@@ -3,12 +3,13 @@ name: humanizer-pro
 version: 4.2.0
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read
-  as human: "humanize this," de-slop a draft, "sounds too AI," style edit, Elements of Style pass,
-  wiki/article rewrite, Wikipedia-style or encyclopedic article draft, neutral tone, wikitext,
-  citations, source-bound writing, or cleaning up chatbot residue. Covers prose tells (significance
-  and promotional inflation, vague attribution, superficial -ing phrases, AI vocabulary, syntactic
-  tells, verbosity and padding, rhetorical formulas, binary contrasts, rule of three, em-dash
-  overuse, formatting), wiki-specific neutrality/source risks, and mechanical artifact leakage
+  as human: "humanize this," de-slop a draft, "sounds too AI," "check this," "score this,"
+  "audit only," "AI check," "do not rewrite," style edit, Elements of Style pass, wiki/article
+  rewrite, Wikipedia-style or encyclopedic article draft, neutral tone, wikitext, citations,
+  source-bound writing, or cleaning up chatbot residue. Covers prose tells (significance and
+  promotional inflation, vague attribution, superficial -ing phrases, AI vocabulary, syntactic tells,
+  verbosity and padding, rhetorical formulas, binary contrasts, rule of three, em-dash overuse,
+  formatting), wiki-specific neutrality/source risks, and mechanical artifact leakage
   (citeturn0search0, contentReference, oaicite, oai_citation, grok_card, web/attached_file tags,
   utm_source=chatgpt.com) plus unfilled placeholders ([Your Name], 2025-XX-XX, INSERT_,
   PASTE_..._HERE).
@@ -31,6 +32,7 @@ self-audits your own drafts before delivery.
 Keep this file as the operating core. Load references only when the mode calls for them:
 
 - `reference/llm-artifacts.md` - deterministic token and placeholder sweep; run first.
+- `reference/ai-check.md` - score-only audit mode; use when the user asks not to rewrite.
 - `reference/tell-catalog.md` - full nine-family catalog with watch-words and examples.
 - `reference/worked-examples.md` - end-to-end audits, including the clean-control restraint case.
 - `reference/style-principles.md` - compact Elements of Style operating checklist for substantial prose.
@@ -46,11 +48,15 @@ Keep this file as the operating core. Load references only when the mode calls f
 
 - **Quick rewrite:** Triggered by "humanize this," "make this less AI," or a simple pasted draft.
   Run the artifact sweep, make the edit, and return only the cleaned text unless flags are serious.
-- **Deep edit / full audit:** Triggered by "full audit," "score this," "what makes this AI," or risky
-  publication. Return score, flags, rationale, draft rewrite, anti-swap check, and final rewrite.
-- **Audit/check mode:** Triggered by file-based audit, "check only," "audit only," or CI/pre-publish
-  review. When the installed repo is available, run `scripts/humanizer_audit.py` for deterministic
-  artifact, source-risk, tell-family, rhythm, and JSON checks before any rewrite.
+- **AI check / audit-only:** Triggered by "check this," "score this," "audit only," "AI check,"
+  "do not rewrite," "check only," file-based audit, or CI/pre-publish review. Load
+  `reference/ai-check.md`. When the installed repo is available, run `scripts/humanizer_audit.py` for
+  deterministic artifact, source-risk, tell-family, rhythm, and JSON checks. Return score, blocker
+  flags, family hits, source-risk notes, and quoted evidence. Do not rewrite unless the user
+  separately asks. Reject detector-bypass claims and optimize-until-green loops.
+- **Deep edit / full audit:** Triggered by "full audit," "what makes this AI," risky publication, or
+  an explicit request for audit plus rewrite. Return score, flags, rationale, draft rewrite,
+  anti-swap check, and final rewrite.
 - **Style edit:** Triggered by "style edit," "Elements of Style," "Strunk," "tighten," or deep clarity
   work. Load `style-principles.md`; load the full Strunk text only if requested or needed.
 - **Wiki/article mode:** Triggered by wiki, Wikipedia-style writing, encyclopedic article, neutral tone,
@@ -245,9 +251,9 @@ Below 42/60 means revise. A low Restraint score means put edits back, not cut mo
 
 1. **Artifact sweep.** Run `llm-artifacts.md` over the text. For every hit, delete the token and
    restore the real reference or flag the unsupported claim.
-2. **Choose mode.** Quick rewrite, full audit, style edit, wiki/article mode, self-audit, or
-   self-improvement. For file-based audit/check requests, use the deterministic CLI instead of
-   rewriting.
+2. **Choose mode.** Quick rewrite, AI check/audit-only, full audit, style edit, wiki/article mode,
+   self-audit, or self-improvement. For file-based audit/check requests, use the deterministic CLI
+   instead of rewriting.
 3. **Read for meaning.** Preserve the real content, authorial stance, and target format.
 4. **Prose pass.** Work the densest tell family first. Edit clusters and formulas, not isolated words.
 5. **Mode-specific pass.** Use `style-principles.md` for substantial style work and `wiki-mode.md` for
@@ -274,6 +280,15 @@ For full audits, return:
 4. "What makes this AI?" with family tags.
 5. Final rewrite after anti-swap and restraint checks.
 6. Short note on what changed and what was kept on purpose.
+
+For AI check/audit-only requests, return:
+
+1. Score and pass/review/block status.
+2. Blocker flags.
+3. Family hits.
+4. Source-risk notes.
+5. Quoted evidence.
+6. No rewrite unless the user separately asks for one.
 
 For wiki/article mode, return neutral target text plus source-risk notes. Do not invent citations or
 add personality.
