@@ -255,7 +255,7 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
-- **Unreleased** - Added Codex skill metadata in `agents/openai.yaml` and clarified Claude Code,
+- **4.2.2** - Added Codex skill metadata in `agents/openai.yaml` and clarified Claude Code,
   Codex, and generic-agent installation and invocation paths.
 - **4.2.1** - Added score-only AI check routing and documentation for Claude Code and generic
   agent installs.
