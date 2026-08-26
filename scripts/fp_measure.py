@@ -218,6 +218,14 @@ def render_results_md(result: dict) -> str:
         "",
         f"- Documents: **{result['corpus_documents']}**",
         f"- Review threshold: **{result['threshold']}** (the CLI default)",
+    ]
+    if result["missing_cache"]:
+        lines.append(
+            f"- Manifest entries with no cached text on this machine, skipped: "
+            f"**{len(result['missing_cache'])}** — the manifest still counts them; "
+            "rates below cover the cached documents only."
+        )
+    lines += [
         "",
         "| Slice | n | Flagged | FPR | 95% CI | Blocked (exit 2) |",
         "|---|---|---|---|---|---|",

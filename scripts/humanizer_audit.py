@@ -51,6 +51,7 @@ class Rule:
     message: str
     severity: str = "warning"
     source_risk: bool = False
+    once_per_doc: bool = False
 
 
 @dataclass(frozen=True)
@@ -261,17 +262,27 @@ FAMILY_RULES = [
         7,
         re.compile(
             r"\b(?:not just\b.+\bbut\b|not only\b.+\bbut also\b|here's the thing|you know what|watch this|"
-            r"what if i told you|let that sink in|plot twist|full stop|see what i did there|"
-            r"\w+\s+\w+,\s+\w+\s+\w+,\s+and\s+\w+\s+\w+)\b",
+            r"what if i told you|let that sink in|plot twist|full stop|see what i did there)\b",
             re.I | re.S,
         ),
         "Rhetorical formula or forced cadence",
     ),
+    # The naive two-word triplet pattern ("\w+ \w+, \w+ \w+, and \w+ \w+") was
+    # removed from family7 after corpus measurement (corpus/RESULTS.md): it fired
+    # on 33% of human wiki documents (180/548) — ordinary enumerations of names,
+    # offices, and places — and three hits force-floor the risk score to review.
+    # Rule-of-three judgment is model-side (catalog §7.3, coverage-map).
     Rule(
         "family8.markdown_structure",
         8,
         re.compile(r"^\s*(?:---\s*$|#{3,}\s+|\|\s*[^|\n]+\s*\||[-*+]\s+\*\*[^*\n]+:\*\*)", re.M),
         "Mechanical structure or Markdown formatting tell",
+        once_per_doc=True,
+        # once_per_doc calibrated against the human-control corpus: table-heavy
+        # human documents matched ~29 lines each, so this one rule alone maxed
+        # the family score cap and tripped the >=10-findings review floor.
+        # Whether mechanical structure is present is a document-level fact; one
+        # finding carries it.
     ),
     Rule(
         "family8.list_label_period",
@@ -1119,6 +1130,8 @@ def regex_findings(text: str, rules: Iterable[Rule], starts: list[int]) -> list[
     for rule in rules:
         for match in rule.regex.finditer(text):
             found.append(make_finding(rule, match, starts))
+            if rule.once_per_doc:
+                break
     return found
 
 
