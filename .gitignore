@@ -16,3 +16,8 @@ desktop.ini
 # Python caches
 __pycache__/
 *.pyc
+
+# corpus: text is never committed, only hashes
+corpus/cache/
+corpus/build.local.json
+corpus/sources.local.json
