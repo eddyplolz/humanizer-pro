@@ -52,11 +52,19 @@ MANIFEST_SCHEMA = "humanizer-corpus-manifest.v1"
 SOURCES_SCHEMA = "humanizer-corpus-sources.v1"
 CUTOFF = "2022-11-01"
 CUTOFF_EPOCH = 1667260800  # 2022-11-01T00:00:00Z
-MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150}
+MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200}
 BBCODE_STRIP_VERSION = "bbcode-strip.v1"
 WIKITEXT_STRIP_VERSION = "wikitext-strip.v1"
 USER_AGENT = "humanizer-pro-corpus/1.0"
-ID_PREFIX = {"forum-post": "forum", "wiki-revision": "wiki", "public-domain": "pd"}
+ID_PREFIX = {
+    "forum-post": "forum",
+    "wiki-revision": "wiki",
+    "public-domain": "pd",
+    "news-page": "news",
+    "gutenberg-work": "guten",
+}
+# Kinds whose sources are public-domain pointers and may publish in the manifest.
+PUBLIC_SOURCE_KINDS = ("public-domain", "news-page", "gutenberg-work")
 
 
 # ---------------------------------------------------------------- utilities
@@ -80,7 +88,9 @@ def save_manifest(manifest: dict) -> None:
     manifest["entries"].sort(key=lambda entry: entry["id"])
     CORPUS_DIR.mkdir(exist_ok=True)
     MANIFEST_PATH.write_text(
-        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
 
 
@@ -93,13 +103,15 @@ def load_local_sources() -> dict:
 def save_local_sources(sources: dict) -> None:
     CORPUS_DIR.mkdir(exist_ok=True)
     LOCAL_SOURCES_PATH.write_text(
-        json.dumps(sources, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        json.dumps(sources, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
 
 
 def write_cache(entry_id: str, text: str) -> None:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    (CACHE_DIR / f"{entry_id}.txt").write_text(text, encoding="utf-8")
+    (CACHE_DIR / f"{entry_id}.txt").write_text(text, encoding="utf-8", newline="\n")
 
 
 def load_local_config() -> dict:
@@ -145,8 +157,8 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
             "sha256": digest,
             **public_fields,
         }
-        if kind == "public-domain":
-            entry["source"] = source  # in-repo pointer; reveals nothing
+        if kind in PUBLIC_SOURCE_KINDS:
+            entry["source"] = source  # public-domain pointer; reveals nothing personal
         else:
             local["sources"][entry_id] = source
         entries.append(entry)
@@ -420,6 +432,221 @@ def build_pd(_args: argparse.Namespace) -> int:
     return 0
 
 
+# -------------------------------------------------------------- news build
+
+
+IA_SEARCH = "https://archive.org/advancedsearch.php"
+IA_QUERY = "collection:(newspapers) AND year:[1900 TO 1922] AND format:(DjVuTXT)"
+NEWS_DATE1, NEWS_DATE2 = "1900", "1922"  # comfortably public domain
+NEWS_CHUNK_WORDS = 600
+NEWS_CHUNK_MIN, NEWS_CHUNK_MAX = 200, 1200
+NEWS_CHUNKS_PER_ISSUE = 3
+NEWS_MIN_ALPHA_RATIO = 0.72
+NEWS_MIN_THE_RATIO = 0.02  # crude English check: "the" frequency
+OCR_CLEAN_VERSION = "ocr-chunk.v1"
+
+
+def api_get_with_retry(url: str, params: dict, sleep: float, attempts: int = 5) -> dict:
+    """loc.gov JSON with backoff: the API 503s hard on bursts, for minutes."""
+    for attempt in range(1, attempts + 1):
+        try:
+            return api_get(url, params, sleep)
+        except urllib.error.HTTPError as error:
+            if error.code in (429, 503) and attempt < attempts:
+                wait = 90 * attempt
+                print(f"rate-limited ({error.code}); backing off {wait}s", flush=True)
+                time.sleep(wait)
+                continue
+            raise
+    raise RuntimeError("unreachable")
+
+
+def ocr_clean(text: str) -> str:
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def alpha_ratio(text: str) -> float:
+    tokens = text.split()
+    if not tokens:
+        return 0.0
+    alpha = sum(1 for token in tokens if re.fullmatch(r"[A-Za-z''-]+[.,;:!?\"')]*", token))
+    return alpha / len(tokens)
+
+
+def english_ratio(text: str) -> float:
+    tokens = text.lower().split()
+    if not tokens:
+        return 0.0
+    return tokens.count("the") / len(tokens)
+
+
+def news_chunks(raw: str) -> list[str]:
+    text = ocr_clean(raw)
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    chunks, current, current_words = [], [], 0
+    for paragraph in paragraphs:
+        current.append(paragraph)
+        current_words += word_count(paragraph)
+        if current_words >= NEWS_CHUNK_WORDS:
+            chunks.append("\n\n".join(current))
+            current, current_words = [], 0
+    if current and current_words >= NEWS_CHUNK_MIN:
+        chunks.append("\n\n".join(current))
+    return chunks
+
+
+def build_news(args: argparse.Namespace) -> int:
+    """Build the news pool from Internet Archive newspaper issues (1900-1922).
+
+    Whole public-domain issues are downloaded as OCR text, chunked into
+    ~600-word documents, and gated per chunk: word band, alphabetic-token
+    ratio (OCR quality), and a crude English check. At most a few chunks are
+    kept per issue so the pool spans many papers. Every drop is counted aloud;
+    RESULTS.md states the OCR caveat next to the numbers.
+    """
+    # Do not route through api_get: it appends format=json, which IA's search
+    # reads as a *metadata filter* (format:"json") and returns zero results.
+    search_url = IA_SEARCH + "?" + urllib.parse.urlencode(
+        {
+            "q": IA_QUERY,
+            "fl[]": "identifier",
+            "rows": str(args.issues),
+            "page": "1",
+            "output": "json",
+        }
+    )
+    payload = json.loads(fetch_text(search_url, args.sleep))
+    identifiers = [
+        doc["identifier"] for doc in payload.get("response", {}).get("docs", [])
+    ]
+    print(f"news: {len(identifiers)} candidate issues from Internet Archive", flush=True)
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped = Counter()
+    issues_used = 0
+    for ident in identifiers:
+        if len(pairs) >= args.target:
+            break
+        url = f"https://archive.org/download/{ident}/{ident}_djvu.txt"
+        try:
+            raw = fetch_text(url, args.sleep)
+        except (urllib.error.HTTPError, urllib.error.URLError):
+            dropped["download-failed"] += 1
+            continue
+        kept_this_issue = 0
+        # Skip the first chunk (masthead/OCR header noise) when others exist.
+        chunks = news_chunks(raw)
+        for index, chunk in enumerate(chunks[1:] or chunks, start=1):
+            if len(pairs) >= args.target or kept_this_issue >= NEWS_CHUNKS_PER_ISSUE:
+                break
+            words = word_count(chunk)
+            if not (NEWS_CHUNK_MIN <= words <= NEWS_CHUNK_MAX):
+                dropped["word-band"] += 1
+                continue
+            if alpha_ratio(chunk) < NEWS_MIN_ALPHA_RATIO:
+                dropped["ocr-quality"] += 1
+                continue
+            if english_ratio(chunk) < NEWS_MIN_THE_RATIO:
+                dropped["not-english"] += 1
+                continue
+            pairs.append(
+                (
+                    {
+                        "register": "news",
+                        "author": "public-domain",
+                        "date": f"{NEWS_DATE1}-{NEWS_DATE2}",
+                        "extraction": OCR_CLEAN_VERSION,
+                    },
+                    chunk,
+                    {
+                        "url": f"https://archive.org/details/{ident}",
+                        "ia_identifier": ident,
+                        "chunk": index,
+                    },
+                )
+            )
+            kept_this_issue += 1
+        issues_used += 1 if kept_this_issue else 0
+    entries = save_pool("news-page", pairs)
+    print(
+        f"news: {len(entries)} chunks cached from {issues_used} issues "
+        f"(target {args.target}); drops: {dict(dropped)}"
+    )
+    return 0
+
+
+# ------------------------------------------------------ gutenberg essays
+
+
+GUTENBERG_WORKS = [
+    # (gutenberg id, short name) — all authors died before 1923; public domain.
+    (2944, "emerson-essays-first-series"),
+    (205, "thoreau-walden"),
+    (3250, "twain-how-to-tell-a-story"),
+]
+GUTENBERG_URL = "https://www.gutenberg.org/cache/epub/{gid}/pg{gid}.txt"
+START_MARKER_RE = re.compile(r"\*\*\* ?START OF.*?\*\*\*", re.S)
+END_MARKER_RE = re.compile(r"\*\*\* ?END OF.*", re.S)
+
+
+def fetch_text(url: str, sleep: float) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=120) as response:
+        raw = response.read().decode("utf-8", errors="replace")
+    time.sleep(sleep)
+    # Normalize newlines so cached bytes hash identically across platforms.
+    return raw.replace("\r\n", "\n").replace("\r", "\n")
+
+
+def gutenberg_chunks(raw: str) -> list[str]:
+    body = START_MARKER_RE.split(raw, maxsplit=1)[-1]
+    body = END_MARKER_RE.sub("", body)
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
+    chunks, current, current_words = [], [], 0
+    for paragraph in paragraphs:
+        current.append(paragraph)
+        current_words += word_count(paragraph)
+        if current_words >= PD_CHUNK_WORDS:
+            chunks.append("\n\n".join(current))
+            current, current_words = [], 0
+    if current and current_words >= MIN_WORDS["essay"]:
+        chunks.append("\n\n".join(current))
+    return chunks
+
+
+def build_essays(args: argparse.Namespace) -> int:
+    """Chunk public-domain Gutenberg essay-register works (beyond Strunk)."""
+    pairs: list[tuple[dict, str, dict]] = []
+    for gid, name in GUTENBERG_WORKS:
+        url = GUTENBERG_URL.format(gid=gid)
+        raw = fetch_text(url, args.sleep)
+        chunks = gutenberg_chunks(raw)
+        for index, chunk in enumerate(chunks, start=1):
+            pairs.append(
+                (
+                    {
+                        "register": "essay",
+                        "author": "public-domain",
+                        "date": "pre-1923",
+                        "extraction": "chunk.v1",
+                    },
+                    chunk,
+                    {
+                        "work": name,
+                        "gutenberg_id": gid,
+                        "url": url,
+                        "chunk": index,
+                        "chunk_words": PD_CHUNK_WORDS,
+                    },
+                )
+            )
+        print(f"gutenberg: {name} -> {len(chunks)} chunks")
+    entries = save_pool("gutenberg-work", pairs)
+    print(f"gutenberg: {len(entries)} chunks cached from {len(GUTENBERG_WORKS)} works")
+    return 0
+
+
 # ---------------------------------------------------------- fetch / verify
 
 
@@ -516,6 +743,20 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pd = sub.add_parser("build-pd", help="chunk the in-repo Strunk text")
     p_pd.set_defaults(func=build_pd)
+
+    p_news = sub.add_parser(
+        "build-news", help="fetch public-domain newspaper text (Internet Archive)"
+    )
+    p_news.add_argument("--target", type=int, default=150)
+    p_news.add_argument("--issues", type=int, default=120)
+    p_news.add_argument("--sleep", type=float, default=1.5)
+    p_news.set_defaults(func=build_news)
+
+    p_essays = sub.add_parser(
+        "build-essays", help="chunk public-domain Gutenberg essay works"
+    )
+    p_essays.add_argument("--sleep", type=float, default=1.0)
+    p_essays.set_defaults(func=build_essays)
 
     p_fetch = sub.add_parser("fetch", help="repopulate cache from the manifest")
     p_fetch.add_argument("--sleep", type=float, default=1.0)
