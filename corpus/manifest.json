@@ -13915,6 +13915,6306 @@
     },
     {
       "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0049844dc9a3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0049844dc9a3acac0c9ae0a5eb600b3c8702071475bfdd8bb038cc16de30a6eb",
+      "source": {
+        "chunk": 4,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-00acfcac3fbf",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "00acfcac3fbf83338cb76a6c3fe1cf0a8a4fa010613aadca7361c5f2e84154e9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0136ff5d66c0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0136ff5d66c0cdcac0001de347917d160d4a13600d3fc4257e5bafd8c70d6ea0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0349674c7ad2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0349674c7ad2643440979eae720adfb16f3aae60390e53c8cf414961f1b1ccaf",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0377ea805729",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0377ea805729ffbd60c87edd044480dc1d258f6bd045526517285770280dcbc0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-048cc3418aab",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "048cc3418aab3373b7eee4292ac688ca43cce6dafc577451c80cb2cafaead4e3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-04df434dd54e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "04df434dd54ee7b8c3fcc532ebfc039b6e6dec2732f8092c85cad6c9f7be9305",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-04f9864bc253",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "04f9864bc253c6baffc510d4e7cdb1dcaad7b710655ad4b3925a66ff649e5317",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-04ffeff46fb5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "04ffeff46fb561fcf03d924ff805c7d436b83ee4365cdabeadfa5b59b5246803",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-061516e51b37",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "061516e51b3712e7993d184aae365fe1f5bdaa991e9ecc6ea5c9aa8f64f063ed",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-06209b2c611b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "06209b2c611bc8b86d80e5395a5b77aeb091df2361c2f2733ff0df499babc79d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-064d4138262a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "064d4138262a2e36c16a8a23fa23bd5191461264bca4f837659a0057c4219668",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-06bade75f1a2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "06bade75f1a2e7e33ade9f755013839dc50e22b3fcc2affba76cbdf500868577",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-075b933509fd",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "075b933509fd53e43790369c11d6930f5055024c48d3475708b1f2913266daa3",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0870f2feaeb5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0870f2feaeb53512315c48c74fd5a2e4b216bc8af7217255259bb4d47cceecd9",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-08da859714f2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "08da859714f21553d07642c561399d2b441bb41ea9b27212b994e190eeb90423",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-08f9744032a3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "08f9744032a3bb48c77a8e78c178de1a68128d09d62fde18af751ca993a4fda7",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 513
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-094c288917ab",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "094c288917abed4001005c78b87621fa1b62a341cf4f8f65d18a77f0e4557007",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 453
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0a501a5de1a5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0a501a5de1a54f4766aeccc51b1471505843e4f16a63210244701af8cae66010",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0a581d5456d9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0a581d5456d9390d456c0b9143fc2a5d7d5d1aeb068abcbc499a23fcaef2235b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 311
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0d8375a9310b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0d8375a9310ba8f37de586d41715ce57c8011f6cf97e4802ed9d0b61b5b9b467",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0df0f5b167c7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0df0f5b167c7a4d162bf7fb1c52fb03da9d5315670aaf0af07384b488e1fc130",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0e3d1e7455bf",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0e3d1e7455bf2be4c427c54fda3c2343fb6758876bd5f5c8b4826d822d967576",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0e52f1c7cd92",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0e52f1c7cd925da12d6bb254dbc5c33106480f971d615efa624d43c039ec0e0c",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0eaffca5dc35",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0eaffca5dc35011ba33f21693b42b95757106dd03c8a9a4f80ead03e73b5fca7",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0f4229f07759",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0f4229f077597de222887b82007a44fc8b7b3d4f4e923ded0a187bd4220462aa",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0f6fc5aaa750",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0f6fc5aaa750836629e965a69e9a85aeabc53f98a518800c1b062ded9f290726",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0f7b76ad9d88",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0f7b76ad9d88fac6080ba4feca52e7e28601f556c9085fe508a06e079c2fc6c7",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-0f7bd7874bff",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "0f7bd7874bff393e54b273f4b0ca53add2e7bb8c9b1008a11a162e60fbd8a835",
+      "source": {
+        "chunk": 4,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 490
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-105a0dce77ab",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "105a0dce77ab3fd05a70cd82f14bffa6893fef755e30be63c6f376f8a688b8e2",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-106b9be37494",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "106b9be374941930c2206e6e96844f73bcba75831f65c9805b5551fff62edf4b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-115d215fb2c1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "115d215fb2c19e5fd74759d17e542d802b36b51c2cd6523380b2b5dd6cc3757f",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-11c0c4ca458f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "11c0c4ca458fb33ddd52df9785cd7341f221257cf270c71651dbc31bea5e559e",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1226b6fcd89d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1226b6fcd89d7d8b43310d24f6dd670c63e69d7ef75d19b21ff1fe905c6a8c81",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-13d1ef1f2675",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "13d1ef1f2675b8f0c38e13d0527c2ed43cd95730f15eb3c31db42bd8840b97d1",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1480ab5257b8",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1480ab5257b879ba114471978d22525c2c1f2e6060d4940cc98451167b304b2f",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-150c5a64e03b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "150c5a64e03b40e9210b34cee6a86e17b1a7ccfcdd0fd653f4d54d3afa73ad42",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-15cc544a8cb4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "15cc544a8cb410bd846dd8b802b89ba9c5b6753cac8e99f0294bc0d58fe1a917",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1798497cc0c4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1798497cc0c4cef43a95c1d66473c8eb394c8294c193f071e6164dcb77f347d7",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-188b1ee05738",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "188b1ee0573856c87afdea22e0f7a5f804a015e7a993acc4abde1479f0ccac17",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-192b2f2e8b65",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "192b2f2e8b65cb17ecb4df8650c35900414e31e10158c564e003ed9a54676b4c",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-196dd142cb23",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "196dd142cb23f99e3ab4f55673987d61751e5c710dc865af7f370fd63f4006e6",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1a17e23d6447",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1a17e23d6447cd1e561c6a583ee12a1ecbd7344b4ce2de743b81929c2ff18e8e",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1b589db3a555",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1b589db3a5552f2d7392192e125ad7e9a0b949723c794858ad95a5337b1f6270",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1c419b6a57ee",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1c419b6a57eef2dbb7db71295a05ecf0d94d57fcf56043c328abcffa389930fe",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1c7242679224",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1c72426792240cd63a6d03c6bc32951d2c49acbc9e3cc1a329f6092f5e703a43",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1c9ee73a63b0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1c9ee73a63b02fe7f644f7e5113eef5acaea74e3647e2b205ffb3c222ec0eded",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1e01e8c9cacb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1e01e8c9cacb9ce076e6222d23375bf3cdd5c1e69ec4df6c3f1e21657e589f9e",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1e19328aec42",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1e19328aec42a7ee9e3c130fe8cdb5c26fea9c0cc94b8738ba713dad08281545",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-15",
+        "file_name": "sn90051081/1909/05/15/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1ec8eef71c18",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1ec8eef71c186a54d27bde162cdac1e831f6e07032849288cb93282fecc19b85",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-1f0e92e15856",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "1f0e92e15856598a5f00482b7ec157d420163e7e2e46be59276ed67e9a31e50e",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-207ed53344d5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "207ed53344d599bcc2b01cc06bd68360472919e993c1c82153a9170a78b6592f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-20a170f8e5fb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "20a170f8e5fb6abd969507e277cba6a55525a59e3dfb60bea484a71bf86725a2",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-20df5998be67",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "20df5998be670abeff6e2d293f0a4601792aeb7780971fe8a20f674239a4819b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-21660de0e843",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "21660de0e84337b7be1dfa5b45d8b4c3d588c0e58be4735410ec5de7f3aeedcb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-224055884514",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "224055884514566925879464c29187bddb15bf5a4d74a215da67e96dcda085c5",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-24ab57736a37",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "24ab57736a37961dc97fc870bb37d50975460773eb7a0bb881a4ae5e6631b509",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-24be6a552583",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "24be6a5525834e8f23457e7c406b370761ff1a837c5d1e0b6413ae913f3bd7d1",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-251cfcf6b722",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "251cfcf6b722575d59831c2c27958e34f41c36edd019ff22cc97767145bcb03c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-25409ca9d3e4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "25409ca9d3e4ad8a86947d79c346e0c1ce0de5f2944d2dddf551576bb7e71848",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-25b74c9697ca",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "25b74c9697cad06e203c8e0c7d1c80d59d7e27403a4808875f5f6e21ce560bb6",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-25bb76365c55",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "25bb76365c55e0233001a17e158162a5bd6066efc56b0bdde60a10c4a2647303",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-25e8ffd86085",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "25e8ffd86085a891a78a0db834c1eccce383ab3d1709be56e8d7aebc0b7a6a60",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-267286cf9fff",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "267286cf9ffff867884716f08390ab8179d1a9e68cd8a8244333945357f03a11",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-276fbc0c52f6",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "276fbc0c52f6bdb053ef895e952d7105bd1a24d1b0afd2c53229d3954e3d2330",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2871c4130760",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2871c41307600987a56bc224dc1fa2ad8f3251f56ca465b3331a4edea430a712",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-28afcbbd77dd",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "28afcbbd77dd7ed1b50e07f6f8bb5afb47253a992f9f0fb4e5227c165652ea16",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-299c636ee6e0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "299c636ee6e0d6ef454120112cf3e5d98b0c68a5a80d21eef4e8cddbfb97a635",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-29db19471b82",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "29db19471b824423506c17dadb16be87c64bffc287e617fd9ca798b49c565697",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2b8d7d5d6a3b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2b8d7d5d6a3b882b92e1aad9256f9dae4ece3b50d24804a50911e34aa7960faa",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2bfec6ff9486",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2bfec6ff9486c901bc1c8690f410de90c861146dac0c184504a0098864b049cb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2c8ab70a353c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2c8ab70a353cdb6576a7b2f61ca36ceb84aaf030f0eeb8f21af0f1b6215ee5e3",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2dae07546990",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2dae075469901bc27dff84e1a184df2ffb450acc3db727dfc48f1f466aacf6f2",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 611
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2e53fa29c1d7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2e53fa29c1d710c33516844b7121b323470440581516aae7b9688fe3846d84f8",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2e92872f2964",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2e92872f2964af91981918bb204c7893374a974d7198972a58f6c12aae8989b6",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2ec304df526a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2ec304df526a1fc9636551610ea3605db0892d939467d3fff65aa5edae09e007",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2f7810f114bf",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2f7810f114bf45989efed9d00ca9b51645295099f2270167eb51953f73a1b3ac",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-2fd6bf5368fa",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "2fd6bf5368fa30485cf4ebfdf0df711ca104e80a88cc91948165d62d5151e686",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-30ed38ff2f38",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "30ed38ff2f38dc5a8fe3e8d579b6640695e51afdbaa4ce71897840c1a1ba7d76",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-31bb52cd8951",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "31bb52cd8951bbf04f07d17a4477a588bcc54f0b26fd71915039733b5d91753d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-32375e871919",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "32375e87191970da74646a723eb0c1bd5103642485d169d82a96287411b2f681",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 354
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-324b69d47148",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "324b69d47148efe46c63b55a8453bf118c8d5ce6c37d790c6b32c018dab98a9e",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-32824a528a89",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "32824a528a8990e55fe643ac1c26a09cbaa4e771cb1b1c66ec2dc23d7f5b325d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3282a12e70db",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3282a12e70dbb46af4900c3b80603578c4d911447b9cff2c1a4100350ca6b6d2",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-33aa8e111702",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "33aa8e1117027c297514d5f1174fe0f8dfd12cb7acdd670e34840645da63ad78",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-34989389f3a3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "34989389f3a3103ffeba1180c6c1f41fb99c32decd4e4e7f8ff01ca0b38c7960",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3526bb7ad83a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3526bb7ad83ab504f9bf8de2dd280a66eea3bc134ab7482fa2175ceb4786b599",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-35ae7f9243a2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "35ae7f9243a276716cda55b3c06143f0f53e2dd8fea55d4e746d42843886c2f4",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-35ff1f14a57c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "35ff1f14a57c6ac7326b5c63c638e8ce9f401ae6e3c19735b25450628c2bbfcd",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-37798d330fde",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "37798d330fde63125acd475d7affed208e95f444ed85a2bcbd61709f96fa38b7",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 235
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-389411a471b7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "389411a471b78ef530473163f87d86217b3b2639fd9347bdd8273eb9bdbb4187",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-396ff2b16558",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "396ff2b16558bb147d4fd047ef473f52a0f7c5061a7746f90d9c32f586dc8a1a",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-39bd929c3dbb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "39bd929c3dbb0e033a5be77f34f8ac5af064ad2b0cc2464f544129584affc76b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3b3aac6733d4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3b3aac6733d4d068b4fd8bb095e33ecd40331e164979348dd83db97bda6f6908",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3c3de35d1296",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3c3de35d1296d472da29aeb761279243552b32e814bcdee32555bf9f73aaf6a4",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3c9832c11cad",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3c9832c11cad9c35075af15e60adde2b9f9f5b41cc0487fd46b83626916f0124",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-3e70df472b7c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "3e70df472b7cb4995decb3800d670e848c133359c74dceb4353503b0561c01e1",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-405e85955e4b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "405e85955e4b4ee6774d72c9589d11e9b94246f084a480001fd07ab311aa162a",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-421a7ccbca85",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "421a7ccbca8546738bb5e8c952cb01a6afc0d7b97d644aa81b03bb765f7b0975",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-431774177db6",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "431774177db6fe07ef24016d29813ab8f891743759e23e5abeb61ed16eeffc93",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-441d39017490",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "441d390174906a6a43bd3293952a3cdc355b3246c3dfb18a7c2e4b8797f9e5ec",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 609
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4471107e341d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4471107e341dbc48a60b87816f243a71ac06979dcd9fe647a29c6e2886fd2fce",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-448891fedca0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "448891fedca018e04af743856fbd8243ff1a1d1e4ea027ec1010330b20a787a5",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 612
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-44c05e0f4dc2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "44c05e0f4dc2501b74187c81eb00c1f61233af98131c9771820e6a179b7fcecc",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4568f693b5c3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4568f693b5c375d119ed5268ee98a4aaa99774fc782fd3cce7ac689b8209d1f9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-45a58397ebf2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "45a58397ebf2c00a8c6fdd830151b8ec25b106c232687568eab0f172ee013f7c",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-45c1b37c2498",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "45c1b37c24983af3374c5c77b164ab5060ac0c36d907fdebd233f59b45bd136f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-4/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-45e2466b5632",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "45e2466b56325c75f90ef96cbe3fcc6e38f02a9184f439ed12f4b6ef3df89b69",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-45e60fcff731",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "45e60fcff7316e51d6b94ba916970097b9e5130c7d7de83abb22916bdff0dbec",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-45ed2505ea4b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "45ed2505ea4b936345eaf4955a392a46a3db73c0380bf60bc47f48f9b57c2cea",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-46f7b676cd16",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "46f7b676cd167d78ad0d5cac3fc6c8167c80a1d77a2470a7ef9506acdf2560f8",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-46feb6f9a10c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "46feb6f9a10c5efa73fa69d3a21d48b0f3ddd6772204927043122b8854c2d1d1",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-47740678d18d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "47740678d18d17f68a02054bf6a1b04837fe1127bc306ae1a6135f9787e4dddf",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4a8732b960ff",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4a8732b960ff4bdf64217f71763a1cd16f77fcf39a8b3f59753472539b5af904",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4b23cdb9317b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4b23cdb9317bb43fcee55a87aa9b91ddfe033f78dbaa81db5ac9d91cbb6606fe",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4bb8423317c1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4bb8423317c146a38032696195497f6ec3e0e3cbb95362e85da1a844e73e7d27",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4f7ddeecde63",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4f7ddeecde6369a7c769ac121d04886ca826ab17fe9bbcb4cc38cb2d93d9718c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-4f8d98a7a195",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "4f8d98a7a195819ca0d5043e3b17c6a530a5543479a6f5cc55e4873319e6ee9b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-50868f53dbd3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "50868f53dbd35661109567cfdb06202641a9251eb4d63d69343ea19ae52ce378",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5179727de3a9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5179727de3a9fe1c437a99205bf9e20b02e12d2c81a0b490a5f98dd099576599",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-51bb5af442e7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "51bb5af442e799bd17bf277428f76b6ba71649e6e1387859fcd4055fc3049078",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-6/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-53d0d47c60c3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "53d0d47c60c3f87eab26196e2ec63fb5b26fdf6d0b222b0bb0b74e91202d97d8",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-53e8dfb4760b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "53e8dfb4760b3fdc62d5e1a97abb0bbc1507e1c6f5191ee46d39563291abee62",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-53f5e35161de",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "53f5e35161de63ab39ace45f3a81883ecfe075283da60ac660845f2566cf5bd4",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-6/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5443262282fa",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5443262282facef41834a1518aeaf39231f5b1bf80d81591dac497e56c837439",
+      "source": {
+        "chunk": 6,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 608
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-552e9860900c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "552e9860900cb1f58e6261e05354d75e7927c24bc82ab64c5bd6c781ec41a766",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 1069
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-57eac9176f14",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "57eac9176f1420cc45f2f1701895879623eb5ef9a77e6762a4d1ce61606bdd9c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 1131
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-58435d660eb0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "58435d660eb0535490a3741fb97386fa761d23b739c9d8bf3f5db12c2cdbd17e",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5854c4775765",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5854c4775765be268a2ad919feb360f81ce8cdeb3e8dd3cbd6406f104c3c58d3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5870ca717a55",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5870ca717a557c1a786da2bc64474730b0aa8291fa1fbc12b684df26fef64292",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-58ee3596b4d3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "58ee3596b4d322d0204b4171376b095808a24f2799a57847b678e50b215e1f24",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5a86ce332f74",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5a86ce332f742fadce97346f01e33ee7cd98ffc8787fb331a237d55cc638a547",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5a86fe5e3bb7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5a86fe5e3bb7ba8ab2b2f151cdcf7f52e35f11e9860397428632f4048fa3dfcd",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5a87bdc3ee7b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5a87bdc3ee7b7ea6323e57d03cb3bb2482944f17aca2ab83ce2b3e8589a332ef",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5c94a2a0999a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5c94a2a0999acbc052face1f379d97243516660d514ec9a649f8227ff429480c",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 400
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-5f83500a95f3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "5f83500a95f30d4224259c874150ebc406dbf70800b6cb5eb649da7d444c4728",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-609e565f7329",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "609e565f73290cef6782886e498e9cb96e4f9aacb6f7420662ad11b38cc53b01",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 613
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6131c43d5179",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6131c43d517917872e3bb2cced95e4bd4d7e7c2bbea3b2f2d6759f9e1a0e5d25",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-617c52d040d1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "617c52d040d18eb2ce25d607d47732a5f03d16a146d95c89ff4d96e7b2801476",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-62a2566ab1fe",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "62a2566ab1fe59753a23676729c3313c5d703b0cdc7243e6f883b2bbc179b739",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-642f5699dfc3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "642f5699dfc3a4f2c3d959e4cf1ffafd0a24541df73b28aff498c109a4277516",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-65813e890be2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "65813e890be29496285c454c2ed8b0ac6a92a59e860bbd044efc3dfb62d25514",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6593953b771e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6593953b771ea00bdd9ee160ae56030a793b736942292f73f3b0b6adfebb2d44",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-668cb51b0708",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "668cb51b070864cfbfadbd46a5c6301530592fb9868c9f3803e19696c3bffc92",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 608
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-66b8f1ce546d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "66b8f1ce546dfa6abd1e0ac63d8313ff9e4f2414634ea354896f268cadc4505d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-67f6b2fbf363",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "67f6b2fbf3635c055e188642197200535ae2392c88880e2542a16a3ebdd0b859",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6890f562cf3f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6890f562cf3fd4b04ed69af39f70e5a2c8dfe935fde9069edbd105f843374597",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-68f665e900ed",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "68f665e900ed5daca094c7735e8f9ea5b58f38d50d72081716252e64e81a0321",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6a05e8e82cdb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6a05e8e82cdb9a4a1b46831d26014444d948865eee52a357483d610ef42124f7",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6b7146db0306",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6b7146db0306375cd57592bdfe1ac1166379360f1b9c70c479c3f932f7a8ee1e",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6d5ac9828571",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6d5ac98285718f72400e038241e82b190c8b1c72194d809ed659d30c57032a6e",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6d8bde49d510",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6d8bde49d510ed8c4532b97c9bea58e8a67dc9fb121b626c2f747b777643654b",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 421
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6dcadf6bf170",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6dcadf6bf170b64b7287c0bda78dd638b5fa55b543240f454b22656f88ee8938",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-6e8758a982db",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "6e8758a982db1081cf16e18358cc44a86d6eba48aa7513f403cd2a0e594480fb",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7043fc5913f5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7043fc5913f5b5d2e33552da7225bb348b1b10bdd6759c5137b282c84cb814bf",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-704463fc0eb3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "704463fc0eb3c8ebe681eaa819ab3568019bb1c0833e1c2d007d09f80314beed",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-71d349b85a50",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "71d349b85a50ca4bbfe4879ac06c0421c7e025bfaf2769293934f4b27fd39699",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-723cea391bac",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "723cea391bac6a88378a7082e013554b5b2eaf0194f449d54aab373a8b21e70a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7244f337e86b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7244f337e86b6f44782cda18507501053a4fc6ab5c6742b440bb7db9244b96ce",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7254734087fb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7254734087fbdf771d4cb1c3e6068575bd19f0ab997f605f3c7938616b465235",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-72cdc4d106d0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "72cdc4d106d0882dd88624580cb457b217685cb4c62a47991148eb8a525bbd03",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-741d799a0bc7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "741d799a0bc709e04b24509811052f4d662b148af57e0e36e24b5a0c689023fa",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-747e108b6c5c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "747e108b6c5c20bff95019d541bf58924a9eb0eb0d18f260373a9d04ce384051",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7523bd95aa87",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7523bd95aa870da785276b9b469eb94903e0105bf2df4987ca55cdba199826c0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 577
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-75ba019ea6b0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "75ba019ea6b0a9cf4cc7d15a6619bd0e31f7bc728185c5f1c1b596c042f969cd",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7640b6bd31a4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7640b6bd31a44261f95660c6287593994a0468f9e5a4fc2472fcf7e0eff694ff",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-765ef40a3fa7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "765ef40a3fa74057ce3a13fd40202d491a635efad5a9aadba3f72e5dc7855427",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-77f4fb423036",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "77f4fb423036bb7eee785ab7998aed1329fe739aeca160becab855548e2a59a7",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-781184a03cbf",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "781184a03cbfe15af4abb55d6a9db3d043f7762ad85b74b357921aff50d5dbb7",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7ad08751cd01",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7ad08751cd01bce43c8e64895aab9ac35b47ca354281fad07cdc55e0a589b0c6",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 608
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7b3e2072c42f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7b3e2072c42fe979cb7bd56c9a5f5cc07b90492df81d1c729050b6127dbf57be",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7bd2633a0d08",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7bd2633a0d080653ee0d4317fee0c030c9bdac45c41ecd87ecb64dd7deba2a8f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7c0fd1416a4e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7c0fd1416a4e85be88ea1b638eec2c074f5e74fb4ddb9196c658148559d5258a",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7da68f969e91",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7da68f969e91170e3df7b4ab11d6038d7de82a5471d2cbc4b5c41ab9524a1985",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-7f61c11d0757",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "7f61c11d0757c754986f092a018917e2350d15a46dc29a1b76e57c3c23b6da4c",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-80e9c8e33d82",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "80e9c8e33d82c5095998860d885faf87fa13e0e88314c9dff5619acf14039324",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-816fe165cb46",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "816fe165cb46c1a55e6436466edd6af93d7baddfd7f285297f40a223d2172a9d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-81ae46d7df50",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "81ae46d7df5092847494f0929d667dc1b52d0f9ee50a3fa955aec7e72e234560",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 368
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-822adb690d23",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "822adb690d23c07b2e63d00ef383b2eca27f28fe75d296001e26931bbfc1df2a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-830eb57b674d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "830eb57b674de2ee911e9f4310cad1cae8f646e43093cf1be899738dbca91cae",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8344357f607e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8344357f607e0deb6427c5eb997ec7665f341921eac8b21a37c8c909da71170b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8366b0c6be3a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8366b0c6be3ae9e50535b5c00b063949528584d22a0022ea819b5c9a116d714f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-83caf4186d16",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "83caf4186d163802cfc5a52b2b58ce7dc252b478da0ce4ebae51c13a25f3f10a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-843e134757e2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "843e134757e241d96c9f53668a70160523f3224165787d482b9243fe510191cb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-84a307209fa0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "84a307209fa020b4b012b08bf8a298992288213a63137268563f9b3017ebc4f8",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-85412ddad97e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "85412ddad97ee37164cd13c3fb277a961fdd11036eccbc0ad07eade6026740f9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-88daff52578c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "88daff52578cc9d88d7ad300afe44ba28063336408db18ef1cb93e20b2fe60e3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8945a21b231f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8945a21b231ffb4f78d528b5c4bf9efc3a55fc2318363e90f2620e9aacd34d18",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8bb5c0ea95f5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8bb5c0ea95f59525204becaa3ecbc4b11a774ea03912934519b65ef364835784",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8bd141cc3b5f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8bd141cc3b5faa4b250352a773e545cdae3d5d305f315f21ca7653d0cce92df2",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8c4b49176af2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8c4b49176af277dc8cd06cb788c42b6be20ecd61186fa4ebf227f6933e81d247",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8c815c2a233e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8c815c2a233eee23c8bf05d73f1c0169b7a1516a45bf5c926dbabbc012f1a5ad",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8d1411253f77",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8d1411253f77f6c76b5d6723f2cd923e37ee516efb020c1937be96f9e5b42f49",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-8ed3b073f834",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "8ed3b073f83452685808c3e9804206a4e1ddf5b8299b8f4ee5c8844908a3f359",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-906417750a65",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "906417750a6522c7fcdb6b1db651446855757431dd4376e6a6e5876fc8e97dcd",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9078ebb7b8fd",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9078ebb7b8fd01658ac729dd07c09326e93388f87ed1e168d3e0c85aabaa9b20",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-90b02ee97061",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "90b02ee97061c76eab9029b764e45c3d404095b6e7637e11edcb91b8fb74d019",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9132f7513e25",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9132f7513e2536539ad335095ae362b9ba65748500b40b2577e8e2dc020bdad2",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-92eae3e1d408",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "92eae3e1d408bbe1593a89d15a00c3b34b76e76e9696df7cde89a1547da1258b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-93706b60de1c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "93706b60de1c8f9c798ff867a076724bb2f0c16d53b9e5b858815650ad050287",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-938cc479215a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "938cc479215afdedb2420f3c9061ab9b78b29fcb9f04b1f996d789838763f880",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-93dd903a064d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "93dd903a064d7e011c23c3bb62da2b054bb2d1ff79ff21f6343d4ba8415288cd",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-940a67d150ea",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "940a67d150eafac255d47ecc7b04920adf4e59ec836cd4a516817fbf937aded0",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-95c22df81c02",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "95c22df81c0240977e0db7e0bf248f4deeba26514ce70bdc317af4fec600d8b2",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-95d5404e4d3f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "95d5404e4d3f29f940a495265f84815e67312079452d671992f8b9d08984c19c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-7/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-965dcc289fdb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "965dcc289fdb163a87f8f2c1508c86341684f57e4bbcb7478f8fa8b209e7182f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-96aad93488ae",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "96aad93488ae92c11ad01ea7588a74651787c5a75e1f50f14b7c1d2c6ac1a75f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9788a10358fb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9788a10358fb690b69c876682058cbf90046815a72b86812e34fd07a6f52ebcb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-97d86de5e4db",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "97d86de5e4db8839f3bf44a31ad6dfd31f36384a3acbafd41fed782b4b222581",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-983460aa7319",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "983460aa731980fdec4907bf4d46584103774227d8ba9121f87af453bc10240e",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9852f433119d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9852f433119d60e75364366ea7c8c2b0af778eac4e4d59a7036d351a19c2477d",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-98909d9664e2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "98909d9664e230706001b43f14ff3b790bb70003e2d80761089b8b41cc39c88a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9a50261efdda",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9a50261efdda85299e4b3f7f7a9af91567c6b7e06f4477846d842c9649f322a1",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9b0071ac477a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9b0071ac477a05559936fd3175fa54a44850fab736edefb932d0b286d7f4778a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9b7b2a5a325e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9b7b2a5a325e70642ffd9dba74f3d743ea81c6cec3a52a8f5f2e5a02dd56c12b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9bd324decfb0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9bd324decfb026f0f5fc79c066ed737c695d54c3b699c8d86934f434f231b409",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9c6fe091b7b0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9c6fe091b7b0fd7adb2899a2b08bcf150954c64a96b927dc6ad3f98cdcb8ba89",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9c77902ffc5e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9c77902ffc5e81eefcec84baff600b82a9a3f00570fe0e752bae4b9bf9f821f0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9ca82530629b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9ca82530629b16184cd1f0b9de8f3dd4ade762bad252d6d6987623f0e897ad1f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9cdb533c29f0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9cdb533c29f06584a37be2272d3fcd6de79b7d0ee06ecf08cbf20010908a5c09",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9d958add114a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9d958add114a99f6e49f031ba4c719766724598042000bcaff2c43904dbc845c",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9dd7bbbf9bec",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9dd7bbbf9bec580e38ed9171f907a7f0bc3e4f0656358b9587166f587f152c76",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9e5a74575612",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9e5a745756122306d9dc055e723a8e585ecc2fc340709a71fee0516198393656",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-6/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9eb590ab24a4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9eb590ab24a4ee61f481609cdb075263308a84c390a98ebd6521f03869de0b76",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 355
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9eb63190d97b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9eb63190d97b962c0b2a96a34c0a836ad1f8c8d9a4a7db09f3f679bdfe759681",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-9ec0e012b4c1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "9ec0e012b4c1ad65f4c43a65eb5bf3f9a7b992a733130cb97ab84aa26d980bfd",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a07d7670e8e1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a07d7670e8e118bd43edaf6b203f945ea146afd915d0240a9fb34ddbb04447a8",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a1048b25ed10",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a1048b25ed10c6ce593cb6f1eda96967cdefaffccc7423badf812995e6de1756",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a259088237dc",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a259088237dc912104d685e9420c36b33fce7f949349240281c66c80e307c4d1",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a32d477a022b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a32d477a022b3fa404c79f1023c738c012b5a0e594ba3c053f33dcad5a043f6f",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a4029d78c6c2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a4029d78c6c27210838d7792fba49d8c0c464f33f671279b781ddea40207033c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a4c4fb71eb9f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a4c4fb71eb9f37895977897faa65bc0649d66dc66d7d8e7b5af53ac328d3adce",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a5602487d518",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a5602487d5182f6e7bef41b7091c990ad4a854f21e744b207ef06ddaddd73bc7",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a6b8d93cc818",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a6b8d93cc8183f15a0a8f5ac1f856c72e55c2d95cd945aa19dfd1f86f5b95292",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a7363f323dc8",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a7363f323dc8ceab676b8b805d3446bb3c550516951158a6bf5273e787aa8bf8",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a7b463f31458",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a7b463f31458b151c8f9712895ea92558735ac805f8209d06dff9be5664e9b68",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-a7d1481e922e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "a7d1481e922e88236ad66ed7fce0903150ea9d058754833ed835a2bce7fe08c0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-aaefe42b3fd9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "aaefe42b3fd9afa534db934169d2879cf8c7759d04e7568751b5e4bd74f6e718",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ab934ca61cf5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ab934ca61cf504e446a44bad6002263c2f442c319daabcf4dff6ec3142f6980b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-abcc37032ef1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "abcc37032ef1d9c2f5e9978eec05a90736f28194f3f627e1e82a213d1c8d70cb",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-abfaa488e732",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "abfaa488e732c1ae3fac3b7f1c18e5bdcaa80267a6db189c9929fbe8c73dd53a",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ac199ec7c269",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ac199ec7c2691ae2d3dec8d3c5d1abdf81373070fadaf08ee19c0dd7d7229d59",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ada7c2aea128",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ada7c2aea128e7e5c0fc1a78f91db0ecac5dd419953f4c288baac6dada15dcaf",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ae08cb97503e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ae08cb97503ecd1a29e472ed19679674f9aaf8f1166683dbe8211e182a22cd6f",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 612
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ae3a6f2fa819",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ae3a6f2fa81906535ecd18ba2fefe4725fed498d9f410623585e49440265321a",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b07254d01aab",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b07254d01aab0092e50195a81b37107c350cd036b552ca77a7481746e7ae68cc",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b0b0d9e96123",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b0b0d9e9612378b16e1f5c1298414484aa3fe66c195e6ff21629c5ce9be212f1",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b0ee58797fb3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b0ee58797fb34663cd1146734eb0bafe9916d267625de6f98a1b8a3490bb8245",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b0f88b8d64cd",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b0f88b8d64cd56c7625faa54ee33a90159c4e343d1fa1995a0eb59dbcedb7aed",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b15d59481d27",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b15d59481d271df66ad1eadb9b6d6016dbc006eef2df136d96bf1ec3fafa948b",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b263f67915b4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b263f67915b404e366ef154c4995f4f67d53581d565eea8be78a373d410e879e",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b2692f1e0bb3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b2692f1e0bb32f71ae3b36875908a1f183664eac383fc1bf827db49c95a7d21b",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b36510fc0ef3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b36510fc0ef3bc9af4fc5b75d7fc42471db5fca3937f48abc75c4e20416e6a1c",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b36f0a52379b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b36f0a52379bb45e4a4c72dd2d3bf6747171af73e11c4d66e4a11dbfd53d09fb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b39a1afcf5e0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b39a1afcf5e0b35b4cdb44c7961be579725f59b9eeeb8b0e9ee211bbfc93834c",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 404
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b485bc6af933",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b485bc6af9332f8bd64e6a70c8acfcd463393a5f9af315934baa5a5b0a96d944",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b4af34fbfbcb",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b4af34fbfbcbe5bbb3b7fd8f1e1494b886291bb052ca1e896ddecb2d07c2c577",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b4af6b3cbaa0",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b4af6b3cbaa0b6ac1ab38db8465747100571f1b5aaacf222fa00d9138ebcf658",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b56dc0a20494",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b56dc0a20494d13926428fb9c47c3fbd1ea3b9957c14e0a24bb48e47464f5473",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b663e3f35fd9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b663e3f35fd99473f9a4ea91c47746cd15c6433602b24789ca54353693aadaf9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b6e697248512",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b6e69724851258631100aeee15b0ab4d5a6b90c307f50598ae9ba04e330b0908",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b70defdd785f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b70defdd785f8788da947cab0604aa94c822c72507f8aeb670449bea961c4d85",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b7c798476b6f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b7c798476b6f7108711cd7411b0ba6440d80a8f81fb31a51a547d02d615dae40",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b7d3cce1830f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b7d3cce1830fccdc7b1cc407730150b8a3a61ce41504da137fea6da576275370",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b8697d4f7b9a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b8697d4f7b9a3f59fd0020358123084f3835354dfb3306e02d44d33c43a13432",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-3/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b87be05163cd",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b87be05163cd5710f11d80dc1edd327532de2c5be4db14134cb01d74fa896a66",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-b9e8cf5858bf",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "b9e8cf5858bfb619d77153603bfeb086c812cbadef7742db3651d7bc37ab473b",
+      "source": {
+        "chunk": 4,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ba0f7d3db059",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ba0f7d3db059d4175938d5e7f6d9b6d301169dca940951bf5520b67e9b8719d7",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-15",
+        "file_name": "sn90051081/1909/05/15/ed-1/seq-1/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-bba45f9deaf5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "bba45f9deaf5874da61efc5821adbb0d7b50ca370e7346a5f2d21c8d5310ecb9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-bc353309cc12",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "bc353309cc12628d9a9f74cd5330182115903eefc8b97e20efe61586220d83e4",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-bd9975214745",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "bd9975214745b547be9558be7f3b5c7ee04e047ea881c2d46d07f89ba6d54ef1",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-bfa44a8a510b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "bfa44a8a510b8a2660fc718e343b0dfa670384b3782c1f2516e4bb128bea77e9",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c2191cb46553",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c2191cb4655373091954717e497f860d6f558ed9814c50b932fe9e41c932dbf5",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-08",
+        "file_name": "sn90051081/1909/05/08/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c235bb845e8d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c235bb845e8d6d1ecd6b044112a5bbaf3205a819987fc7d6fd36e60193fd693e",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c3695264bcc7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c3695264bcc79a20be45bfd4ae29bbbbc0189e2aa67bdc7eb589560dae364b6f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c381a7133aff",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c381a7133affff9504759aecfad9734fffad3a3742b832f9d5bcbceff184e9a7",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c553c07ff939",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c553c07ff939e42a694ca9a836d78ba8c9c1275ae5737ac71009188c70ab677d",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-07",
+        "file_name": "sn84021930/1898/12/07/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c5e82a492b18",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c5e82a492b186260d77333afb30bb112cae5088e88695544fe8a98ebcd9b1067",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c646b96b95c9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c646b96b95c94979d752712b2d0dbeed82d60ff525e7742c779a7bba51e87659",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-c829af0f96bc",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "c829af0f96bcf84c22de4cba8e77cc3ed3ce4e8152bf5f0b17412d1bd827b5d9",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ca2922843f0a",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ca2922843f0ac14ae5cd12a27d9df6f8df5f615f3ca6c403db90e38b391165f2",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-cb6a3aa3708f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "cb6a3aa3708fa5af4709eea826f3704747330118c17f565b29b0b53a37341fb3",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-cbf5c6117903",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "cbf5c61179034c843b146dc345737fd53e313330e3820ffa18c8068d8744a445",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-cd3219e66e69",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "cd3219e66e69ac3a1910f61fc823615bfec019f35ec7ba971b2f45b2b7b5f1eb",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ce17838ec12d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ce17838ec12dcedc3356c8ae21247fbbb6ee94b18bc1836d182d8c669572e855",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ce179824a964",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ce179824a964c0f0efa22f62f6988a5f56709ae548161be97127dee5ebd52e72",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-cf7973c07930",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "cf7973c07930b98159691ae1d9e4fafc390a5b8a436a56499c22b36357b9a57b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d0286364be6f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d0286364be6fb5bcb423281802f61ae815902e026839ece9e72afef78a69a809",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d0fc2cedeff7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d0fc2cedeff78101d545fcc1892283c41aa139b507d583351c5bb11a086c28fb",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d1a23407bb94",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d1a23407bb94f86cf32abd2c2eab7e7d52ce1216709893ae7b4e4a8035eb9b58",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d25b791898e2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d25b791898e2ae90c9b8eeac25a17bfa482bfa989c889d635fb8ae8e826337b8",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d280e17a5f7c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d280e17a5f7ceda5d96d337ff6b2f3b5571d1e823ce5d7442dc1f0d6852bceaa",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-01",
+        "file_name": "sn84021930/1899/02/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d321cff83dad",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d321cff83dade4f5169125fd968e14ab9677d19ca4278ab49c095abc83230a62",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d577cd6cbfd7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d577cd6cbfd7f5d6aaa278b8cf805567d99eecf2832e28c3fa7c8bf20e145287",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 1059
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d64304f54a47",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d64304f54a47443f9f1906e615b420db4acc1fa8aeccca979ecb6731f171cefd",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d660796d198b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d660796d198bcc5325f755e14e6923e992406b355bbc6c43fb1aa5bd4d9d1a12",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d664df35663f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d664df35663f76bcef08a1b8d6bb8d35beef4d7e587233eb9c0cec2b5fe03af0",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-01",
+        "file_name": "sn84021930/1899/03/01/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d75ae7ede0f5",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d75ae7ede0f587facf91772e245fcf819a766108dcc8c9af16d8080a03c795fc",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-01",
+        "file_name": "sn90051081/1909/05/01/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d8bf87c79984",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d8bf87c79984dede42e440f3e865e4a76d86271bf907759a68f163ba9ce67e10",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d960a26e1c20",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d960a26e1c20155b181808d798abef49556b6596ebc5ceed249ef3bc82b6836d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-d96da69e3eae",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "d96da69e3eae47390362c52f426a52989748367fdbc1d07cf68e71f314b541ef",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-db2bd0ae45ab",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "db2bd0ae45abffc9db3f89358bc225acb4772f0cf69ea8dd58b2baa7cbd38445",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-db7d3f3e050c",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "db7d3f3e050ce49c51acdcba8277cf88132d7bf3b9f71281a29a2766e1561da0",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-de2a33e5045f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "de2a33e5045fd14db984f2ff3dbea2f5b9fd0d790ffd3e101a9bd09815c15c9a",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-df7a225d2c7b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "df7a225d2c7b6ae6ef75545c72da3dfb9c61f218dc9a7cc2d4fac3a7196a4d3f",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-dfb78b785e30",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "dfb78b785e30dcf83810c5b35a9539bc971025d6b6641cbe346ae4776d5de21f",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e06ea45d8f4f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e06ea45d8f4f6217cf91c2bace4952ed8294c733e26898004a7bdbd177f8c144",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-2/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e111dc5e0e64",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e111dc5e0e64ed7e09166a80f8e28cc7fdd41c1fbeebca769254f6471380dcd9",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e25036414a59",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e25036414a594023a1618d5d1cfb184c91613877ad55394030b6a6dd8e4295bf",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e3271e9875a3",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e3271e9875a3672d4ec77b837af6864f3c1bcb5277ed502f1383e3a39a799037",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e5658940760d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e5658940760d0bc016a22e151268b08666a4afe0c65dc73fe214c37f8afdd4cb",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-6/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e57807f3e1fe",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e57807f3e1fe99ba398d8ed96e6998bd16dc331d6add3cb10075a651ebe08d1d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e69a42865c6e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e69a42865c6ecbcde7a12bbfd1f83d5227a98c38a54967360f008ec9ffbe1b2d",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e6a8f3bb0a5f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e6a8f3bb0a5faeb06c82e0b04c58d7fac776c2b0caf5bc1fc5c54bccb76bafe0",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-14",
+        "file_name": "sn84021930/1898/12/14/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e6f06ea1008e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e6f06ea1008e93f46e02ee8f92fc2a9b64bc7096f436f16604d8b3dad2cd10e9",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e7b7e06c1364",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e7b7e06c136460d416981e0699d0d23e099954949fd2db3d6a5a1d7c04a4f9fc",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 470
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e87dd2bed971",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e87dd2bed971a48407b5a069a91ca52cb2ef8a6b45f2cde200ae35017e715822",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-e908fa7eb0e9",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "e908fa7eb0e9915b6bf0faa539aa8f13a695de319d8381559a324f815b73e10b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 607
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-eb1d0cec1ef4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "eb1d0cec1ef48fe92b2724d6fcd62988a29ce89204fc87759317d77b4eb13fda",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ec09ad5e6223",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ec09ad5e6223b7f93401c7de5908292164a001aa92a2d485eb1d4a0c6cbd9680",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-15",
+        "file_name": "sn84021930/1899/03/15/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 526
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ec861b075cb6",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ec861b075cb6137d2a973d16f80aec53250a3cc8f1fb53d6d6f273537b4b5745",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-eef33365f56e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "eef33365f56eeb1a6503a524ed83f5a45a72a44c2bd0e7fa4729a85edf3cee6b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-13",
+        "file_name": "sn91052444/1909/05/13/ed-1/seq-1/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-eefeadde228f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "eefeadde228f0e29b5de67b0c225bc38b613c148330272ebefa6d164a4cb2685",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-29",
+        "file_name": "sn84021930/1899/03/29/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f0bc96a640aa",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f0bc96a640aa0f567ae7ba05c92811786b6d8a5ca96ba4a02d0d7b44249c79f8",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-05",
+        "file_name": "sn84021930/1899/04/05/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f10a5ee75a18",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f10a5ee75a1831e336f7b4425389a0c5af5b2a1f0dd69b7d9fc1556127c346a3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-22",
+        "file_name": "sn84021930/1899/03/22/ed-1/seq-5/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f184871854e7",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f184871854e7c8233383cc49c6766757caa17c629fa9874ed97733c771ce9664",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-28",
+        "file_name": "sn84021930/1898/12/28/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f298c3f8fdfc",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f298c3f8fdfc66c7e5405758860c89a9d472322f48c93685d6d40b83a0d2f51c",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-8/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 407
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f2a3c92a9a1f",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f2a3c92a9a1f98246a1a5b5500f654e4016417d1547d6d91dd4f68ebbd4aab7c",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f2f8402fca28",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f2f8402fca287cff8fd02b1cb84f8e41962f686d007fd3727b8a30c2458e6356",
+      "source": {
+        "chunk": 4,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f3ecaf2d99e1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f3ecaf2d99e1774522cd289034339c7ce7ea095ceef8d8d2f991ded16d5b17ce",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-24",
+        "file_name": "sn90051081/1909/04/24/ed-1/seq-2/ocr.txt",
+        "id": "sn90051081"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f4389a556b29",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f4389a556b292c6ebcc7609d2514955d2c931972aed0873c2745baef90eccc47",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-18",
+        "file_name": "sn84021930/1899/01/18/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f533966e48de",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f533966e48dec30220dc7f0780ac4e92d7e838a9266242074ca6d3c2f3396ccc",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-12-21",
+        "file_name": "sn84021930/1898/12/21/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 605
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f5736f032f75",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f5736f032f75638ff5815525284446c29a227117d52aeea5f249e9adf70897d9",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-08",
+        "file_name": "sn84021930/1899/02/08/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 532
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f62416efa7e1",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f62416efa7e14f3968bd2540b4d64a39714ba3bb9e803e26ae670fd560088ea5",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-23",
+        "file_name": "sn84021930/1899/02/23/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f641a132ff29",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f641a132ff29639f670e217ef98f13dc8ac2267d7bcafcf75664a2bd83c26bdc",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-26",
+        "file_name": "sn84021930/1899/04/26/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 220
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f71b7f937516",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f71b7f937516074864fcf4efff73f7060fb5152f9b5e69a6f3f93abf83cfe24f",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-04",
+        "file_name": "sn84021930/1899/01/04/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f7bd03722902",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f7bd03722902f694bbb509a4a06c349747e69334917fcd353be44231bd4b8f63",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-04-29",
+        "file_name": "sn91052444/1909/04/29/ed-1/seq-3/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 602
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f8cc7c24c85b",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f8cc7c24c85b3a8b27f35edf42fc0bec7b33a96ee63cedb5f2b30f4f876a1603",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-15",
+        "file_name": "sn84021930/1899/02/15/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 606
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-f8f058f867f4",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "f8f058f867f4cfe4dcee5f214267d6ce7f8688e11c79774e3b9d4044fc15b861",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fb1200db1e50",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fb1200db1e501442a008335bb93fc286a966ca6e36e3a665f30e77c8ef297800",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1909",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fb4b1c9fa514",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fb4b1c9fa514b563c31399fa533f28d866ce8bc3670a0da93e81e43bd3471902",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1909-05-06",
+        "file_name": "sn91052444/1909/05/06/ed-1/seq-4/ocr.txt",
+        "id": "sn91052444"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fb59190b48ee",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fb59190b48ee02eb5cba33c12e8ebf1d532ef908688b07943c12a4a2f8651514",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-30",
+        "file_name": "sn84021930/1898/11/30/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 600
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fbec309b6ac6",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fbec309b6ac6106ad347f30963aea5fc02d7f009c3c8c177d9c6286f6830682b",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fc6d7b4e14de",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fc6d7b4e14de7ca0923d0ff17daa673ef8f5fa7fdb4a5b4a2cc9a92864f73b40",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-19",
+        "file_name": "sn84021930/1899/04/19/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fcfb15f0446d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fcfb15f0446dc5496bd03531feda99e75c7cef55ae12017c0131406fa8b8ef1b",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-11",
+        "file_name": "sn84021930/1899/01/11/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fd69413ce8d2",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fd69413ce8d25a0b2505c24365f4560728299029c831e7dfda9430675c41f84f",
+      "source": {
+        "chunk": 2,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-02-22",
+        "file_name": "sn84021930/1899/02/22/ed-1/seq-4/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 601
+    },
+    {
+      "author": "public-domain",
+      "date": "1898",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fe446f9c513d",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fe446f9c513d91a7462bfa23dbe99ee918169db8e90aebb0f07c10a3b6771f25",
+      "source": {
+        "chunk": 3,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1898-11-23",
+        "file_name": "sn84021930/1898/11/23/ed-1/seq-1/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-fee7c955dc35",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "fee7c955dc359897e5b82d43c08235699ff190b6fabbcd0ab2c5d80271e969b3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-01-25",
+        "file_name": "sn84021930/1899/01/25/ed-1/seq-2/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 603
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ff11581de390",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ff11581de39071a3dd22dbb39a4103a69248af5d4ac31b468c55d1f84f68afc4",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-03-08",
+        "file_name": "sn84021930/1899/03/08/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 1055
+    },
+    {
+      "author": "public-domain",
+      "date": "1899",
+      "extraction": "ocr-chunk.v2",
+      "id": "hfnews-ff8f0944d56e",
+      "kind": "hf-news",
+      "label": "human",
+      "register": "news",
+      "sha256": "ff8f0944d56ee536595017d7264976c6b4cfd46ca445ca528c3ec471072edaa3",
+      "source": {
+        "chunk": 1,
+        "dataset": "PleIAs/US-PD-Newspapers",
+        "date": "1899-04-12",
+        "file_name": "sn84021930/1899/04/12/ed-1/seq-3/ocr.txt",
+        "id": "sn84021930"
+      },
+      "words": 604
+    },
+    {
+      "author": "public-domain",
       "date": "1900-1922",
       "extraction": "ocr-chunk.v1",
       "id": "news-04b27cc75e66",
