@@ -272,6 +272,10 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.8.0** - Adopted the writing-quality half of harshaneel/humanize (MIT): the counted gate and
+  countable rhythm proxies in the process, four new rhetorical-scaffolding catalog entries plus
+  RLHF helpful-assistant framing, and three corpus-calibrated CLI structure rules. Its
+  detector-evasion techniques were deliberately not adopted. Measured FPR unchanged.
 - **4.7.0** - Widened the corpus with two public-domain pools: a news register (Internet
   Archive newspaper issues 1900-1922, OCR-quality-gated) and a broader essay pool (Gutenberg:
   Emerson, Thoreau, Twain). Four of the six registers are now measured; the personal pools'
@@ -338,6 +342,13 @@ Pattern sources, with thanks:
 
 - **[blader/humanizer](https://github.com/blader/humanizer)** by Siqi Chen - MIT.
 - **[Stop Slop](https://github.com/hardikpandya/stop-slop)** by Hardik Pandya - MIT.
+- **[avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing)** by Conor Bronsdon - MIT.
+  Source of the vocabulary tiering, register-strictness, coverage-map, self-scan, and
+  corpus/FP-measurement designs adopted in v4.3.0-v4.7.0.
+- **[humanize](https://github.com/harshaneel/humanize)** by Harshaneel Gokhale - MIT. Source of the
+  countable rhythm proxies, the written-counts gate, several rhetorical-scaffolding patterns
+  (§7.12-7.15), and the RLHF helpful-assistant framing entry (§9.11) adopted in v4.8.0. Its
+  detector-evasion techniques were deliberately not adopted.
 - **[Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)**
   (WikiProject AI Cleanup) - available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - **[Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134)** - source for William Strunk

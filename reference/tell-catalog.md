@@ -294,6 +294,30 @@ faster"), "Those who [do X] will [win]…" closers.
 analogies for everything, chains ("climb the learning curve… stay focused… feels lighter").
 **Fix:** at most one fresh, concrete image; cut the chain.
 
+### 7.12 Thesis-first paragraph openers & setup sentences (HH)
+**Watch:** the frame before the experience — "The rollout was the hard part.", "The real question
+is Y."; setup shapes like "What I didn't expect was X.", "The pattern is X."
+> **Before:** The rollout was the hard part. We hit three outages in the first week.  **After:** We hit three outages in the first week of rollout.
+**Fix:** start with the concrete thing; let the point emerge from it. Lead with X, not the setup.
+
+### 7.13 Anaphora & parallel-subject mirrors (HH)
+**Watch:** consecutive sentences opening with the same word ("Not every door… Not every version…"),
+or mirrored noun-phrase openers ("The code is one thing. Maintaining it is another.").
+> **Before:** The code is one thing. Maintaining it is another.  **After:** Writing the code took a week; we have maintained it for three years.
+**Fix:** vary one opener, collapse the pair, or make the second sentence do different work.
+Two matched openers can be deliberate emphasis; three is a cadence tell.
+
+### 7.14 Chiasmus & balanced symmetry (HH)
+**Watch:** reversed-parallel constructions that sound like insight ("being specific about being
+wrong / being vague about being right"); symmetric trade-off pairs ("(X, but Y) or (A, but B)").
+**Problem:** real trade-offs and real comparisons are lopsided; the symmetry is manufactured.
+**Fix:** make the comparison asymmetric — say which side weighs more and why.
+
+### 7.15 Parallel reason chains (HH)
+**Watch:** three or more consecutive sentences with the same clause skeleton, usually
+"subject + because/when + reason".
+**Fix:** vary the structure — one "because", one bare assertion, one fragment.
+
 ---
 
 ## Family 8 — Structure & formatting
@@ -412,3 +436,13 @@ single paragraph is the correct shape in formal registers, which is exactly why 
 judgment-only (a regex cannot read the register).
 
 
+
+### 9.11 RLHF helpful-assistant framing (HH)
+**Watch:** "Let me walk you through…", "Here's how I'd think about it…", balanced both-sides
+hedging of an asymmetric tradeoff ("On one hand X, on the other Y, it depends"), unrequested
+option menus, pedagogical scaffolding (defining terms the audience knows), polite refusal-style
+disagreement ("While I understand the appeal of X, I would suggest…").
+**Problem:** the instruction-tuned "helpful assistant" register — the strongest current
+machine-voice signal — survives even when every vocabulary tell is cleaned.
+> **Before:** While I understand the appeal of caching here, I would suggest considering invalidation complexity.  **After:** Caching doesn't work here: invalidation costs more than the reads save.
+**Fix:** say the thing; pick a side; state the asymmetry; trust the reader.

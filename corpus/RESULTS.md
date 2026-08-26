@@ -23,8 +23,8 @@ claimed: there is no machine-generated corpus in this repo yet.
 
 | Threshold | chat | essay | news | wiki |
 |---|---|---|---|---|
-| 20 | 0.4% | 0.6% | 0.0% | 19.0% |
-| 40 | 0.0% | 0.3% | 0.0% | 10.0% |
+| 20 | 0.5% | 1.5% | 0.0% | 20.3% |
+| 40 | 0.0% | 0.3% | 0.0% | 10.2% |
 | 60 | 0.0% | 0.0% | 0.0% | 9.1% |
 | 80 | 0.0% | 0.0% | 0.0% | 0.0% |
 
@@ -36,14 +36,14 @@ claimed: there is no machine-generated corpus in this repo yet.
 | 278 | `structure.low_sentence_variance` |
 | 278 | `family7.rhetorical_formula` |
 | 274 | `source_risk.source_dependent_statement` |
+| 202 | `structure.uniform_length_run` |
+| 166 | `clarity.wordiness` |
 | 123 | `family3.filler_framing` |
-| 123 | `clarity.wordiness` |
+| 98 | `structure.anaphora` |
 | 92 | `family1.significance_inflation` |
 | 50 | `source_risk.bare_url` |
-| 32 | `family9.chatbot_residue` |
+| 33 | `family9.chatbot_residue` |
 | 21 | `family4.ai_vocab_cluster` |
-| 19 | `family8.markdown_structure` |
-| 11 | `family5.syntactic_tell` |
 
 ## Honest limits
 
