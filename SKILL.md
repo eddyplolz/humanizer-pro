@@ -22,7 +22,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
 metadata:
-  version: "4.4.0"
+  version: "4.5.0"
 ---
 
 # Humanizer Pro: Remove AI Writing Tells
@@ -41,6 +41,9 @@ Keep this file as the operating core. Load references only when the mode calls f
 - `reference/elements-of-style-1918.md` - full public-domain Strunk text; load only on explicit
   request or deep style work.
 - `reference/wiki-mode.md` - neutral, source-bound article and wikitext workflow.
+- `reference/registers.md` - per-register strictness table (wiki/news/essay/docs/chat/commit);
+  consult whenever the register is not long-form prose.
+- `reference/coverage-map.md` - the prose-to-CLI contract; read before adding a rule to either side.
 - `reference/improvement-loop.md` - review gate for promoting recurring failures into the skill.
 - `eval/cases.md` and `eval/fixtures/` - manual regression fixtures for skill updates.
 
@@ -67,6 +70,11 @@ Keep this file as the operating core. Load references only when the mode calls f
   restraint checks. Do not show the audit unless asked.
 - **Self-improvement:** When a repeated miss is being turned into a skill update, read
   `improvement-loop.md`. Never promote a one-off observation directly into `SKILL.md`.
+
+**Register strictness:** before editing, decide the register (wiki, news, essay, docs, chat,
+commit) using the cues in `reference/registers.md`, say which one you are using, and enforce rule
+areas at that register's level. A pattern the table marks "skip" for the register is the correct
+form there — leave it alone.
 
 Normal output is concise. Full audits are opt-in.
 
