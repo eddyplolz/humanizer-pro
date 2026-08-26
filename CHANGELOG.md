@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.10.1 - 2026-08-26
+
+- Rewrote the README in plain language: GOV.UK-style plain-English principles in American
+  English, with numbered one-action-per-step procedure blocks for install and CLI use. The
+  structure now layers novice to advanced: what it does, a demo, the built-in refusals, a
+  2-minute install, everyday phrasing, then the CLI, the nine families, the measured
+  evidence, and credits.
+- The README's own audit score fell from raw 100 / exemption-adjusted 60 to raw 65 /
+  adjusted 35; its self-scan budget re-baselines 65 → 40 (measured + 5, downward only).
+  The residual raw score is mostly the tells the README quotes in order to warn about them.
+- Moved the pre-4.2 version history (4.1.0 back to 1.0.0) from the README into this
+  changelog; the README now carries the current release plus a pointer here. Nothing was
+  deleted.
+
 ## 4.10.0 - 2026-08-26
 
 - Recalibrated the two audit rules that drove the wiki register's false-positive rate,
@@ -166,3 +180,46 @@
 - Added the deterministic `humanizer-audit` CLI for artifact sweeps, tell-family hits, source-risk
   flags, rhythm/structure stats, JSON output, and threshold exit codes.
 - Added automated scenario-contract tests for the existing Humanizer Pro fixtures.
+
+## 4.1.0 - 2026-06-24
+
+- Added mode routing for quick rewrite, full audit, style edit, wiki/article mode, self-audit,
+  and self-improvement. Added compact Elements guidance, the full public-domain Strunk text,
+  the neutral wiki/article workflow, the review-based improvement loop, and manual eval
+  fixtures. Kept `SKILL.md` lean and preserved the nine-family tell system, artifact-first
+  checking, anti-swap checking, and restraint checking.
+
+## 4.0.0 - 2026-05-29
+
+- Restructured into a lean `SKILL.md` core plus a `reference/` library (`tell-catalog`,
+  `llm-artifacts`, `worked-examples`). Reorganized into 9 families and added deterministic
+  artifact detection, syntactic tells, verbosity and padding, register and diction, cohesion
+  overuse, title/opening patterns, operating principles, the persistent-tells checklist,
+  anti-swap and restraint checks, and a 6th "Restraint" scoring dimension.
+
+The entries below predate this repository and are recorded from the upstream
+blader/humanizer lineage; no reliable dates exist for them.
+
+## 3.0.0
+
+- Merged Stop Slop patterns, added Quick Checks and the 5-dimension scoring system.
+
+## 2.2.0
+
+- Added a final "obviously AI generated" audit and second-pass rewrite prompts.
+
+## 2.1.1
+
+- Fixed pattern #18 example.
+
+## 2.1.0
+
+- Added before/after examples for all 24 patterns.
+
+## 2.0.0
+
+- Complete rewrite based on raw Wikipedia article content.
+
+## 1.0.0
+
+- Initial release.
