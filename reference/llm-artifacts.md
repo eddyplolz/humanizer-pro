@@ -55,11 +55,14 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
 - **Regex:** `【\d+†[^】]*】`
 - **Fix:** Delete; replace with a proper citation if the statement requires support.
 
-### 7. Tracking parameters in URLs
-- **Looks like:** `https://site.com/page?utm_source=chatgpt.com`, `&utm_source=chatgpt.com`.
-- **Regex:** `[?&]utm_source=chatgpt\.com`
-- **Fix:** Strip the `utm_source` (and any sibling `utm_*`) query params from the URL. A
-  `utm_source=chatgpt.com` is a direct fingerprint that the link came from a ChatGPT session.
+### 7. AI-tool tracking parameters in URLs
+- **Looks like:** `https://site.com/page?utm_source=chatgpt.com`, `&utm_source=claude.ai`,
+  `?utm_source=copilot.com`, `?utm_source=openai`, `?utm_source=perplexity.ai`,
+  `?referrer=grok.com`.
+- **Regex:** `[?&](?:utm_source=(?:chatgpt\.com|claude\.ai|copilot\.com|openai|perplexity\.ai)|referrer=grok\.com)`
+- **Fix:** Strip the AI-referrer parameter (and any sibling `utm_*`) from the URL and keep the
+  rest of the query string — a functional parameter (`?page=2`) is not evidence of anything. The
+  AI-referrer value is a direct fingerprint that the link came out of that tool's chat session.
 
 ### 8. Unfilled phrasal-template placeholders
 - **Looks like:** `[Your Name]`, `[Entertainer's Name]`, `[Describe the specific section…]`,
@@ -74,6 +77,25 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
 - **Regex:** `20\d{2}-(?:XX|\d{2})-XX|\b20XX\b`
 - **Fix:** Replace with the actual date, or drop the field. (Note: a literal `{{as of}}`-style date is
   fine; only the `XX` stub is the tell.)
+
+### 10. Roleplay action markers
+- **Looks like:** `*nods*`, `*sighs*`, `*pauses thoughtfully*` — paired asterisks around a
+  chat-persona action verb, pasted out of a roleplay-flavored chat reply.
+- **Regex:** `(?<!\*)\*(?:nods|sighs|laughs|smiles|frowns|shrugs|grins|winks|chuckles|gasps|pauses|whispers|shouts|glances|smirks|blinks)[^*\n]{0,60}\*(?!\*)`
+  (verb-anchored on purpose: ordinary `*italic emphasis*` stays untouched).
+- **Fix:** Delete the marker. Nothing in finished prose is performed by the narrator.
+
+### 11. Detector-bypass characters
+- **Looks like:** invisible zero-width characters (ZWSP/ZWNJ/ZWJ/word joiner) inside words, or
+  Cyrillic/Greek lookalike letters spliced into Latin words (`cruсial` with a Cyrillic `с`) —
+  tricks "humanizer" tools use to defeat exact-string detectors. Humans do not paste these into
+  their own writing.
+- **Detection:** the audit CLI normalizes both tricks before matching (so an obfuscated `delve`
+  still hits) and reports `artifact.bypass_characters` with the counts. A single leading BOM is
+  ordinary file encoding and exempt; genuine Cyrillic or Greek prose never matches — only
+  mixed-script words do.
+- **Fix:** Remove the characters and treat the text with suspicion: someone or something tried to
+  make it pass a scanner, which is itself the strongest tell on this page.
 
 ## Why "delete only" is not enough
 Every artifact above sits where a **real reference or value** belonged. The model emitted the stub

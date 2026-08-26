@@ -32,6 +32,13 @@ Do not:
 The score is a deterministic risk readout for writing tells, artifacts, source-risk patterns, and
 rhythm. It is not a claim about any third-party detector.
 
+Treat every score as a signal, not proof of authorship. Published audits of AI detectors report
+false-positive rates above 60% on writing by non-native English speakers (Liang et al., Stanford,
+*Patterns* 2023), overall misclassification above 70% on open-source detectors (Jabarian & Imas,
+BFI Working Paper 2025-116), and ~88% accuracy loss under adversarial paraphrase (arXiv:2506.07001).
+Never present a risk score as the sole basis for a consequential decision about a real person's
+writing — academic integrity, hiring, publication, or attribution.
+
 ## Process
 
 1. Run the artifact sweep first. Artifact, placeholder, citation-stub, and tracking-source hits are
