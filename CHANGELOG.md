@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.10.0 - 2026-08-26
+
+- Recalibrated the two audit rules that drove the wiki register's false-positive rate,
+  measured against the human-control corpus: **wiki FPR at threshold 60 drops from 9.1% to
+  1.5%** (8/548, 95% CI 0.7–2.9%); chat, essay, and news stay at 0.0%, and all four in-repo
+  AI fixtures keep their exact risk scores.
+- `family7.rhetorical_formula` no longer carries the naive two-word triplet pattern
+  ("\w+ \w+, \w+ \w+, and \w+ \w+"): it fired on 33% of human wiki documents — ordinary
+  enumerations of names, offices, and places — and three hits force-floor the score to
+  review. The ten explicit formula phrases remain; rule-of-three judgment is model-side
+  (catalog §7.3, coverage map).
+- `family8.markdown_structure` now reports once per document (new `once_per_doc` rule
+  attribute). Table-heavy human documents matched ~29 lines each, so this one rule maxed
+  the family score cap and tripped the ≥10-findings review floor on its own; whether
+  mechanical structure is present is a document-level fact.
+- Two regression tests cover the recalibrations (suite: 39).
+- `fp_measure.py`'s generated results page now states how many manifest entries had no
+  cached text and were skipped — the text report already warned; the Markdown page
+  silently narrowed its document count.
+- `corpus/RESULTS.md` regenerated. Provenance note: 239 of the 500 news-pool documents
+  could not be re-materialized from their public sources this session (Internet Archive
+  search returned a different issue set; some upstream rows drifted), so the news row
+  re-measures n=261. The manifest is unchanged — those documents remain part of the
+  corpus — and this release only removes findings, so the v4.9.0 news result (0.0% at
+  n=500) is not weakened.
+
 ## 4.9.0 - 2026-08-26
 
 - Grew the news pool from 150 to 500 documents using OpenCulture's US-PD-Newspapers dataset
