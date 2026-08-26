@@ -1,5 +1,25 @@
 # Changelog
 
+## 4.8.0 - 2026-08-26
+
+- Adopted the writing-quality half of harshaneel/humanize (MIT), and deliberately none of its
+  detector-evasion half — no detector APIs, no score-targeting, no bypass claims, unchanged.
+- SKILL.md process: a **counted gate** (write every check's count with zeros explicit; list every
+  sentence's word count and fix the list until it passes range/mid-band/neighbor rules — counting
+  beats feel) and the **own-output-is-foreign-text** rule for rewriting text you drafted earlier.
+- Catalog: §7.12 thesis-first openers and setup sentences, §7.13 anaphora and parallel-subject
+  mirrors, §7.14 chiasmus and balanced symmetry, §7.15 parallel reason chains, §9.11 RLHF
+  helpful-assistant framing.
+- CLI: `structure.anaphora` (3+ consecutive sentences sharing an opener, stopword-guarded),
+  `structure.uniform_length_run` (**calibrated against the human-control corpus**: a threshold of
+  4 fires on 40% of human documents, the shipped 6 on 11%), `structure.midband_dominance`; RLHF
+  framing phrases extend `family9.chatbot_residue`; filler wrappers extend `clarity.wordiness`
+  (zero risk weight; "due to the fact that" stays family-3-only to avoid double counting).
+- Measured FPR at threshold 60 is unchanged by the new rules: chat 0.0%, essay 0.0%, news 0.0%,
+  wiki 9.1% — the corpus gated a rule calibration before it shipped, which is what it is for.
+- Self-scan budgets re-baselined (measured + 5) because the new rules fire on this repo's own
+  docs; that is a measuring-stick change, not a prose regression.
+
 ## 4.7.0 - 2026-08-26
 
 - Widened the human-control corpus with two public-domain pools: a **news register**

@@ -22,7 +22,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
 metadata:
-  version: "4.7.0"
+  version: "4.8.0"
 ---
 
 # Humanizer Pro: Remove AI Writing Tells
@@ -177,8 +177,12 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
 - **False ranges:** "from X to Y" off any scale. -> list them.
 - **Dramatic fragmentation:** "Speed. Quality. Cost. That's it." -> complete sentence.
 - **Setup / throat-clearing / meta:** "What if I told you," "Here's the thing," "Let that sink in,"
-  "Plot twist." -> delete the frame.
+  "Plot twist," "The pattern is X," "What I didn't expect was X." -> delete the frame; lead with the thing.
 - **Fortune-cookie endings / forced analogies:** end on the last real point; at most one concrete image.
+- **Thesis-first paragraph openers:** frame before experience ("The rollout was the hard part.") ->
+  start with the concrete thing; let the point emerge (§7.12).
+- **Anaphora, mirrors, chiasmus, parallel chains:** consecutive sentences sharing an opener or a
+  mirrored shape; reversed-parallel "insight"; three "X because Y" in a row. -> vary one (§7.13-7.15).
 
 ### Family 8 - Structure and formatting -> §8
 - **Title/opening formulas:** colon titles, gerund titles, "Picture this," question openers. -> name it
@@ -199,6 +203,9 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
 - **Cutoff and didactic disclaimers:** "as of my last update," "while specific details are limited,"
   "it's important/worth noting." -> state the fact or cut.
 - **Section summaries:** "In summary," "Overall" plus restatement. -> delete.
+- **Helpful-assistant framing:** "Let me walk you through," "Here's how I'd think about it,"
+  both-sides hedging of an asymmetric tradeoff, unrequested option menus, "While I understand the
+  appeal of X..." -> say the thing; pick a side; disagree plainly (§9.11).
 - **English-variety drift:** organize plus colour. -> one variety; American for this workspace.
 - **Wall-of-text replies:** in chat/forum registers only, a short reply with 4+ sentences and zero
   line breaks. -> break at thought boundaries (§9.10; never flag long-form prose for this).
@@ -271,6 +278,8 @@ original never had) is an anti-swap failure to fix, not to explain away.
 - Anticipatory "it" / existential "there"? State the subject.
 - Same sentence or paragraph length repeating? Vary only where meaning supports it.
 - Rule of three where one or two items suffice? Cut.
+- Consecutive sentences opening with the same word, or mirrored subject shapes? Vary one.
+- Helpful-assistant framing (walking the reader through, both-sides hedging)? Say the thing.
 - Em dash before a reveal, or "not X - but Y"? Recast.
 - Motivational-poster close? End on the last real point.
 - Formatting or markup mismatched to target? Convert it.
@@ -307,13 +316,21 @@ Below 42/60 means revise. A low Restraint score means put edits back, not cut mo
    self-audit, or self-improvement. For file-based audit/check requests, use the deterministic CLI
    instead of rewriting.
 3. **Read for meaning.** Preserve the real content, authorial stance, and target format.
-4. **Prose pass.** Work the densest tell family first. Edit clusters and formulas, not isolated words.
+4. **Prose pass.** Work the densest tell family first. Edit clusters and formulas, not isolated
+   words. Treat your own earlier output as foreign text: re-derive the prose from the content; if
+   the edit log reads as word swaps, you light-edited - start over.
 5. **Mode-specific pass.** Use `style-principles.md` for substantial style work and `wiki-mode.md` for
    neutral article work.
 6. **What still makes this AI?** In full audits, name remaining tells by family.
-7. **Anti-swap check.** Remove any tell introduced by your edit.
-8. **Restraint check.** Compare against `worked-examples.md` Example 4. Leave clean prose alone.
-9. **Present.** Concise final for quick rewrites; full audit only when requested or needed.
+7. **Counted gate.** Re-read the finished draft and write the counts - em dashes, formula hits,
+   vocab hits - with zeros written out; a gate entry without a number did not run, and "looks
+   clean" from memory always passes. For rhythm in drafts past ~80 words, list every sentence's
+   word count in order and fix until the list passes: longest minus shortest at or above 20, fewer
+   than half the counts in the 10-20 band, no three neighbors within 5 words of each other. The
+   number list beats feel: a read-through always sounds varied to the model that wrote it.
+8. **Anti-swap check.** Remove any tell introduced by your edit.
+9. **Restraint check.** Compare against `worked-examples.md` Example 4. Leave clean prose alone.
+10. **Present.** Concise final for quick rewrites; full audit only when requested or needed.
 
 ---
 

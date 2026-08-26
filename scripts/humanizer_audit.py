@@ -284,7 +284,9 @@ FAMILY_RULES = [
         9,
         re.compile(
             r"\b(?:great question|here's a polished|i hope this helps|certainly|of course!|best regards|"
-            r"let me know if|would you like me)\b",
+            r"let me know if|would you like me|let me walk you through|here's how i'd think about|"
+            r"while i understand the appeal|as of my (?:last|training) (?:update|cutoff)|"
+            r"on the one hand\b.{0,120}\bon the other)\b",
             re.I,
         ),
         "Chatbot wrapper or collaborative residue",
@@ -343,7 +345,13 @@ CLARITY_RULES = [
         None,
         re.compile(
             r"\b(?:utiliz(?:e|es|ed|ing|ation)|commenc(?:e|es|ed|ing)|"
-            r"facilitat(?:e|es|ed|ing)|endeavor(?:s|ed|ing)?|ascertain(?:s|ed|ing)?)\b",
+            r"facilitat(?:e|es|ed|ing)|endeavor(?:s|ed|ing)?|ascertain(?:s|ed|ing)?|"
+            # Multi-word wrappers around a one-word meaning (HH). "due to the
+            # fact that" stays family3-only; listing it here too would
+            # double-count one phrase across tiers.
+            r"in the event that|for the purpose of|"
+            r"with regard to|with respect to|in light of the fact that|"
+            r"despite the fact that|has the ability to)\b",
             re.I,
         ),
         "Inflated register (a clarity edit, not authorship evidence)",
@@ -1066,6 +1074,18 @@ def title_case_heading_count(text: str) -> int:
     return count
 
 
+def max_uniform_run(sentence_lengths: list[int]) -> int:
+    """Longest run of consecutive sentences whose lengths stay within 5 words."""
+    best = run_start = 0
+    for index in range(len(sentence_lengths)):
+        window = sentence_lengths[run_start : index + 1]
+        while max(window) - min(window) > 5:
+            run_start += 1
+            window = sentence_lengths[run_start : index + 1]
+        best = max(best, index - run_start + 1)
+    return best
+
+
 def stats_for(text: str) -> dict[str, int | float]:
     token_list = words(text)
     sentence_list = sentences(text)
@@ -1077,6 +1097,11 @@ def stats_for(text: str) -> dict[str, int | float]:
         "sentences": len(sentence_list),
         "avg_sentence_words": round(sum(sentence_lengths) / len(sentence_lengths), 2) if sentence_lengths else 0,
         "sentence_length_cv": round(coefficient_of_variation(sentence_lengths), 2),
+        "sentence_length_range": (max(sentence_lengths) - min(sentence_lengths)) if sentence_lengths else 0,
+        "midband_sentence_share": round(
+            sum(1 for length in sentence_lengths if 10 <= length <= 20) / len(sentence_lengths), 2
+        ) if sentence_lengths else 0,
+        "max_uniform_run": max_uniform_run(sentence_lengths),
         "paragraphs": len(paragraphs(text)),
         "type_token_ratio": round(len(unique_words) / word_count, 2) if word_count else 0,
         "em_dash_count": text.count("—"),
@@ -1160,6 +1185,77 @@ def rhythm_findings(stats: dict[str, int | float]) -> list[dict[str, object]]:
                 "source_risk": False,
             }
         )
+    # Threshold calibrated against the human-control corpus (corpus/RESULTS.md):
+    # >=4 fires on 40% of human documents, >=6 on 11% — comparable to the other
+    # structure signals. Info severity either way; this is a rhythm nudge.
+    if stats["max_uniform_run"] >= 6:
+        findings.append(
+            {
+                "id": "structure.uniform_length_run",
+                "family": 8,
+                "severity": "info",
+                "line": 1,
+                "column": 1,
+                "evidence": f"max_uniform_run={stats['max_uniform_run']}",
+                "message": "Run of consecutive sentences within 5 words of each other",
+                "source_risk": False,
+            }
+        )
+    if (
+        stats["sentences"] >= 8
+        and stats["midband_sentence_share"] >= 0.6
+        and stats["sentence_length_range"] < 20
+    ):
+        findings.append(
+            {
+                "id": "structure.midband_dominance",
+                "family": 8,
+                "severity": "info",
+                "line": 1,
+                "column": 1,
+                "evidence": (
+                    f"midband_sentence_share={stats['midband_sentence_share']}, "
+                    f"sentence_length_range={stats['sentence_length_range']}"
+                ),
+                "message": "Most sentences sit in the 10-20 word band with a narrow range",
+                "source_risk": False,
+            }
+        )
+    return findings
+
+
+ANAPHORA_SKIP_WORDS = {
+    "the", "a", "an", "it", "i", "in", "this", "that", "he", "she", "they", "we", "you",
+}
+
+
+def anaphora_findings(text: str) -> list[dict[str, object]]:
+    """Three or more consecutive sentences opening with the same word (§7.13)."""
+    openers = []
+    for sentence in sentences(text):
+        tokens = words(sentence)
+        openers.append(tokens[0].lower() if tokens else "")
+    findings = []
+    index = 0
+    while index < len(openers):
+        run = 1
+        while index + run < len(openers) and openers[index + run] == openers[index]:
+            run += 1
+        opener = openers[index]
+        if run >= 3 and opener and opener not in ANAPHORA_SKIP_WORDS:
+            findings.append(
+                {
+                    "id": "structure.anaphora",
+                    "family": 8,
+                    "severity": "info",
+                    "line": 1,
+                    "column": 1,
+                    "evidence": f"opener='{opener}' x{run} consecutive sentences",
+                    "message": "Consecutive sentences share the same opening word",
+                    "source_risk": False,
+                }
+            )
+        index += run
     return findings
 
 
@@ -1212,6 +1308,7 @@ def audit_text(text: str, path: str) -> dict[str, object]:
     findings.extend(regex_findings(text, SOURCE_RISK_RULES, starts))
     findings.extend(regex_findings(text, CLARITY_RULES, starts))
     findings.extend(rhythm_findings(stats))
+    findings.extend(anaphora_findings(text))
     findings.sort(key=lambda item: (int(item["line"]), int(item["column"]), str(item["id"])))
     return {
         "path": path,
