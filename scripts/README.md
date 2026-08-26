@@ -9,6 +9,25 @@ they are the quoted examples the docs exist to show. Run `py -3 scripts/self_sca
 `--json`). Budgets are measured regression ceilings; lower them when a doc improves, and treat
 raising one as a decision that belongs in a reviewed change.
 
+## Corpus and FP Measurement
+
+`corpus.py` builds and verifies the hash-only human-control corpus described by
+`corpus/manifest.json`. Every corpus document predates ChatGPT (cutoff 2022-11-01), so any audit
+flag on one is a false positive by construction. The manifest is anonymous by design: it holds
+register, author tier, date, word count, and SHA-256 digest per document — no text, no usernames,
+no source locators. Entry ids derive from the digest, so they name content without describing it.
+The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
+`corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pool is the
+exception: its entries point at the public-domain text this repository already ships, so that
+slice is independently rebuildable. `verify` checks every cached file against its digest; a test
+enforces the anonymity contract on every entry.
+
+`fp_measure.py` audits the cached corpus and prints false-positive rates by register and author
+slice with Wilson 95% intervals, a review-threshold sweep, and the rules that fire most often on
+human text. Results are published in `corpus/RESULTS.md`. It claims no true-positive rate: the
+`--include-fixture-tp` flag audits this repo's own AI fixtures, but those tuned the rules, so that
+readout is labeled anecdotal.
+
 `humanizer-audit` is a deterministic, zero-dependency companion to Humanizer Pro. It audits text; it
 does not rewrite it.
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.6.0 - 2026-08-26
+
+- Added the hash-only, anonymous human-control corpus: `corpus/manifest.json` carries register,
+  author tier, date, word count, and SHA-256 digest for 1,345 documents (~639k words) that all
+  predate ChatGPT (cutoff 2022-11-01), so any audit flag on one is a false positive by
+  construction. No text, usernames, or source locators are published — ids derive from the
+  content digest, and a test enforces the anonymity contract. `scripts/corpus.py` builds and
+  verifies the corpus from maintainer-local sources; only the public-domain slice is
+  independently rebuildable, on purpose.
+- Added `scripts/fp_measure.py`: false-positive rates by register and author slice with Wilson
+  95% intervals, a review-threshold sweep, and the rules firing most often on human text.
+  Measured at the default threshold: chat 0.0% (n=764), essay 0.0% (n=33), wiki 9.1% (n=550) —
+  the aggregate (3.7%) hides the register split, which is why rates are reported per register.
+  Results published in `corpus/RESULTS.md`.
+- One hard block on human text is recorded honestly: a 2014 forum post carrying two invisible
+  zero-width characters (ordinary copy-paste residue) trips `artifact.bypass_characters`.
+  Corpus and measurement design adapted from conorbronsdon/avoid-ai-writing (MIT).
+
 ## 4.5.0 - 2026-08-26
 
 - Added `reference/registers.md`: per-register strictness (wiki/news/essay/docs/chat/commit) with
