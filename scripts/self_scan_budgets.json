@@ -1,0 +1,16 @@
+{
+  "README.md": 65,
+  "WARP.md": 10,
+  "SKILL.md": 90,
+  "eval/cases.md": 15,
+  "scripts/README.md": 10,
+  "reference/ai-check.md": 5,
+  "reference/coverage-map.md": 65,
+  "reference/improvement-loop.md": 5,
+  "reference/llm-artifacts.md": 65,
+  "reference/registers.md": 15,
+  "reference/style-principles.md": 15,
+  "reference/tell-catalog.md": 65,
+  "reference/wiki-mode.md": 65,
+  "reference/worked-examples.md": 65
+}

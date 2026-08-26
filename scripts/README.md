@@ -1,5 +1,14 @@
 # Humanizer Audit CLI
 
+## Self-Scan
+
+`self_scan.py` runs the audit over this repository's own documentation and gates the
+exemption-adjusted score against `self_scan_budgets.json` (exit 1 on any file over budget or
+missing a budget). Fenced code, inline code, tables, blockquotes, and quoted spans are exempt —
+they are the quoted examples the docs exist to show. Run `py -3 scripts/self_scan.py` (or with
+`--json`). Budgets are measured regression ceilings; lower them when a doc improves, and treat
+raising one as a decision that belongs in a reviewed change.
+
 `humanizer-audit` is a deterministic, zero-dependency companion to Humanizer Pro. It audits text; it
 does not rewrite it.
 

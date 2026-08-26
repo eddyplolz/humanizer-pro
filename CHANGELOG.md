@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.5.0 - 2026-08-26
+
+- Added `reference/registers.md`: per-register strictness (wiki/news/essay/docs/chat/commit) with
+  auto-detection cues — the same pattern can be a tell in one register and the correct form in
+  another. SKILL.md now requires naming the register before editing.
+- Added `reference/coverage-map.md`: the anti-drift contract between catalog prose and CLI rule
+  ids, including a recorded judgment-only list (why certain rules deliberately have no regex).
+  A new test fails if a CLI rule id is missing from the map.
+- Added `scripts/self_scan.py` + `self_scan_budgets.json`: runs the audit over this repo's own
+  docs, reporting raw and exemption-adjusted scores (fenced/inline code, tables, blockquotes,
+  and quoted spans are exempt as documented self-reference). Budgets gate the exempt score in
+  pytest; they are measured regression ceilings and only move down.
+- Ideas adapted from conorbronsdon/avoid-ai-writing's tolerance matrix, CATEGORIES.md, and
+  PROOF.md (MIT).
+
 ## 4.4.0 - 2026-08-26
 
 - Tiered the AI vocabulary: Tier 1A frequency markers (two distinct 1A words anywhere now fire the
