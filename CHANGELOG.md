@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.9.0 - 2026-08-26
+
+- Grew the news pool from 150 to 500 documents using OpenCulture's US-PD-Newspapers dataset
+  (PleIAs, public domain) via the Hugging Face rows API — stdlib-only, deterministic fixed
+  offsets, dates capped at 1928, the same per-chunk OCR-quality and English gates, failed
+  offsets skipped and counted. The news register's FPR stays 0.0% and its 95% upper bound
+  tightens from 2.5% to 0.8%; every other register is unchanged (corpus now 2,151 documents).
+- The paired US-PD-Books dataset was deliberately not added: its rows are novels, and fiction
+  poured into the essay register would blur that slice's claim rather than strengthen it.
+- Chunker v2 (`ocr-chunk.v2`): paragraphs past the chunk cap now split on line boundaries, so
+  sources that emit a whole page as one block chunk correctly; earlier entries keep their
+  truthful v1 tag.
+
 ## 4.8.0 - 2026-08-26
 
 - Adopted the writing-quality half of harshaneel/humanize (MIT), and deliberately none of its

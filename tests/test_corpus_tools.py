@@ -98,13 +98,14 @@ def test_manifest_is_structurally_sound() -> None:
     assert len(ids) == len(set(ids)), "entry ids must be unique"
     for entry in entries:
         assert entry["kind"] in (
-            "forum-post", "wiki-revision", "public-domain", "news-page", "gutenberg-work",
+            "forum-post", "wiki-revision", "public-domain", "news-page",
+            "gutenberg-work", "hf-news",
         )
         assert entry["register"] in ("chat", "wiki", "essay", "news")
         assert entry["label"] == "human"
         assert entry["author"] in ("maintainer", "other", "public-domain")
         assert re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
-        assert re.fullmatch(r"(forum|wiki|pd|news|guten)-[0-9a-f]{12}", entry["id"])
+        assert re.fullmatch(r"(forum|wiki|pd|news|guten|hfnews)-[0-9a-f]{12}", entry["id"])
         assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
 
@@ -125,6 +126,7 @@ def test_manifest_is_anonymous() -> None:
         "public-domain": {"work", "chunk", "chunk_words"},
         "gutenberg-work": {"work", "gutenberg_id", "url", "chunk", "chunk_words"},
         "news-page": {"url", "ia_identifier", "chunk"},
+        "hf-news": {"dataset", "id", "date", "file_name", "chunk"},
     }
     for entry in entries:
         assert set(entry) <= public_keys
