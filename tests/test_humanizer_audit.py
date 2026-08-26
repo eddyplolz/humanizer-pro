@@ -107,9 +107,79 @@ def test_artifact_fixture_blocks_with_required_artifacts() -> None:
     assert payload["summary"]["max_severity"] == "error"
     assert "artifact.chatgpt_citation_stub" in ids
     assert "artifact.content_reference" in ids
-    assert "artifact.chatgpt_tracking_url" in ids
+    assert "artifact.ai_tracking_url" in ids
+    assert "artifact.roleplay_marker" in ids
     assert "artifact.bracket_placeholder" in ids
     assert "artifact.placeholder_date" in ids
+
+
+def test_ai_tracking_url_covers_multiple_ai_referrers() -> None:
+    text = (
+        "See https://example.org/a?utm_source=claude.ai and "
+        "https://example.org/b?utm_source=copilot.com and "
+        "https://example.org/c?referrer=grok.com for details."
+    )
+    returncode, payload = audit_json("--stdin", input_text=text)
+    ids = [finding["id"] for finding in payload["documents"][0]["findings"]]
+    assert returncode == 2
+    assert ids.count("artifact.ai_tracking_url") == 3
+
+
+def test_functional_query_params_are_not_tracking_flags() -> None:
+    returncode, payload = audit_json("--stdin", input_text="Docs: https://example.org/a?page=2&v=4")
+    ids = finding_ids(payload["documents"][0])
+    assert "artifact.ai_tracking_url" not in ids
+
+
+def test_zero_width_bypass_is_flagged_and_matching_still_hits() -> None:
+    text = "A crucial, vibrant plan. We d​elve into the landscape."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    ids = finding_ids(document)
+    assert returncode == 2
+    assert "artifact.bypass_characters" in ids
+    cluster = [f for f in document["findings"] if f["id"] == "family4.ai_vocab_cluster"]
+    assert cluster and "delve" in cluster[0]["evidence"]
+
+
+def test_homoglyph_bypass_is_flagged_and_matching_still_hits() -> None:
+    text = "A cruсial, vibrant tapestry of pivotal outcomes."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    ids = finding_ids(document)
+    assert returncode == 2
+    assert "artifact.bypass_characters" in ids
+    cluster = [f for f in document["findings"] if f["id"] == "family4.ai_vocab_cluster"]
+    assert cluster and "crucial" in cluster[0]["evidence"]
+
+
+def test_leading_bom_and_genuine_cyrillic_are_not_bypass_flags() -> None:
+    text = "﻿The report quotes the phrase привет in one footnote."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    ids = finding_ids(payload["documents"][0])
+    assert "artifact.bypass_characters" not in ids
+
+
+def test_roleplay_marker_flags_action_asterisks_not_italics() -> None:
+    returncode, payload = audit_json("--stdin", input_text="*nods thoughtfully* The plan works.")
+    assert returncode == 2
+    assert "artifact.roleplay_marker" in finding_ids(payload["documents"][0])
+    returncode, payload = audit_json("--stdin", input_text="This word gets *emphasis* only.")
+    assert "artifact.roleplay_marker" not in finding_ids(payload["documents"][0])
+
+
+def test_compare_ignores_stripped_ai_referrer(tmp_path: Path) -> None:
+    (tmp_path / "original.md").write_text(
+        "Read [the report](https://example.org/r?referrer=grok.com) today.", encoding="utf-8"
+    )
+    (tmp_path / "revised.md").write_text(
+        "Read [the report](https://example.org/r) today.", encoding="utf-8"
+    )
+    returncode, payload = audit_json(
+        "--compare", str(tmp_path / "original.md"), str(tmp_path / "revised.md")
+    )
+    assert returncode == 0
+    assert payload["compare"]["findings"] == []
 
 
 def test_ai_slop_general_returns_review_and_expected_families() -> None:
