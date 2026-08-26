@@ -13,7 +13,8 @@
       "required_ids": [
         "artifact.chatgpt_citation_stub",
         "artifact.content_reference",
-        "artifact.chatgpt_tracking_url",
+        "artifact.ai_tracking_url",
+        "artifact.roleplay_marker",
         "artifact.bracket_placeholder",
         "artifact.placeholder_date"
       ],

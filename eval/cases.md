@@ -27,7 +27,8 @@ behavior and automated contracts for the deterministic audit CLI.
   rewrite, and what stayed on purpose.
 - Wiki/article mode does not add personality, jokes, first person, or unsupported claims.
 - Markdown leakage in wiki/plaintext targets is converted or flagged.
-- Artifact leakage such as `oai_citation`, `contentReference`, `turn0search0`, or
-  `utm_source=chatgpt.com` is flagged before prose editing.
+- Artifact leakage such as `oai_citation`, `contentReference`, `turn0search0`, AI-referrer URL
+  params (`utm_source=chatgpt.com`, `utm_source=claude.ai`, `referrer=grok.com`), roleplay
+  markers, or detector-bypass characters is flagged before prose editing.
 - Candidate self-improvement lessons are rejected unless they pass the promotion gate in
   `reference/improvement-loop.md`.

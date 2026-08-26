@@ -341,7 +341,19 @@ relatability bait ("while your coffee cools"). **Fix:** break the template; cut 
 
 ### 9.7 Artifact tokens & placeholder text
 Dead-giveaway leakage (`citeturn0search0`, `:contentReference[oaicite:N]`, `oai_citation`, `grok_card`,
-`【85†…】`, `utm_source=chatgpt.com`, `[Your Name]`, `2025-XX-XX`): **see `reference/llm-artifacts.md`**
+`【85†…】`, AI-referrer URL params such as `utm_source=chatgpt.com` / `utm_source=claude.ai` /
+`referrer=grok.com`, `[Your Name]`, `2025-XX-XX`): **see `reference/llm-artifacts.md`**
 for the full list and detection regexes. These are deterministic — sweep for them every time.
+
+### 9.8 Roleplay action markers
+**Watch:** `*nods*`, `*sighs*`, `*pauses thoughtfully*` — paired-asterisk action beats from a
+chat persona, pasted into prose. Verb-anchored; ordinary `*italic emphasis*` is not this tell.
+**Fix:** delete the marker (llm-artifacts.md §10).
+
+### 9.9 Detector-bypass characters
+**Watch:** zero-width characters inside words; Cyrillic/Greek lookalike letters spliced into Latin
+words. These arrive from "humanizer" bypass tools, not from authors. The audit CLI normalizes them
+before matching and flags `artifact.bypass_characters` (llm-artifacts.md §11). Treat any hit as the
+strongest possible signal that the text was machine-processed to evade scanners.
 
 

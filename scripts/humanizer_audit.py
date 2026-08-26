@@ -19,6 +19,29 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 SCHEMA = "humanizer-audit.v1"
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
+AI_REFERRER_HOSTS = {
+    "chatgpt.com",
+    "claude.ai",
+    "copilot.com",
+    "grok.com",
+    "openai",
+    "perplexity.ai",
+}
+
+ZERO_WIDTH_RE = re.compile("[​‌‍⁠﻿]")
+HOMOGLYPH_LATIN = {
+    # Cyrillic lookalikes
+    "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x",
+    "у": "y", "к": "k", "м": "m", "н": "h", "в": "b", "т": "t",
+    "А": "A", "Е": "E", "О": "O", "Р": "P", "С": "C", "Х": "X",
+    "У": "Y", "К": "K", "М": "M", "Н": "H", "В": "B", "Т": "T",
+    # Greek lookalikes
+    "ο": "o", "Ο": "O", "α": "a", "Α": "A", "ρ": "p", "Ρ": "P",
+}
+WORD_WITH_HOMOGLYPH_RE = re.compile(
+    "[A-Za-z{h}]*[A-Za-z][A-Za-z{h}]*".format(h="".join(HOMOGLYPH_LATIN))
+)
+
 
 @dataclass(frozen=True)
 class Rule:
@@ -96,12 +119,28 @@ ARTIFACT_RULES = [
         True,
     ),
     Rule(
-        "artifact.chatgpt_tracking_url",
+        "artifact.ai_tracking_url",
         9,
-        re.compile(r"[?&]utm_source=chatgpt\.com", re.I),
-        "ChatGPT tracking parameter in URL",
+        re.compile(
+            r"[?&](?:utm_source=(?:chatgpt\.com|claude\.ai|copilot\.com|openai|perplexity\.ai)"
+            r"|referrer=grok\.com)",
+            re.I,
+        ),
+        "AI-tool tracking parameter in URL",
         "error",
         True,
+    ),
+    Rule(
+        "artifact.roleplay_marker",
+        9,
+        re.compile(
+            r"(?<!\*)\*(?:nods|sighs|laughs|smiles|frowns|shrugs|grins|winks|chuckles|gasps|"
+            r"pauses|whispers|shouts|glances|smirks|blinks)(?:[^*\n]{0,60})?\*(?!\*)",
+            re.I,
+        ),
+        "Chat roleplay action marker leaked into text",
+        "error",
+        False,
     ),
     Rule(
         "artifact.bracket_placeholder",
@@ -414,10 +453,50 @@ def normalize_url(raw_url: str) -> str:
             (key, value)
             for key, value in parse_qsl(parsed.query, keep_blank_values=True)
             if not key.lower().startswith("utm_")
+            and not (key.lower() == "referrer" and value.lower() in AI_REFERRER_HOSTS)
         ],
         doseq=True,
     )
     return urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), parsed.path, query, parsed.fragment))
+
+
+def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
+    """Undo detector-bypass tricks before pattern matching.
+
+    Returns (normalized_text, counts, first_offset). Zero-width characters are
+    removed (a single leading BOM is ordinary file encoding, not a trick, and is
+    exempt); Cyrillic/Greek Latin-lookalike characters are mapped back to Latin
+    only inside mixed-script words, so genuine Cyrillic or Greek prose is never
+    rewritten. Findings that follow are located in the normalized text: line
+    numbers are unaffected, columns can shift only on lines that contained
+    zero-width characters.
+    """
+    counts = {"zero_width": 0, "homoglyph": 0}
+    first_offset = -1
+    lead_bom = text.startswith("﻿")
+    body = text[1:] if lead_bom else text
+    offset_base = 1 if lead_bom else 0
+
+    for match in ZERO_WIDTH_RE.finditer(body):
+        counts["zero_width"] += 1
+        if first_offset < 0:
+            first_offset = match.start() + offset_base
+
+    def swap_word(match: re.Match[str]) -> str:
+        nonlocal first_offset
+        word = match.group(0)
+        if not any(char in HOMOGLYPH_LATIN for char in word):
+            return word
+        counts["homoglyph"] += sum(1 for char in word if char in HOMOGLYPH_LATIN)
+        if first_offset < 0 or match.start() + offset_base < first_offset:
+            first_offset = match.start() + offset_base
+        return "".join(HOMOGLYPH_LATIN.get(char, char) for char in word)
+
+    normalized = WORD_WITH_HOMOGLYPH_RE.sub(swap_word, body)
+    normalized = ZERO_WIDTH_RE.sub("", normalized)
+    if lead_bom:
+        normalized = "﻿" + normalized
+    return normalized, counts, first_offset
 
 
 def normalize_citation(value: str) -> str:
@@ -1041,10 +1120,32 @@ def risk_score(findings: list[dict[str, object]]) -> int:
     return min(100, score)
 
 
+def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]) -> list[dict[str, object]]:
+    total = counts["zero_width"] + counts["homoglyph"]
+    if total == 0:
+        return []
+    line, column = line_column(starts, max(first_offset, 0))
+    return [
+        {
+            "id": "artifact.bypass_characters",
+            "family": 9,
+            "severity": "error",
+            "line": line,
+            "column": column,
+            "evidence": f"zero_width={counts['zero_width']}, homoglyph={counts['homoglyph']}",
+            "message": "Zero-width or homoglyph characters consistent with detector-bypass tricks",
+            "source_risk": False,
+        }
+    ]
+
+
 def audit_text(text: str, path: str) -> dict[str, object]:
+    original_starts = line_starts(text)
+    text, bypass_counts, bypass_offset = normalize_bypass_text(text)
     starts = line_starts(text)
     stats = stats_for(text)
     findings = []
+    findings.extend(bypass_findings(bypass_counts, bypass_offset, original_starts))
     findings.extend(regex_findings(text, ARTIFACT_RULES, starts))
     findings.extend(regex_findings(text, FAMILY_RULES, starts))
     findings.extend(ai_vocab_findings(text, starts))

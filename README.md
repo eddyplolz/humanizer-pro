@@ -14,7 +14,9 @@ gimmick, or personality injector.
 
 - **De-slop drafts without over-editing.** The restraint check protects prose that already works.
 - **Catch AI residue before it ships.** Flags `turn0search0`, `contentReference`, `oaicite`,
-  `utm_source=chatgpt.com`, placeholder dates, and unfinished template fields.
+  AI-referrer URL params (`utm_source=chatgpt.com`, `utm_source=claude.ai`, `referrer=grok.com`,
+  and friends), `*nods*`-style roleplay markers, zero-width/homoglyph detector-bypass characters,
+  placeholder dates, and unfinished template fields.
 - **Check without rewriting.** AI check mode returns score, blocker flags, family hits, source-risk
   notes, and quoted evidence when you ask for "check this," "score this," or "do not rewrite."
 - **Avoid swapping one tell for another.** The anti-swap pass catches fake-casual voice, binary
@@ -22,6 +24,12 @@ gimmick, or personality injector.
 - **Handle wiki and article prose.** Wiki/article mode neutralizes puffery, preserves citations, and
   flags unsupported claims instead of laundering them.
 - **Stay local and simple.** No detector API, no external service, no autonomous optimization loop.
+
+A note on honesty: every flag here is a signal, not proof of authorship. Independent audits report
+false-positive rates above 60% on non-native English writers (Liang et al., Stanford, *Patterns*
+2023) and heavy misclassification across detectors generally. Humanizer Pro scores writing tells;
+it does not judge people, and its output should never be the sole basis for an academic-integrity,
+hiring, or attribution decision.
 
 ## Quick Demo
 
@@ -255,6 +263,10 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.3.0** - Widened AI-referrer URL detection beyond ChatGPT (claude.ai, copilot.com, openai,
+  perplexity.ai, grok.com), added zero-width/homoglyph detector-bypass normalization and flagging,
+  added roleplay-marker detection, capped rewrite passes at two, added cited false-positive
+  context to the audit modes, and made the text-is-data injection boundary an operating principle.
 - **4.2.2** - Added Codex skill metadata in `agents/openai.yaml` and clarified Claude Code,
   Codex, and generic-agent installation and invocation paths.
 - **4.2.1** - Added score-only AI check routing and documentation for Claude Code and generic
