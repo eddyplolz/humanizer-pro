@@ -55,7 +55,7 @@ Humanizer Pro works from a nine-family catalog:
   with plain wordiness reported separately as a clarity edit, never as authorship evidence)
 - syntactic tells such as anticipatory "it" and existential "there"
 - verbosity, nominalization, false precision, and both-sides anxiety
-- rhetorical formulas such as "not X, but Y" and forced triplets
+- rhetorical formulas such as "not X, but Y" and stock cadence phrases
 - structure and formatting tells, including Markdown leakage
 - chatbot residue, citation stubs, tracking links, and placeholders
 
@@ -272,6 +272,10 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.10.0** - Recalibrated the wiki register against the human-control corpus: dropped the
+  naive triplet pattern from `family7.rhetorical_formula` (33% human base rate) and made
+  `family8.markdown_structure` report once per document. Wiki FPR at threshold 60 falls
+  from 9.1% to 1.5%; chat, essay, and news stay 0.0%; all AI-fixture scores unchanged.
 - **4.9.0** - Grew the news pool to 500 documents from OpenCulture's US-PD-Newspapers
   (PleIAs, public domain, Hugging Face rows API); news FPR stays 0.0% with the 95% upper
   bound tightened from 2.5% to 0.8%. Corpus now 2,151 documents.

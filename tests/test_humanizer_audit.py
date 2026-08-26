@@ -344,6 +344,31 @@ def test_anaphora_ignores_two_openers_and_stopwords() -> None:
     assert "structure.anaphora" not in ids
 
 
+def test_family7_ignores_plain_enumeration_triplets() -> None:
+    enumeration = (
+        "The ministry oversees public works, regional transit, and rural development. "
+        "Its board includes elected officials, appointed experts, and community delegates."
+    )
+    _returncode, payload = audit_json("--stdin", input_text=enumeration)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "family7.rhetorical_formula" not in ids
+    phrase = "This is not just a report but a warning to every reader."
+    _returncode, payload = audit_json("--stdin", input_text=phrase)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "family7.rhetorical_formula" in ids
+
+
+def test_markdown_structure_fires_once_per_document() -> None:
+    table_heavy = "\n".join(
+        ["| Year | Event | Outcome |", "| --- | --- | --- |"]
+        + [f"| 19{i:02} | Item {i} | Result {i} |" for i in range(20)]
+    )
+    _returncode, payload = audit_json("--stdin", input_text=table_heavy)
+    findings = payload["documents"][0]["findings"]
+    hits = [f for f in findings if f["id"] == "family8.markdown_structure"]
+    assert len(hits) == 1
+
+
 def test_uniform_length_run_calibrated_threshold() -> None:
     uniform = " ".join(
         "This sentence runs to about twelve words in total length here now." for _ in range(7)

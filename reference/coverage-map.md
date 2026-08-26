@@ -44,7 +44,7 @@ always says more than the regex.
 | `family4.ai_vocab_cluster` | §4.1 tiered AI vocabulary (Tier 1A/2; cluster logic in `ai_vocab_findings`) |
 | `family5.syntactic_tell` | §5.1–5.7 anticipatory it, existential there, hedged passives |
 | `family6.verbosity_padding` | §6.1–6.8 nominalization, periphrasis |
-| `family7.rhetorical_formula` | §7.1–7.11 binary contrasts, throat-clearing, forced triplets |
+| `family7.rhetorical_formula` | §7.1–7.11 binary contrasts, throat-clearing, stock formula phrases |
 | `family8.markdown_structure` | §8.3–8.11 structure and markup tells |
 | `family8.list_label_period` | §8.14 list-label periods |
 | `family9.chatbot_residue` | §9.1–9.5, §9.11 chat wrappers, sycophancy, summaries, RLHF framing |
@@ -91,8 +91,11 @@ applied by the model. Their absence from the CLI is a decision, not a gap:
 - **Em-dash judgment (§8.6)** — a *rate and intent* call; a regex count would flag legitimate prose.
 - **Title/opening patterns (§8.1–8.2)** — colon titles and scene-setting openers are common in
   human writing; only the combination with other tells convicts.
-- **Rule of three (§7.3)** — real triads are fine; the CLI's naive triplet pattern inside
-  `family7.rhetorical_formula` deliberately catches only the most mechanical form.
+- **Rule of three (§7.3)** — real triads are fine, and telling a forced triad from an ordinary
+  enumeration needs the meaning read. The CLI once carried a naive triplet pattern inside
+  `family7.rhetorical_formula`; corpus measurement showed it firing on 33% of human wiki
+  documents (plain lists of names, offices, and places), so it was removed and rule-of-three
+  judgment is entirely model-side.
 - **Diff-anchored writing (§8.15)** — changelog-register carve-outs cannot be read by a regex.
 - **Wall-of-text replies (§9.10)** — fires only in conversational registers; tried as a detector
   upstream (avoid-ai-writing) and reverted because it flagged every ordinary short paragraph.
