@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import http.client
 import json
 import re
 import sys
@@ -62,9 +63,10 @@ ID_PREFIX = {
     "public-domain": "pd",
     "news-page": "news",
     "gutenberg-work": "guten",
+    "hf-news": "hfnews",
 }
 # Kinds whose sources are public-domain pointers and may publish in the manifest.
-PUBLIC_SOURCE_KINDS = ("public-domain", "news-page", "gutenberg-work")
+PUBLIC_SOURCE_KINDS = ("public-domain", "news-page", "gutenberg-work", "hf-news")
 
 
 # ---------------------------------------------------------------- utilities
@@ -443,7 +445,7 @@ NEWS_CHUNK_MIN, NEWS_CHUNK_MAX = 200, 1200
 NEWS_CHUNKS_PER_ISSUE = 3
 NEWS_MIN_ALPHA_RATIO = 0.72
 NEWS_MIN_THE_RATIO = 0.02  # crude English check: "the" frequency
-OCR_CLEAN_VERSION = "ocr-chunk.v1"
+OCR_CLEAN_VERSION = "ocr-chunk.v2"
 
 
 def api_get_with_retry(url: str, params: dict, sleep: float, attempts: int = 5) -> dict:
@@ -482,9 +484,35 @@ def english_ratio(text: str) -> float:
     return tokens.count("the") / len(tokens)
 
 
+def _split_oversized(paragraph: str) -> list[str]:
+    """Split a paragraph past the chunk cap on line boundaries (v2 behavior).
+
+    Some OCR sources emit a whole page as one block with only single
+    newlines; without this, every page becomes one oversized chunk and the
+    word-band gate drops it.
+    """
+    if word_count(paragraph) <= NEWS_CHUNK_MAX:
+        return [paragraph]
+    pieces, current, current_words = [], [], 0
+    for line in paragraph.split("\n"):
+        current.append(line)
+        current_words += word_count(line)
+        if current_words >= NEWS_CHUNK_WORDS:
+            pieces.append("\n".join(current))
+            current, current_words = [], 0
+    if current:
+        pieces.append("\n".join(current))
+    return pieces
+
+
 def news_chunks(raw: str) -> list[str]:
     text = ocr_clean(raw)
-    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    paragraphs = [
+        piece
+        for p in re.split(r"\n\s*\n", text)
+        if p.strip()
+        for piece in _split_oversized(p.strip())
+    ]
     chunks, current, current_words = [], [], 0
     for paragraph in paragraphs:
         current.append(paragraph)
@@ -572,6 +600,96 @@ def build_news(args: argparse.Namespace) -> int:
     print(
         f"news: {len(entries)} chunks cached from {issues_used} issues "
         f"(target {args.target}); drops: {dict(dropped)}"
+    )
+    return 0
+
+
+# -------------------------------------------------- hf news (OpenCulture)
+
+
+HF_ROWS_API = "https://datasets-server.huggingface.co/rows"
+HF_NEWS_DATASET = "PleIAs/US-PD-Newspapers"
+# Fixed, spread offsets so the sample crosses many papers and years while
+# staying deterministic (no randomness; see resume rules). datasets-server
+# caps length at 100 rows per call, and probed offsets past ~2M drop the
+# connection on this dataset — stay inside the window that answers.
+HF_NEWS_OFFSETS = (0, 300_000, 600_000, 900_000, 1_200_000, 1_500_000, 1_800_000, 2_000_000)
+HF_NEWS_MAX_YEAR = 1928  # public-domain safety margin
+
+
+def build_hf_news(args: argparse.Namespace) -> int:
+    """Grow the news pool from OpenCulture's US-PD-Newspapers (HF rows API).
+
+    Page-level pre-extracted OCR text; chunked and gated exactly like the
+    Internet Archive pool. English-only dataset; dates capped at 1928.
+    """
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped = Counter()
+    for offset in HF_NEWS_OFFSETS:
+        if len(pairs) >= args.target:
+            break
+        query = urllib.parse.urlencode(
+            {
+                "dataset": HF_NEWS_DATASET,
+                "config": "default",
+                "split": "train",
+                "offset": offset,
+                "length": "100",
+            }
+        )
+        try:
+            payload = json.loads(fetch_text(f"{HF_ROWS_API}?{query}", args.sleep))
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as error:
+            dropped["offset-fetch-failed"] += 1
+            print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
+            continue
+        for item in payload.get("rows", []):
+            if len(pairs) >= args.target:
+                break
+            row = item.get("row", {})
+            date = str(row.get("date") or "")
+            year = date[:4]
+            if not (year.isdigit() and int(year) <= HF_NEWS_MAX_YEAR):
+                dropped["outside-date-range"] += 1
+                continue
+            kept_this_page = 0
+            chunks = news_chunks(str(row.get("text") or ""))
+            for index, chunk in enumerate(chunks[1:] or chunks, start=1):
+                if len(pairs) >= args.target or kept_this_page >= NEWS_CHUNKS_PER_ISSUE:
+                    break
+                chunk_words = word_count(chunk)
+                if not (NEWS_CHUNK_MIN <= chunk_words <= NEWS_CHUNK_MAX):
+                    dropped["word-band"] += 1
+                    continue
+                if alpha_ratio(chunk) < NEWS_MIN_ALPHA_RATIO:
+                    dropped["ocr-quality"] += 1
+                    continue
+                if english_ratio(chunk) < NEWS_MIN_THE_RATIO:
+                    dropped["not-english"] += 1
+                    continue
+                pairs.append(
+                    (
+                        {
+                            "register": "news",
+                            "author": "public-domain",
+                            "date": year,
+                            "extraction": OCR_CLEAN_VERSION,
+                        },
+                        chunk,
+                        {
+                            "dataset": HF_NEWS_DATASET,
+                            "id": str(row.get("id") or ""),
+                            "date": date,
+                            "file_name": str(row.get("file_name") or ""),
+                            "chunk": index,
+                        },
+                    )
+                )
+                kept_this_page += 1
+    entries = save_pool("hf-news", pairs)
+    print(
+        f"hf-news: {len(entries)} chunks cached (target {args.target}); "
+        f"drops: {dict(dropped)}"
     )
     return 0
 
@@ -757,6 +875,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_essays.add_argument("--sleep", type=float, default=1.0)
     p_essays.set_defaults(func=build_essays)
+
+    p_hf = sub.add_parser(
+        "build-hf-news", help="grow the news pool from OpenCulture (HF rows API)"
+    )
+    p_hf.add_argument("--target", type=int, default=350)
+    p_hf.add_argument("--sleep", type=float, default=1.5)
+    p_hf.set_defaults(func=build_hf_news)
 
     p_fetch = sub.add_parser("fetch", help="repopulate cache from the manifest")
     p_fetch.add_argument("--sleep", type=float, default=1.0)

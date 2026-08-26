@@ -272,6 +272,9 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.9.0** - Grew the news pool to 500 documents from OpenCulture's US-PD-Newspapers
+  (PleIAs, public domain, Hugging Face rows API); news FPR stays 0.0% with the 95% upper
+  bound tightened from 2.5% to 0.8%. Corpus now 2,151 documents.
 - **4.8.0** - Adopted the writing-quality half of harshaneel/humanize (MIT): the counted gate and
   countable rhythm proxies in the process, four new rhetorical-scaffolding catalog entries plus
   RLHF helpful-assistant framing, and three corpus-calibrated CLI structure rules. Its
@@ -353,3 +356,5 @@ Pattern sources, with thanks:
   (WikiProject AI Cleanup) - available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - **[Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134)** - source for William Strunk
   Jr.'s public-domain *The Elements of Style* text.
+- **[OpenCulture / US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers)** by
+  PleIAs - public-domain newspaper text used (hash-only) in the human-control corpus's news pool.
