@@ -68,7 +68,9 @@ Return:
 
 1. **Score:** `pass`, `review`, or `block`, plus the numeric risk score when the CLI produced one.
 2. **Blockers:** artifact leakage, placeholders, citation stubs, tracking URLs, or fidelity drift.
-3. **Family hits:** the strongest tell families by number and name.
+3. **Family hits:** the strongest tell families by number and name. Report `clarity.wordiness`
+   hits separately from vocabulary evidence and say which is which — a wordiness fix (utilize,
+   commence, facilitate) is a writing suggestion, not evidence about who wrote the text.
 4. **Source-risk notes:** unsupported claims, vague attribution, citation-shaped text, source-bound
    language, and evidence markers that need preservation.
 5. **Evidence:** brief quoted phrases with line numbers when available.
