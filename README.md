@@ -272,6 +272,10 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.7.0** - Widened the corpus with two public-domain pools: a news register (Internet
+  Archive newspaper issues 1900-1922, OCR-quality-gated) and a broader essay pool (Gutenberg:
+  Emerson, Thoreau, Twain). Four of the six registers are now measured; the personal pools'
+  anonymity contract is unchanged.
 - **4.6.0** - Added the hash-only, anonymous human-control corpus (`corpus/manifest.json`,
   built by `scripts/corpus.py`; digests and registers only, never text or source locators)
   and measured false-positive rates by register (`scripts/fp_measure.py`, results in

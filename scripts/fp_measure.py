@@ -265,8 +265,12 @@ def render_results_md(result: dict) -> str:
             "## Honest limits",
             "",
             "- Register mapping: forum posts → chat, wiki revisions → wiki,",
-            "  1918 public-domain prose → essay. The essay slice measures century-old",
-            "  prose, which is stated rather than hidden.",
+            "  public-domain prose (Strunk 1918, Emerson, Thoreau, Twain) → essay,",
+            "  Internet Archive newspaper issues (1900–1922) → news. The essay and",
+            "  news slices measure century-old prose, stated rather than hidden.",
+            "- The news pool is OCR of old newsprint: an alphabetic-ratio",
+            "  quality gate bounds the OCR noise but does not eliminate it, so a news",
+            "  flag can reflect the scan rather than the writing.",
             "- The corpus skews toward one writer and one community; it measures",
             "  restraint on the registers this skill actually meets, not all prose.",
             "- Registers are measured separately because rates differ by register;",
@@ -297,7 +301,9 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print(render_text(result))
     if args.write_results:
-        Path(args.write_results).write_text(render_results_md(result), encoding="utf-8")
+        Path(args.write_results).write_text(
+            render_results_md(result), encoding="utf-8", newline="\n"
+        )
         print(f"\nwrote {args.write_results}")
     return 0
 

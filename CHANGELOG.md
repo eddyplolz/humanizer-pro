@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.7.0 - 2026-08-26
+
+- Widened the human-control corpus with two public-domain pools: a **news register**
+  (Internet Archive newspaper issues, 1900-1922, chunked to ~600-word documents and gated per
+  chunk on OCR quality and an English check, with every drop counted) and a broader **essay
+  pool** (Gutenberg: Emerson, Thoreau, Twain, chunked like the existing Strunk text). Four of
+  the six registers the skill defines are now measured.
+- New corpus subcommands `build-news` and `build-essays`; fetching is rate-limit-aware
+  (backoff on 429/503). Public-domain pools publish their sources for reproducibility; the
+  personal pools remain fully anonymous (unchanged contract, still test-enforced).
+- The news slice is honest about its material: page-level OCR of century-old newsprint — the
+  quality gate (alphabetic-token ratio) bounds but does not eliminate OCR noise, and
+  `corpus/RESULTS.md` states that caveat next to the numbers.
+
 ## 4.6.0 - 2026-08-26
 
 - Added the hash-only, anonymous human-control corpus: `corpus/manifest.json` carries register,
