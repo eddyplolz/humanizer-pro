@@ -217,6 +217,52 @@ def test_list_label_period_flags_period_labels_only() -> None:
     assert "family8.list_label_period" not in finding_ids(payload["documents"][0])
 
 
+def _load_audit_module():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("humanizer_audit_under_test", CLI)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["humanizer_audit_under_test"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_every_cli_rule_id_is_in_the_coverage_map() -> None:
+    module = _load_audit_module()
+    coverage = (ROOT / "reference" / "coverage-map.md").read_text(encoding="utf-8")
+    rule_ids = {
+        rule.id
+        for table in (module.ARTIFACT_RULES, module.FAMILY_RULES, module.SOURCE_RISK_RULES, module.CLARITY_RULES)
+        for rule in table
+    }
+    rule_ids.update(
+        {
+            "family4.ai_vocab_cluster",
+            "artifact.bypass_characters",
+            "structure.low_sentence_variance",
+            "structure.long_uniform_paragraphs",
+        }
+    )
+    missing = {rule_id for rule_id in rule_ids if f"`{rule_id}`" not in coverage}
+    assert not missing, f"CLI rule ids missing from reference/coverage-map.md: {sorted(missing)}"
+    assert "compare." in coverage
+
+
+def test_self_scan_passes_its_budgets() -> None:
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "self_scan.py"), "--json"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.stdout, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["schema"] == "humanizer-self-scan.v1"
+    assert result.returncode == 0, payload["failures"]
+    assert {row["path"] for row in payload["documents"]} >= {"README.md", "SKILL.md"}
+
+
 def test_compare_ignores_stripped_ai_referrer(tmp_path: Path) -> None:
     (tmp_path / "original.md").write_text(
         "Read [the report](https://example.org/r?referrer=grok.com) today.", encoding="utf-8"

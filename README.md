@@ -201,8 +201,11 @@ over-humanizing paradox.
 | `reference/style-principles.md` | Compact Elements of Style checklist for everyday style edits. |
 | `reference/elements-of-style-1918.md` | Full public-domain Project Gutenberg text of Strunk's *The Elements of Style*. |
 | `reference/wiki-mode.md` | Neutral, source-bound article workflow for wiki and encyclopedic prose. |
+| `reference/registers.md` | Per-register strictness table with auto-detection cues. |
+| `reference/coverage-map.md` | Anti-drift contract mapping catalog prose to CLI rule ids, with judgment-only rules recorded. |
 | `reference/improvement-loop.md` | Review gate for promoting recurring skill failures into durable rules. |
 | `scripts/humanizer_audit.py` | Deterministic CLI for artifact, source-risk, tell-family, rhythm, and JSON checks. |
+| `scripts/self_scan.py` + `self_scan_budgets.json` | Runs the audit over this repo's own docs; budgets gate the exemption-adjusted score. |
 | `eval/cases.md` | Manual validation matrix. |
 | `eval/contracts/*.json` | Automated scenario contracts for the audit CLI. |
 | `eval/fixtures/*.md` | Regression fixtures for clean prose, AI slop, wiki promotion, over-humanizing, artifacts, style edits, and fidelity compare checks. |
@@ -250,6 +253,11 @@ Manual validation lives in `eval/cases.md` and `eval/fixtures/`.
 Expected checks include:
 
 - `py -3 -m pytest -q tests` passes.
+- `py -3 scripts/self_scan.py` exits 0: the repo's own docs stay within their recorded budgets.
+  Both raw and exemption-adjusted scores are reported, on purpose — the raw number includes every
+  tell this repo quotes in order to warn about it, and publishing only the flattering column is
+  the behavior this project exists to criticize. Budgets are regression ceilings, not quality
+  claims, and they only move down.
 - `py -3 scripts/humanizer_audit.py eval/fixtures --json` emits schema `humanizer-audit.v1`.
 - `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/original.md eval/fixtures/fidelity/revised-drift.md --json`
   reports protected-content drift without style scoring.
@@ -264,6 +272,10 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.5.0** - Added per-register strictness profiles (`reference/registers.md`), the
+  prose-to-CLI coverage map with a test that every CLI rule id is mapped
+  (`reference/coverage-map.md`), and the budget-gated self-scan
+  (`scripts/self_scan.py`) that audits this repo's own documentation.
 - **4.4.0** - Tiered the AI vocabulary (Tier 1A frequency markers vs. Tier 2 cluster-only) and
   split wordiness into `clarity.wordiness`, which carries zero risk weight so a clarity fix can
   never read as authorship evidence. Added the provenance test and never-inject guardrails to the
