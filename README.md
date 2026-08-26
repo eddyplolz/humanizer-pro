@@ -272,6 +272,13 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.6.0** - Added the hash-only, anonymous human-control corpus (`corpus/manifest.json`,
+  built by `scripts/corpus.py`; digests and registers only, never text or source locators)
+  and measured false-positive rates by register (`scripts/fp_measure.py`, results in
+  `corpus/RESULTS.md`). Every corpus document predates ChatGPT, so every flag on one is a
+  false positive by construction; rates are reported per register with Wilson intervals
+  because the aggregate hides the register split. No true-positive rate is claimed — there
+  is no machine-generated corpus here yet.
 - **4.5.0** - Added per-register strictness profiles (`reference/registers.md`), the
   prose-to-CLI coverage map with a test that every CLI rule id is mapped
   (`reference/coverage-map.md`), and the budget-gated self-scan
