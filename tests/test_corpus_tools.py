@@ -97,31 +97,39 @@ def test_manifest_is_structurally_sound() -> None:
     ids = [entry["id"] for entry in entries]
     assert len(ids) == len(set(ids)), "entry ids must be unique"
     for entry in entries:
-        assert entry["kind"] in ("forum-post", "wiki-revision", "public-domain")
-        assert entry["register"] in ("chat", "wiki", "essay")
+        assert entry["kind"] in (
+            "forum-post", "wiki-revision", "public-domain", "news-page", "gutenberg-work",
+        )
+        assert entry["register"] in ("chat", "wiki", "essay", "news")
         assert entry["label"] == "human"
         assert entry["author"] in ("maintainer", "other", "public-domain")
         assert re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
-        assert re.fullmatch(r"(forum|wiki|pd)-[0-9a-f]{12}", entry["id"])
+        assert re.fullmatch(r"(forum|wiki|pd|news|guten)-[0-9a-f]{12}", entry["id"])
         assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
 
 
 def test_manifest_is_anonymous() -> None:
-    """Hash-only AND anonymous: no text, no usernames, no source locators.
+    """Hash-only AND anonymous: no text, no usernames, no personal locators.
 
-    Only the public-domain pool may carry a source, and only a pointer to the
-    public-domain text this repo already ships.
+    Only public-domain pools (Strunk chunks, Gutenberg works, Internet
+    Archive news chunks) may carry a source, and only public-domain pointers.
+    The forum and wiki pools must never publish a locator of any kind.
     """
     entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     public_keys = {
         "id", "kind", "label", "register", "author", "date", "words",
         "sha256", "extraction", "source",
     }
+    source_keys = {
+        "public-domain": {"work", "chunk", "chunk_words"},
+        "gutenberg-work": {"work", "gutenberg_id", "url", "chunk", "chunk_words"},
+        "news-page": {"url", "ia_identifier", "chunk"},
+    }
     for entry in entries:
         assert set(entry) <= public_keys
-        if entry["kind"] == "public-domain":
-            assert set(entry.get("source", {})) <= {"work", "chunk", "chunk_words"}
+        if entry["kind"] in source_keys:
+            assert set(entry.get("source", {})) <= source_keys[entry["kind"]]
         else:
             assert "source" not in entry, f"{entry['id']} leaks a source locator"
 

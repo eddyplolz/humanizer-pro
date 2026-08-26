@@ -17,10 +17,11 @@ flag on one is a false positive by construction. The manifest is anonymous by de
 register, author tier, date, word count, and SHA-256 digest per document — no text, no usernames,
 no source locators. Entry ids derive from the digest, so they name content without describing it.
 The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
-`corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pool is the
-exception: its entries point at the public-domain text this repository already ships, so that
-slice is independently rebuildable. `verify` checks every cached file against its digest; a test
-enforces the anonymity contract on every entry.
+`corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pools are
+the exception: the in-repo Strunk chunks, the Gutenberg essay works (`build-essays`), and the
+Internet Archive news chunks (`build-news`, OCR-quality-gated, rate-limit-aware) publish their
+public-domain sources so those slices are independently rebuildable. `verify` checks every cached
+file against its digest; a test enforces the anonymity contract on every entry.
 
 `fp_measure.py` audits the cached corpus and prints false-positive rates by register and author
 slice with Wilson 95% intervals, a review-threshold sweep, and the rules that fire most often on
