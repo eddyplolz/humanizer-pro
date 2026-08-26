@@ -320,3 +320,66 @@ def test_compare_text_report_is_available() -> None:
     assert result.returncode == 2
     assert "Humanizer compare:" in result.stdout
     assert "compare.code_block.changed" in result.stdout
+
+
+def test_anaphora_fires_on_three_consecutive_openers() -> None:
+    text = (
+        "Not every door has been tried. Not every version of this exists. "
+        "Not every path leads home. The rest of the paragraph varies its openers "
+        "with different words entirely."
+    )
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "structure.anaphora" in ids
+
+
+def test_anaphora_ignores_two_openers_and_stopwords() -> None:
+    two_only = "Not every door was tried. Not every path was walked. A third sentence differs."
+    _returncode, payload = audit_json("--stdin", input_text=two_only)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "structure.anaphora" not in ids
+    stopword = "The dog barked. The cat slept. The bird sang. A fox watched them all."
+    _returncode, payload = audit_json("--stdin", input_text=stopword)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "structure.anaphora" not in ids
+
+
+def test_uniform_length_run_calibrated_threshold() -> None:
+    uniform = " ".join(
+        "This sentence runs to about twelve words in total length here now." for _ in range(7)
+    )
+    _returncode, payload = audit_json("--stdin", input_text=uniform)
+    document = payload["documents"][0]
+    assert document["stats"]["max_uniform_run"] >= 6
+    ids = {finding["id"] for finding in document["findings"]}
+    assert "structure.uniform_length_run" in ids
+    varied = (
+        "Short one. This sentence stretches considerably further, unfolding across many more "
+        "words than its neighbors ever attempt to reach in this text. Mid-length follows here "
+        "with several words. Tiny. Another long construction now arrives, carrying clause after "
+        "clause toward a conclusion that refuses to hurry itself along the way."
+    )
+    _returncode, payload = audit_json("--stdin", input_text=varied)
+    ids = {finding["id"] for finding in payload["documents"][0]["findings"]}
+    assert "structure.uniform_length_run" not in ids
+
+
+def test_rlhf_framing_extends_family9() -> None:
+    text = "Let me walk you through the deployment. On the one hand it is fast, but on the other it costs more."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    hits = [f for f in document["findings"] if f["id"] == "family9.chatbot_residue"]
+    assert len(hits) >= 2
+
+
+def test_filler_wrappers_are_clarity_only() -> None:
+    text = (
+        "With regard to the deployment, the plan held. "
+        "In the event that this recurs, page the on-call engineer."
+    )
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    clarity_hits = [f for f in document["findings"] if f["id"] == "clarity.wordiness"]
+    assert len(clarity_hits) == 2
+    assert all(f["severity"] == "info" for f in clarity_hits)
+    assert document["risk_score"] == 0

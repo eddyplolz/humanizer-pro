@@ -47,13 +47,13 @@ always says more than the regex.
 | `family7.rhetorical_formula` | §7.1–7.11 binary contrasts, throat-clearing, forced triplets |
 | `family8.markdown_structure` | §8.3–8.11 structure and markup tells |
 | `family8.list_label_period` | §8.14 list-label periods |
-| `family9.chatbot_residue` | §9.1–9.5 chat wrappers, sycophancy, summaries |
+| `family9.chatbot_residue` | §9.1–9.5, §9.11 chat wrappers, sycophancy, summaries, RLHF framing |
 
 ### Clarity rules (Tier 1B; info severity, zero risk weight)
 
 | CLI rule id | Section |
 |---|---|
-| `clarity.wordiness` | §4.3 academic register inflation — a clarity edit, never authorship evidence |
+| `clarity.wordiness` | §4.3 academic register inflation + §3.2 multi-word filler wrappers — a clarity edit, never authorship evidence |
 
 ### Source-risk rules (`wiki-mode.md` source discipline; verification needs, not tells)
 
@@ -69,6 +69,9 @@ always says more than the regex.
 |---|---|
 | `structure.low_sentence_variance` | §8.12 paragraph/sentence uniformity, as a computed statistic |
 | `structure.long_uniform_paragraphs` | §8.12, paragraph-level variant |
+| `structure.uniform_length_run` | §7.13/§8.12 — 4+ consecutive sentences within 5 words of each other (HH countable proxy) |
+| `structure.midband_dominance` | §8.12 — most sentences in the 10–20 word band with a narrow range (HH countable proxy) |
+| `structure.anaphora` | §7.13 — 3+ consecutive sentences sharing an opening word |
 
 ### Compare mode (fidelity guards, not tells)
 
