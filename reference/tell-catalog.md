@@ -63,6 +63,24 @@ outlets, active/strong social media presence.
 > **Before:** Her views have been cited in The New York Times, BBC, Financial Times, and The Hindu. She maintains an active social media presence.
 > **After:** In a 2024 New York Times interview, she argued AI regulation should target outcomes, not methods.
 
+### 2.4 Speculative gap-filling (avoid-ai-writing)
+**Watch:** is believed to have, likely began/studied/served, appears to have been/worked,
+maintains a relatively low public profile.
+**Problem:** When the model lacks a fact it fills the gap with hedged speculation dressed as
+background. Worse than a cutoff disclaimer, which at least *admits* the gap — this hides it, so
+the reader cannot tell known from invented. Directly dangerous in wiki/source-bound work.
+> **Before:** He is believed to have studied law and likely began his career in the ministry.
+> **After:** (source it, or cut it — a guess formatted as biography is a fabrication.)
+
+### 2.5 Vague third-party validation (avoid-ai-writing)
+**Watch:** independent testing confirms, third-party benchmarks show, analysts agree, studies
+consistently show — an **unnamed** authority plus a generic superlative.
+**Problem:** The inverse of notability name-dropping: the authority is faceless and the claim
+unfalsifiable. **Carve-out:** specifically attributed, checkable validation is legitimate — a
+named benchmark, a linked report, a dated audit.
+> **Before:** Independent testing confirms the institute's standing among its peers.
+> **After:** The 2019 national research assessment ranked the institute second in materials science.
+
 ---
 
 ## Family 3 — Superficial analysis & filler
@@ -102,11 +120,21 @@ ensuring…, fostering…, showcasing…, encompassing… (participle tacked to 
 ## Family 4 — AI vocabulary & diction
 
 ### 4.1 High-density "AI vocabulary" (WP)
-**Watch (core list):** additionally (sentence-initial), align with, boasts, bolstered, crucial, delve,
-emphasizing, enduring, enhance, fostering, garner, highlight (verb), interplay, intricate/intricacies,
-key (adj), landscape (abstract), meticulous(ly), pivotal, robust, showcase, tapestry (abstract),
-testament, underscore (verb), valuable, vibrant.
-**Problem:** Post-2022 over-represented words. One is coincidence; a *cluster* is a strong tell.
+The list is tiered by what a hit *means* (tiering adapted from avoid-ai-writing / brandonwise's
+vocabulary research). The frequency claims behind Tier 1A are inherited from those sources, not
+measured here — treat them as a well-supported convention.
+
+**Tier 1A — frequency markers** (reported far more common in machine text; two distinct 1A words
+anywhere is already a cluster): delve, emphasizing, enduring, garner, interplay,
+intricate/intricacies, landscape (abstract), meticulous(ly), pivotal, robust, showcase/showcasing,
+tapestry (abstract), testament, underscore (verb), vibrant.
+
+**Tier 2 — cluster-only** (legitimate alone; evidence when 2+ share a paragraph or 3+ share a
+document): additionally (sentence-initial), align with, boasts, bolstered, cornerstone, crucial,
+enhance, foster(ing), highlight(ing) (verb), key (adj), leverage, unlock, valuable.
+
+**Problem:** Post-2022 over-represented words. One is coincidence; a *cluster* is a strong tell,
+and a 1A cluster is the strongest vocabulary evidence available.
 **Era (so the skill ages well — tells drift):**
 - 2023–mid-2024 (GPT-4): additionally, boasts, bolstered, crucial, delve, emphasizing, enduring, garner, intricate, interplay, key, landscape, meticulous, pivotal, underscore, tapestry, testament, valuable, vibrant.
 - mid-2024–mid-2025 (GPT-4o): align with, bolstered, crucial, emphasizing, enhance, enduring, fostering, highlighting, pivotal, showcasing, underscore, vibrant.
@@ -118,9 +146,14 @@ testament, underscore (verb), valuable, vibrant.
 ### 4.2 AI intensifiers (SS)
 **Watch:** deeply, truly, fundamentally, inherently, simply, literally, inevitably. **Fix:** usually delete.
 
-### 4.3 Academic register inflation (PDF)
-**Watch:** utilize→use, commence→start, demonstrate→show, leverage→use, facilitate→help, endeavor→try.
-**Problem:** Latinate word picked over a plain Germanic one regardless of context.
+### 4.3 Academic register inflation — Tier 1B, a clarity edit (PDF)
+**Watch:** utilize→use, commence→start, demonstrate→show, facilitate→help, endeavor→try,
+ascertain→find out.
+**Problem:** Latinate word picked over a plain Germanic one regardless of context. **A 1B hit is
+NOT authorship evidence** — plenty of humans write "utilize" in formal registers. Fix it as good
+editing, report it separately from the vocabulary cluster (the CLI emits it as
+`clarity.wordiness` with zero risk contribution), and never present a wordiness fix as evidence
+about who wrote the text.
 > **Before:** Organizations can utilize these tools to facilitate efficiency.
 > **After:** Companies can use these tools to work faster.
 
@@ -314,6 +347,20 @@ not proof of AI — only its over-frequency + the "not X — but Y" pattern.
 these still err" → "but AI will…"); contrived specificity ("build a REST endpoint for products by tag");
 relatability bait ("while your coffee cools"). **Fix:** break the template; cut the staged moves.
 
+### 8.14 List-label periods (avoid-ai-writing)
+**Problem:** In labeled bullet lists, LLMs end the label with a period where a person writes a colon.
+**Carve-out:** a label that is a full sentence on its own keeps its period.
+> **Before:** - **Intros.** Years of conferences and operator network.
+> **After:** - **Intros:** years of conferences and operator network.
+
+### 8.15 Diff-anchored writing (avoid-ai-writing) — *judgment-only*
+**Watch:** docs or comments narrating the change instead of the artifact: "This function was added to
+replace the previous approach…". Assistants write docs anchored to the edit they just made; a person
+documenting later writes from the artifact. **Fix:** describe current behavior and why it is that way;
+history belongs in the changelog. **Carve-outs:** changelogs, release notes, migration guides, and
+decision records narrate change correctly. Judgment-only — telling a version-scoped document from a
+misanchored one needs the register, which a regex cannot read.
+
 ---
 
 ## Family 9 — Chatbot residue (prose) & artifacts
@@ -355,5 +402,13 @@ chat persona, pasted into prose. Verb-anchored; ordinary `*italic emphasis*` is 
 words. These arrive from "humanizer" bypass tools, not from authors. The audit CLI normalizes them
 before matching and flags `artifact.bypass_characters` (llm-artifacts.md §11). Treat any hit as the
 strongest possible signal that the text was machine-processed to evade scanners.
+
+### 9.10 Wall-of-text replies (avoid-ai-writing) — *judgment-only*
+**Watch:** in conversational registers only (chat, Discord, forum/issue replies): a reply-length
+text (~under 150 words) with four or more sentences and no line break anywhere. Humans break replies
+at thought boundaries; LLMs default to one dense block. **Fix:** break at thought boundaries, one
+idea per line-group. **Never** flag continuous long-form prose for lacking internal breaks — a tight
+single paragraph is the correct shape in formal registers, which is exactly why this stays
+judgment-only (a regex cannot read the register).
 
 

@@ -1,5 +1,25 @@
 # Changelog
 
+## 4.4.0 - 2026-08-26
+
+- Tiered the AI vocabulary: Tier 1A frequency markers (two distinct 1A words anywhere now fire the
+  cluster) vs. Tier 2 cluster-only words; the frequency claims are marked as inherited from the
+  source catalogs, not measured here.
+- Split wordiness (utilize, commence, facilitate, endeavor, ascertain) into `clarity.wordiness`:
+  info severity, no tell family, zero risk-score weight, own `clarity_hit_count` in the summary —
+  a clarity fix can never push a document toward an AI classification.
+- Voice rules now carry the provenance test ("did this information come from the source? subtract
+  and sharpen, never add") with explicit never-inject items: fake first person, invented specifics,
+  manufactured stakes/contrarianism, staccato conversion. Compare mode is wired into the anti-swap
+  check: `compare.*.introduced` findings after a deep edit are anti-swap failures.
+- New detectors: `family2.speculative_gap_filling` ("is believed to have," "likely began"),
+  `family2.vague_validation` ("independent testing confirms," "analysts agree"),
+  `family8.list_label_period` (`**Label.** gloss` where a person writes `**Label:**`).
+- New judgment-only catalog patterns (deliberately not regexes, with the reasons recorded):
+  diff-anchored writing (§8.15) and wall-of-text replies (§9.10).
+- Credits: tiering and the five new patterns adapted from conorbronsdon/avoid-ai-writing (MIT) and
+  the brandonwise/humanizer vocabulary research it builds on.
+
 ## 4.3.0 - 2026-08-26
 
 - Widened `artifact.chatgpt_tracking_url` into `artifact.ai_tracking_url`: now catches
