@@ -168,6 +168,55 @@ def test_roleplay_marker_flags_action_asterisks_not_italics() -> None:
     assert "artifact.roleplay_marker" not in finding_ids(payload["documents"][0])
 
 
+def test_clarity_wordiness_is_reported_but_never_risky() -> None:
+    text = "We will utilize the platform to facilitate onboarding and commence the rollout."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    assert returncode == 0
+    assert "clarity.wordiness" in finding_ids(document)
+    assert document["risk_score"] == 0
+    assert payload["summary"]["clarity_hit_count"] == 3
+    assert payload["summary"]["family_hit_count"] == 0
+
+
+def test_two_tier1_words_fire_vocab_cluster_across_paragraphs() -> None:
+    text = "A pivotal step for the region.\n\nIts opening was a testament, colleagues said."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    ids = finding_ids(payload["documents"][0])
+    assert "family4.ai_vocab_cluster" in ids
+
+
+def test_two_tier2_words_in_separate_paragraphs_do_not_fire_cluster() -> None:
+    text = "A crucial step for the region.\n\nThe team will enhance the program."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    ids = finding_ids(payload["documents"][0])
+    assert "family4.ai_vocab_cluster" not in ids
+
+
+def test_speculative_gap_filling_and_vague_validation_flag_with_source_risk() -> None:
+    text = (
+        "The founder is believed to have studied in the capital. "
+        "Independent testing confirms the institute's reputation."
+    )
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    ids = finding_ids(document)
+    assert "family2.speculative_gap_filling" in ids
+    assert "family2.vague_validation" in ids
+    assert all(
+        finding["source_risk"]
+        for finding in document["findings"]
+        if finding["id"] in {"family2.speculative_gap_filling", "family2.vague_validation"}
+    )
+
+
+def test_list_label_period_flags_period_labels_only() -> None:
+    _returncode, payload = audit_json("--stdin", input_text="- **Intros.** Years of conferences.")
+    assert "family8.list_label_period" in finding_ids(payload["documents"][0])
+    _returncode, payload = audit_json("--stdin", input_text="- **Intros:** years of conferences.")
+    assert "family8.list_label_period" not in finding_ids(payload["documents"][0])
+
+
 def test_compare_ignores_stripped_ai_referrer(tmp_path: Path) -> None:
     (tmp_path / "original.md").write_text(
         "Read [the report](https://example.org/r?referrer=grok.com) today.", encoding="utf-8"

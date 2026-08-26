@@ -199,6 +199,32 @@ FAMILY_RULES = [
         source_risk=True,
     ),
     Rule(
+        "family2.speculative_gap_filling",
+        2,
+        re.compile(
+            r"\b(?:is|was|are|were)\s+(?:widely\s+)?believed\s+to\s+have\b|"
+            r"\blikely\s+(?:began|started|joined|studied|served|worked)\b|"
+            r"\bappears?\s+to\s+have\s+(?:been|begun|studied|worked|served)\b|"
+            r"\bmaintains\s+a\s+relatively\s+low\s+(?:public\s+)?profile\b",
+            re.I,
+        ),
+        "Speculative gap-filling presented as fact",
+        source_risk=True,
+    ),
+    Rule(
+        "family2.vague_validation",
+        2,
+        re.compile(
+            r"\b(?:independent\s+(?:testing|tests|analysis|audits?)\s+(?:confirm|confirms|show|shows|validate|validates)|"
+            r"third-party\s+benchmarks?\s+(?:show|confirm|place|put)|"
+            r"analysts\s+(?:agree|say|note|believe)|"
+            r"studies\s+consistently\s+show)\b",
+            re.I,
+        ),
+        "Unnamed third-party validation",
+        source_risk=True,
+    ),
+    Rule(
         "family3.filler_framing",
         3,
         re.compile(
@@ -248,6 +274,12 @@ FAMILY_RULES = [
         "Mechanical structure or Markdown formatting tell",
     ),
     Rule(
+        "family8.list_label_period",
+        8,
+        re.compile(r"^\s*[-*+]\s+\*\*[^*\n]{1,40}?\.\*\*\s+\S", re.M),
+        "List label ends with a period instead of a colon",
+    ),
+    Rule(
         "family9.chatbot_residue",
         9,
         re.compile(
@@ -259,26 +291,17 @@ FAMILY_RULES = [
     ),
 ]
 
-AI_VOCAB = {
-    "additionally",
-    "align",
-    "boasts",
-    "bolstered",
-    "cornerstone",
-    "crucial",
+# Tier 1A: words reported far more frequent in machine text than human text. The
+# frequency claim is inherited from the source catalogs, not measured here; a
+# cluster of these is still the strongest vocabulary evidence this CLI has.
+AI_VOCAB_TIER1 = {
     "delve",
     "emphasizing",
     "enduring",
-    "enhance",
-    "foster",
-    "fostering",
     "garner",
-    "highlight",
-    "highlighting",
     "interplay",
     "intricate",
     "landscape",
-    "leverage",
     "meticulous",
     "pivotal",
     "robust",
@@ -287,10 +310,46 @@ AI_VOCAB = {
     "tapestry",
     "testament",
     "underscore",
-    "unlock",
-    "valuable",
     "vibrant",
 }
+
+# Tier 2: legitimate on their own; evidence only in clusters.
+AI_VOCAB_TIER2 = {
+    "additionally",
+    "align",
+    "boasts",
+    "bolstered",
+    "cornerstone",
+    "crucial",
+    "enhance",
+    "foster",
+    "fostering",
+    "highlight",
+    "highlighting",
+    "leverage",
+    "unlock",
+    "valuable",
+}
+
+AI_VOCAB = AI_VOCAB_TIER1 | AI_VOCAB_TIER2
+
+# Tier 1B: wordiness and register inflation. Replacing these is good writing
+# regardless of who wrote the sentence, so they are reported as clarity edits,
+# carry no tell family, and contribute nothing to the risk score — a wordiness
+# fix must never push a document toward an AI classification.
+CLARITY_RULES = [
+    Rule(
+        "clarity.wordiness",
+        None,
+        re.compile(
+            r"\b(?:utiliz(?:e|es|ed|ing|ation)|commenc(?:e|es|ed|ing)|"
+            r"facilitat(?:e|es|ed|ing)|endeavor(?:s|ed|ing)?|ascertain(?:s|ed|ing)?)\b",
+            re.I,
+        ),
+        "Inflated register (a clarity edit, not authorship evidence)",
+        "info",
+    ),
+]
 
 SOURCE_RISK_RULES = [
     Rule(
@@ -1041,7 +1100,8 @@ def regex_findings(text: str, rules: Iterable[Rule], starts: list[int]) -> list[
 def ai_vocab_findings(text: str, starts: list[int]) -> list[dict[str, object]]:
     found_terms = [(match.group(0).lower(), match.start()) for match in re.finditer(r"[A-Za-z][A-Za-z'-]*", text)]
     matched = [(term, offset) for term, offset in found_terms if term in AI_VOCAB]
-    if len(matched) < 3:
+    tier1_terms = {term for term, _offset in matched if term in AI_VOCAB_TIER1}
+    if len(matched) < 3 and len(tier1_terms) < 2:
         paragraph_hits = []
         cursor = 0
         for paragraph in paragraphs(text):
@@ -1150,6 +1210,7 @@ def audit_text(text: str, path: str) -> dict[str, object]:
     findings.extend(regex_findings(text, FAMILY_RULES, starts))
     findings.extend(ai_vocab_findings(text, starts))
     findings.extend(regex_findings(text, SOURCE_RISK_RULES, starts))
+    findings.extend(regex_findings(text, CLARITY_RULES, starts))
     findings.extend(rhythm_findings(stats))
     findings.sort(key=lambda item: (int(item["line"]), int(item["column"]), str(item["id"])))
     return {
@@ -1179,6 +1240,7 @@ def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, 
         "artifact_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("artifact.")),
         "source_risk_count": sum(1 for finding in all_findings if finding["source_risk"]),
         "family_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("family")),
+        "clarity_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("clarity.")),
         "exit_code": exit_code,
     }
 

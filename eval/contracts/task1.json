@@ -29,6 +29,10 @@
       "path": "eval/fixtures/wiki-promotional.md",
       "expected_exit": 1,
       "required_families": [1, 2, 4],
+      "required_ids": [
+        "family2.speculative_gap_filling",
+        "family2.vague_validation"
+      ],
       "requires_source_risk": true
     },
     {

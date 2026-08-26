@@ -30,5 +30,9 @@ behavior and automated contracts for the deterministic audit CLI.
 - Artifact leakage such as `oai_citation`, `contentReference`, `turn0search0`, AI-referrer URL
   params (`utm_source=chatgpt.com`, `utm_source=claude.ai`, `referrer=grok.com`), roleplay
   markers, or detector-bypass characters is flagged before prose editing.
+- `clarity.wordiness` hits are reported as clarity edits, kept out of the risk score, and never
+  presented as authorship evidence.
+- Rewrites introduce no protected content the original lacked; `--compare` introduced-token
+  findings are treated as anti-swap failures.
 - Candidate self-improvement lessons are rejected unless they pass the promotion gate in
   `reference/improvement-loop.md`.

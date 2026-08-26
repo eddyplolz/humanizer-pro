@@ -51,7 +51,8 @@ Humanizer Pro works from a nine-family catalog:
 - significance inflation and promotional tone
 - vague attribution and notability padding
 - superficial "-ing" analysis and filler
-- AI vocabulary clusters and inflated diction
+- AI vocabulary clusters and inflated diction (tiered: frequency markers vs. cluster-only words,
+  with plain wordiness reported separately as a clarity edit, never as authorship evidence)
 - syntactic tells such as anticipatory "it" and existential "there"
 - verbosity, nominalization, false precision, and both-sides anxiety
 - rhetorical formulas such as "not X, but Y" and forced triplets
@@ -263,6 +264,12 @@ On POSIX systems, use `python3` in place of `py -3`.
 
 ## Version History
 
+- **4.4.0** - Tiered the AI vocabulary (Tier 1A frequency markers vs. Tier 2 cluster-only) and
+  split wordiness into `clarity.wordiness`, which carries zero risk weight so a clarity fix can
+  never read as authorship evidence. Added the provenance test and never-inject guardrails to the
+  voice rules, wired compare mode into the anti-swap check, and added five patterns: speculative
+  gap-filling, vague third-party validation, list-label periods, diff-anchored writing, and
+  wall-of-text replies.
 - **4.3.0** - Widened AI-referrer URL detection beyond ChatGPT (claude.ai, copilot.com, openai,
   perplexity.ai, grok.com), added zero-width/homoglyph detector-bypass normalization and flagging,
   added roleplay-marker detection, capped rewrite passes at two, added cited false-positive

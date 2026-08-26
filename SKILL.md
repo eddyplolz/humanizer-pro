@@ -22,7 +22,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
 metadata:
-  version: "4.3.0"
+  version: "4.4.0"
 ---
 
 # Humanizer Pro: Remove AI Writing Tells
@@ -115,6 +115,10 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
 - **Weasel attribution:** "Experts argue," "Observers note," "studies show." -> name the source or cut.
 - **Notability padding:** "cited in," "featured in," "active social media presence," "gained
   recognition." -> one specific, sourced fact.
+- **Speculative gap-filling:** "is believed to have," "likely began," "appears to have." -> source
+  it or cut it; a guess formatted as fact is a fabrication.
+- **Vague third-party validation:** "independent testing confirms," "analysts agree." -> name the
+  benchmark, report, or date — or cut the claim.
 
 ### Family 3 - Superficial analysis and filler -> §3
 - **Trailing -ing depth:** "highlighting / underscoring / contributing to / showcasing." -> cut or add
@@ -126,9 +130,13 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
   specific fact; end on the last real point.
 
 ### Family 4 - AI vocabulary and diction -> §4
-- **High-density AI words:** additionally, align with, crucial, enduring, enhance, fostering, garner,
-  interplay, intricate, key, landscape, meticulous, pivotal, robust, showcase, tapestry, testament,
-  underscore, valuable, vibrant. -> thin the cluster.
+- **High-density AI words (tiered, §4.1):** Tier 1A frequency markers (delve, tapestry, testament,
+  pivotal, vibrant, landscape, meticulous, intricate, interplay, enduring, robust, showcase,
+  underscore, garner, emphasizing — two distinct 1A words is already a cluster); Tier 2
+  cluster-only words (crucial, enhance, foster, leverage, boasts, cornerstone, additionally, align,
+  highlight, unlock, valuable, bolstered). -> thin the cluster.
+- **Wordiness is 1B, not evidence:** utilize, commence, facilitate, endeavor, ascertain are clarity
+  edits for anyone's prose — fix them, but never report them as authorship evidence (§4.3).
 - **Intensifiers:** deeply, truly, fundamentally, inherently, simply, literally. -> usually delete.
 - **Academic register:** utilize->use, commence->start, facilitate->help, demonstrate->show.
 - **Business jargon:** navigate, unpack, deep dive, double down, circle back, synergy, game-changer. ->
@@ -173,6 +181,10 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
   genuine dash.
 - **Markup drift:** unusual tables, uniform paragraph length, Markdown in non-Markdown targets,
   skipped heading levels. -> match target markup.
+- **List-label periods:** "**Intros.** gloss" where a person writes "**Intros:** gloss". -> colon.
+- **Diff-anchored writing:** docs narrating the change ("was added to replace...") instead of the
+  artifact. -> describe current behavior; history goes to the changelog (§8.15; changelogs and
+  release notes are exempt).
 
 ### Family 9 - Chatbot residue and artifacts -> §9 plus `llm-artifacts.md`
 - **Residue and sycophancy:** "Great question," "I hope this helps," "Certainly," "let me know." -> cut.
@@ -180,6 +192,8 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
   "it's important/worth noting." -> state the fact or cut.
 - **Section summaries:** "In summary," "Overall" plus restatement. -> delete.
 - **English-variety drift:** organize plus colour. -> one variety; American for this workspace.
+- **Wall-of-text replies:** in chat/forum registers only, a short reply with 4+ sentences and zero
+  line breaks. -> break at thought boundaries (§9.10; never flag long-form prose for this).
 - **Artifact tokens and placeholders:** `citeturn0search0`, `contentReference`, `oaicite`,
   `oai_citation`, `grok_card`, `【85†...】`, AI-referrer URL params (`utm_source=chatgpt.com`,
   `utm_source=claude.ai`, `referrer=grok.com`, ...), `*nods*`-style roleplay markers,
@@ -220,6 +234,25 @@ Use:
 Avoid fake-casual openers, profanity as decoration, ellipsis abuse, "Watch this," meta-commentary,
 scheduled spontaneity, and rhetorical questions used for fake intimacy.
 
+**The provenance test governs every edit: did this information come from the source?** Subtracting
+and sharpening are in scope — cutting filler, making an existing claim concrete, surfacing a buried
+point. Adding stance, personality, or fact is not. Never inject into a text that did not already
+contain it:
+
+- **Fake first person.** If the source has no "I," the rewrite has no "I."
+- **Invented specifics.** A number, name, date, or mechanism the source never contained. This is
+  the most tempting fix because it always reads better, and a fabricated specific is worse than the
+  vague phrasing it replaced. Flag the gap; never fill it.
+- **Manufactured stakes or contrarianism.** "Now more than ever," "everyone says X, but" — inventing
+  a foil is inventing a claim.
+- **Staccato conversion.** Chopping ordinary sentences into fragments to manufacture rhythm. Vary
+  sentences by rewriting them, not by breaking them.
+
+When the installed repo is available, back this mechanically: run
+`scripts/humanizer_audit.py --compare original.md revised.md` after a deep edit — any
+`compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement that the
+original never had) is an anti-swap failure to fix, not to explain away.
+
 ---
 
 ## Quick-Scan Checklist
@@ -235,7 +268,8 @@ scheduled spontaneity, and rhetorical questions used for fake intimacy.
 - Formatting or markup mismatched to target? Convert it.
 - US/UK spelling mixed? Use one variety; American here.
 - Wiki/article mode: unsupported claim, puffery, or vague significance? Source, neutralize, or flag.
-- Anti-swap: did a fix add fake voice, binary contrast, or another formula? Undo it.
+- Anti-swap: did a fix add fake voice, binary contrast, another formula, or a specific the source
+  never contained? Undo it.
 - Restraint: was clean human prose rewritten? Put it back.
 
 ---
