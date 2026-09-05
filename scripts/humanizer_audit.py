@@ -449,6 +449,86 @@ REPORTING_LANGUAGE_RE = re.compile(
 )
 NAME_CONNECTORS = {"and", "de", "del", "du", "for", "la", "le", "of", "the", "van", "von"}
 NAME_EXCLUDE_START = {"A", "An", "As", "At", "By", "For", "From", "If", "In", "It", "On", "Or", "The", "This", "To"}
+# A capital is evidence of a proper noun only when the author chose it. At the
+# head of a sentence the capital is grammar, so a run that opens a sentence has
+# its head token demoted when there is positive evidence the head is an ordinary
+# word: it appears lowercase somewhere in the compared texts, or it is a known
+# function word or sentence opener. Without this, ordinary copy edits reported
+# protected-name drift -- deleting a leading connective recapitalizes the next
+# word ("Additionally, comedian Luis Vilgarde" -> "Comedian Luis Vilgarde"), and
+# a determiner fix rewrites the head ("These UHRSD" -> "The UHRSD"). Only the
+# head is dropped, so the real name inside the run still compares. A head with
+# no such evidence is kept, so the check still fails closed on a real name.
+NAME_SENTENCE_END = ".!?"
+NAME_RUN_OPENERS = " \t\r\n\f\v'\"“”‘’([{*#:;|=<>"
+NAME_HEAD_RE = re.compile(r"\S+\s+")
+LOWERCASE_WORD_RE = re.compile(r"\b[a-z][A-Za-z0-9'.&-]*")
+# NAME_RE token characters include ".", so a greedy run swallows the period that
+# ends a sentence and joins the next sentence's first word ("... School
+# District. These UHRSD"). A boundary is a word of at least three letters ending
+# in a period, followed by a capital -- which leaves "St.", "U.S." and the named
+# abbreviations below joined to what follows them.
+NAME_SENTENCE_SPLIT_RE = re.compile(r"(?<=[A-Za-z]{3}\.)\s+(?=[A-Z])")
+NAME_ABBREVIATIONS = frozenset(
+    """
+    adm amb approx asst assoc bros capt col corp dept esq fig gen gov hon inc
+    jr ltd maj mrs prof pres rep rev sec sen sgt sr univ vol
+    """.split()
+)
+# Ordinary words that routinely open a sentence. A backstop for the lowercase
+# evidence above, which a short text may not supply. Grouped by part of speech
+# so later additions stay coherent rather than fitted to one failing case.
+NAME_SENTENCE_OPENERS = frozenset(
+    """
+    a an the this that these those each every either neither both all any some
+    many most much few several other another such various same
+    he she it they we you his her its their our your my him them us
+    who whom whose which what where when why how there here
+    and but or nor for yet so as if because although though while whereas
+    since until unless before after during despite besides beyond within
+    across against among between beneath under over above about into onto
+    from with without through throughout toward towards upon per via
+    is are was were be been being am has have had do does did
+    can could might must shall should would
+    not only also just even still again once then now today later
+    however meanwhile therefore thus hence instead rather nevertheless
+    nonetheless likewise similarly conversely accordingly consequently
+    additionally furthermore moreover subsequently ultimately alternatively
+    central main major minor primary secondary key local national regional
+    modern early earlier late recent current former original general public
+    private official large small new old further overall total annual daily
+    initial final following historically together part parts
+    one two three first second third last next
+    """.split()
+)
+
+
+def name_run_is_sentence_initial(text: str, start: int) -> bool:
+    """True when ``start`` opens a sentence, a heading, or a list item."""
+    index = start - 1
+    while index >= 0 and text[index] in NAME_RUN_OPENERS:
+        if text[index] in "\r\n":
+            return True
+        index -= 1
+    return index < 0 or text[index] in NAME_SENTENCE_END
+
+
+def name_vocabulary(*texts: str) -> set[str]:
+    """Words the compared texts show in lowercase at least once."""
+    words: set[str] = set()
+    for text in texts:
+        words.update(word.lower() for word in LOWERCASE_WORD_RE.findall(text))
+    return words
+
+
+def head_is_ordinary_word(head: str, ordinary: set[str]) -> bool:
+    lowered = head.lower().strip(".,:;")
+    return (
+        lowered in ordinary
+        or lowered in STOPWORDS
+        or lowered in NAME_SENTENCE_OPENERS
+        or head in NAME_EXCLUDE_START
+    )
 STOPWORDS = {
     "a",
     "an",
@@ -640,7 +720,9 @@ def extract_number_tokens(text: str) -> list[ProtectedToken]:
     return tokens
 
 
-def extract_name_tokens(text: str) -> list[ProtectedToken]:
+def extract_name_tokens(
+    text: str, ordinary: set[str] | None = None
+) -> list[ProtectedToken]:
     prose = masked_for_prose(text)
     masked_lines = []
     for line in prose.splitlines(keepends=True):
@@ -651,16 +733,47 @@ def extract_name_tokens(text: str) -> list[ProtectedToken]:
         body = line[:-1] if newline else line
         masked_lines.append(" " * len(body) + newline)
     prose = "".join(masked_lines)
+    if ordinary is None:
+        ordinary = name_vocabulary(prose)
     tokens = []
     for match in NAME_RE.finditer(prose):
-        raw = normalize_space(match.group(0))
-        words_in_name = re.findall(r"[A-Za-z][A-Za-z0-9'.&-]*", raw)
-        semantic_words = [word for word in words_in_name if word.lower() not in NAME_CONNECTORS]
-        if len(semantic_words) < 2:
-            continue
-        if semantic_words[0] in NAME_EXCLUDE_START and not ORG_HINT_RE.search(raw):
-            continue
-        tokens.append(ProtectedToken("name", normalize_name(raw), evidence(raw), match.start()))
+        # A greedy run can span a sentence boundary; each side of the boundary
+        # is judged on its own, and every piece after the first opens a sentence
+        # by construction.
+        pieces = []
+        position = 0
+        span = match.group(0)
+        for boundary in NAME_SENTENCE_SPLIT_RE.finditer(span):
+            word = re.findall(r"[A-Za-z]+", span[position : boundary.start()])
+            if word and word[-1].lower() in NAME_ABBREVIATIONS:
+                continue
+            pieces.append((match.start() + position, span[position : boundary.start()]))
+            position = boundary.end()
+        pieces.append((match.start() + position, span[position:]))
+        for index, (offset, piece) in enumerate(pieces):
+            trimmed = False
+            if index > 0 or name_run_is_sentence_initial(prose, offset):
+                head_match = NAME_HEAD_RE.match(piece)
+                if head_match and head_is_ordinary_word(
+                    piece[: head_match.end()].strip(), ordinary
+                ):
+                    offset += head_match.end()
+                    piece = piece[head_match.end() :]
+                    trimmed = True
+            raw = normalize_space(piece)
+            words_in_name = re.findall(r"[A-Za-z][A-Za-z0-9'.&-]*", raw)
+            semantic_words = [
+                word for word in words_in_name if word.lower() not in NAME_CONNECTORS
+            ]
+            if len(semantic_words) < 2:
+                continue
+            if (
+                not trimmed
+                and semantic_words[0] in NAME_EXCLUDE_START
+                and not ORG_HINT_RE.search(raw)
+            ):
+                continue
+            tokens.append(ProtectedToken("name", normalize_name(raw), evidence(raw), offset))
     return tokens
 
 
@@ -748,6 +861,14 @@ def compare_token_sets(
     source_kinds = {"citation", "url"}
     original_counts = Counter(token.value for token in original_tokens)
     revised_counts = Counter(token.value for token in revised_tokens)
+    if kind == "name":
+        # What a name protects is the REFERENT, not how many times it is
+        # repeated. Trimming one of an article's many mentions of its own
+        # subject is a copy edit, not a dropped name, so a name still present in
+        # the other text raises nothing; only a name that disappears entirely,
+        # or appears from nowhere, is reported.
+        original_counts = Counter(dict.fromkeys(original_counts, 1))
+        revised_counts = Counter(dict.fromkeys(revised_counts, 1))
     original_buckets = token_buckets(original_tokens)
     revised_buckets = token_buckets(revised_tokens)
     findings = []
@@ -995,6 +1116,12 @@ def compare_source_statements(
     return findings
 
 
+def name_extractor_for(original_text: str, revised_text: str):
+    """Name extractor bound to the joint lowercase vocabulary of both texts."""
+    ordinary = name_vocabulary(original_text, revised_text)
+    return lambda text: extract_name_tokens(text, ordinary)
+
+
 def compare_texts(original_text: str, revised_text: str, original_path: str, revised_path: str) -> dict[str, object]:
     original_starts = line_starts(original_text)
     revised_starts = line_starts(revised_text)
@@ -1003,7 +1130,10 @@ def compare_texts(original_text: str, revised_text: str, original_path: str, rev
     for kind, extractor in (
         ("number", extract_number_tokens),
         ("date", extract_date_tokens),
-        ("name", extract_name_tokens),
+        # Both sides share one lowercase vocabulary: a word the ORIGINAL
+        # shows in lowercase still proves it ordinary when the revision
+        # promotes it to a sentence head.
+        ("name", name_extractor_for(original_text, revised_text)),
         ("url", extract_url_tokens),
         ("citation", extract_citation_tokens),
     ):
