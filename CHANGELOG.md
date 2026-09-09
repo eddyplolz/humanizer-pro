@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.11.0 - 2026-09-09
+
+- Hardened the detector-bypass normalization against two newer text-hiding tricks and one
+  corruption bug. The audit now always strips **Unicode tag characters** (U+E0000–E007F) and
+  **noncharacters** (U+FDD0–FDEF and every plane's U+xFFFE/U+xFFFF), which render as nothing and
+  carry hidden payloads; both now count toward `artifact.bypass_characters`.
+- Added a **preserve-list** so the bypass pass no longer corrupts legitimate multilingual text.
+  The zero-width joiner/non-joiner and the variation selectors (VS15/VS16) are kept when a
+  neighbour proves a real context — an emoji ZWJ sequence, a Persian/Arabic non-joiner, a
+  Devanagari ligature, an emoji variation selector or keycap — and stripped only where they sit
+  between Latin letters with no shaping role. Previously ZWJ/ZWNJ were stripped unconditionally,
+  which mangled emoji families and Indic/Arabic script.
+- Six paired tests cover the new coverage and the preserve-list (byte-identity on legitimate
+  strings, stripping on injected bypass characters). The single-class `ZERO_WIDTH_RE` was retired
+  in favour of the neighbour-aware classifier.
+
 ## 4.10.1 - 2026-08-26
 
 - Rewrote the README in plain language: GOV.UK-style plain-English principles in American

@@ -86,14 +86,18 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
 - **Fix:** Delete the marker. Nothing in finished prose is performed by the narrator.
 
 ### 11. Detector-bypass characters
-- **Looks like:** invisible zero-width characters (ZWSP/ZWNJ/ZWJ/word joiner) inside words, or
-  Cyrillic/Greek lookalike letters spliced into Latin words (`cruсial` with a Cyrillic `с`) —
-  tricks "humanizer" tools use to defeat exact-string detectors. Humans do not paste these into
-  their own writing.
+- **Looks like:** invisible characters spliced into text to defeat exact-string detectors —
+  zero-width spaces and word joiners inside words, Unicode **tag characters** (U+E0000–E007F) and
+  **noncharacters** used to hide payloads with no visible glyph at all, or Cyrillic/Greek lookalike
+  letters in Latin words (`cruсial` with a Cyrillic `с`). Humans do not paste these into their own
+  writing.
 - **Detection:** the audit CLI normalizes both tricks before matching (so an obfuscated `delve`
-  still hits) and reports `artifact.bypass_characters` with the counts. A single leading BOM is
-  ordinary file encoding and exempt; genuine Cyrillic or Greek prose never matches — only
-  mixed-script words do.
+  still hits) and reports `artifact.bypass_characters` with the counts. It does **not** corrupt
+  legitimate multilingual text: the zero-width joiner/non-joiner and the variation selectors are
+  kept where their neighbours prove a real context — an emoji ZWJ sequence (👨‍👩‍👧), a Persian
+  non-joiner, a Devanagari ligature — and stripped only between Latin letters where they have no
+  shaping role. A single leading BOM is ordinary file encoding and exempt; genuine Cyrillic or
+  Greek prose never matches — only mixed-script words do.
 - **Fix:** Remove the characters and treat the text with suspicion: someone or something tried to
   make it pass a scanner, which is itself the strongest tell on this page.
 

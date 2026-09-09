@@ -28,7 +28,6 @@ AI_REFERRER_HOSTS = {
     "perplexity.ai",
 }
 
-ZERO_WIDTH_RE = re.compile("[​‌‍⁠﻿]")
 HOMOGLYPH_LATIN = {
     # Cyrillic lookalikes
     "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x",
@@ -41,6 +40,123 @@ HOMOGLYPH_LATIN = {
 WORD_WITH_HOMOGLYPH_RE = re.compile(
     "[A-Za-z{h}]*[A-Za-z][A-Za-z{h}]*".format(h="".join(HOMOGLYPH_LATIN))
 )
+
+# Invisible characters split into two policies. The always-strip set has no
+# legitimate use in the registers this skill meets (prose, wiki, chat), so a
+# hit is bypass evidence wherever it lands: zero-width space, word joiner, the
+# invisible math operators, a non-leading byte-order mark, and the deprecated
+# Mongolian vowel separator. Unicode tag characters (U+E0000-E007F) and
+# noncharacters carry the same verdict and are matched by range below — the tag
+# block is the newest text-hiding trick and has no visible rendering at all.
+ALWAYS_STRIP_INVISIBLES = frozenset(
+    {0x200B, 0x2060, 0x2061, 0x2062, 0x2063, 0x2064, 0xFEFF, 0x180E}
+)
+# The conditional set is legitimate in the right script and corrupts text if
+# stripped blindly: the zero-width joiner binds emoji sequences and shapes
+# Indic/Arabic ligatures, the non-joiner separates Persian/Devanagari letters,
+# and the variation selectors choose an emoji or text glyph. Each is kept when
+# its neighbours prove the legitimate context and stripped otherwise.
+CONDITIONAL_INVISIBLES = frozenset({0x200C, 0x200D, 0xFE0E, 0xFE0F})
+
+
+def _is_tag_char(cp: int) -> bool:
+    return 0xE0000 <= cp <= 0xE007F
+
+
+def _is_noncharacter(cp: int) -> bool:
+    return 0xFDD0 <= cp <= 0xFDEF or (cp & 0xFFFF) in (0xFFFE, 0xFFFF)
+
+
+def _is_managed_invisible(cp: int) -> bool:
+    """True for any codepoint the bypass pass may remove."""
+    return (
+        cp in ALWAYS_STRIP_INVISIBLES
+        or cp in CONDITIONAL_INVISIBLES
+        or _is_tag_char(cp)
+        or _is_noncharacter(cp)
+    )
+
+
+def _is_emoji_related(char: str) -> bool:
+    """A base, modifier, or selector that can appear in an emoji sequence."""
+    if not char:
+        return False
+    cp = ord(char)
+    return (
+        0x1F000 <= cp <= 0x1FAFF  # emoji and pictograph blocks
+        or 0x2600 <= cp <= 0x27BF  # misc symbols and dingbats
+        or 0x2B00 <= cp <= 0x2BFF  # misc symbols and arrows
+        or 0x1F1E6 <= cp <= 0x1F1FF  # regional indicators
+        or 0x1F3FB <= cp <= 0x1F3FF  # skin-tone modifiers
+        or 0xFE00 <= cp <= 0xFE0F  # variation selectors
+        or cp == 0x20E3  # combining enclosing keycap
+        or cp
+        in {0x203C, 0x2049, 0x2122, 0x2139, 0x2194, 0x21A9, 0x231A, 0x24C2, 0x25AA, 0x3030, 0x303D, 0x3297, 0x3299}
+    )
+
+
+def _in_joining_script(char: str) -> bool:
+    """A letter from a script that uses the zero-width (non-)joiner for shaping."""
+    if not char:
+        return False
+    cp = ord(char)
+    return (
+        0x0590 <= cp <= 0x074F  # Hebrew, Arabic, Syriac
+        or 0x0750 <= cp <= 0x07BF  # Arabic Supplement, Thaana
+        or 0x08A0 <= cp <= 0x08FF  # Arabic Extended-A
+        or 0x0900 <= cp <= 0x0DFF  # Devanagari through Sinhala
+        or 0x1780 <= cp <= 0x17FF  # Khmer
+        or 0xA8E0 <= cp <= 0xA8FF  # Devanagari Extended
+        or 0xFB1D <= cp <= 0xFB4F  # Hebrew presentation forms
+        or 0xFB50 <= cp <= 0xFDCF  # Arabic Presentation Forms-A (below noncharacters)
+        or 0xFDF0 <= cp <= 0xFDFF  # Arabic Presentation Forms-A (above noncharacters)
+        or 0xFE70 <= cp <= 0xFEFC  # Arabic Presentation Forms-B
+    )
+
+
+def _strip_invisible(cp: int, prev_char: str, next_char: str) -> bool:
+    """Decide whether a managed invisible character is bypass residue to remove.
+
+    The conditional joiners and variation selectors are kept when a neighbour
+    supplies the legitimate context (an emoji run, or a joining-script letter)
+    and removed otherwise. Every other managed codepoint is always removed.
+    """
+    if cp == 0x200D:  # zero-width joiner
+        return not (
+            _is_emoji_related(prev_char)
+            or _is_emoji_related(next_char)
+            or _in_joining_script(prev_char)
+            or _in_joining_script(next_char)
+        )
+    if cp == 0x200C:  # zero-width non-joiner
+        return not (_in_joining_script(prev_char) or _in_joining_script(next_char))
+    if cp in (0xFE0E, 0xFE0F):  # variation selectors 15 and 16
+        return not (_is_emoji_related(prev_char) or _is_emoji_related(next_char))
+    return True
+
+
+def _strip_invisibles(body: str, offset_base: int) -> tuple[str, int, int]:
+    """Remove bypass invisibles from ``body``, keeping legitimate joiners.
+
+    Returns (cleaned_text, removed_count, first_removed_offset). Neighbour
+    lookups use the original text so an emoji or Arabic run is judged before any
+    character is dropped.
+    """
+    out: list[str] = []
+    removed = 0
+    first_offset = -1
+    length = len(body)
+    for index, char in enumerate(body):
+        if _is_managed_invisible(ord(char)):
+            prev_char = body[index - 1] if index > 0 else ""
+            next_char = body[index + 1] if index + 1 < length else ""
+            if _strip_invisible(ord(char), prev_char, next_char):
+                removed += 1
+                if first_offset < 0:
+                    first_offset = index + offset_base
+                continue
+        out.append(char)
+    return "".join(out), removed, first_offset
 
 
 @dataclass(frozen=True)
@@ -621,37 +737,39 @@ def normalize_url(raw_url: str) -> str:
 def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
     """Undo detector-bypass tricks before pattern matching.
 
-    Returns (normalized_text, counts, first_offset). Zero-width characters are
-    removed (a single leading BOM is ordinary file encoding, not a trick, and is
-    exempt); Cyrillic/Greek Latin-lookalike characters are mapped back to Latin
-    only inside mixed-script words, so genuine Cyrillic or Greek prose is never
-    rewritten. Findings that follow are located in the normalized text: line
-    numbers are unaffected, columns can shift only on lines that contained
-    zero-width characters.
+    Returns (normalized_text, counts, first_offset). Invisible bypass characters
+    are removed -- a single leading BOM is ordinary file encoding, not a trick,
+    and is exempt; the zero-width joiner/non-joiner and the variation selectors
+    are kept where their neighbours prove a legitimate emoji or joining-script
+    context, so multilingual text is never corrupted, while Unicode tag
+    characters and noncharacters are always removed. Cyrillic/Greek
+    Latin-lookalike characters are mapped back to Latin only inside mixed-script
+    words, so genuine Cyrillic or Greek prose is never rewritten. Findings that
+    follow are located in the normalized text: line numbers are unaffected,
+    columns can shift only on lines that contained the removed characters.
     """
     counts = {"zero_width": 0, "homoglyph": 0}
-    first_offset = -1
+    homoglyph_offset = -1
     lead_bom = text.startswith("﻿")
     body = text[1:] if lead_bom else text
     offset_base = 1 if lead_bom else 0
 
-    for match in ZERO_WIDTH_RE.finditer(body):
-        counts["zero_width"] += 1
-        if first_offset < 0:
-            first_offset = match.start() + offset_base
-
     def swap_word(match: re.Match[str]) -> str:
-        nonlocal first_offset
+        nonlocal homoglyph_offset
         word = match.group(0)
         if not any(char in HOMOGLYPH_LATIN for char in word):
             return word
         counts["homoglyph"] += sum(1 for char in word if char in HOMOGLYPH_LATIN)
-        if first_offset < 0 or match.start() + offset_base < first_offset:
-            first_offset = match.start() + offset_base
+        if homoglyph_offset < 0:
+            homoglyph_offset = match.start() + offset_base
         return "".join(HOMOGLYPH_LATIN.get(char, char) for char in word)
 
-    normalized = WORD_WITH_HOMOGLYPH_RE.sub(swap_word, body)
-    normalized = ZERO_WIDTH_RE.sub("", normalized)
+    # The homoglyph swap is length-preserving, so offsets into ``swapped`` still
+    # index the original body and stay comparable with the leading-BOM base.
+    swapped = WORD_WITH_HOMOGLYPH_RE.sub(swap_word, body)
+    normalized, counts["zero_width"], invisible_offset = _strip_invisibles(swapped, offset_base)
+    offsets = [value for value in (homoglyph_offset, invisible_offset) if value >= 0]
+    first_offset = min(offsets) if offsets else -1
     if lead_bom:
         normalized = "﻿" + normalized
     return normalized, counts, first_offset
