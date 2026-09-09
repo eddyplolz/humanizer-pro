@@ -408,3 +408,62 @@ def test_filler_wrappers_are_clarity_only() -> None:
     assert len(clarity_hits) == 2
     assert all(f["severity"] == "info" for f in clarity_hits)
     assert document["risk_score"] == 0
+
+
+def test_unicode_tag_characters_are_stripped_and_flagged() -> None:
+    text = "The plan is ready\U000E0068\U000E0069 for the vibrant, crucial rollout."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    assert returncode == 2
+    assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
+
+
+def test_unicode_noncharacters_are_stripped_and_flagged() -> None:
+    text = "A crucial￿and vibrant plan for the landscape ahead of us."
+    returncode, payload = audit_json("--stdin", input_text=text)
+    assert returncode == 2
+    assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
+
+
+def test_latin_zero_width_joiner_bypass_is_still_flagged() -> None:
+    # A zero-width joiner or non-joiner between Latin letters has no legitimate
+    # shaping role, so it is bypass residue and must still be caught.
+    for joiner in ("‍", "‌"):
+        text = f"A cru{joiner}cial and vibrant plan for the landscape."
+        _returncode, payload = audit_json("--stdin", input_text=text)
+        assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
+
+
+def test_preserve_list_keeps_multilingual_joiners_byte_identical() -> None:
+    module = _load_audit_module()
+    for legit in (
+        "\U0001f468‍\U0001f469‍\U0001f467",  # family emoji ZWJ sequence
+        "❤️",  # heart followed by variation selector 16
+        "1️⃣",  # keycap digit sequence
+        "می‌خواهم",  # Persian "mikhaham" with ZWNJ
+        "क्‍ष",  # Devanagari ligature held by a ZWJ
+    ):
+        normalized, counts, first_offset = module.normalize_bypass_text(legit)
+        assert normalized == legit, legit.encode("unicode_escape")
+        assert counts["zero_width"] == 0
+        assert first_offset == -1
+
+
+def test_injected_zero_width_stripped_while_emoji_joiner_survives() -> None:
+    module = _load_audit_module()
+    # A zero-width SPACE injected after a legitimate emoji ZWJ pair: the joiner
+    # is kept, the injected space is removed, and only the injection is counted.
+    normalized, counts, _first = module.normalize_bypass_text(
+        "\U0001f468‍\U0001f469​next"
+    )
+    assert normalized == "\U0001f468‍\U0001f469next"
+    assert counts["zero_width"] == 1
+
+
+def test_variation_selector_stripped_between_letters_kept_after_emoji() -> None:
+    module = _load_audit_module()
+    stripped, counts, _first = module.normalize_bypass_text("a️b")
+    assert stripped == "ab"
+    assert counts["zero_width"] == 1
+    kept, kept_counts, _f2 = module.normalize_bypass_text("❤️")
+    assert kept == "❤️"
+    assert kept_counts["zero_width"] == 0
