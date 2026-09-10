@@ -1338,6 +1338,32 @@ def coefficient_of_variation(lengths: list[int]) -> float:
     return math.sqrt(variance) / mean
 
 
+def moving_avg_type_token_ratio(token_list: list[str], window: int = 50) -> float:
+    """Moving-average type-token ratio (MATTR) over ``window``-token windows.
+
+    A length-robust lexical-diversity measure: unlike the plain type-token
+    ratio it does not decay as a text grows longer, because it averages the TTR
+    of a sliding fixed-size window rather than dividing uniques by total. Tokens
+    are lowercased so casing does not inflate the type count. For text shorter
+    than one window the whole text is a single window (it degrades to the plain
+    TTR). Returned rounded to 2 dp; 0.0 for empty input.
+
+    Reported as a diagnostic stat only, never as a finding or a score input:
+    calibration against pre-cutoff encyclopedic prose showed MATTR cannot
+    separate AI from human writing without an unacceptable false-positive rate
+    on the encyclopedic register (human median ~0.76, min ~0.46), so any
+    flagging threshold would misfire on exactly the register this skill most
+    often audits. It is surfaced for analysis, not verdicts.
+    """
+    if not token_list:
+        return 0.0
+    lowered = [token.lower() for token in token_list]
+    size = min(window, len(lowered))
+    windows = len(lowered) - size + 1
+    total = sum(len(set(lowered[i : i + size])) / size for i in range(windows))
+    return round(total / windows, 2)
+
+
 def title_case_heading_count(text: str) -> int:
     count = 0
     for line in text.splitlines():
@@ -1380,6 +1406,7 @@ def stats_for(text: str) -> dict[str, int | float]:
         "max_uniform_run": max_uniform_run(sentence_lengths),
         "paragraphs": len(paragraphs(text)),
         "type_token_ratio": round(len(unique_words) / word_count, 2) if word_count else 0,
+        "mattr_50": moving_avg_type_token_ratio(token_list, 50),
         "em_dash_count": text.count("—"),
         "heading_count": len(re.findall(r"^\s{0,3}#{1,6}\s+", text, re.M)),
         "title_case_heading_count": title_case_heading_count(text),
