@@ -83,11 +83,12 @@ def _is_emoji_related(char: str) -> bool:
         return False
     cp = ord(char)
     return (
+        # The emoji/pictograph block already subsumes the regional-indicator
+        # (U+1F1E6-1F1FF) and skin-tone (U+1F3FB-1F3FF) ranges, so they need no
+        # separate clause.
         0x1F000 <= cp <= 0x1FAFF  # emoji and pictograph blocks
         or 0x2600 <= cp <= 0x27BF  # misc symbols and dingbats
         or 0x2B00 <= cp <= 0x2BFF  # misc symbols and arrows
-        or 0x1F1E6 <= cp <= 0x1F1FF  # regional indicators
-        or 0x1F3FB <= cp <= 0x1F3FF  # skin-tone modifiers
         or 0xFE00 <= cp <= 0xFE0F  # variation selectors
         or cp == 0x20E3  # combining enclosing keycap
         or cp
@@ -764,7 +765,7 @@ def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
     follow are located in the normalized text: line numbers are unaffected,
     columns can shift only on lines that contained the removed characters.
     """
-    counts = {"zero_width": 0, "homoglyph": 0}
+    counts = {"invisible": 0, "homoglyph": 0}
     homoglyph_offset = -1
     lead_bom = text.startswith("﻿")
     body = text[1:] if lead_bom else text
@@ -783,7 +784,7 @@ def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
     # The homoglyph swap is length-preserving, so offsets into ``swapped`` still
     # index the original body and stay comparable with the leading-BOM base.
     swapped = WORD_WITH_HOMOGLYPH_RE.sub(swap_word, body)
-    normalized, counts["zero_width"], invisible_offset = _strip_invisibles(swapped, offset_base)
+    normalized, counts["invisible"], invisible_offset = _strip_invisibles(swapped, offset_base)
     offsets = [value for value in (homoglyph_offset, invisible_offset) if value >= 0]
     first_offset = min(offsets) if offsets else -1
     if lead_bom:
@@ -1554,7 +1555,7 @@ def risk_score(findings: list[dict[str, object]]) -> int:
 
 
 def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]) -> list[dict[str, object]]:
-    total = counts["zero_width"] + counts["homoglyph"]
+    total = counts["invisible"] + counts["homoglyph"]
     if total == 0:
         return []
     line, column = line_column(starts, max(first_offset, 0))
@@ -1565,8 +1566,8 @@ def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]
             "severity": "error",
             "line": line,
             "column": column,
-            "evidence": f"zero_width={counts['zero_width']}, homoglyph={counts['homoglyph']}",
-            "message": "Zero-width or homoglyph characters consistent with detector-bypass tricks",
+            "evidence": f"invisible={counts['invisible']}, homoglyph={counts['homoglyph']}",
+            "message": "Invisible or homoglyph characters consistent with detector-bypass tricks",
             "source_risk": False,
         }
     ]
