@@ -524,3 +524,35 @@ def test_mongolian_vowel_separator_is_stripped_and_flagged() -> None:
     )
     assert returncode == 2
     assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
+
+
+def test_mattr_matches_hand_computed_windows() -> None:
+    # Independent hand-computed values, not a re-derivation of the code.
+    # window=2 over [a,a,b,a]: TTRs 1/2, 2/2, 2/2 -> mean 0.8333 -> 0.83.
+    module = _load_audit_module()
+    mattr = module.moving_avg_type_token_ratio
+    assert mattr(["a", "a", "b", "a"], 2) == 0.83
+    # window=3 over [a,b,c,d]: every window all-unique -> 1.0.
+    assert mattr(["a", "b", "c", "d"], 3) == 1.0
+    # shorter than one window degrades to plain TTR: [a,a] -> 1 unique / 2 -> 0.5.
+    assert mattr(["a", "a"], 50) == 0.5
+    assert mattr([]) == 0.0
+
+
+def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
+    module = _load_audit_module()
+    # Low-diversity text scores far below high-diversity text (independent inputs).
+    low = module.stats_for("cat dog " * 60)["mattr_50"]
+    high = module.stats_for(" ".join(f"w{i}" for i in range(120)))["mattr_50"]
+    assert 0.0 <= low <= 1.0
+    assert 0.0 <= high <= 1.0
+    assert low < high
+    # It is a diagnostic stat only: it appears in the stats block and never as
+    # a finding, and it never moves the risk score (repetitive human-style prose
+    # with no other tell stays at score 0).
+    returncode, payload = audit_json("--stdin", input_text="cat dog " * 60)
+    document = payload["documents"][0]
+    assert "mattr_50" in document["stats"]
+    assert not any("mattr" in fid for fid in finding_ids(document))
+    assert document["risk_score"] == 0
+    assert returncode == 0

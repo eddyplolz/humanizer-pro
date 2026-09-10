@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.12.0 - 2026-09-10
+
+- Added **MATTR** (moving-average type-token ratio over 50-token windows) as a diagnostic stat in the
+  `stats` block, alongside the existing `type_token_ratio`. MATTR is length-robust: it averages the
+  type-token ratio of a sliding fixed-size window instead of dividing uniques by total, so it does not
+  decay as a document grows.
+- **Reported as a stat only — deliberately NOT a finding and NOT a score input.** Calibration against
+  110 pre-2022-11-01 Wikipedia article revisions (encyclopedic register) found human MATTR spans a low,
+  wide band (median ~0.76, 10th percentile ~0.69, min ~0.46), while the repo's AI-slop fixtures score
+  *higher* (0.71-0.92). No flagging threshold separates the two: one safe for encyclopedic prose (<=0.68,
+  ~9% false-positive) catches none of the AI fixtures, and one that catches AI floods false positives on
+  exactly the register this skill most often audits. With no machine-generated corpus to establish a
+  true-positive rate, MATTR is surfaced for analysis, not verdicts. Method and figures:
+  `reference/mattr-calibration.md`.
+
 ## 4.11.2 - 2026-09-10
 
 - Renamed the bypass count from `zero_width` to `invisible` in the counts dict, the
