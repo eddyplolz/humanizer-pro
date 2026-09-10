@@ -417,6 +417,20 @@ def test_unicode_tag_characters_are_stripped_and_flagged() -> None:
     assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
 
 
+def test_tag_character_hit_is_reported_as_invisible_not_zero_width() -> None:
+    # A tag character is neither zero-width nor a homoglyph, so the finding must
+    # label it as an invisible character rather than mislabeling it zero-width.
+    text = "The plan is ready\U000E0068\U000E0069 for the vibrant, crucial rollout."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    bypass = next(
+        f for f in payload["documents"][0]["findings"]
+        if f["id"] == "artifact.bypass_characters"
+    )
+    assert bypass["evidence"].startswith("invisible=")
+    assert "zero_width" not in bypass["evidence"]
+    assert bypass["message"].startswith("Invisible or homoglyph")
+
+
 def test_unicode_noncharacters_are_stripped_and_flagged() -> None:
     text = "A crucial￿and vibrant plan for the landscape ahead of us."
     returncode, payload = audit_json("--stdin", input_text=text)
@@ -444,7 +458,7 @@ def test_preserve_list_keeps_multilingual_joiners_byte_identical() -> None:
     ):
         normalized, counts, first_offset = module.normalize_bypass_text(legit)
         assert normalized == legit, legit.encode("unicode_escape")
-        assert counts["zero_width"] == 0
+        assert counts["invisible"] == 0
         assert first_offset == -1
 
 
@@ -456,17 +470,17 @@ def test_injected_zero_width_stripped_while_emoji_joiner_survives() -> None:
         "\U0001f468‍\U0001f469​next"
     )
     assert normalized == "\U0001f468‍\U0001f469next"
-    assert counts["zero_width"] == 1
+    assert counts["invisible"] == 1
 
 
 def test_variation_selector_stripped_between_letters_kept_after_emoji() -> None:
     module = _load_audit_module()
     stripped, counts, _first = module.normalize_bypass_text("a️b")
     assert stripped == "ab"
-    assert counts["zero_width"] == 1
+    assert counts["invisible"] == 1
     kept, kept_counts, _f2 = module.normalize_bypass_text("❤️")
     assert kept == "❤️"
-    assert kept_counts["zero_width"] == 0
+    assert kept_counts["invisible"] == 0
 
 
 def test_adjacent_variation_selectors_between_letters_do_not_shield() -> None:
@@ -476,8 +490,37 @@ def test_adjacent_variation_selectors_between_letters_do_not_shield() -> None:
     # so both are bypass residue that is stripped and counted.
     normalized, counts, _first = module.normalize_bypass_text("a️️b")
     assert normalized == "ab"
-    assert counts["zero_width"] == 2
+    assert counts["invisible"] == 2
     # A longer run collapses completely rather than partially surviving.
     collapsed, run_counts, _f2 = module.normalize_bypass_text("a️️️b")
     assert collapsed == "ab"
-    assert run_counts["zero_width"] == 3
+    assert run_counts["invisible"] == 3
+
+
+def test_invisible_math_operators_are_stripped_and_flagged() -> None:
+    # U+2061-U+2064 (function application, invisible times/separator/plus) have
+    # no place in this skill's registers, so each is always-strip bypass residue.
+    module = _load_audit_module()
+    for cp in (0x2061, 0x2062, 0x2063, 0x2064):
+        text = f"a{chr(cp)}b"
+        normalized, counts, _first = module.normalize_bypass_text(text)
+        assert normalized == "ab", hex(cp)
+        assert counts["invisible"] == 1, hex(cp)
+    returncode, payload = audit_json(
+        "--stdin", input_text="A crucial⁢and vibrant plan for the landscape ahead."
+    )
+    assert returncode == 2
+    assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
+
+
+def test_mongolian_vowel_separator_is_stripped_and_flagged() -> None:
+    # U+180E renders as nothing in modern fonts and is a known bypass character.
+    module = _load_audit_module()
+    normalized, counts, _first = module.normalize_bypass_text("a᠎b")
+    assert normalized == "ab"
+    assert counts["invisible"] == 1
+    returncode, payload = audit_json(
+        "--stdin", input_text="A crucial᠎and vibrant plan for the landscape ahead."
+    )
+    assert returncode == 2
+    assert "artifact.bypass_characters" in finding_ids(payload["documents"][0])
