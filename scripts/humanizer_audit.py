@@ -95,6 +95,22 @@ def _is_emoji_related(char: str) -> bool:
     )
 
 
+def _is_emoji_base(char: str) -> bool:
+    """Emoji context that can legitimately anchor a variation selector.
+
+    This is ``_is_emoji_related`` minus the variation-selector block itself. A
+    variation selector is only meaningful directly after a real base glyph, so
+    one selector must not treat an adjacent selector as its context -- otherwise
+    two injected selectors between plain letters would each vouch for the other
+    and both survive the bypass pass.
+    """
+    if not char:
+        return False
+    if 0xFE00 <= ord(char) <= 0xFE0F:
+        return False
+    return _is_emoji_related(char)
+
+
 def _in_joining_script(char: str) -> bool:
     """A letter from a script that uses the zero-width (non-)joiner for shaping."""
     if not char:
@@ -131,7 +147,7 @@ def _strip_invisible(cp: int, prev_char: str, next_char: str) -> bool:
     if cp == 0x200C:  # zero-width non-joiner
         return not (_in_joining_script(prev_char) or _in_joining_script(next_char))
     if cp in (0xFE0E, 0xFE0F):  # variation selectors 15 and 16
-        return not (_is_emoji_related(prev_char) or _is_emoji_related(next_char))
+        return not (_is_emoji_base(prev_char) or _is_emoji_base(next_char))
     return True
 
 

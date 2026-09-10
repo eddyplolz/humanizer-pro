@@ -216,4 +216,4 @@ Pattern sources, with thanks:
 
 ## Version history
 
-Current release: **v4.10.1**, this plain-language README. Just before it, v4.10.0 recalibrated the wiki register: wiki false positives fell from 9.1% to 1.5%, with every other register unchanged. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
+Current release: **v4.11.1**, which fixed a hole in the detector-bypass pass: two or more invisible variation selectors placed side by side between ordinary letters used to shield each other and slip through, so they are now stripped and counted. Just before it, v4.11.0 hardened that pass against Unicode tag characters and noncharacters while keeping legitimate emoji and Indic or Arabic joiners intact, and v4.10.1 rewrote this README in plain language. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
