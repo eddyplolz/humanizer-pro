@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.11.2 - 2026-09-10
+
+- Renamed the bypass count from `zero_width` to `invisible` in the counts dict, the
+  `artifact.bypass_characters` evidence string, and its message. The bucket has covered tag
+  characters, noncharacters, invisible math operators, and the Mongolian vowel separator since
+  4.11.0, so a tag-character-only hit no longer reports as "zero-width."
+- Added tests for the always-strip codepoints that shipped untested in 4.11.0: the invisible math
+  operators (U+2061-U+2064) and the Mongolian vowel separator (U+180E) now have strip-and-flag
+  coverage.
+- Dropped the redundant regional-indicator (U+1F1E6-1F1FF) and skin-tone (U+1F3FB-1F3FF) clauses in
+  the emoji-context test; both are already inside the U+1F000-1FAFF block. No behavior change.
+
 ## 4.11.1 - 2026-09-09
 
 - Closed a variation-selector bypass hole introduced with the preserve-list in 4.11.0. Two or more
