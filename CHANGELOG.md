@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.11.1 - 2026-09-09
+
+- Closed a variation-selector bypass hole introduced with the preserve-list in 4.11.0. Two or more
+  variation selectors (VS15/VS16) placed side by side between ordinary letters used to treat each
+  other as legitimate emoji context, so a run of them survived the bypass pass uncounted. A selector
+  now anchors only to a real emoji base, never to another selector, so injected runs are stripped and
+  counted while genuine emoji sequences (heart, keycap, family) are still preserved byte-for-byte.
+- Bumped `SKILL.md` and the README to match; both still advertised 4.10.1 after the 4.11.0 change.
+
 ## 4.11.0 - 2026-09-09
 
 - Hardened the detector-bypass normalization against two newer text-hiding tricks and one

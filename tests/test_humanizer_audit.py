@@ -467,3 +467,17 @@ def test_variation_selector_stripped_between_letters_kept_after_emoji() -> None:
     kept, kept_counts, _f2 = module.normalize_bypass_text("❤️")
     assert kept == "❤️"
     assert kept_counts["zero_width"] == 0
+
+
+def test_adjacent_variation_selectors_between_letters_do_not_shield() -> None:
+    module = _load_audit_module()
+    # Two variation selectors injected between plain Latin letters must not
+    # vouch for each other: a selector's context has to be a real emoji base,
+    # so both are bypass residue that is stripped and counted.
+    normalized, counts, _first = module.normalize_bypass_text("a️️b")
+    assert normalized == "ab"
+    assert counts["zero_width"] == 2
+    # A longer run collapses completely rather than partially surviving.
+    collapsed, run_counts, _f2 = module.normalize_bypass_text("a️️️b")
+    assert collapsed == "ab"
+    assert run_counts["zero_width"] == 3
