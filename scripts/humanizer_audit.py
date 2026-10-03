@@ -14,9 +14,10 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 
+__version__ = "4.14.0"
 SCHEMA = "humanizer-audit.v1"
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
@@ -1632,11 +1633,32 @@ def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]
     ]
 
 
-def audit_text(text: str, path: str) -> dict[str, object]:
+# Inline code: a double-backtick span (which may hold a single backtick) or a
+# single-backtick span, never across a line break.
+INLINE_CODE_RE = re.compile(r"``[^\n]+?``|`[^`\n]+`")
+
+
+def mask_code(text: str) -> str:
+    """Blank fenced and inline code, keeping every offset and line break.
+
+    Code is not prose: `utilize()` in a README is an API name, not wordiness,
+    and a fenced example of a leaked token is documentation, not a leak.
+    """
+    fenced = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
+    return blank_spans(fenced, regex_spans(fenced, INLINE_CODE_RE))
+
+
+def audit_text(text: str, path: str, include_code: bool = False) -> dict[str, object]:
     original_starts = line_starts(text)
     text, bypass_counts, bypass_offset = normalize_bypass_text(text)
+    # Bypass characters are judged on the whole text above; code is masked
+    # only for the prose rules and stats below.
+    code_block_count = len(CODE_BLOCK_RE.findall(text))
+    if not include_code:
+        text = mask_code(text)
     starts = line_starts(text)
     stats = stats_for(text)
+    stats["code_block_count"] = code_block_count
     findings = []
     findings.extend(bypass_findings(bypass_counts, bypass_offset, original_starts))
     findings.extend(regex_findings(text, ARTIFACT_RULES, starts))
@@ -1703,11 +1725,11 @@ def iter_input_files(target: Path) -> list[Path]:
     raise FileNotFoundError(f"No such file or directory: {target}")
 
 
-def audit_paths(paths: list[Path]) -> list[dict[str, object]]:
+def audit_paths(paths: list[Path], include_code: bool = False) -> list[dict[str, object]]:
     documents = []
     for path in paths:
         text = path.read_text(encoding="utf-8")
-        documents.append(audit_text(text, str(path)))
+        documents.append(audit_text(text, str(path), include_code))
     return documents
 
 
@@ -1751,6 +1773,89 @@ def render_compare_report(result: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+SARIF_LEVELS = {"error": "error", "warning": "warning", "info": "note"}
+SARIF_SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
+INFORMATION_URI = "https://github.com/eddyplolz/humanizer-pro"
+
+
+def sarif_uri(path: str) -> str:
+    """A SARIF artifact URI: relative to the working directory when possible,
+    so GitHub code scanning can map it onto the checked-out repository."""
+    if path == "<stdin>":
+        return "stdin"
+    candidate = Path(path)
+    try:
+        relative = candidate.resolve().relative_to(Path.cwd().resolve())
+    except ValueError:
+        return candidate.resolve().as_uri()
+    return quote(relative.as_posix())
+
+
+def render_sarif(result: dict[str, object]) -> dict[str, object]:
+    """SARIF 2.1.0 log for an audit or compare result."""
+    located: list[tuple[str, dict[str, object]]] = []
+    if "compare" in result:
+        compare = result["compare"]
+        for finding in compare["findings"]:
+            located.append((str(compare[finding["side"]]), finding))
+    else:
+        for document in result["documents"]:
+            for finding in document["findings"]:
+                located.append((str(document["path"]), finding))
+    rule_index: dict[str, int] = {}
+    rules: list[dict[str, object]] = []
+    for _path, finding in sorted(located, key=lambda item: str(item[1]["id"])):
+        rule_id = str(finding["id"])
+        if rule_id in rule_index:
+            continue
+        rule_index[rule_id] = len(rules)
+        rules.append(
+            {
+                "id": rule_id,
+                "shortDescription": {"text": str(finding["message"])},
+                "defaultConfiguration": {"level": SARIF_LEVELS[str(finding["severity"])]},
+                "helpUri": INFORMATION_URI,
+            }
+        )
+    results = [
+        {
+            "ruleId": str(finding["id"]),
+            "ruleIndex": rule_index[str(finding["id"])],
+            "level": SARIF_LEVELS[str(finding["severity"])],
+            "message": {"text": f"{finding['message']}: {finding['evidence']}"},
+            "locations": [
+                {
+                    "physicalLocation": {
+                        "artifactLocation": {"uri": sarif_uri(path)},
+                        "region": {
+                            "startLine": int(finding["line"]),
+                            "startColumn": int(finding["column"]),
+                        },
+                    }
+                }
+            ],
+        }
+        for path, finding in located
+    ]
+    return {
+        "$schema": SARIF_SCHEMA,
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "humanizer-audit",
+                        "version": __version__,
+                        "informationUri": INFORMATION_URI,
+                        "rules": rules,
+                    }
+                },
+                "results": results,
+            }
+        ],
+    }
+
+
 class AuditArgumentParser(argparse.ArgumentParser):
     """argparse exits 2 on a usage error, which this CLI reserves for "block".
 
@@ -1765,7 +1870,7 @@ class AuditArgumentParser(argparse.ArgumentParser):
 
 def build_parser() -> argparse.ArgumentParser:
     parser = AuditArgumentParser(description="Audit text for Humanizer Pro tells and source-risk artifacts.")
-    parser.add_argument("target", nargs="?", help="File or directory to audit.")
+    parser.add_argument("targets", nargs="*", metavar="target", help="Files or directories to audit.")
     parser.add_argument("--stdin", action="store_true", help="Read text from stdin instead of a path.")
     parser.add_argument(
         "--compare",
@@ -1775,14 +1880,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of a text report.")
     parser.add_argument("--fail-score", type=int, default=60, help="Risk score that exits with review status 1.")
+    parser.add_argument(
+        "--include-code",
+        action="store_true",
+        help="Also apply prose rules inside fenced and inline code (skipped by default).",
+    )
+    parser.add_argument("--sarif", metavar="PATH", help="Also write findings as SARIF 2.1.0 to PATH.")
+    parser.add_argument("--version", action="version", version=f"humanizer-audit {__version__}")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if sum(1 for active in (args.stdin, bool(args.target), bool(args.compare)) if active) != 1:
-        parser.error("provide exactly one input: <file-or-dir>, --stdin, or --compare ORIGINAL REVISED")
+    if sum(1 for active in (args.stdin, bool(args.targets), bool(args.compare)) if active) != 1:
+        parser.error("provide exactly one input mode: <file-or-dir>..., --stdin, or --compare ORIGINAL REVISED")
     try:
         if args.compare:
             compare = compare_paths(Path(args.compare[0]), Path(args.compare[1]))
@@ -1794,16 +1906,23 @@ def main(argv: list[str] | None = None) -> int:
             # newlines the way text-mode file reads do.
             raw = sys.stdin.buffer.read().decode("utf-8")
             text = raw.replace("\r\n", "\n").replace("\r", "\n")
-            documents = [audit_text(text, "<stdin>")]
+            documents = [audit_text(text, "<stdin>", args.include_code)]
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
-            paths = iter_input_files(Path(args.target))
-            if not paths:
-                print(f"humanizer-audit: no .md or .txt files under {args.target}", file=sys.stderr)
-            documents = audit_paths(paths)
+            paths: list[Path] = []
+            for target in args.targets:
+                found = iter_input_files(Path(target))
+                if not found:
+                    print(f"humanizer-audit: no .md or .txt files under {target}", file=sys.stderr)
+                paths.extend(path for path in found if path not in paths)
+            documents = audit_paths(paths, args.include_code)
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
+        if args.sarif:
+            Path(args.sarif).write_text(
+                json.dumps(render_sarif(result), indent=2) + "\n", encoding="utf-8"
+            )
     except (OSError, UnicodeDecodeError) as exc:
         print(f"humanizer-audit: {exc}", file=sys.stderr)
         return 3

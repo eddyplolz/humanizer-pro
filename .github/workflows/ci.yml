@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Unit tests and fixture contracts
+        run: python -m pytest -q tests
+      - name: Self-scan against doc budgets
+        run: python scripts/self_scan.py
+      - name: Audit the eval fixtures
+        run: |
+          set +e
+          python scripts/humanizer_audit.py eval/fixtures --json > /dev/null
+          code=$?
+          # The fixtures include deliberate artifacts, so 2 (block) is expected;
+          # 3 means the CLI itself failed.
+          if [ "$code" -ne 2 ]; then echo "unexpected exit $code"; exit 1; fi
+
+  package:
+    name: Package install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the console script
+        run: python -m pip install .
+      - name: Run it
+        run: |
+          humanizer-audit --version
+          humanizer-audit eval/fixtures/clean-human.md
+
+  action:
+    name: Action smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: clean
+        uses: ./
+        with:
+          paths: eval/fixtures/clean-human.md
+          fail-on: review
+      - id: leak
+        uses: ./
+        with:
+          paths: eval/fixtures/artifact-leakage.md
+          fail-on: never
+      - name: Check outputs
+        env:
+          CLEAN: ${{ steps.clean.outputs.exit-code }}
+          LEAK: ${{ steps.leak.outputs.exit-code }}
+          SARIF: ${{ steps.leak.outputs.sarif-file }}
+        run: |
+          test "$CLEAN" = "0"
+          test "$LEAK" = "2"
+          python3 -c "import json,sys; log=json.load(open(sys.argv[1])); assert log['version']=='2.1.0' and log['runs'][0]['results']" "$SARIF"
