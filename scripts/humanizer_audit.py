@@ -296,6 +296,21 @@ ARTIFACT_RULES = [
         False,
     ),
     Rule(
+        "artifact.humanizer_whitespace",
+        9,
+        re.compile(
+            # Thin, hair, six-per-em, figure, punctuation, and medium math
+            # spaces between letters. No keyboard produces them; "humanizer"
+            # tools swap them for ordinary spaces to break exact matching. The
+            # non-breaking space is left alone: editors and web copy use it.
+            r"(?<=[A-Za-z,.;:!?])[      ](?=[A-Za-z])",
+        ),
+        "Typographic space character where a keyboard space belongs",
+        "warning",
+        False,
+        True,
+    ),
+    Rule(
         "artifact.bracket_placeholder",
         9,
         re.compile(
@@ -464,6 +479,39 @@ FAMILY_RULES = [
         8,
         re.compile(r"^\s*[-*+]\s+\*\*[^*\n]{1,40}?\.\*\*\s+\S", re.M),
         "List label ends with a period instead of a colon",
+    ),
+    Rule(
+        "family9.humanizer_spacing",
+        9,
+        re.compile(
+            # "end.Next" — a sentence boundary with the space removed, the most
+            # common damage from rule-based humanizers (Pangram, Aug 2025).
+            # Two lowercase letters before the stop skip abbreviations (e.g.)
+            # and the lowercase after the capital skips file names and acronyms.
+            r"(?<=[a-z][a-z])[.!?](?=[A-Z][a-z]{2})"
+        ),
+        "Missing space after a sentence end",
+        "warning",
+        False,
+    ),
+    Rule(
+        "family9.tortured_phrase",
+        9,
+        re.compile(
+            # Known one-for-one synonym swaps that no writer chooses: the
+            # Problematic Paper Screener's classics plus a few stilted verbs.
+            # Also common in non-native English, so the message says "check".
+            r"\b(?:counterfeit consciousness|computerized reasoning|profound (?:learning|neural organi[sz]ation)|"
+            r"(?:irregular|arbitrary) (?:timberland|woodland)|bosom (?:peril|malignancy|malignant growth)|"
+            r"(?:colossal|huge) information|signal to commotion|mean square blunder|"
+            r"normal language handling|choice tree|(?:picture|discourse|face) acknowledgment|"
+            r"backing vector machine|fake neural organi[sz]ation|worldwide temperature alteration|"
+            r"require to (?:obtain|acquire|get)|creating a peculiar)\b",
+            re.I,
+        ),
+        "Phrase reads like a mechanical synonym swap; check the intended term",
+        "warning",
+        False,
     ),
     Rule(
         "family9.chatbot_residue",
