@@ -17,8 +17,10 @@ desktop.ini
 __pycache__/
 *.pyc
 
-# corpus: text is never committed, only hashes
+# corpus: text is never committed, only hashes and public pointers
 corpus/cache/
+# Leftovers from before 4.15.0 on older machines; kept ignored so they can
+# never be committed by accident. Nothing reads them any more.
 corpus/manifest.private.json
 corpus/build.local.json
 corpus/sources.local.json

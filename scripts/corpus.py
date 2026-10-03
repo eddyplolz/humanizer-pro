@@ -1,45 +1,46 @@
 #!/usr/bin/env python3
-"""Human-control corpus builder for FP measurement.
+"""Corpus builder for error-rate measurement, public sources only.
 
-Ground truth by provenance, not judgment: every corpus document predates the
+Ground truth by provenance, not judgment: every human document predates the
 public release of ChatGPT (2022-11-30; this corpus uses a 2022-11-01 cutoff
 for margin), so any audit flag on it is a false positive by construction.
-Design adapted from avoid-ai-writing's corpus/fp-measure (MIT).
+Machine documents carry the model that wrote them. Design adapted from
+avoid-ai-writing's corpus/fp-measure (MIT).
 
-The corpus is hash-only and anonymous. `corpus/manifest.json` carries only
-register, author tier, date, word count, and SHA-256 digest per document —
-no text, no usernames, no source locators. Entry ids are derived from the
-digest, so they identify content without describing it. The text lives in
-`corpus/cache/` and the source locators in `corpus/sources.local.json`;
-both are gitignored and stay on the maintainer's machine. The public-domain
-pool is the one exception: its entries point at the public-domain text this
-repository already ships, so that slice is independently rebuildable.
+The corpus is hash-only. `corpus/manifest.json` carries register, author
+tier, date, word count, SHA-256 digest, and a public pointer per document
+(a Gutenberg id, an Internet Archive identifier, a Wikipedia revision id, a
+Stack Exchange answer id, a dataset row). No text is committed: it lives in
+the gitignored `corpus/cache/`, and every pool can be rebuilt from its
+pointers by anyone, so every published number can be checked; every
+document comes from a public source.
 
 Subcommands:
-  build-forum   read MyBB dump SQL files, extract pre-cutoff posts
-  build-wiki    fetch a wiki user's pre-cutoff revisions via the MediaWiki API
-  build-pd      chunk the in-repo public-domain Strunk text
-  build-essays  chunk public-domain Gutenberg essay works
-  build-news    fetch public-domain newspaper OCR (Internet Archive)
-  build-hf-news grow the news pool from OpenCulture (HF rows API)
-  build-peps    docs-register pool: PEPs at the last pre-cutoff commit
-  build-raid    machine pool: RAID generations (non-adversarial, MIT)
-  build-wildchat machine pool: WildChat-1M first replies (ODC-BY)
-                (scripts/generate_machine.py adds current Claude models)
-  fetch         repopulate the cache (public-domain always; wiki needs the
-                maintainer's sources.local.json; other kinds name their
-                build-* subcommand)
-  verify        check every cached file against its manifest sha256
-
-Maintainer-local settings (dump paths, identity mapping, wiki endpoint) come
-from CLI flags or a gitignored `corpus/build.local.json`; they are
-deliberately not stored in the manifest or this script.
+  build-pd            chunk the in-repo public-domain Strunk text
+  build-essays        chunk public-domain Gutenberg essay works
+  build-news          fetch public-domain newspaper OCR (Internet Archive)
+  build-hf-news       grow the news pool from OpenCulture (HF rows API)
+  build-wikipedia     wiki-register pool: random English Wikipedia articles at
+                      their last pre-cutoff revision (CC BY-SA)
+  build-stackexchange chat-register pool: pre-cutoff Stack Exchange answers
+                      from hobby and language sites (CC BY-SA)
+  build-peps          docs-register pool: PEPs at the last pre-cutoff commit
+  build-raid          machine pool: RAID generations (non-adversarial, MIT)
+  build-wildchat      machine pool: WildChat-1M first replies (ODC-BY)
+                      (scripts/generate_machine.py can add current Claude
+                      models; it needs an API key and is never run by default)
+  fetch               repopulate the cache from the manifest's public pointers
+                      (Strunk offline; Wikipedia and Stack Exchange by id;
+                      other kinds name their build-* subcommand)
+  verify              check every cached file against its manifest sha256
 """
 
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
+import html as html_lib
 import http.client
 import json
 import os
@@ -55,43 +56,36 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CORPUS_DIR = ROOT / "corpus"
 MANIFEST_PATH = CORPUS_DIR / "manifest.json"
-# Entries for the maintainer's own writing (forum posts, wiki revisions) live
-# here, gitignored, never in the public manifest. A public digest of that text
-# would let anyone who can read the forum or wiki hash candidate posts and
-# confirm which accounts are the maintainer's. The public file keeps totals only.
-PRIVATE_MANIFEST_PATH = CORPUS_DIR / "manifest.private.json"
 CACHE_DIR = CORPUS_DIR / "cache"
-LOCAL_CONFIG_PATH = CORPUS_DIR / "build.local.json"
-LOCAL_SOURCES_PATH = CORPUS_DIR / "sources.local.json"
-
 MANIFEST_SCHEMA = "humanizer-corpus-manifest.v1"
-SOURCES_SCHEMA = "humanizer-corpus-sources.v1"
 CUTOFF = "2022-11-01"
 CUTOFF_EPOCH = 1667260800  # 2022-11-01T00:00:00Z
 MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200, "docs": 150}
-BBCODE_STRIP_VERSION = "bbcode-strip.v2"
 WIKITEXT_STRIP_VERSION = "wikitext-strip.v2"
 CHUNK_VERSION = "chunk.v2"
 USER_AGENT = "humanizer-pro-corpus/1.0"
 ID_PREFIX = {
-    "forum-post": "forum",
-    "wiki-revision": "wiki",
     "public-domain": "pd",
     "news-page": "news",
     "gutenberg-work": "guten",
     "hf-news": "hfnews",
     "pep-chunk": "pep",
+    "wikipedia-revision": "wp",
+    "stackexchange-answer": "se",
     "raid-generation": "raid",
     "wildchat-turn": "wildchat",
     "generated": "gen",
 }
-# Kinds whose sources are public-domain pointers and may publish in the manifest.
+# Every kind publishes its pointer in the manifest; the tuple is kept as the
+# contract the anonymity test checks, kind by kind.
 PUBLIC_SOURCE_KINDS = (
     "public-domain",
     "news-page",
     "gutenberg-work",
     "hf-news",
     "pep-chunk",
+    "wikipedia-revision",
+    "stackexchange-answer",
     "raid-generation",
     "wildchat-turn",
     "generated",
@@ -124,29 +118,10 @@ def word_count(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9'’-]+", text))
 
 
-PRIVATE_KINDS = ("forum-post", "wiki-revision")
-
-
-def private_summary(entries: list[dict]) -> dict:
-    """Totals the public manifest may show for the private pools."""
-    summary: dict = {}
-    for entry in entries:
-        pool = summary.setdefault(entry["kind"], {"entries": 0, "registers": {}})
-        pool["entries"] += 1
-        pool["registers"][entry["register"]] = pool["registers"].get(entry["register"], 0) + 1
-    return summary
-
-
 def load_manifest() -> dict:
-    """The public manifest, plus the private entries when this machine has them."""
     if MANIFEST_PATH.exists():
-        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    else:
-        manifest = {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": []}
-    if PRIVATE_MANIFEST_PATH.exists():
-        private = json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))
-        manifest["entries"].extend(private["entries"])
-    return manifest
+        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    return {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": []}
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -154,39 +129,11 @@ def _write_json(path: Path, payload: dict) -> None:
 
 
 def save_manifest(manifest: dict) -> None:
-    """Write public entries to the public manifest and private ones to the
-    gitignored private manifest. The public totals change only for private
-    pools this machine holds; the others keep their published totals."""
     entries = sorted(manifest["entries"], key=lambda entry: entry["id"])
-    private = [entry for entry in entries if entry["kind"] in PRIVATE_KINDS]
-    public = {key: value for key, value in manifest.items() if key != "entries"}
-    public["entries"] = [entry for entry in entries if entry["kind"] not in PRIVATE_KINDS]
+    public = {key: value for key, value in manifest.items() if key not in ("entries", "private_pools")}
+    public["entries"] = entries
     CORPUS_DIR.mkdir(exist_ok=True)
-    if private or PRIVATE_MANIFEST_PATH.exists():
-        local_kinds = {entry["kind"] for entry in private}
-        if PRIVATE_MANIFEST_PATH.exists():
-            held = json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
-            local_kinds |= {entry["kind"] for entry in held}
-        pools = {kind: totals for kind, totals in public.get("private_pools", {}).items() if kind not in local_kinds}
-        pools.update(private_summary(private))
-        _write_json(PRIVATE_MANIFEST_PATH, {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": private})
-        public["private_pools"] = pools
     _write_json(MANIFEST_PATH, public)
-
-
-def load_local_sources() -> dict:
-    if LOCAL_SOURCES_PATH.exists():
-        return json.loads(LOCAL_SOURCES_PATH.read_text(encoding="utf-8"))
-    return {"schema": SOURCES_SCHEMA, "sources": {}}
-
-
-def save_local_sources(sources: dict) -> None:
-    CORPUS_DIR.mkdir(exist_ok=True)
-    LOCAL_SOURCES_PATH.write_text(
-        json.dumps(sources, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
 
 
 ENTRY_ID_RE = re.compile(r"[a-z]+-[0-9a-f]{12}")
@@ -211,26 +158,17 @@ def read_cache(entry_id: str) -> str:
     return cache_path(entry_id).read_bytes().decode("utf-8")
 
 
-def load_local_config() -> dict:
-    if LOCAL_CONFIG_PATH.exists():
-        return json.loads(LOCAL_CONFIG_PATH.read_text(encoding="utf-8"))
-    return {}
-
-
 def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
-    """Persist one pool: anonymous public entries, local sources, cache text.
+    """Persist one pool: manifest entries with public pointers, cache text.
 
     `pairs` items are (public_fields, text, source). The entry id is the kind
-    prefix plus the first 12 hex chars of the content digest, so a public id
-    names content without describing where it came from. Existing entries and
-    cache files for the same kind are replaced (idempotent rebuild).
+    prefix plus the first 12 hex chars of the content digest. Existing entries
+    and cache files for the same kind are replaced (idempotent rebuild).
     """
     prefix = ID_PREFIX[kind]
     manifest = load_manifest()
-    local = load_local_sources()
     for entry_id in [e["id"] for e in manifest["entries"] if e["id"].startswith(f"{prefix}-")]:
         cache_path(entry_id).unlink(missing_ok=True)
-        local["sources"].pop(entry_id, None)
     manifest["entries"] = [
         e for e in manifest["entries"] if not e["id"].startswith(f"{prefix}-")
     ]
@@ -256,51 +194,17 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
         }
         if kind in MACHINE_KINDS:
             entry["split"] = digest_split(digest)
-        if kind in PUBLIC_SOURCE_KINDS:
-            entry["source"] = source  # public-domain pointer; reveals nothing personal
-        else:
-            local["sources"][entry_id] = source
+        entry["source"] = source  # a public pointer anyone can rebuild from
         entries.append(entry)
         write_cache(entry_id, text)
     manifest["entries"].extend(entries)
     save_manifest(manifest)
-    save_local_sources(local)
     if duplicates:
         print(f"{kind}: dropped {duplicates} byte-identical duplicate document(s)")
     return entries
 
 
 # ---------------------------------------------------------- text extraction
-
-
-# Innermost block only: its body holds no opening tag of the same name, so
-# nested quotes are removed from the inside out rather than the outer opener
-# pairing with the inner closer and leaking the quoted author's words.
-BBCODE_BLOCK_RE = re.compile(
-    r"\[(quote|code|php|html)(?:=[^\]]*)?\](?:(?!\[\1(?:=[^\]]*)?\]).)*?\[/\1\]", re.S | re.I
-)
-SQL_ESCAPES = {"n": "\n", "r": "\r", "t": "\t", "0": "\0", "Z": "\x1a"}
-BBCODE_TAG_RE = re.compile(r"\[/?[a-zA-Z*][^\]]*\]")
-
-
-def bbcode_strip(message: str) -> str:
-    """SQL-unescape a MyBB message and strip BBCode.
-
-    Quote and code blocks are removed outright: quoted text is another
-    author's writing and code is not prose. Remaining tags are unwrapped.
-    """
-    # One pass over escape pairs. Chained replace() calls read the "\\n" in
-    # an escaped backslash followed by "n" (C:\\new) as a newline.
-    text = re.sub(r"\\(.)", lambda m: SQL_ESCAPES.get(m.group(1), m.group(1)), message, flags=re.S)
-    text = text.replace("\r\n", "\n").replace("\r", "\n")
-    while True:
-        text, count = BBCODE_BLOCK_RE.subn(" ", text)
-        if not count:
-            break
-    text = BBCODE_TAG_RE.sub("", text)
-    text = re.sub(r"[ \t]+", " ", text)
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
 
 
 WIKI_DROP_RES = [
@@ -383,91 +287,7 @@ def _wikitext_finish(text: str) -> str:
     return text.strip()
 
 
-# ------------------------------------------------------------- forum build
-
-
-# mybb_posts columns: pid,tid,replyto,fid,subject,icon,uid,username,dateline,message,...
-POSTS_INSERT_RE = re.compile(r"INSERT INTO `mybb_posts`[^;]*?VALUES\s*(.*?);\r?\n", re.S)
-POST_ROW_RE = re.compile(
-    r"\((\d+),\s*\d+,\s*\d+,\s*\d+,\s*'(?:[^'\\]|\\.)*',\s*-?\d+,\s*(\d+),\s*"
-    r"'((?:[^'\\]|\\.)*)',\s*(\d+),\s*'((?:[^'\\]|\\.)*)'"
-    # Optional tail: ipaddress (quoted, hex, _binary, or NULL), includesig,
-    # smilieoff, edituid, then edittime. MyBB stores the edited text in place,
-    # so a post edited after the cutoff is not pre-cutoff text. A dump whose
-    # rows lack these columns yields None and is counted, not guessed.
-    r"(?:,\s*(?:'(?:[^'\\]|\\.)*'|_binary\s*'(?:[^'\\]|\\.)*'|0x[0-9A-Fa-f]*|NULL)"
-    r",\s*-?\d+,\s*-?\d+,\s*-?\d+,\s*(\d+))?"
-)
-
-
-def iter_mybb_posts(sql_path: Path):
-    text = sql_path.read_text(encoding="utf-8", errors="replace")
-    for insert in POSTS_INSERT_RE.finditer(text):
-        for row in POST_ROW_RE.finditer(insert.group(1)):
-            pid, _uid, username, dateline, message, edittime = row.groups()
-            yield (
-                int(pid),
-                username,
-                int(dateline),
-                message,
-                int(edittime) if edittime is not None else None,
-            )
-
-
-def build_forum(args: argparse.Namespace) -> int:
-    config = load_local_config()
-    dump_dir = Path(args.dump_dir or config.get("mybb_dump_dir", ""))
-    maintainer_users = set(args.maintainer_user or config.get("maintainer_users", []))
-    if not dump_dir.is_dir():
-        print(f"FAIL: MyBB dump directory not found: {dump_dir!r}", file=sys.stderr)
-        return 3
-    dumps = sorted(dump_dir.glob("*_sanitized.sql"))
-    if not dumps:
-        print(f"FAIL: no *_sanitized.sql files in {dump_dir}", file=sys.stderr)
-        return 3
-    pairs: list[tuple[dict, str, dict]] = []
-    dropped = Counter()
-    for sql_path in dumps:
-        forum = sql_path.stem.replace("_sanitized", "")
-        for pid, username, dateline, message, edittime in iter_mybb_posts(sql_path):
-            if dateline >= CUTOFF_EPOCH:
-                dropped["post-cutoff"] += 1
-                continue
-            if edittime is not None and edittime >= CUTOFF_EPOCH:
-                dropped["edited-post-cutoff"] += 1
-                continue
-            if edittime is None:
-                dropped["edittime-unknown"] += 1
-            text = bbcode_strip(message)
-            if word_count(text) < MIN_WORDS["chat"]:
-                dropped["under-min-words"] += 1
-                continue
-            pairs.append(
-                (
-                    {
-                        "register": "chat",
-                        "author": "maintainer" if username in maintainer_users else "other",
-                        "date": time.strftime("%Y-%m", time.gmtime(dateline)),
-                        "extraction": BBCODE_STRIP_VERSION,
-                    },
-                    text,
-                    {"dump": forum, "pid": pid},
-                )
-            )
-    entries = save_pool("forum-post", pairs)
-    by_author = Counter(entry["author"] for entry in entries)
-    print(
-        f"forum: {len(entries)} entries cached "
-        f"({by_author['maintainer']} maintainer, {by_author['other']} other); "
-        f"dropped {dropped['post-cutoff']} post-cutoff, "
-        f"{dropped['edited-post-cutoff']} edited after the cutoff, "
-        f"{dropped['under-min-words']} under {MIN_WORDS['chat']} words; "
-        f"{dropped['edittime-unknown']} kept with no parseable edittime"
-    )
-    return 0
-
-
-# -------------------------------------------------------------- wiki build
+# ---------------------------------------------------------- api helpers
 
 
 def api_get(api_url: str, params: dict, sleep: float) -> dict:
@@ -476,87 +296,247 @@ def api_get(api_url: str, params: dict, sleep: float) -> dict:
         f"{api_url}?{query}", headers={"User-Agent": USER_AGENT}
     )
     with urllib.request.urlopen(request, timeout=60) as response:
-        payload = json.loads(response.read().decode("utf-8"))
+        raw = response.read()
+        if response.headers.get("Content-Encoding") == "gzip":
+            raw = gzip.decompress(raw)
+        payload = json.loads(raw.decode("utf-8"))
     time.sleep(sleep)
     return payload
 
 
-def build_wiki(args: argparse.Namespace) -> int:
-    config = load_local_config()
-    api_url = args.api_url or config.get("wiki_api_url")
-    user = args.user or config.get("wiki_user")
-    if not api_url or not user:
-        print("FAIL: --api-url and --user (or build.local.json) required", file=sys.stderr)
-        return 3
-    # 1) Enumerate the user's pre-cutoff mainspace contributions, newest first,
-    #    keeping the latest pre-cutoff revision per page.
-    latest_rev_by_page: dict[str, int] = {}
-    params = {
-        "action": "query",
-        "list": "usercontribs",
-        "ucuser": user,
-        "ucnamespace": "0",
-        "ucstart": f"{CUTOFF}T00:00:00Z",
-        "ucdir": "older",
-        "uclimit": "500",
-        "ucprop": "ids|title|timestamp",
-    }
-    while True:
-        payload = api_get(api_url, params, args.sleep)
-        for contrib in payload.get("query", {}).get("usercontribs", []):
-            latest_rev_by_page.setdefault(contrib["title"], contrib["revid"])
-        cont = payload.get("continue")
-        if not cont:
-            break
-        params.update(cont)
-    print(f"wiki: {len(latest_rev_by_page)} pages with pre-cutoff revisions by {user}")
-    # 2) Batch-fetch revision content.
-    revids = sorted(latest_rev_by_page.values())
-    pairs: list[tuple[dict, str, dict]] = []
-    dropped = Counter()
-    for start in range(0, len(revids), 50):
-        batch = revids[start : start + 50]
-        payload = api_get(
-            api_url,
-            {
-                "action": "query",
-                "prop": "revisions",
-                "revids": "|".join(str(revid) for revid in batch),
-                "rvprop": "ids|timestamp|content",
-                "rvslots": "main",
-            },
-            args.sleep,
-        )
-        for page in payload.get("query", {}).get("pages", {}).values():
-            for rev in page.get("revisions", []):
-                wikitext = rev.get("slots", {}).get("main", {}).get("*", "")
-                text = wikitext_strip(wikitext)
-                if word_count(text) < MIN_WORDS["wiki"]:
-                    dropped["under-min-words"] += 1
-                    continue
-                pairs.append(
-                    (
-                        {
-                            "register": "wiki",
-                            # A page at the maintainer's last pre-cutoff
-                            # revision can hold other editors' text.
-                            "author": "mixed",
-                            "date": rev["timestamp"][:7],
-                            "extraction": WIKITEXT_STRIP_VERSION,
-                        },
-                        text,
-                        {
-                            "api": api_url,
-                            "revid": rev["revid"],
-                            "title": page.get("title", ""),
-                        },
-                    )
-                )
-    entries = save_pool("wiki-revision", pairs)
-    print(
-        f"wiki: {len(entries)} entries cached; "
-        f"dropped {dropped['under-min-words']} under {MIN_WORDS['wiki']} words"
+# ------------------------------------------------------- wikipedia build
+
+
+WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php"
+WIKIPEDIA_SITE = "en.wikipedia.org"
+WIKIPEDIA_RANDOM_BATCH = 20
+WIKIPEDIA_MAX_WORDS = 4000  # whole articles, bounded so one page cannot dominate a run
+
+
+def wikipedia_revision(title: str, sleep: float) -> dict | None:
+    """The article's last revision before the cutoff, with its wikitext."""
+    payload = api_get(
+        WIKIPEDIA_API,
+        {
+            "action": "query",
+            "titles": title,
+            "prop": "revisions",
+            "rvprop": "ids|timestamp|content",
+            "rvslots": "main",
+            "rvlimit": 1,
+            "rvstart": f"{CUTOFF}T00:00:00Z",
+            "rvdir": "older",
+        },
+        sleep,
     )
+    page = next(iter(payload.get("query", {}).get("pages", {}).values()), {})
+    revisions = page.get("revisions") or []
+    if not revisions or "missing" in page:
+        return None
+    rev = revisions[0]
+    return {
+        "title": page.get("title", title),
+        "revid": rev["revid"],
+        "timestamp": rev["timestamp"],
+        "wikitext": rev.get("slots", {}).get("main", {}).get("*", ""),
+    }
+
+
+def wikipedia_pair(rev: dict) -> tuple[dict, str, dict] | None:
+    text = wikitext_strip(rev["wikitext"])
+    words = word_count(text)
+    if not (MIN_WORDS["wiki"] <= words <= WIKIPEDIA_MAX_WORDS):
+        return None
+    return (
+        {
+            "register": "wiki",
+            "author": "other",
+            "date": rev["timestamp"][:7],
+            "extraction": WIKITEXT_STRIP_VERSION,
+        },
+        text,
+        {
+            "site": WIKIPEDIA_SITE,
+            "title": rev["title"],
+            "revid": rev["revid"],
+            "url": f"https://{WIKIPEDIA_SITE}/w/index.php?oldid={rev['revid']}",
+        },
+    )
+
+
+def build_wikipedia(args: argparse.Namespace) -> int:
+    """Wiki-register human pool: random English Wikipedia articles, each at
+    its last revision before the cutoff (CC BY-SA 4.0; the pointer is the
+    revision id, so the exact text can be fetched again)."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    seen: set[str] = set()
+    stalled = 0
+    while len(pairs) < args.target and stalled < 5:
+        try:
+            payload = api_get(
+                WIKIPEDIA_API,
+                {"action": "query", "list": "random", "rnnamespace": 0, "rnlimit": WIKIPEDIA_RANDOM_BATCH},
+                args.sleep,
+            )
+        except FETCH_ERRORS as error:
+            print(f"wikipedia: random listing failed ({error})", flush=True)
+            stalled += 1
+            continue
+        titles = [item["title"] for item in payload.get("query", {}).get("random", [])]
+        if not titles:
+            stalled += 1
+            continue
+        for title in titles:
+            if len(pairs) >= args.target:
+                break
+            if title in seen:
+                continue
+            seen.add(title)
+            try:
+                rev = wikipedia_revision(title, args.sleep)
+            except FETCH_ERRORS:
+                dropped["fetch-failed"] += 1
+                continue
+            if rev is None:
+                dropped["no-pre-cutoff-revision"] += 1
+                continue
+            pair = wikipedia_pair(rev)
+            if pair is None:
+                dropped["word-band"] += 1
+                continue
+            pairs.append(pair)
+        print(f"wikipedia: {len(pairs)}/{args.target} kept, {len(seen)} titles tried", flush=True)
+    if not pairs:
+        print("FAIL: no Wikipedia articles collected; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("wikipedia-revision", pairs)
+    print(f"wikipedia: {len(entries)} articles cached (target {args.target}); drops: {dict(dropped)}")
+    return 0
+
+
+# --------------------------------------------------- stack exchange build
+
+
+STACKEXCHANGE_API = "https://api.stackexchange.com/2.3"
+# Hobby, language, and workplace sites: conversational human prose, little code.
+STACKEXCHANGE_SITES = (
+    "english",
+    "writing",
+    "cooking",
+    "gardening",
+    "travel",
+    "workplace",
+    "academia",
+    "money",
+    "diy",
+    "history",
+)
+STACKEXCHANGE_PAGE = 100
+STACKEXCHANGE_MAX_WORDS = 1200
+HTML_STRIP_VERSION = "html-strip.v1"
+HTML_BLOCK_DROP_RE = re.compile(r"<(pre|code|blockquote)\b[^>]*>.*?</\1>", re.S | re.I)
+HTML_BREAK_RE = re.compile(r"</(?:p|li|h\d|div|blockquote|tr)>|<br\s*/?>", re.I)
+
+
+def html_strip(markup: str) -> str:
+    """Answer HTML to prose: code, preformatted, and quoted blocks dropped
+    (not the answerer's prose), block ends become paragraph breaks."""
+    text = HTML_BLOCK_DROP_RE.sub(" ", markup)
+    text = HTML_BREAK_RE.sub("\n\n", text)
+    text = HTML_TAG_RE.sub("", text)
+    text = html_lib.unescape(text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" *\n *", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def stackexchange_pairs(items: list[dict], site: str) -> tuple[list, Counter]:
+    """Corpus pairs from one site's answer rows. An answer edited after the
+    cutoff is not pre-cutoff text, so it is dropped like a post-cutoff one."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for item in items:
+        created = int(item.get("creation_date") or 0)
+        if created >= CUTOFF_EPOCH:
+            dropped["post-cutoff"] += 1
+            continue
+        edited = item.get("last_edit_date")
+        if edited is not None and int(edited) >= CUTOFF_EPOCH:
+            dropped["edited-post-cutoff"] += 1
+            continue
+        text = html_strip(str(item.get("body") or ""))
+        words = word_count(text)
+        if not (MIN_WORDS["chat"] <= words <= STACKEXCHANGE_MAX_WORDS):
+            dropped["word-band"] += 1
+            continue
+        answer_id = int(item["answer_id"])
+        pairs.append(
+            (
+                {
+                    "register": "chat",
+                    "author": "other",
+                    "date": time.strftime("%Y-%m", time.gmtime(created)),
+                    "extraction": HTML_STRIP_VERSION,
+                },
+                text,
+                {
+                    "site": site,
+                    "answer_id": answer_id,
+                    "url": f"https://{site}.stackexchange.com/a/{answer_id}",
+                },
+            )
+        )
+    return pairs, dropped
+
+
+def stackexchange_get(path: str, params: dict, sleep: float) -> dict:
+    payload = api_get(f"{STACKEXCHANGE_API}/{path}", {**params, "filter": "withbody"}, sleep)
+    backoff = payload.get("backoff")
+    if backoff:
+        time.sleep(float(backoff))
+    return payload
+
+
+def build_stackexchange(args: argparse.Namespace) -> int:
+    """Chat-register human pool: top-voted pre-cutoff answers from hobby and
+    language Stack Exchange sites (CC BY-SA; the pointer is the answer id).
+    The API allows 300 requests a day without a key; a run uses about one
+    per site per page."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for site in STACKEXCHANGE_SITES:
+        site_pairs: list = []
+        for page in range(1, args.pages + 1):
+            try:
+                payload = stackexchange_get(
+                    "answers",
+                    {
+                        "site": site,
+                        "todate": CUTOFF_EPOCH,
+                        "order": "desc",
+                        "sort": "votes",
+                        "pagesize": STACKEXCHANGE_PAGE,
+                        "page": page,
+                    },
+                    args.sleep,
+                )
+            except FETCH_ERRORS as error:
+                print(f"stackexchange: {site} page {page} failed ({error})", flush=True)
+                break
+            kept, drops = stackexchange_pairs(payload.get("items", []), site)
+            site_pairs.extend(kept)
+            dropped.update(drops)
+            if len(site_pairs) >= args.per_site or not payload.get("has_more"):
+                break
+        pairs.extend(site_pairs[: args.per_site])
+        print(f"stackexchange: {site}: {min(len(site_pairs), args.per_site)} answers kept", flush=True)
+    if not pairs:
+        print("FAIL: no Stack Exchange answers collected; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("stackexchange-answer", pairs)
+    print(f"stackexchange: {len(entries)} answers cached; drops: {dict(dropped)}")
     return 0
 
 
@@ -1282,7 +1262,6 @@ REBUILD_HINT = {
     "gutenberg-work": "build-essays",
     "news-page": "build-news",
     "hf-news": "build-hf-news",
-    "forum-post": "build-forum",
     "pep-chunk": "build-peps",
     "raid-generation": "build-raid",
     "wildchat-turn": "build-wildchat",
@@ -1291,68 +1270,67 @@ REBUILD_HINT = {
 
 
 def fetch(args: argparse.Namespace) -> int:
-    """Repopulate cache: public-domain from the repo, wiki via local sources.
+    """Repopulate the cache from public pointers.
 
-    Other kinds are rebuilt by their own build-* subcommand; fetch says which
-    ones are missing and exits non-zero while any entry stays uncached.
+    Strunk chunks come from the repo; Wikipedia revisions and Stack Exchange
+    answers are fetched by id. Other kinds are rebuilt by their own build-*
+    subcommand; fetch names the missing ones and exits non-zero while any
+    entry stays uncached.
     """
     manifest = load_manifest()
-    local = load_local_sources()["sources"]
     missing = [entry for entry in manifest["entries"] if not cache_path(entry["id"]).exists()]
     if any(e["kind"] == "public-domain" for e in missing):
         build_pd(args)
-    wiki_entries = [
-        e for e in missing if e["kind"] == "wiki-revision" and e["id"] in local
-    ]
-    unsourced_wiki = sum(
-        1 for e in missing if e["kind"] == "wiki-revision" and e["id"] not in local
-    )
-    if unsourced_wiki:
-        print(
-            f"NOTE: {unsourced_wiki} wiki entries have no locator in "
-            f"{LOCAL_SOURCES_PATH.name} on this machine (the corpus is anonymous "
-            "by design)."
-        )
     by_kind = Counter(e["kind"] for e in missing if e["kind"] in REBUILD_HINT)
     for kind, count in sorted(by_kind.items()):
         print(f"NOTE: {count} {kind} entries missing; rebuild them with `{REBUILD_HINT[kind]}`.")
-    # Batch per API endpoint: a batch must not borrow the first entry's wiki.
-    by_api: dict[str, list[dict]] = {}
-    for entry in wiki_entries:
-        by_api.setdefault(local[entry["id"]]["api"], []).append(entry)
-    for api_url, api_entries in sorted(by_api.items()):
-        for start in range(0, len(api_entries), 50):
-            batch = api_entries[start : start + 50]
-            payload = api_get(
-                api_url,
-                {
-                    "action": "query",
-                    "prop": "revisions",
-                    "revids": "|".join(str(local[e["id"]]["revid"]) for e in batch),
-                    "rvprop": "ids|content",
-                    "rvslots": "main",
-                },
-                args.sleep,
-            )
-            by_revid = {local[e["id"]]["revid"]: e for e in batch}
-            for page in payload.get("query", {}).get("pages", {}).values():
-                for rev in page.get("revisions", []):
-                    entry = by_revid.get(rev["revid"])
-                    if not entry:
-                        continue
-                    # Rebuild with the extraction the entry was published
-                    # with, or its digest can never match.
-                    strip = WIKITEXT_STRIPPERS.get(entry.get("extraction", ""))
-                    if strip is None:
-                        print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
-                        continue
-                    write_cache(entry["id"], strip(rev.get("slots", {}).get("main", {}).get("*", "")))
+    wiki_entries = [e for e in missing if e["kind"] == "wikipedia-revision"]
+    for start in range(0, len(wiki_entries), 50):
+        batch = wiki_entries[start : start + 50]
+        payload = api_get(
+            WIKIPEDIA_API,
+            {
+                "action": "query",
+                "prop": "revisions",
+                "revids": "|".join(str(e["source"]["revid"]) for e in batch),
+                "rvprop": "ids|content",
+                "rvslots": "main",
+            },
+            args.sleep,
+        )
+        by_revid = {e["source"]["revid"]: e for e in batch}
+        for page in payload.get("query", {}).get("pages", {}).values():
+            for rev in page.get("revisions", []):
+                entry = by_revid.get(rev["revid"])
+                if not entry:
+                    continue
+                # Rebuild with the extraction the entry was published with,
+                # or its digest can never match.
+                strip = WIKITEXT_STRIPPERS.get(entry.get("extraction", ""))
+                if strip is None:
+                    print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
+                    continue
+                write_cache(entry["id"], strip(rev.get("slots", {}).get("main", {}).get("*", "")))
+    se_entries = [e for e in missing if e["kind"] == "stackexchange-answer"]
+    by_site: dict[str, list[dict]] = {}
+    for entry in se_entries:
+        by_site.setdefault(entry["source"]["site"], []).append(entry)
+    for site, site_entries in sorted(by_site.items()):
+        for start in range(0, len(site_entries), 100):
+            batch = site_entries[start : start + 100]
+            ids = ";".join(str(e["source"]["answer_id"]) for e in batch)
+            payload = stackexchange_get(f"answers/{ids}", {"site": site}, args.sleep)
+            by_id = {e["source"]["answer_id"]: e for e in batch}
+            for item in payload.get("items", []):
+                entry = by_id.get(int(item.get("answer_id", 0)))
+                if entry is not None and entry.get("extraction") == HTML_STRIP_VERSION:
+                    write_cache(entry["id"], html_strip(str(item.get("body") or "")))
     still_missing = sum(
         1 for entry in load_manifest()["entries"] if not cache_path(entry["id"]).exists()
     )
     print(
-        f"fetch: attempted {len(wiki_entries)} wiki entries; "
-        f"{still_missing} entries still uncached; run verify next"
+        f"fetch: attempted {len(wiki_entries)} Wikipedia and {len(se_entries)} Stack Exchange "
+        f"entries; {still_missing} entries still uncached; run verify next"
     )
     return 1 if still_missing else 0
 
@@ -1381,21 +1359,6 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_forum = sub.add_parser("build-forum", help="extract pre-cutoff MyBB posts")
-    p_forum.add_argument("--dump-dir", help="directory of *_sanitized.sql dumps")
-    p_forum.add_argument(
-        "--maintainer-user",
-        action="append",
-        help="forum username belonging to the maintainer (repeatable)",
-    )
-    p_forum.set_defaults(func=build_forum)
-
-    p_wiki = sub.add_parser("build-wiki", help="fetch a user's pre-cutoff revisions")
-    p_wiki.add_argument("--api-url", help="MediaWiki api.php URL")
-    p_wiki.add_argument("--user", help="wiki username")
-    p_wiki.add_argument("--sleep", type=float, default=1.0)
-    p_wiki.set_defaults(func=build_wiki)
-
     p_pd = sub.add_parser("build-pd", help="chunk the in-repo Strunk text")
     p_pd.set_defaults(func=build_pd)
 
@@ -1419,6 +1382,17 @@ def main(argv: list[str] | None = None) -> int:
     p_hf.add_argument("--target", type=int, default=350)
     p_hf.add_argument("--sleep", type=float, default=1.5)
     p_hf.set_defaults(func=build_hf_news)
+
+    p_wp = sub.add_parser("build-wikipedia", help="wiki-register pool from pre-cutoff Wikipedia revisions")
+    p_wp.add_argument("--target", type=int, default=500)
+    p_wp.add_argument("--sleep", type=float, default=0.5)
+    p_wp.set_defaults(func=build_wikipedia)
+
+    p_se = sub.add_parser("build-stackexchange", help="chat-register pool from pre-cutoff Stack Exchange answers")
+    p_se.add_argument("--per-site", type=int, default=60)
+    p_se.add_argument("--pages", type=int, default=2, help="API pages of 100 answers per site, at most")
+    p_se.add_argument("--sleep", type=float, default=0.5)
+    p_se.set_defaults(func=build_stackexchange)
 
     p_peps = sub.add_parser("build-peps", help="docs-register human pool from pre-cutoff PEPs")
     p_peps.add_argument("--target", type=int, default=400)
