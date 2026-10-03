@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure false-positive rates over the human-control corpus, by register.
+"""Measure false-positive and catch rates over the corpus, by register.
 
 Every corpus document predates ChatGPT (see corpus/manifest.json), so any
 flag the audit raises on one is a false positive by construction. This
@@ -11,9 +11,12 @@ failure this exists to catch: a rule set can be gentle on chat and harsh
 on technical prose at the same time. Wilson 95% intervals accompany every
 rate — small slices get honest, wide intervals rather than false precision.
 
-There is no machine-generated corpus here yet, so no true-positive rate is
-claimed. `--include-fixture-tp` audits the repo's own AI fixtures, but
-those tuned the rules, so that readout is anecdotal and labeled as such.
+Machine-labelled entries (RAID, WildChat, current-model generations) give
+the other direction: the catch rate, measured with the same "flagged"
+definition on the held-out test split only. The dev split feeds the rule
+scorecard, the one place rule tuning may look. `--include-fixture-tp`
+audits the repo's own AI fixtures, but those tuned the rules, so that
+readout is anecdotal and labelled as such.
 """
 
 from __future__ import annotations
@@ -29,7 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "corpus" / "manifest.json"
 CACHE_DIR = ROOT / "corpus" / "cache"
-RESULT_SCHEMA = "humanizer-fp-measure.v1"
+RESULT_SCHEMA = "humanizer-fp-measure.v2"
 DEFAULT_THRESHOLD = 60  # the CLI's default review threshold
 SWEEP = (20, 40, 60, 80)
 FIXTURE_TP = [
@@ -72,6 +75,9 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
         rows.append(
             {
                 "id": entry["id"],
+                "label": entry.get("label", "human"),
+                "split": entry.get("split"),
+                "model": entry.get("model"),
                 "register": entry["register"],
                 "author": entry["author"],
                 "words": entry["words"],
@@ -118,8 +124,78 @@ def slice_stats(rows: list[dict], threshold: int) -> dict:
     }
 
 
+def catch_stats(rows: list[dict], threshold: int) -> dict:
+    """Share of machine documents the CLI would not pass, with a Wilson CI."""
+    n = len(rows)
+    caught = sum(1 for r in rows if is_flagged(r, threshold))
+    low, high = wilson_interval(caught, n)
+    return {
+        "n": n,
+        "caught": caught,
+        "rate": round(caught / n, 4) if n else None,
+        "rate_ci95": [round(low, 4), round(high, 4)],
+    }
+
+
+def catch_rates(machine_rows: list[dict], threshold: int) -> dict | None:
+    """Catch rate on the test split, overall, by register, and by model."""
+    test = [r for r in machine_rows if r["split"] == "test"]
+    if not test:
+        return None
+    return {
+        "split": "test",
+        "overall": catch_stats(test, threshold),
+        "by_register": {
+            reg: catch_stats([r for r in test if r["register"] == reg], threshold)
+            for reg in sorted({r["register"] for r in test})
+        },
+        "by_model": {
+            model: catch_stats([r for r in test if r["model"] == model], threshold)
+            for model in sorted({str(r["model"]) for r in test})
+        },
+    }
+
+
+def rule_scorecard(human_rows: list[dict], machine_rows: list[dict]) -> list[dict]:
+    """Per rule: share of human documents vs share of machine dev documents.
+
+    A rule whose machine share is not clearly above its human share costs
+    false positives without catching AI text. Advisory: it uses the dev split
+    only, so acting on it never touches the published test numbers.
+    """
+    dev = [r for r in machine_rows if r["split"] == "dev"]
+    if not human_rows or not dev:
+        return []
+    human_hits: Counter[str] = Counter()
+    machine_hits: Counter[str] = Counter()
+    for row in human_rows:
+        human_hits.update(row["rule_ids"])
+    for row in dev:
+        machine_hits.update(row["rule_ids"])
+    card = []
+    for rule in sorted(set(human_hits) | set(machine_hits)):
+        human_share = human_hits[rule] / len(human_rows)
+        machine_share = machine_hits[rule] / len(dev)
+        card.append(
+            {
+                "rule": rule,
+                "human_share": round(human_share, 4),
+                "machine_share": round(machine_share, 4),
+                # None when the rule never fires on human text.
+                "ratio": round(machine_share / human_share, 2) if human_share else None,
+            }
+        )
+    # Weakest evidence first: lowest machine-to-human ratio.
+    card.sort(key=lambda item: (item["ratio"] is None, item["ratio"] or 0.0, item["rule"]))
+    return card
+
+
 def measure(threshold: int, include_fixture_tp: bool) -> dict:
-    rows, missing = audit_corpus(threshold)
+    all_rows, missing = audit_corpus(threshold)
+    # False-positive rates are about human text only; a machine row in these
+    # tables would count a correct catch as a false alarm.
+    rows = [r for r in all_rows if r["label"] == "human"]
+    machine_rows = [r for r in all_rows if r["label"] == "machine"]
     registers = sorted({r["register"] for r in rows})
     by_register = {
         reg: slice_stats([r for r in rows if r["register"] == reg], threshold)
@@ -143,6 +219,7 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         "schema": RESULT_SCHEMA,
         "threshold": threshold,
         "corpus_documents": len(rows),
+        "machine_documents": len(machine_rows),
         "missing_cache": missing,
         "overall": slice_stats(rows, threshold),
         "by_register": by_register,
@@ -151,6 +228,8 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
         ],
+        "catch_rate": catch_rates(machine_rows, threshold),
+        "rule_scorecard": rule_scorecard(rows, machine_rows),
     }
     if include_fixture_tp:
         tp_rows = []
@@ -223,6 +302,20 @@ def render_text(result: dict) -> str:
             f"WARNING: {len(result['missing_cache'])} manifest entries had no cached "
             "text and were skipped (run corpus.py fetch / build first)."
         )
+    lines.append("")
+    catch = result["catch_rate"]
+    if catch is None:
+        lines.append("Catch rate: not measured (no machine documents in the test split are cached).")
+    else:
+        lines.append(f"Catch rate on {result['machine_documents']} machine documents (test split):")
+        for name, stats in [("overall", catch["overall"])] + [
+            (f"register:{reg}", stats) for reg, stats in catch["by_register"].items()
+        ] + [(f"model:{model}", stats) for model, stats in catch["by_model"].items()]:
+            low, high = stats["rate_ci95"]
+            lines.append(
+                f"  {name:30} {stats['n']:>5} {stats['caught']:>6} {pct(stats['rate']):>7} "
+                f"{pct(low):>7}-{pct(high):<8}"
+            )
     if "fixture_tp_anecdotal" in result:
         tp = result["fixture_tp_anecdotal"]
         lines.append("")
@@ -235,14 +328,15 @@ def render_text(result: dict) -> str:
 
 def render_results_md(result: dict) -> str:
     lines = [
-        "# Measured false-positive rates",
+        "# Measured error rates",
         "",
-        "Generated by `scripts/fp_measure.py` over the hash-only human-control corpus",
-        "(`corpus/manifest.json`). Every document predates ChatGPT, so every flag",
-        "counted here is a false positive by construction. No true-positive rate is",
-        "claimed: there is no machine-generated corpus in this repo yet.",
+        "Generated by `scripts/fp_measure.py` over the hash-only corpus",
+        "(`corpus/manifest.json`). Every human document predates ChatGPT, so every",
+        "flag on one is a false positive by construction. Machine documents are",
+        "labelled by source; the catch rate uses only their held-out test split.",
         "",
-        f"- Documents: **{result['corpus_documents']}**",
+        f"- Human documents: **{result['corpus_documents']}**",
+        f"- Machine documents: **{result['machine_documents']}**",
         f"- Review threshold: **{result['threshold']}**"
         + (" (the CLI default)" if result["threshold"] == DEFAULT_THRESHOLD else ""),
         "- Flagged means any non-pass exit: risk at or above the threshold, or a",
@@ -288,6 +382,44 @@ def render_results_md(result: dict) -> str:
             lines.append(
                 f"| {t} | " + " | ".join(pct(per_register[reg]) for reg in result["by_register"]) + " |"
             )
+    lines.extend(["", "## Catch rate on machine text (test split)", ""])
+    catch = result["catch_rate"]
+    if catch is None:
+        lines.append(
+            "Not measured yet: no machine documents in the test split are cached. Build them with"
+        )
+        lines.append(
+            "`corpus.py build-raid`, `build-wildchat`, and `scripts/generate_machine.py`, then rerun."
+        )
+    else:
+        lines += ["| Slice | n | Caught | Rate | 95% CI |", "|---|---|---|---|---|"]
+        for name, stats in [("overall", catch["overall"])] + [
+            (f"register: {reg}", stats) for reg, stats in catch["by_register"].items()
+        ] + [(f"model: `{model}`", stats) for model, stats in catch["by_model"].items()]:
+            low, high = stats["rate_ci95"]
+            lines.append(
+                f"| {name} | {stats['n']} | {stats['caught']} | {pct(stats['rate'])} | "
+                f"{pct(low)}–{pct(high)} |"
+            )
+    if result["rule_scorecard"]:
+        lines.extend(
+            [
+                "",
+                "## Rule scorecard (machine dev split vs human)",
+                "",
+                "Share of documents each rule fires on. A ratio near or below 1 means the rule",
+                "fires about as often on human text as on AI text: it costs false positives",
+                "without evidence. Tune rules from this table only; it never uses the test split.",
+                "",
+                "| Rule | Human share | Machine share | Ratio |",
+                "|---|---|---|---|",
+            ]
+        )
+        for item in result["rule_scorecard"]:
+            ratio = "only on machine" if item["ratio"] is None else f"{item['ratio']:.2f}"
+            lines.append(
+                f"| `{item['rule']}` | {pct(item['human_share'])} | {pct(item['machine_share'])} | {ratio} |"
+            )
     lines.extend(
         [
             "",
@@ -313,8 +445,16 @@ def render_results_md(result: dict) -> str:
             "  quality gate bounds the OCR noise but does not eliminate it, so a news",
             "  flag can reflect the scan rather than the writing.",
             "- A wiki entry is the whole page at the maintainer's last pre-cutoff",
-            "  revision, so it can include other editors' text; the `maintainer`",
-            "  author label means \"pages the maintainer edited\", not sole authorship.",
+            "  revision, so it can include other editors' text; hence the `mixed`",
+            "  author tier.",
+            "- Machine text comes from RAID (2023 generators), WildChat (GPT-3.5 and",
+            "  GPT-4 replies), and current Claude models on committed prompts. The",
+            "  catch rate describes those models only; tells change between model",
+            "  generations.",
+            "- Era confound: human essays and news are a century old, while machine",
+            "  essays and news are modern. A gap between the two rates there is partly",
+            "  era, not authorship. The wiki, chat, and docs slices compare",
+            "  contemporaries more closely.",
             "- The corpus skews toward one writer and one community; it measures",
             "  restraint on the registers this skill actually meets, not all prose.",
             "- Registers are measured separately because rates differ by register;",

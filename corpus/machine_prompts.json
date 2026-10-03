@@ -1,0 +1,306 @@
+{
+  "schema": "humanizer-machine-prompts.v1",
+  "note": "Plain requests of the kind people send to chat assistants. They do not ask for or against any style, so the outputs show each model's default prose. Change a prompt only with a new id, so results stay comparable.",
+  "prompts": [
+    {
+      "id": "wiki-01",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Erie Canal, around 400 words."
+    },
+    {
+      "id": "wiki-02",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Hanseatic League, around 400 words."
+    },
+    {
+      "id": "wiki-03",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Antikythera mechanism, around 400 words."
+    },
+    {
+      "id": "wiki-04",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the city of Tbilisi, around 400 words."
+    },
+    {
+      "id": "wiki-05",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Great Molasses Flood of 1919, around 400 words."
+    },
+    {
+      "id": "wiki-06",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Voyager 1 space probe, around 400 words."
+    },
+    {
+      "id": "wiki-07",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the composer Hildegard of Bingen, around 400 words."
+    },
+    {
+      "id": "wiki-08",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Atacama Desert, around 400 words."
+    },
+    {
+      "id": "wiki-09",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the history of the bicycle, around 400 words."
+    },
+    {
+      "id": "wiki-10",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Rosetta Stone, around 400 words."
+    },
+    {
+      "id": "wiki-11",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Dust Bowl, around 400 words."
+    },
+    {
+      "id": "wiki-12",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Svalbard Global Seed Vault, around 400 words."
+    },
+    {
+      "id": "wiki-13",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Battle of Hastings, around 400 words."
+    },
+    {
+      "id": "wiki-14",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the axolotl, around 400 words."
+    },
+    {
+      "id": "wiki-15",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Trans-Siberian Railway, around 400 words."
+    },
+    {
+      "id": "wiki-16",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the painter Artemisia Gentileschi, around 400 words."
+    },
+    {
+      "id": "wiki-17",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the Library of Alexandria, around 400 words."
+    },
+    {
+      "id": "wiki-18",
+      "register": "wiki",
+      "prompt": "Write a Wikipedia-style article about the history of the printing press in Korea, around 400 words."
+    },
+    {
+      "id": "news-01",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a city council approving a new bike-lane network after a contentious vote."
+    },
+    {
+      "id": "news-02",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a regional airline cancelling flights because of a pilot shortage."
+    },
+    {
+      "id": "news-03",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a museum returning looted artifacts to their country of origin."
+    },
+    {
+      "id": "news-04",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a heat wave straining a state's power grid."
+    },
+    {
+      "id": "news-05",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a university announcing free tuition for low-income students."
+    },
+    {
+      "id": "news-06",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a small town's only grocery store closing."
+    },
+    {
+      "id": "news-07",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a ruling that blocks a planned highway expansion."
+    },
+    {
+      "id": "news-08",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a record turnout in a local school-board election."
+    },
+    {
+      "id": "news-09",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a data breach at a hospital network."
+    },
+    {
+      "id": "news-10",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a new study on microplastics in drinking water."
+    },
+    {
+      "id": "news-11",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a ferry service resuming after a two-year suspension."
+    },
+    {
+      "id": "news-12",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a strike by public-transit workers."
+    },
+    {
+      "id": "news-13",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a wildfire forcing evacuations near a national park."
+    },
+    {
+      "id": "news-14",
+      "register": "news",
+      "prompt": "Write a news article, around 400 words, about a startup's recall of a faulty home battery."
+    },
+    {
+      "id": "essay-01",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about why public libraries still matter."
+    },
+    {
+      "id": "essay-02",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about what learning a second language as an adult taught you."
+    },
+    {
+      "id": "essay-03",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the case for four-day work weeks."
+    },
+    {
+      "id": "essay-04",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the value of boredom."
+    },
+    {
+      "id": "essay-05",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about whether cities should ban cars from their centers."
+    },
+    {
+      "id": "essay-06",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about what makes a good teacher."
+    },
+    {
+      "id": "essay-07",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the pleasures and costs of moving to a new city."
+    },
+    {
+      "id": "essay-08",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about why people keep journals."
+    },
+    {
+      "id": "essay-09",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the ethics of eating meat."
+    },
+    {
+      "id": "essay-10",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about how social media changed friendship."
+    },
+    {
+      "id": "essay-11",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the role of failure in learning to cook."
+    },
+    {
+      "id": "essay-12",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about why some old buildings deserve preservation."
+    },
+    {
+      "id": "essay-13",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about what we lose when we stop writing letters."
+    },
+    {
+      "id": "essay-14",
+      "register": "essay",
+      "prompt": "Write a personal essay, around 500 words, about the habit of walking."
+    },
+    {
+      "id": "docs-01",
+      "register": "docs",
+      "prompt": "Write the README for a command-line tool that renames photos by the date they were taken. Around 400 words."
+    },
+    {
+      "id": "docs-02",
+      "register": "docs",
+      "prompt": "Write installation and quick-start instructions for a small Python library that parses CSV files. Around 400 words."
+    },
+    {
+      "id": "docs-03",
+      "register": "docs",
+      "prompt": "Write a contributing guide for an open-source documentation website. Around 400 words."
+    },
+    {
+      "id": "docs-04",
+      "register": "docs",
+      "prompt": "Write a design document proposing a caching layer for a web API. Around 400 words."
+    },
+    {
+      "id": "docs-05",
+      "register": "docs",
+      "prompt": "Write release notes for version 2.0 of a note-taking app. Around 400 words."
+    },
+    {
+      "id": "docs-06",
+      "register": "docs",
+      "prompt": "Write a troubleshooting guide for a home Wi-Fi mesh system. Around 400 words."
+    },
+    {
+      "id": "docs-07",
+      "register": "docs",
+      "prompt": "Write an onboarding guide for new engineers joining a backend team. Around 400 words."
+    },
+    {
+      "id": "docs-08",
+      "register": "docs",
+      "prompt": "Write a user guide for a spreadsheet's pivot-table feature. Around 400 words."
+    },
+    {
+      "id": "docs-09",
+      "register": "docs",
+      "prompt": "Write a migration guide from version 1 to version 2 of a configuration file format. Around 400 words."
+    },
+    {
+      "id": "docs-10",
+      "register": "docs",
+      "prompt": "Write API documentation for an endpoint that creates calendar events. Around 400 words."
+    },
+    {
+      "id": "docs-11",
+      "register": "docs",
+      "prompt": "Write a runbook for restarting a stuck message queue. Around 400 words."
+    },
+    {
+      "id": "docs-12",
+      "register": "docs",
+      "prompt": "Write a style guide for writing commit messages. Around 400 words."
+    },
+    {
+      "id": "docs-13",
+      "register": "docs",
+      "prompt": "Write documentation for a plugin system in a text editor. Around 400 words."
+    },
+    {
+      "id": "docs-14",
+      "register": "docs",
+      "prompt": "Write an FAQ for a public bike-share service. Around 400 words."
+    }
+  ]
+}

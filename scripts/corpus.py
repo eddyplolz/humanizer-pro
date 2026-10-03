@@ -22,6 +22,10 @@ Subcommands:
   build-essays  chunk public-domain Gutenberg essay works
   build-news    fetch public-domain newspaper OCR (Internet Archive)
   build-hf-news grow the news pool from OpenCulture (HF rows API)
+  build-peps    docs-register pool: PEPs at the last pre-cutoff commit
+  build-raid    machine pool: RAID generations (non-adversarial, MIT)
+  build-wildchat machine pool: WildChat-1M first replies (ODC-BY)
+                (scripts/generate_machine.py adds current Claude models)
   fetch         repopulate the cache (public-domain always; wiki needs the
                 maintainer's sources.local.json; other kinds name their
                 build-* subcommand)
@@ -38,6 +42,7 @@ import argparse
 import hashlib
 import http.client
 import json
+import os
 import re
 import sys
 import time
@@ -58,7 +63,7 @@ MANIFEST_SCHEMA = "humanizer-corpus-manifest.v1"
 SOURCES_SCHEMA = "humanizer-corpus-sources.v1"
 CUTOFF = "2022-11-01"
 CUTOFF_EPOCH = 1667260800  # 2022-11-01T00:00:00Z
-MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200}
+MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200, "docs": 150}
 BBCODE_STRIP_VERSION = "bbcode-strip.v2"
 WIKITEXT_STRIP_VERSION = "wikitext-strip.v2"
 CHUNK_VERSION = "chunk.v2"
@@ -70,9 +75,33 @@ ID_PREFIX = {
     "news-page": "news",
     "gutenberg-work": "guten",
     "hf-news": "hfnews",
+    "pep-chunk": "pep",
+    "raid-generation": "raid",
+    "wildchat-turn": "wildchat",
+    "generated": "gen",
 }
 # Kinds whose sources are public-domain pointers and may publish in the manifest.
-PUBLIC_SOURCE_KINDS = ("public-domain", "news-page", "gutenberg-work", "hf-news")
+PUBLIC_SOURCE_KINDS = (
+    "public-domain",
+    "news-page",
+    "gutenberg-work",
+    "hf-news",
+    "pep-chunk",
+    "raid-generation",
+    "wildchat-turn",
+    "generated",
+)
+# Machine-written kinds. Their entries carry label "machine", the generating
+# model, and a dev/test split; every other kind is human by provenance.
+MACHINE_KINDS = ("raid-generation", "wildchat-turn", "generated")
+# About a quarter of machine documents form the dev split, the only part rule
+# tuning may look at. The published catch rate uses the test split.
+DEV_SPLIT_HEX = "0123"
+
+
+def machine_split(digest: str) -> str:
+    """dev or test, from the content digest: stable, and needs no stored seed."""
+    return "dev" if digest[0] in DEV_SPLIT_HEX else "test"
 
 
 # ---------------------------------------------------------------- utilities
@@ -178,11 +207,13 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
         entry = {
             "id": entry_id,
             "kind": kind,
-            "label": "human",
+            "label": "machine" if kind in MACHINE_KINDS else "human",
             "words": word_count(text),
             "sha256": digest,
             **public_fields,
         }
+        if kind in MACHINE_KINDS:
+            entry["split"] = machine_split(digest)
         if kind in PUBLIC_SOURCE_KINDS:
             entry["source"] = source  # public-domain pointer; reveals nothing personal
         else:
@@ -465,7 +496,9 @@ def build_wiki(args: argparse.Namespace) -> int:
                     (
                         {
                             "register": "wiki",
-                            "author": "maintainer",
+                            # A page at the maintainer's last pre-cutoff
+                            # revision can hold other editors' text.
+                            "author": "mixed",
                             "date": rev["timestamp"][:7],
                             "extraction": WIKITEXT_STRIP_VERSION,
                         },
@@ -537,7 +570,7 @@ OCR_CLEAN_VERSION = "ocr-chunk.v3"
 FETCH_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException)
 
 
-def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4) -> str:
+def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4, headers: dict | None = None) -> str:
     """fetch_text with linear backoff on rate limits and transient failures.
 
     Archive endpoints answer bursts with 429/503, and a read timeout raises
@@ -546,7 +579,7 @@ def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4) -> str:
     """
     for attempt in range(1, attempts + 1):
         try:
-            return fetch_text(url, sleep)
+            return fetch_text(url, sleep, headers)
         except urllib.error.HTTPError as error:
             if error.code not in (429, 503) or attempt == attempts:
                 raise
@@ -810,8 +843,8 @@ START_MARKER_RE = re.compile(r"\*\*\* ?START OF.*?\*\*\*", re.S)
 END_MARKER_RE = re.compile(r"\*\*\* ?END OF.*", re.S)
 
 
-def fetch_text(url: str, sleep: float) -> str:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+def fetch_text(url: str, sleep: float, headers: dict | None = None) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
     with urllib.request.urlopen(request, timeout=120) as response:
         raw = response.read().decode("utf-8", errors="replace")
     time.sleep(sleep)
@@ -819,20 +852,26 @@ def fetch_text(url: str, sleep: float) -> str:
     return raw.replace("\r\n", "\n").replace("\r", "\n")
 
 
-def gutenberg_chunks(raw: str) -> list[str]:
-    body = START_MARKER_RE.split(raw, maxsplit=1)[-1]
-    body = END_MARKER_RE.sub("", body)
+def paragraph_chunks(body: str, chunk_words: int, min_words: int) -> list[str]:
+    """Group whole paragraphs into chunks of at least ``chunk_words`` words;
+    a final remainder is kept only if it reaches ``min_words``."""
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
     chunks, current, current_words = [], [], 0
     for paragraph in paragraphs:
         current.append(paragraph)
         current_words += word_count(paragraph)
-        if current_words >= PD_CHUNK_WORDS:
+        if current_words >= chunk_words:
             chunks.append("\n\n".join(current))
             current, current_words = [], 0
-    if current and current_words >= MIN_WORDS["essay"]:
+    if current and current_words >= min_words:
         chunks.append("\n\n".join(current))
     return chunks
+
+
+def gutenberg_chunks(raw: str) -> list[str]:
+    body = START_MARKER_RE.split(raw, maxsplit=1)[-1]
+    body = END_MARKER_RE.sub("", body)
+    return paragraph_chunks(body, PD_CHUNK_WORDS, MIN_WORDS["essay"])
 
 
 def build_essays(args: argparse.Namespace) -> int:
@@ -867,6 +906,301 @@ def build_essays(args: argparse.Namespace) -> int:
     return 0
 
 
+# ------------------------------------------------------------- PEPs (docs)
+
+
+GITHUB_API = "https://api.github.com"
+PEPS_REPO = "python/peps"
+PEP_FILE_RE = re.compile(r"(?:^|/)pep-(\d{4})\.(?:txt|rst)$")
+PEP_HEADER_RE = re.compile(r"^[A-Z][A-Za-z-]*:\s")
+PEP_CREATED_RE = re.compile(r"^Created:\s*.*?(\d{4})", re.M)
+PEP_PUBLIC_DOMAIN_RE = re.compile(r"placed\s+in\s+the\s+public\s+domain", re.I)
+RST_STOP_HEADINGS = {"copyright", "references", "footnotes"}
+RST_ADORNMENT_RE = re.compile(r"""^([=\-~^"'`#*+:.])\1{2,}\s*$""")
+RST_SIMPLE_TABLE_RE = re.compile(r"^=+(?:\s+=+)+\s*$")
+RST_INLINE_LITERAL_RE = re.compile(r"``[^`]+``")
+RST_LINK_RE = re.compile(r"`([^`<]+?)\s*<[^>]+>`__?")
+RST_ROLE_RE = re.compile(r":[a-z][\w-]*:`([^`]+)`")
+RST_REF_RE = re.compile(r"`([^`]+)`_{1,2}")
+RST_FOOTNOTE_REF_RE = re.compile(r"\s*\[(?:#\w*|\d+|\*)\]_")
+RST_EMPHASIS_RE = re.compile(r"\*\*([^*\n]+)\*\*|\*([^*\n]+)\*")
+RST_BULLET_RE = re.compile(r"^\s*(?:[-*+]|#\.|\d+\.)\s+", re.M)
+RST_STRIP_VERSION = "rst-strip.v1"
+PEP_CHUNK_WORDS = 500
+PEP_CHUNKS_PER_PEP = 2
+
+
+def rst_strip(raw: str) -> str:
+    """Reduce a PEP's reStructuredText to prose: no header block, code,
+    directives, tables, or reference sections."""
+    lines = raw.replace("\r\n", "\n").split("\n")
+    # The RFC 822-style header block ends at the first blank line.
+    if lines and PEP_HEADER_RE.match(lines[0]):
+        while lines and lines[0].strip():
+            lines.pop(0)
+    out: list[str] = []
+    skip_indent: int | None = None
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip())
+        if skip_indent is not None:
+            # Inside a literal block or directive: skip blank and indented lines.
+            if not stripped or indent > skip_indent:
+                continue
+            skip_indent = None
+        following = lines[index + 1].strip() if index + 1 < len(lines) else ""
+        if stripped.lower() in RST_STOP_HEADINGS and RST_ADORNMENT_RE.match(following):
+            break
+        if stripped.startswith(".. ") or stripped == "..":
+            skip_indent = indent
+            continue
+        if RST_ADORNMENT_RE.match(stripped) or RST_SIMPLE_TABLE_RE.match(stripped):
+            continue
+        if stripped.startswith(("+-", "+=", "|")):
+            continue
+        if stripped.endswith("::"):
+            skip_indent = indent
+            line = line.rstrip()[:-2].rstrip()
+            if line.strip():
+                out.append(line.strip() + ":")
+            continue
+        out.append(stripped)
+    text = "\n".join(out)
+    # Keep the literal's text so the sentence around it stays whole.
+    text = RST_INLINE_LITERAL_RE.sub(lambda m: m.group(0)[2:-2], text)
+    text = RST_LINK_RE.sub(r"\1", text)
+    text = RST_ROLE_RE.sub(r"\1", text)
+    text = RST_REF_RE.sub(r"\1", text)
+    text = RST_FOOTNOTE_REF_RE.sub("", text)
+    text = RST_EMPHASIS_RE.sub(lambda m: m.group(1) or m.group(2), text)
+    text = RST_BULLET_RE.sub("", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" +([.,;:])", r"\1", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def pep_pairs(files: list[tuple[str, str]], commit: str, target: int) -> tuple[list, Counter]:
+    """Chunk PEP sources into corpus pairs. ``files`` is [(path, raw)]."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for path, raw in sorted(files, key=lambda item: item[0]):
+        if len(pairs) >= target:
+            break
+        if not PEP_PUBLIC_DOMAIN_RE.search(raw):
+            dropped["not-public-domain"] += 1
+            continue
+        created = PEP_CREATED_RE.search(raw)
+        chunks = paragraph_chunks(rst_strip(raw), PEP_CHUNK_WORDS, MIN_WORDS["docs"])
+        if not chunks:
+            dropped["too-short"] += 1
+            continue
+        for index, chunk in enumerate(chunks[:PEP_CHUNKS_PER_PEP], start=1):
+            if len(pairs) >= target:
+                break
+            pairs.append(
+                (
+                    {
+                        "register": "docs",
+                        "author": "other",
+                        "date": created.group(1) if created else "pre-2022",
+                        "extraction": RST_STRIP_VERSION,
+                    },
+                    chunk,
+                    {"repo": PEPS_REPO, "commit": commit, "path": path, "chunk": index},
+                )
+            )
+    return pairs, dropped
+
+
+def github_json(url: str, sleep: float) -> object:
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return json.loads(fetch_text_with_retry(url, sleep, headers=headers))
+
+
+def build_peps(args: argparse.Namespace) -> int:
+    """Docs-register human pool: Python Enhancement Proposals, public domain.
+
+    The text is read at the python/peps commit that was current at the
+    cutoff, so every word predates it; later edits never enter the corpus.
+    """
+    try:
+        commits = github_json(
+            f"{GITHUB_API}/repos/{PEPS_REPO}/commits?until={CUTOFF}T00:00:00Z&per_page=1",
+            args.sleep,
+        )
+        commit = commits[0]["sha"]
+        tree = github_json(f"{GITHUB_API}/repos/{PEPS_REPO}/git/trees/{commit}?recursive=1", args.sleep)
+    except FETCH_ERRORS as error:
+        print(f"FAIL: GitHub API unreachable ({error})", file=sys.stderr)
+        return 1
+    if tree.get("truncated"):
+        print("WARNING: GitHub truncated the tree listing; some PEPs may be missing")
+    paths = sorted(
+        item["path"] for item in tree.get("tree", [])
+        if item.get("type") == "blob" and PEP_FILE_RE.search(item["path"])
+    )
+    print(f"peps: {len(paths)} PEP files at {commit[:12]} (last commit before {CUTOFF})", flush=True)
+    files: list[tuple[str, str]] = []
+    failed = 0
+    for path in paths:
+        url = f"https://raw.githubusercontent.com/{PEPS_REPO}/{commit}/{path}"
+        try:
+            files.append((path, fetch_text_with_retry(url, args.sleep)))
+        except FETCH_ERRORS:
+            failed += 1
+    pairs, dropped = pep_pairs(files, commit, args.target)
+    entries = save_pool("pep-chunk", pairs)
+    print(
+        f"peps: {len(entries)} chunks cached (target {args.target}); "
+        f"{failed} downloads failed; drops: {dict(dropped)}"
+    )
+    return 0
+
+
+# ------------------------------------------------- machine pools (labelled)
+
+
+RAID_URL = "https://dataset.raid-bench.xyz/train_none.csv"  # MIT; test labels are hidden
+RAID_DOMAINS = {"wiki": "wiki", "news": "news", "reddit": "chat"}
+# Instruction-tuned or chat generators only: GPT-2 and the base models are
+# not what people paste into documents.
+RAID_MODELS = ("chatgpt", "gpt4", "gpt3", "llama-chat", "mistral-chat", "mpt-chat", "cohere-chat")
+RAID_EXTRACTION = "raid.v1"
+
+
+def raid_pairs(rows, per_cell: int) -> tuple[list, Counter]:
+    """Select RAID generations: sampling without repetition penalty, no
+    adversarial attack, up to ``per_cell`` per (domain, model)."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    cells: Counter = Counter()
+    wanted = len(RAID_DOMAINS) * len(RAID_MODELS) * per_cell
+    for row in rows:
+        domain, model = row.get("domain"), row.get("model")
+        if domain not in RAID_DOMAINS or model not in RAID_MODELS:
+            continue
+        if row.get("attack", "none") != "none" or row.get("decoding") != "sampling" or row.get(
+            "repetition_penalty"
+        ) != "no":
+            dropped["decoding-or-attack"] += 1
+            continue
+        if cells[(domain, model)] >= per_cell:
+            continue
+        register = RAID_DOMAINS[domain]
+        text = (row.get("generation") or "").strip()
+        if word_count(text) < MIN_WORDS[register]:
+            dropped["under-min-words"] += 1
+            continue
+        cells[(domain, model)] += 1
+        pairs.append(
+            (
+                {
+                    "register": register,
+                    "author": "machine",
+                    "model": f"raid:{model}",
+                    "date": "2023",
+                    "extraction": RAID_EXTRACTION,
+                },
+                text,
+                {"dataset": "liamdugan/raid", "file": "train_none.csv", "id": str(row.get("id", ""))},
+            )
+        )
+        if len(pairs) >= wanted:
+            break
+    return pairs, dropped
+
+
+def build_raid(args: argparse.Namespace) -> int:
+    """Machine pool from RAID (Dugan et al., ACL 2024), streamed, not stored whole."""
+    import csv
+    import io
+
+    csv.field_size_limit(min(sys.maxsize, 2**31 - 1))
+    request = urllib.request.Request(RAID_URL, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            reader = csv.DictReader(io.TextIOWrapper(response, encoding="utf-8", newline=""))
+            pairs, dropped = raid_pairs(reader, args.per_cell)
+    except FETCH_ERRORS as error:
+        print(f"FAIL: RAID download failed ({error}); nothing saved", file=sys.stderr)
+        return 1
+    entries = save_pool("raid-generation", pairs)
+    print(f"raid: {len(entries)} generations cached; drops: {dict(dropped)}")
+    return 0
+
+
+WILDCHAT_DATASET = "allenai/WildChat-1M"  # ODC-BY
+WILDCHAT_OFFSETS = tuple(range(0, 800_001, 100_000))
+WILDCHAT_EXTRACTION = "wildchat-first-reply.v1"
+WILDCHAT_MAX_WORDS = 1200
+
+
+def wildchat_pairs(rows, target: int) -> tuple[list, Counter]:
+    """First assistant reply of English conversations, prose only."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for row in rows:
+        if len(pairs) >= target:
+            break
+        if row.get("language") != "English":
+            dropped["not-english"] += 1
+            continue
+        reply = next(
+            (turn.get("content") or "" for turn in row.get("conversation") or [] if turn.get("role") == "assistant"),
+            "",
+        ).strip()
+        if "```" in reply:
+            dropped["code-reply"] += 1
+            continue
+        words = word_count(reply)
+        if not (MIN_WORDS["chat"] <= words <= WILDCHAT_MAX_WORDS):
+            dropped["word-band"] += 1
+            continue
+        timestamp = str(row.get("timestamp") or "")
+        pairs.append(
+            (
+                {
+                    "register": "chat",
+                    "author": "machine",
+                    "model": f"wildchat:{row.get('model') or 'unknown'}",
+                    "date": timestamp[:7] if re.match(r"\d{4}-\d{2}", timestamp) else "2023",
+                    "extraction": WILDCHAT_EXTRACTION,
+                },
+                reply,
+                {"dataset": WILDCHAT_DATASET, "conversation_hash": str(row.get("conversation_hash") or "")},
+            )
+        )
+    return pairs, dropped
+
+
+def build_wildchat(args: argparse.Namespace) -> int:
+    """Machine pool from WildChat-1M through the Hugging Face rows API.
+
+    Set HF_TOKEN if the dataset asks you to accept its terms first.
+    """
+    token = os.environ.get("HF_TOKEN")
+    headers = {"Authorization": f"Bearer {token}"} if token else None
+    rows: list[dict] = []
+    for offset in WILDCHAT_OFFSETS:
+        query = urllib.parse.urlencode(
+            {"dataset": WILDCHAT_DATASET, "config": "default", "split": "train", "offset": offset, "length": "100"}
+        )
+        try:
+            payload = json.loads(fetch_text_with_retry(f"{HF_ROWS_API}?{query}", args.sleep, headers=headers))
+        except FETCH_ERRORS as error:
+            print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
+            continue
+        rows.extend(item.get("row", {}) for item in payload.get("rows", []))
+    pairs, dropped = wildchat_pairs(rows, args.target)
+    entries = save_pool("wildchat-turn", pairs)
+    print(f"wildchat: {len(entries)} replies cached (target {args.target}); drops: {dict(dropped)}")
+    return 0
+
+
 # ---------------------------------------------------------- fetch / verify
 
 
@@ -875,6 +1209,10 @@ REBUILD_HINT = {
     "news-page": "build-news",
     "hf-news": "build-hf-news",
     "forum-post": "build-forum",
+    "pep-chunk": "build-peps",
+    "raid-generation": "build-raid",
+    "wildchat-turn": "build-wildchat",
+    "generated": "scripts/generate_machine.py",
 }
 
 
@@ -1007,6 +1345,20 @@ def main(argv: list[str] | None = None) -> int:
     p_hf.add_argument("--target", type=int, default=350)
     p_hf.add_argument("--sleep", type=float, default=1.5)
     p_hf.set_defaults(func=build_hf_news)
+
+    p_peps = sub.add_parser("build-peps", help="docs-register human pool from pre-cutoff PEPs")
+    p_peps.add_argument("--target", type=int, default=400)
+    p_peps.add_argument("--sleep", type=float, default=0.2)
+    p_peps.set_defaults(func=build_peps)
+
+    p_raid = sub.add_parser("build-raid", help="machine pool from RAID (non-adversarial)")
+    p_raid.add_argument("--per-cell", type=int, default=25, help="documents per (domain, model)")
+    p_raid.set_defaults(func=build_raid)
+
+    p_wildchat = sub.add_parser("build-wildchat", help="machine pool from WildChat-1M replies")
+    p_wildchat.add_argument("--target", type=int, default=300)
+    p_wildchat.add_argument("--sleep", type=float, default=1.5)
+    p_wildchat.set_defaults(func=build_wildchat)
 
     p_fetch = sub.add_parser("fetch", help="repopulate cache from the manifest")
     p_fetch.add_argument("--sleep", type=float, default=1.0)
