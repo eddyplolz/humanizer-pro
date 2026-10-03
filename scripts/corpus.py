@@ -59,8 +59,9 @@ SOURCES_SCHEMA = "humanizer-corpus-sources.v1"
 CUTOFF = "2022-11-01"
 CUTOFF_EPOCH = 1667260800  # 2022-11-01T00:00:00Z
 MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200}
-BBCODE_STRIP_VERSION = "bbcode-strip.v1"
-WIKITEXT_STRIP_VERSION = "wikitext-strip.v1"
+BBCODE_STRIP_VERSION = "bbcode-strip.v2"
+WIKITEXT_STRIP_VERSION = "wikitext-strip.v2"
+CHUNK_VERSION = "chunk.v2"
 USER_AGENT = "humanizer-pro-corpus/1.0"
 ID_PREFIX = {
     "forum-post": "forum",
@@ -82,7 +83,8 @@ def sha256_text(text: str) -> str:
 
 
 def word_count(text: str) -> int:
-    return len(re.findall(r"[A-Za-z0-9''-]+", text))
+    # Straight and curly apostrophes, so "don’t" is one word.
+    return len(re.findall(r"[A-Za-z0-9'’-]+", text))
 
 
 def load_manifest() -> dict:
@@ -198,9 +200,13 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
 # ---------------------------------------------------------- text extraction
 
 
+# Innermost block only: its body holds no opening tag of the same name, so
+# nested quotes are removed from the inside out rather than the outer opener
+# pairing with the inner closer and leaking the quoted author's words.
 BBCODE_BLOCK_RE = re.compile(
-    r"\[(quote|code|php|html)(?:=[^\]]*)?\].*?\[/\1\]", re.S | re.I
+    r"\[(quote|code|php|html)(?:=[^\]]*)?\](?:(?!\[\1(?:=[^\]]*)?\]).)*?\[/\1\]", re.S | re.I
 )
+SQL_ESCAPES = {"n": "\n", "r": "\r", "t": "\t", "0": "\0", "Z": "\x1a"}
 BBCODE_TAG_RE = re.compile(r"\[/?[a-zA-Z*][^\]]*\]")
 
 
@@ -210,9 +216,14 @@ def bbcode_strip(message: str) -> str:
     Quote and code blocks are removed outright: quoted text is another
     author's writing and code is not prose. Remaining tags are unwrapped.
     """
-    text = message.replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\r", "\n")
-    text = text.replace("\\\"", '"').replace("\\'", "'").replace("\\\\", "\\")
-    text = BBCODE_BLOCK_RE.sub(" ", text)
+    # One pass over escape pairs. Chained replace() calls read the "\\n" in
+    # an escaped backslash followed by "n" (C:\\new) as a newline.
+    text = re.sub(r"\\(.)", lambda m: SQL_ESCAPES.get(m.group(1), m.group(1)), message, flags=re.S)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    while True:
+        text, count = BBCODE_BLOCK_RE.subn(" ", text)
+        if not count:
+            break
     text = BBCODE_TAG_RE.sub("", text)
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
@@ -235,8 +246,10 @@ HEADING_RE = re.compile(r"^=+\s*(.*?)\s*=+\s*$", re.M)
 HTML_TAG_RE = re.compile(r"</?[a-zA-Z][^>]*>")
 
 
-def wikitext_strip(wikitext: str) -> str:
-    """Reduce wikitext to plain prose so markup never counts as a tell."""
+def wikitext_strip_v1(wikitext: str) -> str:
+    """The wikitext-strip.v1 extraction, kept byte-for-byte so `fetch` can
+    rebuild existing v1 entries to their published digests. New builds use
+    ``wikitext_strip`` (v2)."""
     text = wikitext
     for regex in WIKI_DROP_RES:
         text = regex.sub(" ", text)
@@ -246,6 +259,46 @@ def wikitext_strip(wikitext: str) -> str:
             break
     text = WIKILINK_PIPED_RE.sub(r"\1", text)
     text = WIKILINK_RE.sub(r"\1", text)
+    return _wikitext_finish(text)
+
+
+MEDIA_LINK_RE = re.compile(r"\[\[(?:File|Image|Category):[^\[\]]*\]\]", re.I)
+INNER_PIPED_LINK_RE = re.compile(r"\[\[(?!(?:File|Image|Category):)[^\[\]|]*\|([^\[\]]*)\]\]", re.I)
+INNER_LINK_RE = re.compile(r"\[\[(?!(?:File|Image|Category):)([^\[\]|]*)\]\]", re.I)
+WIKI_NEST_LIMIT = 100
+
+
+def wikitext_strip(wikitext: str) -> str:
+    """Reduce wikitext to plain prose so markup never counts as a tell (v2).
+
+    v1 unwrapped at most four template levels and dropped a media link at its
+    first "]]", so a caption holding a link ("[[File:x|A [[Foo]] map]]") left
+    " map]]" behind. v2 resolves templates and links innermost first until
+    nothing changes.
+    """
+    text = wikitext
+    for regex in WIKI_DROP_RES[:4]:
+        text = regex.sub(" ", text)
+    for _ in range(WIKI_NEST_LIMIT):
+        text, n = TEMPLATE_RE.subn(" ", text)
+        if not n:
+            break
+    for _ in range(WIKI_NEST_LIMIT):
+        before = text
+        text = INNER_PIPED_LINK_RE.sub(r"\1", text)
+        text = INNER_LINK_RE.sub(r"\1", text)
+        text = EXTLINK_RE.sub(r"\1", text)
+        text = BARE_EXTLINK_RE.sub(" ", text)
+        text = MEDIA_LINK_RE.sub(" ", text)
+        if text == before:
+            break
+    return _wikitext_finish(text)
+
+
+WIKITEXT_STRIPPERS = {"wikitext-strip.v1": wikitext_strip_v1, WIKITEXT_STRIP_VERSION: wikitext_strip}
+
+
+def _wikitext_finish(text: str) -> str:
     text = EXTLINK_RE.sub(r"\1", text)
     text = BARE_EXTLINK_RE.sub(" ", text)
     text = HEADING_RE.sub(r"\1", text)
@@ -265,6 +318,12 @@ POSTS_INSERT_RE = re.compile(r"INSERT INTO `mybb_posts`[^;]*?VALUES\s*(.*?);\r?\
 POST_ROW_RE = re.compile(
     r"\((\d+),\s*\d+,\s*\d+,\s*\d+,\s*'(?:[^'\\]|\\.)*',\s*-?\d+,\s*(\d+),\s*"
     r"'((?:[^'\\]|\\.)*)',\s*(\d+),\s*'((?:[^'\\]|\\.)*)'"
+    # Optional tail: ipaddress (quoted, hex, _binary, or NULL), includesig,
+    # smilieoff, edituid, then edittime. MyBB stores the edited text in place,
+    # so a post edited after the cutoff is not pre-cutoff text. A dump whose
+    # rows lack these columns yields None and is counted, not guessed.
+    r"(?:,\s*(?:'(?:[^'\\]|\\.)*'|_binary\s*'(?:[^'\\]|\\.)*'|0x[0-9A-Fa-f]*|NULL)"
+    r",\s*-?\d+,\s*-?\d+,\s*-?\d+,\s*(\d+))?"
 )
 
 
@@ -272,8 +331,14 @@ def iter_mybb_posts(sql_path: Path):
     text = sql_path.read_text(encoding="utf-8", errors="replace")
     for insert in POSTS_INSERT_RE.finditer(text):
         for row in POST_ROW_RE.finditer(insert.group(1)):
-            pid, _uid, username, dateline, message = row.groups()
-            yield int(pid), username, int(dateline), message
+            pid, _uid, username, dateline, message, edittime = row.groups()
+            yield (
+                int(pid),
+                username,
+                int(dateline),
+                message,
+                int(edittime) if edittime is not None else None,
+            )
 
 
 def build_forum(args: argparse.Namespace) -> int:
@@ -291,10 +356,15 @@ def build_forum(args: argparse.Namespace) -> int:
     dropped = Counter()
     for sql_path in dumps:
         forum = sql_path.stem.replace("_sanitized", "")
-        for pid, username, dateline, message in iter_mybb_posts(sql_path):
+        for pid, username, dateline, message, edittime in iter_mybb_posts(sql_path):
             if dateline >= CUTOFF_EPOCH:
                 dropped["post-cutoff"] += 1
                 continue
+            if edittime is not None and edittime >= CUTOFF_EPOCH:
+                dropped["edited-post-cutoff"] += 1
+                continue
+            if edittime is None:
+                dropped["edittime-unknown"] += 1
             text = bbcode_strip(message)
             if word_count(text) < MIN_WORDS["chat"]:
                 dropped["under-min-words"] += 1
@@ -317,7 +387,9 @@ def build_forum(args: argparse.Namespace) -> int:
         f"forum: {len(entries)} entries cached "
         f"({by_author['maintainer']} maintainer, {by_author['other']} other); "
         f"dropped {dropped['post-cutoff']} post-cutoff, "
-        f"{dropped['under-min-words']} under {MIN_WORDS['chat']} words"
+        f"{dropped['edited-post-cutoff']} edited after the cutoff, "
+        f"{dropped['under-min-words']} under {MIN_WORDS['chat']} words; "
+        f"{dropped['edittime-unknown']} kept with no parseable edittime"
     )
     return 0
 
@@ -432,7 +504,7 @@ def build_pd(_args: argparse.Namespace) -> int:
                 "register": "essay",
                 "author": "public-domain",
                 "date": "1918",
-                "extraction": "chunk.v2",
+                "extraction": CHUNK_VERSION,
             },
             chunk,
             {
@@ -459,7 +531,7 @@ NEWS_CHUNK_MIN, NEWS_CHUNK_MAX = 200, 1200
 NEWS_CHUNKS_PER_ISSUE = 3
 NEWS_MIN_ALPHA_RATIO = 0.72
 NEWS_MIN_THE_RATIO = 0.02  # crude English check: "the" frequency
-OCR_CLEAN_VERSION = "ocr-chunk.v2"
+OCR_CLEAN_VERSION = "ocr-chunk.v3"
 
 
 FETCH_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException)
@@ -489,6 +561,8 @@ def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4) -> str:
 
 
 def ocr_clean(text: str) -> str:
+    # JSON-escaped CRs in HF rows survive fetch_text's newline pass.
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
@@ -498,7 +572,7 @@ def alpha_ratio(text: str) -> float:
     tokens = text.split()
     if not tokens:
         return 0.0
-    alpha = sum(1 for token in tokens if re.fullmatch(r"[A-Za-z''-]+[.,;:!?\"')]*", token))
+    alpha = sum(1 for token in tokens if re.fullmatch(r"[A-Za-z'’-]+[.,;:!?\"'’)]*", token))
     return alpha / len(tokens)
 
 
@@ -775,7 +849,7 @@ def build_essays(args: argparse.Namespace) -> int:
                         "register": "essay",
                         "author": "public-domain",
                         "date": "pre-1923",
-                        "extraction": "chunk.v1",
+                        "extraction": CHUNK_VERSION,
                     },
                     chunk,
                     {
@@ -852,11 +926,15 @@ def fetch(args: argparse.Namespace) -> int:
             for page in payload.get("query", {}).get("pages", {}).values():
                 for rev in page.get("revisions", []):
                     entry = by_revid.get(rev["revid"])
-                    if entry:
-                        write_cache(
-                            entry["id"],
-                            wikitext_strip(rev.get("slots", {}).get("main", {}).get("*", "")),
-                        )
+                    if not entry:
+                        continue
+                    # Rebuild with the extraction the entry was published
+                    # with, or its digest can never match.
+                    strip = WIKITEXT_STRIPPERS.get(entry.get("extraction", ""))
+                    if strip is None:
+                        print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
+                        continue
+                    write_cache(entry["id"], strip(rev.get("slots", {}).get("main", {}).get("*", "")))
     still_missing = sum(
         1 for entry in load_manifest()["entries"] if not cache_path(entry["id"]).exists()
     )

@@ -25,6 +25,18 @@ rebuilt. The news builds are OCR-quality-gated and retry rate limits. `fetch` re
 pool and wiki revisions and names the `build-*` command for any other missing kind. `verify` checks every cached
 file against its digest; a test enforces the anonymity contract on every entry.
 
+Anonymity has one known limit. Full SHA-256 digests, the `maintainer` author tier, and the
+deterministic extraction code are all public, so someone who already holds a candidate forum post
+or wiki revision can extract and hash it and confirm that it is in the corpus. The manifest names
+no one, but it can confirm a guess. Truncated or salted digests would close this and would also
+end independent verification of the public-domain pools, so the trade-off is left to the
+maintainer.
+
+Extraction versions are recorded per entry. `fetch` rebuilds wiki entries with the extractor named
+in their `extraction` field (`wikitext-strip.v1` stays byte-for-byte for existing digests); new
+builds use the current version. A wiki entry is the whole page at the maintainer's last pre-cutoff
+revision, so it can hold other editors' text.
+
 `fp_measure.py` audits the cached corpus and prints false-positive rates by register and author
 slice with Wilson 95% intervals, a review-threshold sweep, and the rules that fire most often on
 human text. Results are published in `corpus/RESULTS.md`. It claims no true-positive rate: the

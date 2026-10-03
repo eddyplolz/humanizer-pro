@@ -45,6 +45,20 @@ Corpus and measurement:
   for the default threshold, and an empty cache no longer renders a broken sweep table.
 - Cache reads are byte-exact in `verify` and `fp_measure.py`, and entry ids are checked before any
   path is built from them.
+- Corpus extraction fixes, versioned so existing entries still verify:
+  - `bbcode-strip.v2`: nested quote blocks are removed inside out, so an inner quote no longer
+    leaks the outer quoted author's words into the post, and SQL escapes are decoded in one pass
+    (`C:\\new` stayed a newline before).
+  - `build-forum` reads each post's `edittime` and drops posts edited after the cutoff, since
+    MyBB stores the edited text in place. It counts rows whose dump has no parseable `edittime`.
+  - `wikitext-strip.v2`: templates and links resolve innermost first until nothing changes. A
+    media caption holding a link no longer leaves `]]` behind, and templates nested deeper than
+    four levels are removed. `wikitext-strip.v1` is kept unchanged, and `fetch` rebuilds each wiki
+    entry with the extractor it was built with.
+  - The word counter and the OCR alphabetic gate count curly apostrophes inside words
+    (`ocr-chunk.v3`, `chunk.v2`), and OCR cleaning folds stray carriage returns.
+- The audit's text report no longer crashes (exit 1, read as "review") when a Windows pipe can't
+  encode quoted evidence; characters the stream can't hold are escaped.
 - `build-news` retries rate limits and transient failures (a read timeout used to abort the whole
   build) and sorts its Internet Archive search so reruns select the same issues. The dead loc.gov
   retry helper is gone. `fetch` batches wiki revisions per API endpoint, names the `build-*`
