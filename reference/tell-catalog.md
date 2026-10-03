@@ -437,6 +437,14 @@ judgment-only (a regex cannot read the register).
 
 
 
+### 9.12 Humanizer damage (Pangram, Aug 2025)
+**Watch:** a missing space after a sentence end ("the end.Next, we"), thin or hair spaces between
+words, and synonym swaps that no writer makes ("counterfeit consciousness", "irregular timberland",
+"require to obtain"). These are the damage automatic rewriting tools leave behind.
+**Fix:** restore the plain space and the intended term, then re-read the whole piece for meaning
+drift: a tool that swapped one term swapped others. Never flag these as "AI": a second-language
+writer can produce the same phrase.
+
 ### 9.11 RLHF helpful-assistant framing (HH)
 **Watch:** "Let me walk you through…", "Here's how I'd think about it…", balanced both-sides
 hedging of an asymmetric tradeoff ("On one hand X, on the other Y, it depends"), unrequested
