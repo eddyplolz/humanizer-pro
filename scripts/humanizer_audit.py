@@ -17,7 +17,7 @@ from typing import Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 
-__version__ = "4.14.0"
+__version__ = "4.14.1"
 SCHEMA = "humanizer-audit.v1"
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
