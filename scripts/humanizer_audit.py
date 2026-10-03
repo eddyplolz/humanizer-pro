@@ -1769,14 +1769,16 @@ def audit_paths(paths: list[Path], include_code: bool = False) -> list[dict[str,
     documents = []
     for path in paths:
         text = path.read_text(encoding="utf-8")
-        documents.append(audit_text(text, str(path), include_code))
+        # Forward slashes on every OS, so JSON and text output (and tests)
+        # read the same on Windows as on Linux. SARIF already does this.
+        documents.append(audit_text(text, path.as_posix(), include_code))
     return documents
 
 
 def compare_paths(original_path: Path, revised_path: Path) -> dict[str, object]:
     original_text = original_path.read_text(encoding="utf-8")
     revised_text = revised_path.read_text(encoding="utf-8")
-    return compare_texts(original_text, revised_text, str(original_path), str(revised_path))
+    return compare_texts(original_text, revised_text, original_path.as_posix(), revised_path.as_posix())
 
 
 def render_text_report(result: dict[str, object]) -> str:
