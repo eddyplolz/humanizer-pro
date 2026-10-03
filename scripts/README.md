@@ -15,39 +15,40 @@ raising one as a decision that belongs in a reviewed change.
 human document predates ChatGPT (cutoff 2022-11-01), so any audit flag on one is a false positive
 by construction. Machine documents carry `label: machine` and the generating `model`. Every
 document falls in a dev or test split derived from its digest (about a quarter dev); machine
-entries record it as `split`, and `fp_measure.py` derives it for human entries. The public manifest
-holds register, author tier, date, word count, and SHA-256 digest per document from public sources,
-and no text, usernames, or private locators. Entry ids derive from the digest, so they name content
-without describing it. Entries for the maintainer's own writing (the forum and wiki pools) are kept
-out of it entirely: they live in the gitignored `corpus/manifest.private.json`, and the public file
-shows only their totals (`private_pools`). The tools read both files when the private one exists.
-The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
-`corpus/sources.local.json`; all three stay on the maintainer's machine. The public-domain pools are
-the exception: the in-repo Strunk chunks (`build-pd`, offline), the Gutenberg essay works
-(`build-essays`), the Internet Archive news chunks (`build-news`), and the OpenCulture
-US-PD-Newspapers pages (`build-hf-news`), and the PEPs (`build-peps`, read at the python/peps commit
-current at the cutoff; set `GITHUB_TOKEN` to raise the API rate limit) publish their sources so
-those slices can be rebuilt. The machine pools publish theirs too: `build-raid` streams RAID's
-non-adversarial training file (MIT; its test labels are hidden), `build-wildchat` reads WildChat-1M
-first replies through the Hugging Face rows API (ODC-BY; set `HF_TOKEN` if the dataset asks you to
-accept its terms), and `scripts/generate_machine.py` asks current Claude models the prompts in
-`corpus/machine_prompts.json`. That script needs `pip install anthropic` and an API key, uses no
-refusal fallbacks so every label names the model that wrote the text, and replaces the generated
-pool on each full run. `--dry-run` prints the request count, and `--limit N` is a trial run that
-saves nothing. A builder that collects nothing keeps the existing pool. The news builds are OCR-quality-gated and retry rate limits. `fetch` restores the Strunk
-pool and wiki revisions and names the `build-*` command for any other missing kind. `verify` checks every cached
-file against its digest; a test enforces the anonymity contract on every entry.
+entries record it as `split`, and `fp_measure.py` derives it for human entries.
 
-Why the private pools are kept out: the extraction code is public, so a published digest of a
-forum post or wiki revision would let anyone who can read that forum or wiki hash candidate posts
-and confirm which accounts are the maintainer's. With only totals published, there is nothing to
-match against. Public-domain digests stay public, because those sources are public anyway and the
-digests let anyone verify the rebuild.
+The manifest holds register, author tier, date, word count, SHA-256 digest, and a public pointer
+per document, and no text. Every pool comes from a public source, so anyone can rebuild it and
+check the published numbers; every document comes from a public source. The text
+lives in the gitignored `corpus/cache/` on the machine that built it.
 
-Extraction versions are recorded per entry. `fetch` rebuilds wiki entries with the extractor named
-in their `extraction` field (`wikitext-strip.v1` stays byte-for-byte for existing digests); new
-builds use the current version. A wiki entry is the whole page at the maintainer's last pre-cutoff
-revision, so it can hold other editors' text.
+| Pool | Register | Source | Rebuild |
+|---|---|---|---|
+| Strunk chunks | essay | the in-repo *Elements of Style* text | `build-pd` (offline) |
+| Gutenberg works | essay | Emerson, Thoreau, Twain (public domain) | `build-essays` |
+| Newspaper OCR | news | Internet Archive issues; OpenCulture US-PD-Newspapers pages | `build-news`, `build-hf-news` |
+| Wikipedia articles | wiki | random English Wikipedia articles at their last pre-cutoff revision (CC BY-SA 4.0; pointer is the revision id) | `build-wikipedia` |
+| Stack Exchange answers | chat | top-voted pre-cutoff answers from hobby, language, and workplace sites, code and quotes removed (CC BY-SA 4.0; pointer is the answer id) | `build-stackexchange` |
+| PEPs | docs | Python Enhancement Proposals at the python/peps commit current at the cutoff (public domain; set `GITHUB_TOKEN` to raise the API rate limit) | `build-peps` |
+| RAID | wiki, news, chat (machine) | RAID's non-adversarial training file, streamed (MIT; test labels are hidden) | `build-raid` |
+| WildChat | chat (machine) | WildChat-1M first replies through the Hugging Face rows API (ODC-BY; set `HF_TOKEN` if the dataset asks you to accept its terms) | `build-wildchat` |
+
+`scripts/generate_machine.py` can add a pool of current Claude models answering the prompts in
+`corpus/machine_prompts.json`. It needs `pip install anthropic` and an API key, and it is never
+run by default; the published numbers do not depend on it. `--dry-run` prints the request count,
+and `--limit N` is a trial run that saves nothing.
+
+A builder that collects nothing keeps the existing pool. The news builds are OCR-quality-gated and
+retry rate limits. A Stack Exchange answer edited after the cutoff is dropped, like a post-cutoff
+one, because the edited text is what the API returns. `fetch` restores the Strunk pool offline and
+the Wikipedia and Stack Exchange pools by id, and names the `build-*` command for any other missing
+kind. `verify` checks every cached file against its digest; a test enforces, kind by kind, that
+every manifest entry carries only a public pointer.
+
+Extraction versions are recorded per entry. `fetch` rebuilds Wikipedia entries with the extractor
+named in their `extraction` field (`wikitext-strip.v1` stays byte-for-byte for old digests); new
+builds use the current version. A Wikipedia entry is a whole article, bounded at 4,000 words, so
+it is many editors' text.
 
 `fp_measure.py` audits the cached corpus. On human test documents it prints false-positive rates
 by register and author slice with Wilson 95% intervals, a review-threshold sweep, and the rules that
