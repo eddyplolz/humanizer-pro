@@ -14,11 +14,15 @@ COMPARE_CONTRACT = ROOT / "eval" / "contracts" / "task2_compare.json"
 
 
 def run_audit(*args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
+    # Pin both ends of the pipe to UTF-8: a Windows runner's cp1252 default
+    # cannot carry the zero-width and Cyrillic characters the tests send.
     return subprocess.run(
         [sys.executable, str(CLI), *args],
         input=input_text,
         cwd=ROOT,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=False,
     )
@@ -848,6 +852,18 @@ def _action_script() -> str:
     return "\n".join(body) + "\n"
 
 
+def _bash() -> str:
+    """Git Bash on Windows; a bare ``bash`` there can resolve to the WSL launcher
+    in System32, which exits 1 when no distribution is installed (the GitHub
+    windows-latest runner). Elsewhere, plain ``bash``."""
+    if os.name == "nt":
+        for base in (os.environ.get("ProgramFiles", r"C:\Program Files"), os.environ.get("ProgramW6432", "")):
+            candidate = Path(base) / "Git" / "bin" / "bash.exe"
+            if base and candidate.is_file():
+                return str(candidate)
+    return "bash"
+
+
 def _run_action(tmp_path: Path, **inputs: str) -> tuple[int, dict[str, str]]:
     output = tmp_path / "github_output"
     output.write_text("", encoding="utf-8")
@@ -862,8 +878,9 @@ def _run_action(tmp_path: Path, **inputs: str) -> tuple[int, dict[str, str]]:
         "HA_INCLUDE_CODE": inputs.get("include_code", "false"),
     }
     result = subprocess.run(
-        ["bash", "-e", "-c", _action_script()], cwd=ROOT, env=env, capture_output=True, check=False
+        [_bash(), "-e", "-c", _action_script()], cwd=ROOT, env=env, capture_output=True, check=False
     )
+    assert result.returncode <= 3, result.stderr.decode("utf-8", "replace")
     pairs = dict(
         line.split("=", 1) for line in output.read_text(encoding="utf-8").splitlines() if "=" in line
     )
