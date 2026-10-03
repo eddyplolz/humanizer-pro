@@ -155,16 +155,22 @@ def _write_json(path: Path, payload: dict) -> None:
 
 def save_manifest(manifest: dict) -> None:
     """Write public entries to the public manifest and private ones to the
-    gitignored private manifest. Without a private file on this machine, the
-    public totals for the private pools are kept as they were."""
+    gitignored private manifest. The public totals change only for private
+    pools this machine holds; the others keep their published totals."""
     entries = sorted(manifest["entries"], key=lambda entry: entry["id"])
     private = [entry for entry in entries if entry["kind"] in PRIVATE_KINDS]
     public = {key: value for key, value in manifest.items() if key != "entries"}
     public["entries"] = [entry for entry in entries if entry["kind"] not in PRIVATE_KINDS]
     CORPUS_DIR.mkdir(exist_ok=True)
     if private or PRIVATE_MANIFEST_PATH.exists():
+        local_kinds = {entry["kind"] for entry in private}
+        if PRIVATE_MANIFEST_PATH.exists():
+            held = json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
+            local_kinds |= {entry["kind"] for entry in held}
+        pools = {kind: totals for kind, totals in public.get("private_pools", {}).items() if kind not in local_kinds}
+        pools.update(private_summary(private))
         _write_json(PRIVATE_MANIFEST_PATH, {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": private})
-        public["private_pools"] = private_summary(private)
+        public["private_pools"] = pools
     _write_json(MANIFEST_PATH, public)
 
 

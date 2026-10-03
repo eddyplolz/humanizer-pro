@@ -674,3 +674,23 @@ def test_private_pools_never_reach_the_public_manifest(tmp_path, monkeypatch) ->
     (tmp_path / "manifest.private.json").unlink()
     corpus.save_manifest(corpus.load_manifest())
     assert json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"] == public["private_pools"]
+
+
+def test_rebuilding_one_private_pool_keeps_the_other_pools_totals(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
+    published = {"forum-post": {"entries": 5, "registers": {"chat": 5}},
+                 "wiki-revision": {"entries": 3, "registers": {"wiki": 3}}}
+    base = {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "private_pools": published}
+    corpus._write_json(tmp_path / "manifest.json", {**base, "entries": []})
+    wiki = {"id": "wiki-00000000000a", "kind": "wiki-revision", "register": "wiki", "author": "mixed",
+            "sha256": "a" * 64, "words": 400}
+    # A fresh clone rebuilds only the wiki pool: the forum total stays published.
+    corpus.save_manifest({**corpus.load_manifest(), "entries": [wiki]})
+    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
+    assert pools == {"forum-post": published["forum-post"], "wiki-revision": {"entries": 1, "registers": {"wiki": 1}}}
+    # A pool this machine held and then emptied drops out of the totals.
+    corpus.save_manifest({**corpus.load_manifest(), "entries": []})
+    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
+    assert pools == {"forum-post": published["forum-post"]}
