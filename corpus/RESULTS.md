@@ -120,10 +120,11 @@ the test split, which this table never reads.
   it is many editors' text; a Stack Exchange entry is one answer, with
   code and quoted blocks removed. Answers are top-voted, so the chat
   slice leans toward careful writers.
-- Machine text comes from RAID (2023 generators), WildChat (GPT-3.5 and
-  GPT-4 replies), and current Claude models on committed prompts. The
-  catch rate describes those models only; tells change between model
-  generations.
+- Machine text comes from RAID (2023 generators) and WildChat (GPT-3.5
+  and GPT-4 replies). An optional pool from current Claude models
+  (scripts/generate_machine.py) is not part of the published numbers.
+  The catch rate describes those models only; tells change between
+  model generations.
 - Era confound: human essays and news are a century old, while machine
   essays and news are modern. A gap between the two rates there is partly
   era, not authorship. The wiki, chat, and docs slices compare
