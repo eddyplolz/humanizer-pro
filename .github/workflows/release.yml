@@ -1,0 +1,56 @@
+name: Release
+
+# Publishes a GitHub release once CI has passed on main for a version that has
+# no release yet. The version comes from scripts/humanizer_audit.py, and the
+# notes from that version's section in CHANGELOG.md. It runs only after a
+# successful CI run for a push to main, so a failing commit is never released,
+# and it cannot be started by hand from another branch.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Read the version
+        id: version
+        run: |
+          version="$(python3 -c "import ast,sys; t=ast.parse(open('scripts/humanizer_audit.py').read()); print(next(n.value.value for n in t.body if isinstance(n, ast.Assign) and getattr(n.targets[0], 'id', '') == '__version__'))")"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Publish the release if it is new
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "Release $TAG already exists; nothing to do."
+            exit 0
+          fi
+          # The notes are this version's CHANGELOG section, without its heading.
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v "( |$)" { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for $VERSION"
+            exit 1
+          fi
+          gh release create "$TAG" --target "$TESTED_SHA" --title "$TAG" --notes-file notes.md
