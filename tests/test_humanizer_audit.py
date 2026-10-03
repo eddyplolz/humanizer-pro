@@ -958,7 +958,10 @@ def test_version_is_consistent_across_the_repo() -> None:
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     assert f'version: "{version}"' in skill
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    assert re.search(r"^## (\S+)", changelog, re.M).group(1) == version
+    headings = re.findall(r"^## (\S+)", changelog, re.M)
+    if headings and headings[0] == "Unreleased":
+        headings = headings[1:]  # changes waiting for the next version bump
+    assert headings[0] == version
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert f"Current release: **v{version}**" in readme
 
@@ -973,3 +976,25 @@ def test_action_reads_multi_line_paths_and_drops_stale_sarif(tmp_path: Path) -> 
     stale.write_text("stale", encoding="utf-8")
     code, outputs = _run_action(tmp_path, paths="no/such/file.md", fail_on="never")
     assert code == 3 and not stale.exists() and "sarif-file" not in outputs
+
+
+def test_skill_description_fits_the_skill_loader_limit() -> None:
+    # Claude Code rejects or truncates skill descriptions over 1024 characters,
+    # so the frontmatter description must stay under it after YAML folding.
+    import re
+
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    match = re.search(r"^description: >\n(.*?)^\S", skill, re.S | re.M)
+    assert match, "description block not found"
+    folded = " ".join(match.group(1).split())
+    assert len(folded) <= 1024, f"description is {len(folded)} characters"
+
+
+def test_readme_pins_the_current_version_in_install_snippets() -> None:
+    import re
+
+    version = _load_audit_module().__version__
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    pins = re.findall(r"(?:rev: |eddyplolz/humanizer-pro@)v(\d+\.\d+\.\d+)", readme)
+    assert pins, "no version pins found in README"
+    assert set(pins) == {version}, f"README pins {sorted(set(pins))}, code is {version}"

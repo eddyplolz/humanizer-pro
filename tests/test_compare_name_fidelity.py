@@ -68,11 +68,11 @@ def test_determiner_fix_does_not_move_a_name():
 def test_removing_a_banned_opener_does_not_move_a_name():
     original = (
         "The Port of Calder Bay handles cargo. "
-        "Furthermore, the Aeropuerto de Boriquen handles freight."
+        "Furthermore, the Aeropuerto de Marvale handles freight."
     )
     revised = (
         "The Port of Calder Bay handles cargo. "
-        "The Aeropuerto de Boriquen also handles freight."
+        "The Aeropuerto de Marvale also handles freight."
     )
     assert name_findings(original, revised) == []
 

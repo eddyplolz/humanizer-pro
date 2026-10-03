@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- README: the measurement section now says what was measured (1,912 documents with the 4.12.0
+  rules), that the public collection holds no AI text yet, and that the dev/test split applies
+  from the next measurement on. The newspaper date range is 1898 to 1909. Install snippets pin
+  the current release, and a test keeps them pinned.
+- SKILL.md: the description is 810 characters, under the 1,024-character skill-loader limit (it
+  was 1,049), and a test keeps it there. The audit CLI is resolved from the skill's own directory
+  or the installed `humanizer-audit` command, never from the working directory.
+- Self-scan budget for SKILL.md lowered from 95 to 60 after the description shrank.
+- Fixture names are invented in a test fixture and two source notes.
+
 ## 4.14.1 - 2026-10-03
 
 Corpus and documentation.
