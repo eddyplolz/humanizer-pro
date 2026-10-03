@@ -13,6 +13,15 @@
 - Residue from real-world editing work replaced with invented names in a test fixture and two
   source notes.
 
+Skill:
+
+- Four operating principles added (10 to 13): keep the precise word, rewrite or cut the sentence
+  rather than patch the word, never add damage (typos, odd spacing, odd characters), and match
+  the author's own habits rather than a house style. Principle 2 now says why: stripping every
+  listed tell on sight is its own fingerprint, which is what a July 2026 open-source "academic
+  humanizer" was called out in Nature for. The voice section says sentence length varies with the
+  content, never toward a rhythm target.
+
 Audit CLI:
 
 - New artifact rule `artifact.assistant_self_disclosure` (severity error, exit 2): "As an AI
