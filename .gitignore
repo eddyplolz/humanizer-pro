@@ -19,6 +19,7 @@ __pycache__/
 
 # corpus: text is never committed, only hashes
 corpus/cache/
+corpus/manifest.private.json
 corpus/build.local.json
 corpus/sources.local.json
 
