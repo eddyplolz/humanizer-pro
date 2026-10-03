@@ -55,6 +55,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CORPUS_DIR = ROOT / "corpus"
 MANIFEST_PATH = CORPUS_DIR / "manifest.json"
+# Entries for the maintainer's own writing (forum posts, wiki revisions) live
+# here, gitignored, never in the public manifest. A public digest of that text
+# would let anyone who can read the forum or wiki hash candidate posts and
+# confirm which accounts are the maintainer's. The public file keeps totals only.
+PRIVATE_MANIFEST_PATH = CORPUS_DIR / "manifest.private.json"
 CACHE_DIR = CORPUS_DIR / "cache"
 LOCAL_CONFIG_PATH = CORPUS_DIR / "build.local.json"
 LOCAL_SOURCES_PATH = CORPUS_DIR / "sources.local.json"
@@ -119,20 +124,48 @@ def word_count(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9'’-]+", text))
 
 
+PRIVATE_KINDS = ("forum-post", "wiki-revision")
+
+
+def private_summary(entries: list[dict]) -> dict:
+    """Totals the public manifest may show for the private pools."""
+    summary: dict = {}
+    for entry in entries:
+        pool = summary.setdefault(entry["kind"], {"entries": 0, "registers": {}})
+        pool["entries"] += 1
+        pool["registers"][entry["register"]] = pool["registers"].get(entry["register"], 0) + 1
+    return summary
+
+
 def load_manifest() -> dict:
+    """The public manifest, plus the private entries when this machine has them."""
     if MANIFEST_PATH.exists():
-        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    return {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": []}
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    else:
+        manifest = {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": []}
+    if PRIVATE_MANIFEST_PATH.exists():
+        private = json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest["entries"].extend(private["entries"])
+    return manifest
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 
 def save_manifest(manifest: dict) -> None:
-    manifest["entries"].sort(key=lambda entry: entry["id"])
+    """Write public entries to the public manifest and private ones to the
+    gitignored private manifest. Without a private file on this machine, the
+    public totals for the private pools are kept as they were."""
+    entries = sorted(manifest["entries"], key=lambda entry: entry["id"])
+    private = [entry for entry in entries if entry["kind"] in PRIVATE_KINDS]
+    public = {key: value for key, value in manifest.items() if key != "entries"}
+    public["entries"] = [entry for entry in entries if entry["kind"] not in PRIVATE_KINDS]
     CORPUS_DIR.mkdir(exist_ok=True)
-    MANIFEST_PATH.write_text(
-        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
+    if private or PRIVATE_MANIFEST_PATH.exists():
+        _write_json(PRIVATE_MANIFEST_PATH, {"schema": MANIFEST_SCHEMA, "cutoff": CUTOFF, "entries": private})
+        public["private_pools"] = private_summary(private)
+    _write_json(MANIFEST_PATH, public)
 
 
 def load_local_sources() -> dict:

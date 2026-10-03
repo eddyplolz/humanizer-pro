@@ -31,6 +31,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "corpus" / "manifest.json"
+PRIVATE_MANIFEST_PATH = ROOT / "corpus" / "manifest.private.json"  # gitignored
 CACHE_DIR = ROOT / "corpus" / "cache"
 RESULT_SCHEMA = "humanizer-fp-measure.v2"
 DEFAULT_THRESHOLD = 60  # the CLI's default review threshold
@@ -66,9 +67,13 @@ def wilson_interval(hits: int, total: int, z: float = 1.96) -> tuple[float, floa
 
 
 def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
+    # The maintainer's own forum and wiki entries are kept out of the public
+    # manifest; they are measured only on a machine that has the private file.
+    if PRIVATE_MANIFEST_PATH.exists():
+        entries = entries + json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     rows, missing = [], []
-    for entry in manifest["entries"]:
+    for entry in entries:
         path = CACHE_DIR / f"{entry['id']}.txt"
         if not path.exists():
             missing.append(entry["id"])
