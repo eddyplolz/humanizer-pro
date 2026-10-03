@@ -534,9 +534,41 @@ def test_mattr_matches_hand_computed_windows() -> None:
     assert mattr(["a", "a", "b", "a"], 2) == 0.83
     # window=3 over [a,b,c,d]: every window all-unique -> 1.0.
     assert mattr(["a", "b", "c", "d"], 3) == 1.0
-    # shorter than one window degrades to plain TTR: [a,a] -> 1 unique / 2 -> 0.5.
-    assert mattr(["a", "a"], 50) == 0.5
-    assert mattr([]) == 0.0
+    # Shorter than one window: no windowed value exists, so None rather than a
+    # plain TTR that would not be comparable with a real MATTR.
+    assert mattr(["a", "a"], 50) is None
+    assert mattr([]) is None
+    # Exactly one window is the plain TTR of that window.
+    assert mattr(["a", "a"], 2) == 0.5
+
+
+def test_mattr_rejects_non_positive_window() -> None:
+    mattr = _load_audit_module().moving_avg_type_token_ratio
+    for window in (0, -1):
+        try:
+            mattr(["a", "b"], window)
+        except ValueError:
+            continue
+        raise AssertionError(f"window={window} should raise ValueError")
+
+
+def test_mattr_sliding_count_matches_per_window_sets() -> None:
+    import random
+
+    mattr = _load_audit_module().moving_avg_type_token_ratio
+    rng = random.Random(7)
+    for _ in range(200):
+        tokens = [rng.choice("abcdeAB") for _ in range(rng.randint(1, 120))]
+        window = rng.randint(1, len(tokens))
+        lowered = [token.lower() for token in tokens]
+        count = len(lowered) - window + 1
+        types = sum(len(set(lowered[i : i + window])) for i in range(count))
+        assert mattr(tokens, window) == round(types / (count * window), 2)
+
+
+def test_short_document_reports_null_mattr() -> None:
+    _returncode, payload = audit_json("--stdin", input_text="A short note about the plan.")
+    assert payload["documents"][0]["stats"]["mattr_50"] is None
 
 
 def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
@@ -548,11 +580,133 @@ def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
     assert 0.0 <= high <= 1.0
     assert low < high
     # It is a diagnostic stat only: it appears in the stats block and never as
-    # a finding, and it never moves the risk score (repetitive human-style prose
-    # with no other tell stays at score 0).
-    returncode, payload = audit_json("--stdin", input_text="cat dog " * 60)
+    # a finding, and changing its value moves neither findings nor score.
+    _returncode, payload = audit_json("--stdin", input_text="cat dog " * 60)
     document = payload["documents"][0]
     assert "mattr_50" in document["stats"]
     assert not any("mattr" in fid for fid in finding_ids(document))
-    assert document["risk_score"] == 0
-    assert returncode == 0
+    text = (ROOT / "eval" / "fixtures" / "ai-slop-general.md").read_text(encoding="utf-8")
+    baseline = module.audit_text(text, "x")
+    original = module.moving_avg_type_token_ratio
+    try:
+        for forced in (0.0, 1.0, None):
+            module.moving_avg_type_token_ratio = lambda *_args, value=forced: value
+            forced_result = module.audit_text(text, "x")
+            assert forced_result["stats"]["mattr_50"] == forced
+            assert forced_result["findings"] == baseline["findings"]
+            assert forced_result["risk_score"] == baseline["risk_score"]
+    finally:
+        module.moving_avg_type_token_ratio = original
+
+
+# ------------------------------------------------- full-repo review fixes
+
+
+def _ids_for(text: str) -> list[str]:
+    return [f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]]
+
+
+def test_usage_errors_exit_3_not_block() -> None:
+    assert run_audit().returncode == 3
+    assert run_audit("--bogus", "x").returncode == 3
+    assert run_audit("--fail-score", "abc", "x").returncode == 3
+
+
+def test_stdin_is_strict_utf8_and_newline_normalized() -> None:
+    bad = subprocess.run(
+        [sys.executable, str(CLI), "--stdin"], input=b"caf\xc3\xa9 \xff",
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    assert bad.returncode == 3
+    good = subprocess.run(
+        [sys.executable, str(CLI), "--stdin", "--json"], input="Ab café.\r\nNext line.\r\n".encode(),
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    assert good.returncode == 0
+    stats = json.loads(good.stdout)["documents"][0]["stats"]
+    assert stats["words"] == 4
+
+
+def test_rhetorical_formula_stays_inside_one_sentence() -> None:
+    far_apart = "This is not just a test.\n\nMuch later, but unrelated, the end."
+    assert "family7.rhetorical_formula" not in _ids_for(far_apart)
+    assert "family7.rhetorical_formula" in _ids_for("It is not just fast but cheap.")
+    assert "family7.rhetorical_formula" in _ids_for("Not only fast, but also cheap.")
+
+
+def test_of_course_bang_is_detected_before_a_space() -> None:
+    assert "family9.chatbot_residue" in _ids_for("Of course! Here is the plan.")
+
+
+def test_one_phrase_is_not_scored_twice() -> None:
+    assert _ids_for("It is important to note the plan.") == ["family5.syntactic_tell"]
+    assert _ids_for("The tool has the ability to parse files.") == ["family6.verbosity_padding"]
+
+
+def test_one_repeated_vocab_word_is_not_a_cluster() -> None:
+    assert "family4.ai_vocab_cluster" not in _ids_for(
+        "The robust design was robust. We tested robust estimators."
+    )
+    assert "family4.ai_vocab_cluster" not in _ids_for("The landscape of the landscape.")
+    assert "family4.ai_vocab_cluster" in _ids_for("A robust, vibrant tapestry.")
+
+
+def test_word_tokenizer_handles_accents_and_curly_apostrophes() -> None:
+    words = _load_audit_module().words
+    assert words("café naïve don’t state-of-the-art") == [
+        "café", "naïve", "don’t", "state-of-the-art",
+    ]
+
+
+def test_low_variance_message_is_a_full_sentence() -> None:
+    text = "One two three four. " * 4
+    findings = _load_audit_module().audit_text(text, "x")["findings"]
+    message = next(f["message"] for f in findings if f["id"] == "structure.low_sentence_variance")
+    assert not message.endswith(" even")
+
+
+def _compare_ids(original: str, revised: str) -> list[tuple[str, str]]:
+    result = _load_audit_module().compare_texts(original, revised, "a", "b")
+    return [(f["id"], f["evidence"]) for f in result["findings"]]
+
+
+def test_dropping_first_quote_does_not_shift_later_quotes() -> None:
+    original = 'Intro "alpha beta gamma" mid "delta epsilon" end "zeta eta theta".'
+    revised = 'Intro mid "delta epsilon" end "zeta eta theta".'
+    quote_findings = [item for item in _compare_ids(original, revised) if ".quote." in item[0]]
+    assert quote_findings == [("compare.quote.dropped", '"alpha beta gamma"')]
+
+
+def test_changed_quote_is_still_reported_as_changed() -> None:
+    quote_findings = [
+        item
+        for item in _compare_ids('A "one two three" B "four five six"', 'A "one two THREE" B "four five six"')
+        if ".quote." in item[0]
+    ]
+    assert quote_findings == [("compare.quote.changed", '"one two three"')]
+
+
+def test_repeated_link_label_retarget_is_reported() -> None:
+    original = "See [docs](https://a.com/1) and [docs](https://a.com/2)."
+    revised = "See [docs](https://a.com/9) and [docs](https://a.com/2)."
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert "compare.citation.changed_target" in ids
+
+
+def test_tilde_fences_are_code_blocks() -> None:
+    original = "Text.\n\n~~~\nx = 1\n~~~\n"
+    ids = [item[0] for item in _compare_ids(original, original.replace("1", "2"))]
+    assert ids == ["compare.code_block.changed"]
+    assert _load_audit_module().stats_for(original)["code_block_count"] == 1
+
+
+def test_empty_directory_warns_on_stderr(tmp_path: Path) -> None:
+    result = run_audit(str(tmp_path))
+    assert result.returncode == 0
+    assert "no .md or .txt files" in result.stderr
+
+
+def test_skill_md_stays_under_line_limit() -> None:
+    # WARP.md: "Keep under 350 lines for v4.x."
+    lines = (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
+    assert len(lines) < 350, len(lines)

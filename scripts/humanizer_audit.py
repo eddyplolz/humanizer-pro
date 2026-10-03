@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import json
 import math
@@ -362,7 +363,9 @@ FAMILY_RULES = [
         "family3.filler_framing",
         3,
         re.compile(
-            r"\b(?:in today's|in conclusion|it is important to note|in order to|due to the fact that|"
+            # "it is important to note" is family5-only (anticipatory "it",
+            # catalog 5.1); listing it here too scored one phrase twice.
+            r"\b(?:in today's|in conclusion|in order to|due to the fact that|"
             r"at its core|when it comes to|future belongs|exciting journey|journey toward excellence|"
             r"highlighting|underscoring|showcasing|fostering)\b",
             re.I,
@@ -394,9 +397,13 @@ FAMILY_RULES = [
         "family7.rhetorical_formula",
         7,
         re.compile(
-            r"\b(?:not just\b.+\bbut\b|not only\b.+\bbut also\b|here's the thing|you know what|watch this|"
+            # The paired forms stay inside one sentence. With DOTALL and a
+            # greedy ".+", "not just" in one paragraph matched the last "but"
+            # anywhere later in the document.
+            r"\b(?:not just\b[^.!?]{0,150}?\bbut\b|not only\b[^.!?]{0,150}?\bbut also\b|"
+            r"here's the thing|you know what|watch this|"
             r"what if i told you|let that sink in|plot twist|full stop|see what i did there)\b",
-            re.I | re.S,
+            re.I,
         ),
         "Rhetorical formula or forced cadence",
     ),
@@ -427,7 +434,10 @@ FAMILY_RULES = [
         "family9.chatbot_residue",
         9,
         re.compile(
-            r"\b(?:great question|here's a polished|i hope this helps|certainly|of course!|best regards|"
+            # "of course!" sits outside the group: it ends in punctuation, so a
+            # closing \b only matched when a letter followed with no space.
+            r"\bof course!|"
+            r"\b(?:great question|here's a polished|i hope this helps|certainly|best regards|"
             r"let me know if|would you like me|let me walk you through|here's how i'd think about|"
             r"while i understand the appeal|as of my (?:last|training) (?:update|cutoff)|"
             r"on the one hand\b.{0,120}\bon the other)\b",
@@ -492,10 +502,11 @@ CLARITY_RULES = [
             r"facilitat(?:e|es|ed|ing)|endeavor(?:s|ed|ing)?|ascertain(?:s|ed|ing)?|"
             # Multi-word wrappers around a one-word meaning (HH). "due to the
             # fact that" stays family3-only; listing it here too would
-            # double-count one phrase across tiers.
+            # double-count one phrase across tiers. "has the ability to" stays
+            # family6-only for the same reason.
             r"in the event that|for the purpose of|"
             r"with regard to|with respect to|in light of the fact that|"
-            r"despite the fact that|has the ability to)\b",
+            r"despite the fact that)\b",
             re.I,
         ),
         "Inflated register (a clarity edit, not authorship evidence)",
@@ -531,7 +542,9 @@ SOURCE_RISK_RULES = [
     ),
 ]
 
-CODE_BLOCK_RE = re.compile(r"```[^\n`]*(?:\n.*?)?```", re.S)
+# Backtick and tilde fences (CommonMark allows both); the closer must match the
+# opener.
+CODE_BLOCK_RE = re.compile(r"(```|~~~)[^\n`~]*(?:\n.*?)?\1", re.S)
 URL_RE = re.compile(r"https?://[^\s<>\]\)\"'|{}]+", re.I)
 MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[([^\]\n]+)\]\(([^)\s]+(?:\s+\"[^\"]*\")?)\)")
 FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]\n]+\]")
@@ -843,7 +856,8 @@ def extract_date_tokens(text: str) -> list[ProtectedToken]:
 
 
 def extract_number_tokens(text: str) -> list[ProtectedToken]:
-    masked = blank_spans(masked_for_prose(text), regex_spans(masked_for_prose(text), DATE_RE))
+    prose = masked_for_prose(text)
+    masked = blank_spans(prose, regex_spans(prose, DATE_RE))
     tokens = []
     occupied: list[tuple[int, int]] = []
     for regex in (CURRENCY_RE, PERCENT_RE, RANGE_RE):
@@ -1034,13 +1048,16 @@ def compare_token_sets(
     return findings
 
 
-def markdown_link_targets(text: str) -> dict[str, ProtectedToken]:
+def markdown_link_targets(text: str) -> dict[str, list[ProtectedToken]]:
+    """Link targets per label, in document order (a label can repeat)."""
     masked = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
-    targets = {}
+    targets: dict[str, list[ProtectedToken]] = {}
     for match in MARKDOWN_LINK_RE.finditer(masked):
         label = normalize_space(match.group(1)).lower()
         target = normalize_url(match.group(2).split()[0])
-        targets[label] = ProtectedToken("citation", target, evidence(match.group(0)), match.start())
+        targets.setdefault(label, []).append(
+            ProtectedToken("citation", target, evidence(match.group(0)), match.start())
+        )
     return targets
 
 
@@ -1052,9 +1069,13 @@ def compare_markdown_targets(
     original_links = markdown_link_targets(original_text)
     revised_links = markdown_link_targets(revised_text)
     findings = []
-    for label, original_token in original_links.items():
-        revised_token = revised_links.get(label)
-        if revised_token and revised_token.value != original_token.value:
+    for label, original_tokens in original_links.items():
+        # Pair repeated labels by occurrence; a dict keyed on label alone kept
+        # only the last link and missed a retargeted earlier one.
+        pairs = zip(original_tokens, revised_links.get(label, []))
+        for original_token, revised_token in pairs:
+            if revised_token.value == original_token.value:
+                continue
             findings.append(
                 compare_finding(
                     "compare.citation.changed_target",
@@ -1079,43 +1100,33 @@ def compare_ordered_tokens(
         "code_block": "Changed fenced code block",
         "quote": "Changed quoted text or blockquote",
     }
+    label = kind.replace("_", " ")
+
+    def finding(suffix: str, message: str, token: ProtectedToken, side: str) -> dict[str, object]:
+        starts = original_starts if side == "original" else revised_starts
+        return compare_finding(f"compare.{kind}.{suffix}", message, token, starts, side, False)
+
+    # Align the two sequences before comparing, so dropping the first quote
+    # reports one dropped quote instead of shifting every later quote into a
+    # false "changed" pair.
+    matcher = difflib.SequenceMatcher(
+        a=[token.value for token in original_tokens],
+        b=[token.value for token in revised_tokens],
+        autojunk=False,
+    )
     findings = []
-    for original_token, revised_token in zip(original_tokens, revised_tokens, strict=False):
-        if original_token.value != revised_token.value:
-            findings.append(
-                compare_finding(
-                    f"compare.{kind}.changed",
-                    changed_messages[kind],
-                    original_token,
-                    original_starts,
-                    "original",
-                    False,
-                )
-            )
-    if len(original_tokens) > len(revised_tokens):
-        for token in original_tokens[len(revised_tokens) :]:
-            findings.append(
-                compare_finding(
-                    f"compare.{kind}.dropped",
-                    f"Dropped protected {kind.replace('_', ' ')}",
-                    token,
-                    original_starts,
-                    "original",
-                    False,
-                )
-            )
-    elif len(revised_tokens) > len(original_tokens):
-        for token in revised_tokens[len(original_tokens) :]:
-            findings.append(
-                compare_finding(
-                    f"compare.{kind}.introduced",
-                    f"Introduced protected {kind.replace('_', ' ')}",
-                    token,
-                    revised_starts,
-                    "revised",
-                    False,
-                )
-            )
+    for tag, a_start, a_end, b_start, b_end in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+        originals = original_tokens[a_start:a_end]
+        revised = revised_tokens[b_start:b_end]
+        paired = min(len(originals), len(revised)) if tag == "replace" else 0
+        for original_token in originals[:paired]:
+            findings.append(finding("changed", changed_messages[kind], original_token, "original"))
+        for token in originals[paired:]:
+            findings.append(finding("dropped", f"Dropped protected {label}", token, "original"))
+        for token in revised[paired:]:
+            findings.append(finding("introduced", f"Introduced protected {label}", token, "revised"))
     return findings
 
 
@@ -1314,8 +1325,15 @@ def make_finding(rule: Rule, match: re.Match[str], starts: list[int]) -> dict[st
     }
 
 
+# Letters and digits in any script, joined by inner hyphens and straight or
+# curly apostrophes. An ASCII-only class split "café" into "caf" and "don’t"
+# into "don" + "t", which skewed word counts, sentence lengths, and MATTR on
+# accented or typographically quoted text.
+WORD_RE = re.compile(r"[^\W_]+(?:[-'’][^\W_]+)*")
+
+
 def words(text: str) -> list[str]:
-    return re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?", text)
+    return WORD_RE.findall(text)
 
 
 def paragraphs(text: str) -> list[str]:
@@ -1338,30 +1356,41 @@ def coefficient_of_variation(lengths: list[int]) -> float:
     return math.sqrt(variance) / mean
 
 
-def moving_avg_type_token_ratio(token_list: list[str], window: int = 50) -> float:
+def moving_avg_type_token_ratio(token_list: list[str], window: int = 50) -> float | None:
     """Moving-average type-token ratio (MATTR) over ``window``-token windows.
 
     A length-robust lexical-diversity measure: unlike the plain type-token
     ratio it does not decay as a text grows longer, because it averages the TTR
     of a sliding fixed-size window rather than dividing uniques by total. Tokens
-    are lowercased so casing does not inflate the type count. For text shorter
-    than one window the whole text is a single window (it degrades to the plain
-    TTR). Returned rounded to 2 dp; 0.0 for empty input.
+    are lowercased so casing does not inflate the type count. Returned rounded
+    to 2 dp.
 
-    Reported as a diagnostic stat only, never as a finding or a score input:
-    calibration against pre-cutoff encyclopedic prose showed MATTR cannot
-    separate AI from human writing without an unacceptable false-positive rate
-    on the encyclopedic register (human median ~0.76, min ~0.46), so any
-    flagging threshold would misfire on exactly the register this skill most
-    often audits. It is surfaced for analysis, not verdicts.
+    Returns None when the text is shorter than one window. A short text's
+    "MATTR" would just be its plain TTR, which is length-dependent and not
+    comparable with a true windowed value from a longer document.
+
+    Reported as a diagnostic stat only, never as a finding or a score input.
+    See reference/mattr-calibration.md for why.
     """
-    if not token_list:
-        return 0.0
+    if window < 1:
+        raise ValueError(f"window must be a positive integer, got {window}")
+    if len(token_list) < window:
+        return None
     lowered = [token.lower() for token in token_list]
-    size = min(window, len(lowered))
-    windows = len(lowered) - size + 1
-    total = sum(len(set(lowered[i : i + size])) / size for i in range(windows))
-    return round(total / windows, 2)
+    # Slide one count table across the text: O(n) instead of a fresh set per
+    # window.
+    counts = Counter(lowered[:window])
+    total_types = len(counts)
+    for index in range(window, len(lowered)):
+        incoming = lowered[index]
+        outgoing = lowered[index - window]
+        counts[outgoing] -= 1
+        if counts[outgoing] == 0:
+            del counts[outgoing]
+        counts[incoming] += 1
+        total_types += len(counts)
+    windows = len(lowered) - window + 1
+    return round(total_types / (windows * window), 2)
 
 
 def title_case_heading_count(text: str) -> int:
@@ -1413,7 +1442,7 @@ def stats_for(text: str) -> dict[str, int | float]:
         "bold_marker_count": text.count("**"),
         "table_line_count": len(re.findall(r"^\s*\|.+\|\s*$", text, re.M)),
         "bullet_count": len(re.findall(r"^\s*[-*+]\s+", text, re.M)),
-        "code_block_count": text.count("```") // 2,
+        "code_block_count": len(CODE_BLOCK_RE.findall(text)),
     }
 
 
@@ -1430,21 +1459,24 @@ def regex_findings(text: str, rules: Iterable[Rule], starts: list[int]) -> list[
 def ai_vocab_findings(text: str, starts: list[int]) -> list[dict[str, object]]:
     found_terms = [(match.group(0).lower(), match.start()) for match in re.finditer(r"[A-Za-z][A-Za-z'-]*", text)]
     matched = [(term, offset) for term, offset in found_terms if term in AI_VOCAB]
-    tier1_terms = {term for term, _offset in matched if term in AI_VOCAB_TIER1}
-    if len(matched) < 3 and len(tier1_terms) < 2:
+    # A cluster means distinct words. One topical word repeated ("robust
+    # estimators ... robust ... robust") is not a vocabulary cluster.
+    distinct_terms = {term for term, _offset in matched}
+    tier1_terms = distinct_terms & AI_VOCAB_TIER1
+    if len(distinct_terms) < 3 and len(tier1_terms) < 2:
         paragraph_hits = []
         cursor = 0
         for paragraph in paragraphs(text):
             start = text.find(paragraph, cursor)
             cursor = start + len(paragraph)
-            terms = [term for term in re.findall(r"[A-Za-z][A-Za-z'-]*", paragraph.lower()) if term in AI_VOCAB]
+            terms = {term for term in re.findall(r"[A-Za-z][A-Za-z'-]*", paragraph.lower()) if term in AI_VOCAB}
             if len(terms) >= 2:
-                paragraph_hits.append((sorted(set(terms)), start))
+                paragraph_hits.append((sorted(terms), start))
         if not paragraph_hits:
             return []
         terms, offset = paragraph_hits[0]
     else:
-        terms = sorted({term for term, _offset in matched})
+        terms = sorted(distinct_terms)
         offset = matched[0][1]
 
     line, column = line_column(starts, offset)
@@ -1473,7 +1505,7 @@ def rhythm_findings(stats: dict[str, int | float]) -> list[dict[str, object]]:
                 "line": 1,
                 "column": 1,
                 "evidence": f"sentence_length_cv={stats['sentence_length_cv']}",
-                "message": "Low sentence-length variance can read mechanically even",
+                "message": "Low sentence-length variance can read mechanically, even in human prose",
                 "source_risk": False,
             }
         )
@@ -1719,8 +1751,20 @@ def render_compare_report(result: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+class AuditArgumentParser(argparse.ArgumentParser):
+    """argparse exits 2 on a usage error, which this CLI reserves for "block".
+
+    A CI job branching on exit codes must not read a typo in its own command
+    line as a leaked artifact, so usage errors exit 3 like read errors.
+    """
+
+    def error(self, message: str) -> None:  # type: ignore[override]
+        self.print_usage(sys.stderr)
+        self.exit(3, f"{self.prog}: error: {message}\n")
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Audit text for Humanizer Pro tells and source-risk artifacts.")
+    parser = AuditArgumentParser(description="Audit text for Humanizer Pro tells and source-risk artifacts.")
     parser.add_argument("target", nargs="?", help="File or directory to audit.")
     parser.add_argument("--stdin", action="store_true", help="Read text from stdin instead of a path.")
     parser.add_argument(
@@ -1745,11 +1789,19 @@ def main(argv: list[str] | None = None) -> int:
             summary = summarize_compare(compare)
             result = {"schema": SCHEMA, "summary": summary, "documents": [], "compare": compare}
         elif args.stdin:
-            documents = [audit_text(sys.stdin.read(), "<stdin>")]
+            # Decode stdin as strict UTF-8 like file input, rather than with the
+            # platform locale (cp1252 on many Windows setups), and translate
+            # newlines the way text-mode file reads do.
+            raw = sys.stdin.buffer.read().decode("utf-8")
+            text = raw.replace("\r\n", "\n").replace("\r", "\n")
+            documents = [audit_text(text, "<stdin>")]
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
-            documents = audit_paths(iter_input_files(Path(args.target)))
+            paths = iter_input_files(Path(args.target))
+            if not paths:
+                print(f"humanizer-audit: no .md or .txt files under {args.target}", file=sys.stderr)
+            documents = audit_paths(paths)
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
     except (OSError, UnicodeDecodeError) as exc:

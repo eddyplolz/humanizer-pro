@@ -19,8 +19,12 @@ Subcommands:
   build-forum   read MyBB dump SQL files, extract pre-cutoff posts
   build-wiki    fetch a wiki user's pre-cutoff revisions via the MediaWiki API
   build-pd      chunk the in-repo public-domain Strunk text
-  fetch         repopulate the cache (public-domain always; others need
-                the maintainer's sources.local.json)
+  build-essays  chunk public-domain Gutenberg essay works
+  build-news    fetch public-domain newspaper OCR (Internet Archive)
+  build-hf-news grow the news pool from OpenCulture (HF rows API)
+  fetch         repopulate the cache (public-domain always; wiki needs the
+                maintainer's sources.local.json; other kinds name their
+                build-* subcommand)
   verify        check every cached file against its manifest sha256
 
 Maintainer-local settings (dump paths, identity mapping, wiki endpoint) come
@@ -37,6 +41,7 @@ import json
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -111,9 +116,26 @@ def save_local_sources(sources: dict) -> None:
     )
 
 
+ENTRY_ID_RE = re.compile(r"[a-z]+-[0-9a-f]{12}")
+
+
+def cache_path(entry_id: str) -> Path:
+    """Cache file for an entry id, refusing ids that could leave CACHE_DIR."""
+    if not ENTRY_ID_RE.fullmatch(entry_id):
+        raise ValueError(f"malformed corpus entry id: {entry_id!r}")
+    return CACHE_DIR / f"{entry_id}.txt"
+
+
 def write_cache(entry_id: str, text: str) -> None:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    (CACHE_DIR / f"{entry_id}.txt").write_text(text, encoding="utf-8", newline="\n")
+    cache_path(entry_id).write_text(text, encoding="utf-8", newline="\n")
+
+
+def read_cache(entry_id: str) -> str:
+    """Cached text exactly as written. read_text() would translate a lone CR
+    or CRLF to LF, so a corrupted file could still match its digest and a
+    text holding a literal CR could never match it."""
+    return cache_path(entry_id).read_bytes().decode("utf-8")
 
 
 def load_local_config() -> dict:
@@ -134,7 +156,7 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
     manifest = load_manifest()
     local = load_local_sources()
     for entry_id in [e["id"] for e in manifest["entries"] if e["id"].startswith(f"{prefix}-")]:
-        (CACHE_DIR / f"{entry_id}.txt").unlink(missing_ok=True)
+        cache_path(entry_id).unlink(missing_ok=True)
         local["sources"].pop(entry_id, None)
     manifest["entries"] = [
         e for e in manifest["entries"] if not e["id"].startswith(f"{prefix}-")
@@ -399,26 +421,18 @@ PD_CHUNK_WORDS = 500
 
 
 def build_pd(_args: argparse.Namespace) -> int:
-    text = PD_SOURCE.read_text(encoding="utf-8")
-    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
-    chunks: list[str] = []
-    current: list[str] = []
-    current_words = 0
-    for paragraph in paragraphs:
-        current.append(paragraph)
-        current_words += word_count(paragraph)
-        if current_words >= PD_CHUNK_WORDS:
-            chunks.append("\n\n".join(current))
-            current, current_words = [], 0
-    if current and current_words >= MIN_WORDS["essay"]:
-        chunks.append("\n\n".join(current))
+    # The in-repo file is a full Project Gutenberg download. Chunk only the
+    # book between the START/END markers: the header and the licence are
+    # modern Gutenberg text, not 1918 Strunk, and counted as such they put
+    # post-1918 prose into the "1918" essay slice.
+    chunks = gutenberg_chunks(PD_SOURCE.read_text(encoding="utf-8"))
     pairs = [
         (
             {
                 "register": "essay",
                 "author": "public-domain",
                 "date": "1918",
-                "extraction": "chunk.v1",
+                "extraction": "chunk.v2",
             },
             chunk,
             {
@@ -448,18 +462,29 @@ NEWS_MIN_THE_RATIO = 0.02  # crude English check: "the" frequency
 OCR_CLEAN_VERSION = "ocr-chunk.v2"
 
 
-def api_get_with_retry(url: str, params: dict, sleep: float, attempts: int = 5) -> dict:
-    """loc.gov JSON with backoff: the API 503s hard on bursts, for minutes."""
+FETCH_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException)
+
+
+def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4) -> str:
+    """fetch_text with linear backoff on rate limits and transient failures.
+
+    Archive endpoints answer bursts with 429/503, and a read timeout raises
+    TimeoutError (an OSError, not a URLError). Other HTTP errors (404 and the
+    like) are permanent and raise at once.
+    """
     for attempt in range(1, attempts + 1):
         try:
-            return api_get(url, params, sleep)
+            return fetch_text(url, sleep)
         except urllib.error.HTTPError as error:
-            if error.code in (429, 503) and attempt < attempts:
-                wait = 90 * attempt
-                print(f"rate-limited ({error.code}); backing off {wait}s", flush=True)
-                time.sleep(wait)
-                continue
-            raise
+            if error.code not in (429, 503) or attempt == attempts:
+                raise
+            wait = 30 * attempt
+        except FETCH_ERRORS:
+            if attempt == attempts:
+                raise
+            wait = 10 * attempt
+        print(f"fetch failed for {url}; retrying in {wait}s", flush=True)
+        time.sleep(wait)
     raise RuntimeError("unreachable")
 
 
@@ -540,12 +565,15 @@ def build_news(args: argparse.Namespace) -> int:
         {
             "q": IA_QUERY,
             "fl[]": "identifier",
+            # Without an explicit sort the result order is not stable, so a
+            # rebuild could select different issues.
+            "sort[]": "identifier asc",
             "rows": str(args.issues),
             "page": "1",
             "output": "json",
         }
     )
-    payload = json.loads(fetch_text(search_url, args.sleep))
+    payload = json.loads(fetch_text_with_retry(search_url, args.sleep))
     identifiers = [
         doc["identifier"] for doc in payload.get("response", {}).get("docs", [])
     ]
@@ -558,8 +586,8 @@ def build_news(args: argparse.Namespace) -> int:
             break
         url = f"https://archive.org/download/{ident}/{ident}_djvu.txt"
         try:
-            raw = fetch_text(url, args.sleep)
-        except (urllib.error.HTTPError, urllib.error.URLError):
+            raw = fetch_text_with_retry(url, args.sleep)
+        except FETCH_ERRORS:
             dropped["download-failed"] += 1
             continue
         kept_this_issue = 0
@@ -639,7 +667,7 @@ def build_hf_news(args: argparse.Namespace) -> int:
         )
         try:
             payload = json.loads(fetch_text(f"{HF_ROWS_API}?{query}", args.sleep))
-        except (urllib.error.URLError, OSError, http.client.HTTPException) as error:
+        except FETCH_ERRORS as error:
             dropped["offset-fetch-failed"] += 1
             print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
             continue
@@ -768,66 +796,85 @@ def build_essays(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------- fetch / verify
 
 
+REBUILD_HINT = {
+    "gutenberg-work": "build-essays",
+    "news-page": "build-news",
+    "hf-news": "build-hf-news",
+    "forum-post": "build-forum",
+}
+
+
 def fetch(args: argparse.Namespace) -> int:
-    """Repopulate cache: public-domain from the repo, others via local sources."""
+    """Repopulate cache: public-domain from the repo, wiki via local sources.
+
+    Other kinds are rebuilt by their own build-* subcommand; fetch says which
+    ones are missing and exits non-zero while any entry stays uncached.
+    """
     manifest = load_manifest()
     local = load_local_sources()["sources"]
-    missing = [
-        entry
-        for entry in manifest["entries"]
-        if not (CACHE_DIR / f"{entry['id']}.txt").exists()
-    ]
+    missing = [entry for entry in manifest["entries"] if not cache_path(entry["id"]).exists()]
     if any(e["kind"] == "public-domain" for e in missing):
         build_pd(args)
     wiki_entries = [
         e for e in missing if e["kind"] == "wiki-revision" and e["id"] in local
     ]
-    unsourced = [
-        e
-        for e in missing
-        if e["kind"] != "public-domain" and e["id"] not in local
-    ]
-    if unsourced:
+    unsourced_wiki = sum(
+        1 for e in missing if e["kind"] == "wiki-revision" and e["id"] not in local
+    )
+    if unsourced_wiki:
         print(
-            f"NOTE: {len(unsourced)} entries have no locator in "
+            f"NOTE: {unsourced_wiki} wiki entries have no locator in "
             f"{LOCAL_SOURCES_PATH.name} on this machine (the corpus is anonymous "
-            "by design); rebuild them with the build-* subcommands where the "
-            "sources are available."
+            "by design)."
         )
-    for start in range(0, len(wiki_entries), 50):
-        batch = wiki_entries[start : start + 50]
-        payload = api_get(
-            local[batch[0]["id"]]["api"],
-            {
-                "action": "query",
-                "prop": "revisions",
-                "revids": "|".join(str(local[e["id"]]["revid"]) for e in batch),
-                "rvprop": "ids|content",
-                "rvslots": "main",
-            },
-            args.sleep,
-        )
-        by_revid = {local[e["id"]]["revid"]: e for e in batch}
-        for page in payload.get("query", {}).get("pages", {}).values():
-            for rev in page.get("revisions", []):
-                entry = by_revid.get(rev["revid"])
-                if entry:
-                    write_cache(
-                        entry["id"],
-                        wikitext_strip(rev.get("slots", {}).get("main", {}).get("*", "")),
-                    )
-    print(f"fetch: attempted {len(wiki_entries)} wiki entries; run verify next")
-    return 0
+    by_kind = Counter(e["kind"] for e in missing if e["kind"] in REBUILD_HINT)
+    for kind, count in sorted(by_kind.items()):
+        print(f"NOTE: {count} {kind} entries missing; rebuild them with `{REBUILD_HINT[kind]}`.")
+    # Batch per API endpoint: a batch must not borrow the first entry's wiki.
+    by_api: dict[str, list[dict]] = {}
+    for entry in wiki_entries:
+        by_api.setdefault(local[entry["id"]]["api"], []).append(entry)
+    for api_url, api_entries in sorted(by_api.items()):
+        for start in range(0, len(api_entries), 50):
+            batch = api_entries[start : start + 50]
+            payload = api_get(
+                api_url,
+                {
+                    "action": "query",
+                    "prop": "revisions",
+                    "revids": "|".join(str(local[e["id"]]["revid"]) for e in batch),
+                    "rvprop": "ids|content",
+                    "rvslots": "main",
+                },
+                args.sleep,
+            )
+            by_revid = {local[e["id"]]["revid"]: e for e in batch}
+            for page in payload.get("query", {}).get("pages", {}).values():
+                for rev in page.get("revisions", []):
+                    entry = by_revid.get(rev["revid"])
+                    if entry:
+                        write_cache(
+                            entry["id"],
+                            wikitext_strip(rev.get("slots", {}).get("main", {}).get("*", "")),
+                        )
+    still_missing = sum(
+        1 for entry in load_manifest()["entries"] if not cache_path(entry["id"]).exists()
+    )
+    print(
+        f"fetch: attempted {len(wiki_entries)} wiki entries; "
+        f"{still_missing} entries still uncached; run verify next"
+    )
+    return 1 if still_missing else 0
 
 
 def verify(_args: argparse.Namespace) -> int:
     manifest = load_manifest()
     missing, mismatched, ok = [], [], 0
     for entry in manifest["entries"]:
-        path = CACHE_DIR / f"{entry['id']}.txt"
+        path = cache_path(entry["id"])
         if not path.exists():
             missing.append(entry["id"])
-        elif sha256_text(path.read_text(encoding="utf-8")) != entry["sha256"]:
+        elif sha256_text(read_cache(entry["id"])) != entry["sha256"]:
             mismatched.append(entry["id"])
         else:
             ok += 1

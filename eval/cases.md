@@ -1,4 +1,4 @@
-# Humanizer Pro v4.1 Manual Evaluation Cases
+# Humanizer Pro Manual Evaluation Cases
 
 Use these fixtures after skill changes. They serve two purposes: manual regression prompts for editing
 behavior and automated contracts for the deterministic audit CLI.
@@ -19,6 +19,7 @@ behavior and automated contracts for the deterministic audit CLI.
 ## Required Checks
 
 - `py -3 -m pytest -q tests` passes for the automated `humanizer-audit` contracts.
+  On macOS or Linux, replace `py -3` with `python3` in every command below.
 - `py -3 scripts/humanizer_audit.py eval/fixtures --json` returns schema `humanizer-audit.v1`.
 - `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/original.md eval/fixtures/fidelity/revised-drift.md --json`
   returns protected-content drift findings without style scoring.

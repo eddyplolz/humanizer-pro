@@ -446,3 +446,21 @@ disagreement ("While I understand the appeal of X, I would suggest…").
 machine-voice signal — survives even when every vocabulary tell is cleaned.
 > **Before:** While I understand the appeal of caching here, I would suggest considering invalidation complexity.  **After:** Caching doesn't work here: invalidation costs more than the reads save.
 **Fix:** say the thing; pick a side; state the asymmetry; trust the reader.
+
+---
+
+## Persistent-tells second pass
+
+Run after the main edit (SKILL.md, Persistent-Tells Second Pass). These survive a first rewrite:
+
+- Em-dash definitions: "X - a term for Y -" used as a gloss.
+- Colon titles/headings: "Topic: A Closer Look."
+- Verb-first list items: every bullet opening with "Streamline," "Empower," "Unlock."
+- Binary constructions: "not X, but Y" / "isn't about X, it's about Y."
+- "Of course" / "To be fair" concessions.
+- Payoff framing: "the real benefit is," "the takeaway is."
+- Confident-prediction endings: "those who do X will win."
+- Temporal bridges: "In today's world," "Now more than ever."
+- Industry-insider voice: "As any engineer knows," "We've all been there."
+
+If any fire, state the point plainly. Do not install a different tell.

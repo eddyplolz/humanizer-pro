@@ -66,7 +66,9 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
         if not path.exists():
             missing.append(entry["id"])
             continue
-        result = _audit.audit_text(path.read_text(encoding="utf-8"), entry["id"])
+        # Bytes, not read_text(): audit exactly the text the digest covers.
+        text = path.read_bytes().decode("utf-8")
+        result = _audit.audit_text(text, entry["id"])
         rows.append(
             {
                 "id": entry["id"],
@@ -76,15 +78,34 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
                 "risk": int(result["risk_score"]),
                 "blocked": any(f["severity"] == "error" for f in result["findings"]),
                 "rule_ids": sorted({f["id"] for f in result["findings"]}),
-                "flagged": int(result["risk_score"]) >= threshold,
             }
         )
     return rows, missing
 
 
+def is_flagged(row: dict, threshold: int) -> bool:
+    """Any non-pass CLI outcome on human text is a false positive.
+
+    A block (exit 2) fails a CI gate as surely as a review (exit 1), so it
+    counts whatever the risk score. The fixture readout below already counts
+    blocks as detections; leaving them out here hid human blocks.
+    """
+    return row["risk"] >= threshold or row["blocked"]
+
+
+def median(values: list[int]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    middle = len(ordered) // 2
+    if len(ordered) % 2:
+        return ordered[middle]
+    return (ordered[middle - 1] + ordered[middle]) / 2
+
+
 def slice_stats(rows: list[dict], threshold: int) -> dict:
     n = len(rows)
-    flagged = sum(1 for r in rows if r["risk"] >= threshold)
+    flagged = sum(1 for r in rows if is_flagged(r, threshold))
     blocked = sum(1 for r in rows if r["blocked"])
     low, high = wilson_interval(flagged, n)
     return {
@@ -93,7 +114,7 @@ def slice_stats(rows: list[dict], threshold: int) -> dict:
         "fpr": round(flagged / n, 4) if n else None,
         "fpr_ci95": [round(low, 4), round(high, 4)],
         "blocked": blocked,
-        "median_risk": sorted(r["risk"] for r in rows)[n // 2] if n else None,
+        "median_risk": median([r["risk"] for r in rows]),
     }
 
 
@@ -139,8 +160,13 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
                 {
                     "path": rel,
                     "risk": int(audit["risk_score"]),
-                    "detected": int(audit["risk_score"]) >= threshold
-                    or any(f["severity"] == "error" for f in audit["findings"]),
+                    "detected": is_flagged(
+                        {
+                            "risk": int(audit["risk_score"]),
+                            "blocked": any(f["severity"] == "error" for f in audit["findings"]),
+                        },
+                        threshold,
+                    ),
                 }
             )
         result["fixture_tp_anecdotal"] = {
@@ -217,7 +243,10 @@ def render_results_md(result: dict) -> str:
         "claimed: there is no machine-generated corpus in this repo yet.",
         "",
         f"- Documents: **{result['corpus_documents']}**",
-        f"- Review threshold: **{result['threshold']}** (the CLI default)",
+        f"- Review threshold: **{result['threshold']}**"
+        + (" (the CLI default)" if result["threshold"] == DEFAULT_THRESHOLD else ""),
+        "- Flagged means any non-pass exit: risk at or above the threshold, or a",
+        "  block (exit 2) at any score.",
     ]
     if result["missing_cache"]:
         lines.append(
@@ -243,19 +272,22 @@ def render_results_md(result: dict) -> str:
         lines.append(row(f"register: {reg}", stats))
     for author, stats in result["by_author"].items():
         lines.append(row(f"author: {author}", stats))
-    lines.extend(
-        [
-            "",
-            "## FPR by review threshold",
-            "",
-            "| Threshold | " + " | ".join(result["by_register"]) + " |",
-            "|---|" + "|".join("---" for _ in result["by_register"]) + "|",
-        ]
-    )
-    for t, per_register in result["threshold_sweep_fpr"].items():
-        lines.append(
-            f"| {t} | " + " | ".join(pct(per_register[reg]) for reg in result["by_register"]) + " |"
+    # With nothing cached there are no register columns, and an empty table
+    # renders as broken Markdown.
+    if result["by_register"]:
+        lines.extend(
+            [
+                "",
+                "## FPR by review threshold",
+                "",
+                "| Threshold | " + " | ".join(result["by_register"]) + " |",
+                "|---|" + "|".join("---" for _ in result["by_register"]) + "|",
+            ]
         )
+        for t, per_register in result["threshold_sweep_fpr"].items():
+            lines.append(
+                f"| {t} | " + " | ".join(pct(per_register[reg]) for reg in result["by_register"]) + " |"
+            )
     lines.extend(
         [
             "",
@@ -274,7 +306,8 @@ def render_results_md(result: dict) -> str:
             "",
             "- Register mapping: forum posts → chat, wiki revisions → wiki,",
             "  public-domain prose (Strunk 1918, Emerson, Thoreau, Twain) → essay,",
-            "  Internet Archive newspaper issues (1900–1922) → news. The essay and",
+            "  Internet Archive newspaper issues (1900–1922) and OpenCulture",
+            "  US-PD-Newspapers pages (dated up to 1928) → news. The essay and",
             "  news slices measure century-old prose, stated rather than hidden.",
             "- The news pool is OCR of old newsprint: an alphabetic-ratio",
             "  quality gate bounds the OCR noise but does not eliminate it, so a news",

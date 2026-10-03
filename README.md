@@ -150,16 +150,16 @@ Strictness also adapts to what you are writing. A chat message, an essay, a news
 
 ## The evidence
 
-Claims about false positives get measured here, not asserted. The repo carries a hash-only corpus of 2,151 human documents, all written before ChatGPT existed, so any flag on one is a false positive by construction. Rates at the default threshold ([full table and method](corpus/RESULTS.md)):
+Claims about false positives get measured here, not asserted. The repo carries a hash-only corpus of 2,145 human documents, all written before ChatGPT existed, so any flag on one is a false positive by construction. Rates at the default threshold, measured on the 1,912 documents cached at the time (news n=261) and before the 4.13.0 fixes ([full table and method](corpus/RESULTS.md)):
 
 | Register | False-positive rate |
 |---|---|
-| Chat (forum posts) | 0.0% |
+| Chat (forum posts) | 0.0% (plus 1 of 764 blocked; see note) |
 | Essays | 0.0% |
-| News (1900–1922 newspapers) | 0.0% |
+| News (1898–1928 newspapers) | 0.0% |
 | Encyclopedia articles | 1.5% |
 
-The corpus publishes digests, dates, and word counts, never text, names, or source locations. No true-positive rate is claimed: there is no machine-generated corpus here yet, and honest numbers beat impressive ones.
+Note: these rates count reviews (exit 1) only. One human chat post was blocked (exit 2); from 4.13.0, `fp_measure.py` counts a block as a false positive, so the next measurement will show it. The corpus publishes digests, dates, and word counts, never text, names, or source locations. No true-positive rate is claimed: there is no machine-generated corpus here yet, and honest numbers beat impressive ones.
 
 The repo also eats its own cooking. `scripts/self_scan.py` audits these very docs against recorded budgets, and both the raw and the exemption-adjusted scores are published on purpose: the raw number counts every tell this README quotes in order to warn you about it, and showing only the flattering column is the exact behavior this project exists to criticize.
 
@@ -168,13 +168,15 @@ The repo also eats its own cooking. `scripts/self_scan.py` audits these very doc
 | Path | What it is |
 |---|---|
 | `SKILL.md` | The skill's operating core: routing, principles, checklists, scoring. |
-| `reference/` | The deep material: full tell catalog, worked examples, style and wiki guides, register profiles, improvement loop. |
+| `reference/` | The deep material: full tell catalog, artifact detector, AI-check mode, worked examples, style and wiki guides, register profiles, coverage map, MATTR calibration, improvement loop. |
 | `scripts/humanizer_audit.py` | The audit and compare CLI. |
 | `scripts/self_scan.py` | Audits this repo's own docs against recorded budgets. |
 | `scripts/corpus.py` and `scripts/fp_measure.py` | Build the human-control corpus and measure false-positive rates. |
 | `corpus/` | Hash-only corpus manifest and measured results. |
 | `eval/` | Fixtures and machine-readable expectations for the CLI. |
-| `tests/` | Pytest suite for the CLI. |
+| `tests/` | Pytest suite for the CLI, compare mode, and corpus tools. |
+| `CHANGELOG.md` | Full release history. |
+| `WARP.md` | Maintainer guide: file roles, commands, change rules. |
 | `agents/openai.yaml` | Codex-facing name, description, and default prompt. |
 
 ## Contributing
@@ -184,7 +186,7 @@ New rules enter through a review loop, not a hot take: Observation, then Candida
 Before a pull request, run the checks:
 
 1. `py -3 -m pytest -q tests` (Mac or Linux: `python3 -m pytest -q tests`). Everything should pass.
-2. `py -3 scripts/self_scan.py`. It should exit 0.
+2. `py -3 scripts/self_scan.py` (Mac or Linux: `python3 scripts/self_scan.py`). It should exit 0.
 
 ## Credits and licensing
 
@@ -216,4 +218,4 @@ Pattern sources, with thanks:
 
 ## Version history
 
-Current release: **v4.12.0**, which adds MATTR (moving-average type-token ratio) as a diagnostic lexical-diversity stat. It is reported for analysis only, never as a finding or a score input: calibration against pre-2022 encyclopedic prose showed MATTR cannot separate AI from human writing without over-flagging the encyclopedic register, so it informs rather than judges. Just before it, v4.11.2 relabeled the bypass count `invisible`, v4.11.1 closed a variation-selector shielding hole, and v4.11.0 hardened the detector-bypass pass against Unicode tag characters and noncharacters. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
+Current release: **v4.13.0**, a bug-fix release from a full-repo review. Usage errors now exit 3 instead of colliding with the block code, several rules stop double-counting or matching across paragraphs, the tokenizer handles accented letters and curly apostrophes, compare mode aligns quotes instead of pairing them by position, and the MATTR calibration page is corrected. The Strunk corpus pool also drops Project Gutenberg licence text it had counted as 1918 prose. Before it, v4.12.0 added MATTR as a diagnostic stat. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).

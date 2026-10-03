@@ -22,7 +22,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
 metadata:
-  version: "4.12.0"
+  version: "4.13.0"
 ---
 
 # Humanizer Pro: Remove AI Writing Tells
@@ -219,19 +219,9 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
 
 ## Persistent-Tells Second Pass
 
-After the main edit, scan for:
-
-- Em-dash definitions: "X - a term for Y -" used as a gloss.
-- Colon titles/headings: "Topic: A Closer Look."
-- Verb-first list items: every bullet opening with "Streamline," "Empower," "Unlock."
-- Binary constructions: "not X, but Y" / "isn't about X, it's about Y."
-- "Of course" / "To be fair" concessions.
-- Payoff framing: "the real benefit is," "the takeaway is."
-- Confident-prediction endings: "those who do X will win."
-- Temporal bridges: "In today's world," "Now more than ever."
-- Industry-insider voice: "As any engineer knows," "We've all been there."
-
-If any fire, state the point plainly. Do not install a different tell.
+After the main edit, run the second-pass list in `reference/tell-catalog.md` (em-dash glosses,
+colon titles, verb-first bullets, binary constructions, payoff framing, and the rest). If any fire,
+state the point plainly. Do not install a different tell.
 
 ---
 
@@ -336,28 +326,13 @@ Below 42/60 means revise. A low Restraint score means put edits back, not cut mo
 
 ## Output Format
 
-For ordinary "humanize this" requests, return:
-
-1. Final rewrite.
-2. Source-risk notes only if artifacts, placeholders, or unsupported claims appeared.
-
-For full audits, return:
-
-1. Score.
-2. Artifact flags.
-3. Draft rewrite.
-4. "What makes this AI?" with family tags.
-5. Final rewrite after anti-swap and restraint checks.
-6. Short note on what changed and what was kept on purpose.
-
-For AI check/audit-only requests, return:
-
-1. Score and pass/review/block status.
-2. Blocker flags.
-3. Family hits.
-4. Source-risk notes.
-5. Quoted evidence.
-6. No rewrite unless the user separately asks for one.
+- **"Humanize this":** the final rewrite, plus source-risk notes only if artifacts, placeholders,
+  or unsupported claims appeared.
+- **Full audit:** (1) score, (2) artifact flags, (3) draft rewrite, (4) "What makes this AI?" with
+  family tags, (5) final rewrite after anti-swap and restraint checks, (6) a short note on what
+  changed and what was kept on purpose.
+- **AI check/audit-only:** (1) score and pass/review/block status, (2) blocker flags, (3) family
+  hits, (4) source-risk notes, (5) quoted evidence. No rewrite unless the user separately asks.
 
 For wiki/article mode, return neutral target text plus source-risk notes. Do not invent citations or
 add personality.

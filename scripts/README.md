@@ -5,8 +5,8 @@
 `self_scan.py` runs the audit over this repository's own documentation and gates the
 exemption-adjusted score against `self_scan_budgets.json` (exit 1 on any file over budget or
 missing a budget). Fenced code, inline code, tables, blockquotes, and quoted spans are exempt —
-they are the quoted examples the docs exist to show. Run `py -3 scripts/self_scan.py` (or with
-`--json`). Budgets are measured regression ceilings; lower them when a doc improves, and treat
+they are the quoted examples the docs exist to show. Run `py -3 scripts/self_scan.py` (POSIX:
+`python3 scripts/self_scan.py`; add `--json` for JSON). Budgets are measured regression ceilings; lower them when a doc improves, and treat
 raising one as a decision that belongs in a reviewed change.
 
 ## Corpus and FP Measurement
@@ -18,9 +18,11 @@ register, author tier, date, word count, and SHA-256 digest per document — no 
 no source locators. Entry ids derive from the digest, so they name content without describing it.
 The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
 `corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pools are
-the exception: the in-repo Strunk chunks, the Gutenberg essay works (`build-essays`), and the
-Internet Archive news chunks (`build-news`, OCR-quality-gated, rate-limit-aware) publish their
-public-domain sources so those slices are independently rebuildable. `verify` checks every cached
+the exception: the in-repo Strunk chunks (`build-pd`, offline), the Gutenberg essay works
+(`build-essays`), the Internet Archive news chunks (`build-news`), and the OpenCulture
+US-PD-Newspapers pages (`build-hf-news`) publish their public-domain sources so those slices can be
+rebuilt. The news builds are OCR-quality-gated and retry rate limits. `fetch` restores the Strunk
+pool and wiki revisions and names the `build-*` command for any other missing kind. `verify` checks every cached
 file against its digest; a test enforces the anonymity contract on every entry.
 
 `fp_measure.py` audits the cached corpus and prints false-positive rates by register and author
@@ -76,8 +78,8 @@ otherwise identical source URL is not treated as drift.
 |---:|---|
 | 0 | Pass: no blocker and risk score is below the threshold. |
 | 1 | Review: no blocker, but the risk score met or exceeded `--fail-score`. |
-| 2 | Block: artifact, placeholder, citation stub, or tracking URL found. |
-| 3 | CLI usage or read error. |
+| 2 | Block: artifact, placeholder, citation stub, tracking URL, or bypass characters found. In `--compare` mode, any protected-content drift. |
+| 3 | CLI usage or read error (argparse usage errors included). |
 
 The default review threshold is `--fail-score 60`.
 
@@ -86,7 +88,8 @@ The default review threshold is `--fail-score 60`.
 `--json` emits schema `humanizer-audit.v1` with:
 
 - `summary`: document count, max risk score, max severity, finding counts, and exit code.
-- `documents[].stats`: rhythm and structure metrics.
+- `documents[].stats`: rhythm and structure metrics, plus `type_token_ratio` and `mattr_50`
+  (diagnostic only; `null` below 50 tokens; see `reference/mattr-calibration.md`).
 - `documents[].findings`: family hits, source-risk flags, artifacts, severity, line/column, and
   quoted evidence.
 - `compare.findings`: protected-content drift findings when `--compare` is used.
