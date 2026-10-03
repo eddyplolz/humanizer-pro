@@ -17,7 +17,7 @@ from typing import Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 
-__version__ = "4.14.0"
+__version__ = "4.14.1"
 SCHEMA = "humanizer-audit.v1"
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
@@ -603,8 +603,8 @@ NAME_EXCLUDE_START = {"A", "An", "As", "At", "By", "For", "From", "If", "In", "I
 # word: it appears lowercase somewhere in the compared texts, or it is a known
 # function word or sentence opener. Without this, ordinary copy edits reported
 # protected-name drift -- deleting a leading connective recapitalizes the next
-# word ("Additionally, comedian Luis Vilgarde" -> "Comedian Luis Vilgarde"), and
-# a determiner fix rewrites the head ("These UHRSD" -> "The UHRSD"). Only the
+# word ("Additionally, comedian Dana Whitfield" -> "Comedian Dana Whitfield"), and
+# a determiner fix rewrites the head ("These UCBSD" -> "The UCBSD"). Only the
 # head is dropped, so the real name inside the run still compares. A head with
 # no such evidence is kept, so the check still fails closed on a real name.
 NAME_SENTENCE_END = ".!?"
@@ -613,7 +613,7 @@ NAME_HEAD_RE = re.compile(r"\S+\s+")
 LOWERCASE_WORD_RE = re.compile(r"\b[a-z][A-Za-z0-9'.&-]*")
 # NAME_RE token characters include ".", so a greedy run swallows the period that
 # ends a sentence and joins the next sentence's first word ("... School
-# District. These UHRSD"). A boundary is a word of at least three letters ending
+# District. These UCBSD"). A boundary is a word of at least three letters ending
 # in a period, followed by a capital -- which leaves "St.", "U.S." and the named
 # abbreviations below joined to what follows them.
 NAME_SENTENCE_SPLIT_RE = re.compile(r"(?<=[A-Za-z]{3}\.)\s+(?=[A-Z])")

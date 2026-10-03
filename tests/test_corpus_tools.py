@@ -82,7 +82,7 @@ def test_wikitext_strip_reduces_markup_to_prose() -> None:
     wikitext = (
         "{{Infobox nation|name=Testland}}\n"
         "== History ==\n"
-        "The '''Republic''' was founded in [[Alduria|the old kingdom]] "
+        "The '''Republic''' was founded in [[Examplia|the old kingdom]] "
         "in 1699.<ref>Chronicle, vol. 2</ref>\n"
         "[[Category:Nations]]\n"
     )
@@ -160,6 +160,8 @@ def test_manifest_is_structurally_sound() -> None:
     assert len(ids) == len(set(ids)), "entry ids must be unique"
     for entry in entries:
         assert entry["kind"] in corpus.ID_PREFIX
+        # The maintainer's own writing never enters the public manifest.
+        assert entry["kind"] not in corpus.PRIVATE_KINDS, entry["id"]
         assert entry["register"] in corpus.MIN_WORDS
         machine = entry["kind"] in corpus.MACHINE_KINDS
         assert entry["label"] == ("machine" if machine else "human")
@@ -175,6 +177,11 @@ def test_manifest_is_structurally_sound() -> None:
         assert re.fullmatch(rf"{prefix}-[0-9a-f]{{12}}", entry["id"])
         assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
+    # Only totals are public for the private pools.
+    for kind, pool in manifest.get("private_pools", {}).items():
+        assert kind in corpus.PRIVATE_KINDS
+        assert set(pool) == {"entries", "registers"}
+        assert pool["entries"] == sum(pool["registers"].values())
 
 
 def test_manifest_is_anonymous() -> None:
@@ -224,7 +231,8 @@ def test_audit_corpus_accounts_for_every_entry() -> None:
     On a fresh clone the cache is empty (it is gitignored), so every entry
     lands in `missing`; after corpus.py fetch/build they land in `rows`.
     """
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    # Public entries plus, on the maintainer's machine, the private ones.
+    manifest = corpus.load_manifest()
     rows, missing = fp_measure.audit_corpus(threshold=60)
     assert len(rows) + len(missing) == len(manifest["entries"])
 
@@ -244,6 +252,7 @@ def test_audit_corpus_audits_cached_entries(tmp_path, monkeypatch) -> None:
     cache.mkdir()
     (cache / f"{cached}.txt").write_text("[Your Name] wrote this.", encoding="utf-8")
     monkeypatch.setattr(fp_measure, "MANIFEST_PATH", manifest_path)
+    monkeypatch.setattr(fp_measure, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
     monkeypatch.setattr(fp_measure, "CACHE_DIR", cache)
     rows, missing = fp_measure.audit_corpus(threshold=60)
     assert missing == ["pd-ba9876543210"]
@@ -307,6 +316,7 @@ def test_digest_split_is_a_stable_quarter() -> None:
 def test_save_pool_labels_machine_entries(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
     monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
     monkeypatch.setattr(corpus, "LOCAL_SOURCES_PATH", tmp_path / "sources.local.json")
     monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
     fields = {"register": "wiki", "author": "machine", "model": "raid:gpt4", "date": "2023", "extraction": "x"}
@@ -562,6 +572,7 @@ def _measure_fixture(tmp_path, monkeypatch, entries):
     for entry, text in entries:
         (cache / f"{entry['id']}.txt").write_text(text, encoding="utf-8")
     monkeypatch.setattr(fp_measure, "MANIFEST_PATH", manifest_path)
+    monkeypatch.setattr(fp_measure, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
     monkeypatch.setattr(fp_measure, "CACHE_DIR", cache)
     return fp_measure.measure(threshold=5, include_fixture_tp=False)
 
@@ -642,3 +653,44 @@ def test_wildchat_build_keeps_the_pool_when_nothing_arrives(monkeypatch) -> None
     assert corpus.build_wildchat(argparse.Namespace(target=10, sleep=0)) == 1
     assert corpus.build_peps(argparse.Namespace(target=10, sleep=0)) == 1
     assert saved == []
+
+
+def test_private_pools_never_reach_the_public_manifest(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
+    forum = {"id": "forum-0123456789ab", "kind": "forum-post", "register": "chat", "author": "maintainer",
+             "sha256": "0123456789ab" + "0" * 52, "words": 60}
+    pd = {"id": "pd-ba9876543210", "kind": "public-domain", "register": "essay", "author": "public-domain",
+          "sha256": "ba9876543210" + "0" * 52, "words": 600}
+    corpus.save_manifest({"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": [forum, pd]})
+    public_text = (tmp_path / "manifest.json").read_text(encoding="utf-8")
+    assert "forum-0123456789ab" not in public_text and "0123456789ab" not in public_text
+    public = json.loads(public_text)
+    assert [e["id"] for e in public["entries"]] == ["pd-ba9876543210"]
+    assert public["private_pools"] == {"forum-post": {"entries": 1, "registers": {"chat": 1}}}
+    assert {e["id"] for e in corpus.load_manifest()["entries"]} == {"forum-0123456789ab", "pd-ba9876543210"}
+    # A public clone (no private file) keeps the published totals when it saves.
+    (tmp_path / "manifest.private.json").unlink()
+    corpus.save_manifest(corpus.load_manifest())
+    assert json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"] == public["private_pools"]
+
+
+def test_rebuilding_one_private_pool_keeps_the_other_pools_totals(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
+    published = {"forum-post": {"entries": 5, "registers": {"chat": 5}},
+                 "wiki-revision": {"entries": 3, "registers": {"wiki": 3}}}
+    base = {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "private_pools": published}
+    corpus._write_json(tmp_path / "manifest.json", {**base, "entries": []})
+    wiki = {"id": "wiki-00000000000a", "kind": "wiki-revision", "register": "wiki", "author": "mixed",
+            "sha256": "a" * 64, "words": 400}
+    # A fresh clone rebuilds only the wiki pool: the forum total stays published.
+    corpus.save_manifest({**corpus.load_manifest(), "entries": [wiki]})
+    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
+    assert pools == {"forum-post": published["forum-post"], "wiki-revision": {"entries": 1, "registers": {"wiki": 1}}}
+    # A pool this machine held and then emptied drops out of the totals.
+    corpus.save_manifest({**corpus.load_manifest(), "entries": []})
+    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
+    assert pools == {"forum-post": published["forum-post"]}

@@ -43,35 +43,35 @@ def evidences(original: str, revised: str) -> set[str]:
 
 def test_deleting_a_leading_connective_does_not_move_a_name():
     original = (
-        "Performers have brought stories from Hato Rey to life. "
-        "Additionally, comedian Luis Vilgarde has captured the hearts of many."
+        "Performers have brought stories from Calder Bay to life. "
+        "Additionally, comedian Dana Whitfield has captured the hearts of many."
     )
     revised = (
-        "Performers have brought stories from Hato Rey to life. "
-        "Comedian Luis Vilgarde has also captured the hearts of many."
+        "Performers have brought stories from Calder Bay to life. "
+        "Comedian Dana Whitfield has also captured the hearts of many."
     )
     assert name_findings(original, revised) == []
 
 
 def test_determiner_fix_does_not_move_a_name():
     original = (
-        "Education is accessible through the Unified Hato Rey School District. "
-        "These UHRSD is known for a curriculum that balances academic and arts education."
+        "Education is accessible through the Unified Calder Bay School District. "
+        "These UCBSD is known for a curriculum that balances academic and arts education."
     )
     revised = (
-        "Education is accessible through the Unified Hato Rey School District. "
-        "The UHRSD is known for a curriculum that balances academic and arts education."
+        "Education is accessible through the Unified Calder Bay School District. "
+        "The UCBSD is known for a curriculum that balances academic and arts education."
     )
     assert name_findings(original, revised) == []
 
 
 def test_removing_a_banned_opener_does_not_move_a_name():
     original = (
-        "The Port of Hato Rey handles cargo. "
+        "The Port of Calder Bay handles cargo. "
         "Furthermore, the Aeropuerto de Boriquen handles freight."
     )
     revised = (
-        "The Port of Hato Rey handles cargo. "
+        "The Port of Calder Bay handles cargo. "
         "The Aeropuerto de Boriquen also handles freight."
     )
     assert name_findings(original, revised) == []
@@ -82,14 +82,14 @@ def test_removing_a_banned_opener_does_not_move_a_name():
 
 def test_trimming_one_of_many_mentions_is_not_a_dropped_name():
     original = (
-        "Hato Rey is the capital. The Mayor of Hato Rey serves four years. "
+        "Calder Bay is the capital. The Mayor of Calder Bay serves four years. "
         "In addition to day-to-day governance, the Mayor shapes the long-term "
-        "vision for Hato Rey. The economy of Hato Rey is diversified."
+        "vision for Calder Bay. The economy of Calder Bay is diversified."
     )
     revised = (
-        "Hato Rey is the capital. The Mayor of Hato Rey serves four years. "
+        "Calder Bay is the capital. The Mayor of Calder Bay serves four years. "
         "In addition to day-to-day governance, the Mayor shapes long-term "
-        "planning priorities. The economy of Hato Rey is diversified."
+        "planning priorities. The economy of Calder Bay is diversified."
     )
     assert name_findings(original, revised) == []
 
