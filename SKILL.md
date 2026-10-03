@@ -58,7 +58,7 @@ Keep this file as the operating core. Load references only when the mode calls f
   `reference/ai-check.md`. When the installed repo is available, run `scripts/humanizer_audit.py` for
   deterministic artifact, source-risk, tell-family, rhythm, and JSON checks. Return score, blocker
   flags, family hits, source-risk notes, and quoted evidence. Do not rewrite unless the user
-  separately asks. Reject detector-bypass claims and optimize-until-green loops.
+  separately asks.
 - **Deep edit / full audit:** Triggered by "full audit," "what makes this AI," risky publication, or
   an explicit request for audit plus rewrite. Return score, flags, rationale, draft rewrite,
   anti-swap check, and final rewrite.
@@ -91,11 +91,11 @@ Normal output is concise. Full audits are opt-in.
    formulaic spontaneity are new tells, not personality.
 5. **Tells evolve.** Treat word lists as dated clues. Flag a word because it clusters and reads as a
    machine default here, not because it appears on a list.
-6. **Multi-pass, capped at two.** The first rewrite removes obvious tells and may expose subtler
-   ones. Always do the anti-swap and restraint checks before calling it done — then stop. A rewrite
-   plus one corrective pass clears what is clearable; a third full pass costs a regeneration,
-   rarely finds more, and drifts toward over-editing. Go past two only when the user explicitly
-   asks for another round.
+6. **Multi-pass until clean.** The first rewrite removes obvious tells and often exposes subtler
+   ones. Re-run the audit after every pass and keep editing while it still finds tells. After
+   each pass, do the anti-swap and restraint checks so facts, names, and numbers never drift
+   and clean sentences are not churned. Stop when the audit is clean or when a pass changes
+   nothing.
 7. **For wiki/article work, neutrality outranks voice.** Do not add jokes, first person, casualness,
    unsupported significance, or synthetic "human warmth." Preserve or flag sources.
 8. **For style work, clarity outranks rule-worship.** Use Strunk's concrete language, active voice,

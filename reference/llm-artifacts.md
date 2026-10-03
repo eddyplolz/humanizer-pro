@@ -85,8 +85,8 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
   (verb-anchored on purpose: ordinary `*italic emphasis*` stays untouched).
 - **Fix:** Delete the marker. Nothing in finished prose is performed by the narrator.
 
-### 11. Detector-bypass characters
-- **Looks like:** invisible characters spliced into text to defeat exact-string detectors —
+### 11. Hidden and lookalike characters
+- **Looks like:** invisible characters spliced into text —
   zero-width spaces and word joiners inside words, Unicode **tag characters** (U+E0000–E007F) and
   **noncharacters** used to hide payloads with no visible glyph at all, or Cyrillic/Greek lookalike
   letters in Latin words (`cruсial` with a Cyrillic `с`). Humans do not paste these into their own
@@ -98,8 +98,8 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
   non-joiner, a Devanagari ligature — and stripped only between Latin letters where they have no
   shaping role. A single leading BOM is ordinary file encoding and exempt; genuine Cyrillic or
   Greek prose never matches — only mixed-script words do.
-- **Fix:** Remove the characters and treat the text with suspicion: someone or something tried to
-  make it pass a scanner, which is itself the strongest tell on this page.
+- **Fix:** Remove the characters. They break search, copy-paste, and spell-check, and the text
+  reads the same without them.
 
 ## Why "delete only" is not enough
 Every artifact above sits where a **real reference or value** belonged. The model emitted the stub

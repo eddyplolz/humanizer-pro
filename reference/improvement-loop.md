@@ -1,8 +1,7 @@
 # Improvement Loop
 
 Humanizer Pro can improve over time, but only through review. Do not add automatic memory
-accumulation, detector APIs, autonomous optimize-until-green loops, large scripts, or one-off clever
-observations directly into `SKILL.md`.
+accumulation, large scripts, or one-off clever observations directly into `SKILL.md`.
 
 ## Promotion Path
 
@@ -27,7 +26,6 @@ Reject candidates that:
 - Encourage over-editing.
 - Duplicate an existing rule.
 - Depend on a single user's one-off taste.
-- Require a detector API or external service.
 - Need more than about 80 words to state.
 
 ## 3. Fixture
