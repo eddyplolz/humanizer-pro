@@ -279,9 +279,38 @@ ARTIFACT_RULES = [
         False,
     ),
     Rule(
+        "artifact.assistant_self_disclosure",
+        9,
+        re.compile(
+            # The assistant speaking as itself: "As an AI language model, I".
+            # Anchored on the first person so a sentence *about* a language
+            # model ("the film is about an AI language model") stays clear.
+            r"\b(?:as an? (?:ai|artificial intelligence|large language model|llm)(?: (?:language )?(?:model|assistant|chatbot|system))?,? i\b|"
+            r"i(?:'m| am) (?:just |only )?an? (?:ai|artificial intelligence|large language model|llm)(?: (?:language )?(?:model|assistant|chatbot))?\b|"
+            r"i (?:do not|don't) have (?:access to )?real-time (?:data|information|access)|"
+            r"i (?:cannot|can't|am unable to) browse the internet)",
+            re.I,
+        ),
+        "Assistant self-disclosure leaked from a chat reply",
+        "error",
+        False,
+    ),
+    Rule(
         "artifact.bracket_placeholder",
         9,
-        re.compile(r"\[(?:Your Name|Entertainer's Name|insert[^\]]*|describe[^\]]*|link to[^\]]*)\]", re.I),
+        re.compile(
+            # Generic fill-in blanks ([Recipient Name], [Company], [Date]) as
+            # well as the on-wiki forms. A Markdown link or reference
+            # ("[Your account](url)", "[Company][1]", "[1]: url") and a wiki
+            # link ("[[Date]]") are not placeholders, so an opening bracket
+            # before, or a "(" ":" "[" after, cancels the match.
+            r"(?<!\[)\[(?:Your Name|Entertainer's Name|insert[^\]]*|describe[^\]]*|link to[^\]]*|"
+            r"(?:Your|Insert|Recipient|Client|Candidate|Author|Employer|Manager|Company|Product|"
+            r"Organization|Organisation|Address|City|State|Country|Email|Phone|Date|Name|Title|"
+            r"Position|Job Title|Signature|Website|URL|Number|Amount|Quantity|Reason|Topic|Subject)"
+            r"(?: [A-Za-z]+){0,3})\](?!\s*[\(\[:])",
+            re.I,
+        ),
         "Unfilled bracket placeholder",
         "error",
         True,
@@ -402,6 +431,11 @@ FAMILY_RULES = [
             # greedy ".+", "not just" in one paragraph matched the last "but"
             # anywhere later in the document.
             r"\b(?:not just\b[^.!?]{0,150}?\bbut\b|not only\b[^.!?]{0,150}?\bbut also\b|"
+            # "not just X; it's Y" / "not just X. It's Y": the contrast lands in
+            # the next clause or sentence without a "but". Anchored on a
+            # preceding copula ("is/it's not just") so "had not just arrived"
+            # stays clear.
+            r"(?:is|'s|are|was|were)\s+not just\b[^.!?;,]{0,120}?[.;,:]\s*(?:it'?s|it is|that'?s|this is|they'?re)\b|"
             r"here's the thing|you know what|watch this|"
             r"what if i told you|let that sink in|plot twist|full stop|see what i did there)\b",
             re.I,
@@ -440,7 +474,9 @@ FAMILY_RULES = [
             r"\bof course!|"
             r"\b(?:great question|here's a polished|i hope this helps|certainly|best regards|"
             r"let me know if|would you like me|let me walk you through|here's how i'd think about|"
-            r"while i understand the appeal|as of my (?:last|training) (?:update|cutoff)|"
+            r"while i understand the appeal|"
+            r"(?:as of|up to|based on) my (?:last |most recent |latest )?(?:knowledge |training )?(?:update|cutoff|data)|"
+            r"my (?:knowledge|training) (?:cutoff|data)(?: only)? (?:goes|extends|runs) (?:up )?to|my knowledge cutoff|"
             r"on the one hand\b.{0,120}\bon the other)\b",
             re.I,
         ),
