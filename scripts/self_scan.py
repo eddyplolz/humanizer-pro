@@ -80,7 +80,8 @@ def scan(budgets: dict[str, int]) -> dict[str, object]:
     for path in scan_targets():
         rel = path.relative_to(ROOT).as_posix()
         text = path.read_text(encoding="utf-8")
-        raw = _audit.audit_text(text, rel)
+        # Raw means every match, quoted examples and code included.
+        raw = _audit.audit_text(text, rel, include_code=True)
         exempt = _audit.audit_text(apply_exemptions(text), rel)
         budget = budgets.get(rel)
         over = budget is not None and int(exempt["risk_score"]) > budget
