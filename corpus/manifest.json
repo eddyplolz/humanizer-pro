@@ -22616,44 +22616,28 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2290b1583baa",
+      "extraction": "chunk.v2",
+      "id": "pd-03c6a992e116",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2290b1583baacd22b8a917efa061f4ecf2a49ba45e9d318255f60e602967e51d",
+      "sha256": "03c6a992e11684caa2c80fe1dbfe05eacedc89f01e071e7a9ae89be60124c9e1",
       "source": {
-        "chunk": 32,
+        "chunk": 3,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 522
+      "words": 509
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-250c1d57c1ab",
+      "extraction": "chunk.v2",
+      "id": "pd-0c61f103917e",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "250c1d57c1abaa81aa25476c4cf2b7d0ced8b2c2d5c005fb8dc61502a9a6420a",
-      "source": {
-        "chunk": 6,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 502
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2a6e2fd17d03",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "2a6e2fd17d03ca358d796c5503849fd76a1095f0a7a334ce5c73518f9dcb0b51",
+      "sha256": "0c61f103917e2b949095d01bd51e34bcbdee246091dc278a9dd602112d1fb294",
       "source": {
         "chunk": 24,
         "chunk_words": 500,
@@ -22664,14 +22648,14 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2c5a8aabd415",
+      "extraction": "chunk.v2",
+      "id": "pd-14726b29c750",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2c5a8aabd415dfbe9cdc3563162f46416c34b81b9ba869a34432ad52f90e9496",
+      "sha256": "14726b29c7505ad41626010e85311278917358f64221598fea81dcf305299075",
       "source": {
-        "chunk": 33,
+        "chunk": 4,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22680,110 +22664,94 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2ef47f77ed6e",
+      "extraction": "chunk.v2",
+      "id": "pd-159f6e269714",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2ef47f77ed6ee09953578c7e390b6b99e2ba9b08b4d0e749b0b883c3324fb405",
+      "sha256": "159f6e269714b1b21222841c0850fa1b1e63a83af050996e9defa743d0f51992",
       "source": {
-        "chunk": 7,
+        "chunk": 5,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 501
+      "words": 511
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-33e96cd2cb64",
+      "extraction": "chunk.v2",
+      "id": "pd-1ac1f067bcb8",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "33e96cd2cb64061677e1dff71d0418f4339a4518834066424c2346506aedbe4e",
+      "sha256": "1ac1f067bcb87a281d7c2d5aaaa7a3979cf2a0de8d41e1053c61cbc6c7459980",
       "source": {
-        "chunk": 26,
+        "chunk": 1,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 504
+      "words": 561
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-406815607eb1",
+      "extraction": "chunk.v2",
+      "id": "pd-293793813b1a",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "406815607eb12ba1d23b4934dacf498522780a1c4977bdedefc6b8f9cb511f07",
+      "sha256": "293793813b1a7b9ab324d319f65a99dcfff92d06952104c755874ab8ad585ec1",
       "source": {
-        "chunk": 3,
+        "chunk": 17,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 505
+      "words": 543
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4206be50a664",
+      "extraction": "chunk.v2",
+      "id": "pd-2ad34074304c",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4206be50a664b7ac18fed6507fb28e56da22a27e78108b2426dcb65c8f62797c",
+      "sha256": "2ad34074304c75d26ced82c13725e083043ab49f4394ebf036e4269f0d694e42",
       "source": {
-        "chunk": 31,
+        "chunk": 11,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 599
+      "words": 508
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4b839e25254d",
+      "extraction": "chunk.v2",
+      "id": "pd-37700fb9bff7",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4b839e25254dcde948a45a7a1ef4ffe91d3b79eea5188e32720e02b0ab67f49c",
+      "sha256": "37700fb9bff712e79fb3972e4323830b03ef7b4e1dda6b32d423081574796f01",
       "source": {
-        "chunk": 14,
+        "chunk": 16,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 501
+      "words": 533
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4d5b3e140fac",
+      "extraction": "chunk.v2",
+      "id": "pd-3a016d1e2a93",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4d5b3e140fac7f52ca6452a6e50c9115f298cba991b51c4e5d007b526d26717a",
+      "sha256": "3a016d1e2a93afcf751ed8d875a85b0d175668a4ff7f81705ad343ad0253a62a",
       "source": {
-        "chunk": 13,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 537
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-5b2d07c93379",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "5b2d07c93379a11fb76cc143aa4e632025f7f578dddb352b58e932e01a7c76a3",
-      "source": {
-        "chunk": 22,
+        "chunk": 9,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22792,30 +22760,14 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-5cb1b23ee87a",
+      "extraction": "chunk.v2",
+      "id": "pd-533e726675c4",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "5cb1b23ee87ac7963b297162b3db537e931d83cdc812458b100449dee00e19d0",
+      "sha256": "533e726675c42eea1ed3885c26c5a521d320d3c2790c1df2905d0bcd2b7f3ab9",
       "source": {
-        "chunk": 29,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 504
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-6195ccca62f6",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "6195ccca62f6f4de7c80fbe9d66ac6765da952bc09bfead9fe2da52ba70c430c",
-      "source": {
-        "chunk": 27,
+        "chunk": 23,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22824,238 +22776,46 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-65ecae351221",
+      "extraction": "chunk.v2",
+      "id": "pd-5ffabd336d70",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "65ecae351221d68411b367b2473e5732d242a3b29888bdfa80d3508d4492cd93",
-      "source": {
-        "chunk": 1,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 501
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-66a31555b3d0",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "66a31555b3d0e4191c5384baf9a8681ff2c467de52654e73ca73fe120fbb037e",
-      "source": {
-        "chunk": 2,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 509
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-714768ec3651",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "714768ec3651c126d8e7048278d656c39c65061857913fefd24b350c4a34da40",
-      "source": {
-        "chunk": 23,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 506
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-818ca6943579",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "818ca69435797c74f7e7a1f3ce799fe7482f5a7daed9c4535ca824963f4fa274",
-      "source": {
-        "chunk": 12,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 500
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-84ad1530c1e6",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "84ad1530c1e6da2308369c8b37442ceb74f68517eba1e19513a5e342eb20169a",
+      "sha256": "5ffabd336d70cb6caac2ad6947c551215fd52210229598e65d76925dd2f6c918",
       "source": {
         "chunk": 21,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 513
+      "words": 538
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-88e2e30dcefa",
+      "extraction": "chunk.v2",
+      "id": "pd-64330c01bdea",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "88e2e30dcefaa3d92524c5f0849b358ab21c93d96d661c12be2782a18ab0e15c",
+      "sha256": "64330c01bdea2828aab4603b65354a57a3a2f32b0a9baecf0753c8d54b12314c",
       "source": {
-        "chunk": 30,
+        "chunk": 7,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 544
+      "words": 568
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-89ffaaca96d6",
+      "extraction": "chunk.v2",
+      "id": "pd-65bfbd8c0d0a",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "89ffaaca96d6464ffa15a7d5cc555ddc4bf6dfd56bd80d1773302c104bad26d8",
+      "sha256": "65bfbd8c0d0a2a89e1774b8fb9497a2893d3896ada7a5e14b5a3acc74869b917",
       "source": {
-        "chunk": 17,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 510
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-91ffc4e04298",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "91ffc4e04298924822aad6637f8030ef79731bc0d4d490ac442e7384336e18f3",
-      "source": {
-        "chunk": 19,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 507
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-924f05468a0d",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "924f05468a0d6365159e33694cab5cf2e9151de96c30c22b6530247d48a984bb",
-      "source": {
-        "chunk": 9,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 502
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-99d66c83932c",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "99d66c83932c4b17d25c61393d17f0f80e006ed6e98ade0b5a2509a44a55127e",
-      "source": {
-        "chunk": 15,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 505
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-9c9d430c18a2",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "9c9d430c18a2df0bde982ec0af695659e16447db5d648729bcd7d18828d72e59",
-      "source": {
-        "chunk": 25,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 610
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-a97656df15dc",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "a97656df15dc616b4c514dabfd5b7ad96146ea55a0b0982d4d1b9b667b73e5b5",
-      "source": {
-        "chunk": 18,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 509
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-be122358a6fa",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "be122358a6fa3d58c2c8bf89840bd3d80a84949cbb7bd1c68c9c12b78f731f38",
-      "source": {
-        "chunk": 11,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 506
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-c267d471c19b",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "c267d471c19b32bc2ff97aadbe0d2e69b3415fd2073a9a4274af81a37fed73ad",
-      "source": {
-        "chunk": 16,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 519
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-d9133e004229",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "d9133e00422985da6720c09d3c39392bf17b710c6cac27a1abcabefead487e7d",
-      "source": {
-        "chunk": 20,
+        "chunk": 14,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -23064,14 +22824,30 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-ddc3d379dbfb",
+      "extraction": "chunk.v2",
+      "id": "pd-68bc77a5d368",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "ddc3d379dbfb2c2f1a34dbc0cd5dc7777735b9ef12f1946cbd4cf4c190775e5a",
+      "sha256": "68bc77a5d368b3c16f01d6b839c6fa34f71f5d25e7374eb73114c080d240ca13",
       "source": {
-        "chunk": 28,
+        "chunk": 19,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 500
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-68d2a379315b",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "68d2a379315b135c5eabc99b66202fc79d7a9eb75753006d9674cdcc7fa0f83b",
+      "source": {
+        "chunk": 18,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -23080,66 +22856,194 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-e1878e6f35ce",
+      "extraction": "chunk.v2",
+      "id": "pd-78eb346bae00",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "e1878e6f35ce0ce261063c33117f751bb0a3e486c673579472e1a0a0c7afec9c",
+      "sha256": "78eb346bae00add1b09e3ade828fae16ff38e28c0c7757cdccc2d606367bab90",
       "source": {
-        "chunk": 4,
+        "chunk": 22,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 531
+      "words": 520
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-e59eb25696b8",
+      "extraction": "chunk.v2",
+      "id": "pd-7f112bb38cb1",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "e59eb25696b897895adc1a6fe467814b088c8497b15ca2f8d211448675e427df",
-      "source": {
-        "chunk": 8,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 560
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-ec7953206394",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "ec7953206394a89546de3bdc6ae633fe5c13d7023bda1342917e446373c2f17c",
-      "source": {
-        "chunk": 5,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 501
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-fe41b686c2c5",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "fe41b686c2c54834ba5ba8e3d12218b78ee0b2820fd003d31062667cc3487ccb",
+      "sha256": "7f112bb38cb16068e77eca80200c7edcbcbe02fbbd3b0f19285a75841be5213e",
       "source": {
         "chunk": 10,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
+      "words": 506
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-804e588f6eff",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "804e588f6effcbd4576fbf38671ee6617321b8a65758741a60044a9f6d26e95c",
+      "source": {
+        "chunk": 6,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 513
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-9139ddfaabf4",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9139ddfaabf48107a89e111adcad23677b212812d629997ddc338a8aa77336b9",
+      "source": {
+        "chunk": 13,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 504
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-966ef2153734",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "966ef2153734516d81b2c09d1a23c0ed1babb2f8ed17275dbad2f6c1fa3042cd",
+      "source": {
+        "chunk": 8,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 523
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-9be505f6eb21",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9be505f6eb210a2201d88375cb68d97dc76277a8b92a0f79bfa805282906640f",
+      "source": {
+        "chunk": 15,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 568
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-ad15e0a1ed90",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ad15e0a1ed90535cffb8713cc4b3c626092705944f91aab6244e9e8dca5a509a",
+      "source": {
+        "chunk": 12,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 511
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d623dea32517",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d623dea3251793611b8cc07cb0652b29a1563c14e7eefe006efcb16a39f2d0b8",
+      "source": {
+        "chunk": 26,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 536
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d7e70adbab3e",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d7e70adbab3eb9fff08cecc79f1d5286baad0b28787279f9c1c29e5f26651d83",
+      "source": {
+        "chunk": 20,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 503
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d7ec3329b179",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d7ec3329b17948dd290ea72cd871d6b35cd5875c74446031e37f560dc2c8b3ee",
+      "source": {
+        "chunk": 2,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
       "words": 500
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-e685c92dc9e3",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e685c92dc9e33352d82d0c82b53eabcede73403c5da2d4e805eeb42b5efa55b3",
+      "source": {
+        "chunk": 27,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 340
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-ef5d17721f6b",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ef5d17721f6b1a1b25db46e3fa6bf7ff3b330610587ef77e1c40f2aacbaebaa2",
+      "source": {
+        "chunk": 25,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 545
     },
     {
       "author": "maintainer",
