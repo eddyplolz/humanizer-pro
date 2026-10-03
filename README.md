@@ -62,7 +62,7 @@ eval/fixtures/ai-slop-general.md — risk 60
 
 ## What it does not do
 
-Humanizer Pro will not help you get past AI detectors. It does not use invisible characters, synonym swaps, or claims that text is "undetectable."
+This project makes no claims about AI detectors.
 
 It does not add a fake personality. Swapping one stock phrase for a casual one trades one habit for another, so the skill avoids both.
 

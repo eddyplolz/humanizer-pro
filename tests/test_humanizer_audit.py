@@ -429,7 +429,7 @@ def test_tag_character_hit_is_reported_as_invisible_not_zero_width() -> None:
     )
     assert bypass["evidence"].startswith("invisible=")
     assert "zero_width" not in bypass["evidence"]
-    assert bypass["message"].startswith("Invisible or homoglyph")
+    assert bypass["message"].startswith("Invisible or lookalike")
 
 
 def test_unicode_noncharacters_are_stripped_and_flagged() -> None:
