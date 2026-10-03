@@ -23,11 +23,7 @@ separate from the score.
 Do not:
 
 - rewrite the text
-- optimize against an AI detector
-- promise detector bypass, invisibility, or "human score" guarantees
-- run external detector APIs
-- loop until a score turns green
-- add fake-casual voice, synonym spinning, obfuscation, typos, or translation tricks
+- promise a result from any third-party tool, or a "human score"
 
 The score is a deterministic risk readout for writing tells, artifacts, source-risk patterns, and
 rhythm. It is not a claim about any third-party detector.
