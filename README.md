@@ -196,7 +196,7 @@ The checker ends with an exit code that scripts can act on.
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v4.14.0
+    rev: v4.14.1
     hooks:
       - id: humanizer-audit
 ```
@@ -225,7 +225,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: eddyplolz/humanizer-pro@v4.14.0
+      - uses: eddyplolz/humanizer-pro@v4.14.1
         with:
           paths: docs README.md
           fail-on: block
@@ -258,7 +258,7 @@ This project measures its error rates instead of only describing them. It counts
 
 | What is measured | Writing used | Result |
 |---|---|---|
-| False positives | 2,145 documents written before ChatGPT existed: forum posts, encyclopedia articles, newspapers, and essays | 0.0% to 1.5%, depending on the type of writing ([full results](corpus/RESULTS.md)) |
+| False positives | 1,912 documents written before ChatGPT existed: forum posts, encyclopedia articles, newspapers, and essays (measured with version 4.12.0; the collection now holds 2,145) | 0.0% to 1.5%, depending on the type of writing ([full results](corpus/RESULTS.md)) |
 | Catch rate | Writing from 2023 AI models, real ChatGPT replies, and current Claude models | Not measured yet |
 
 ### False positives
@@ -269,7 +269,7 @@ Every document in the human set was written before ChatGPT was released, so any 
 |---|---|
 | Forum posts | 0.0%, plus 1 post of 764 blocked |
 | Essays | 0.0% |
-| Newspapers (1898 to 1928) | 0.0% |
+| Newspapers (1898 to 1909) | 0.0% |
 | Encyclopedia articles | 1.5% |
 
 These rates come from version 4.12.0 and cover the 1,912 documents that were available then, including 261 newspaper pages. Later versions count a block as a false positive and change some rules. The next measurement will replace this table.
@@ -278,7 +278,7 @@ For documents from public sources, such as old books and newspapers, the project
 
 ### Catch rate
 
-From version 4.14.0, the collection also includes writing by AI, labeled by its source:
+Version 4.14.0 added the tools to collect writing by AI, labeled by its source. Those pools have not been built yet, so the public collection holds no AI text today. The planned sources are:
 
 - text from [RAID](https://github.com/liamdugan/raid), a research benchmark of 2023 AI models
 - first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M), a public collection of real ChatGPT conversations
@@ -293,7 +293,7 @@ The catch rate has not been measured yet. When it is, 2 limits will apply:
 
 Every document goes into one of 2 groups, chosen by its fingerprint. About a quarter go into a tuning group, and the rest into a test group.
 
-Rules are adjusted using the tuning group only. Both published rates use the test group only. A rule cannot be tuned to make its own results look better.
+Rules are adjusted using the tuning group only. The false-positive rates published today predate this split (they come from version 4.12.0). From the next measurement on, every published rate uses the test group only, so a rule cannot be tuned to make its own results look better.
 
 This project also checks its own documentation with the same rules, using `scripts/self_scan.py`. It publishes 2 scores: one that counts every phrase this page quotes as a bad example, and one that leaves quotes and code out.
 
@@ -376,4 +376,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.14.1**. It adds a section on where your text goes and tidies the corpus files. Version 4.14.0 before it measured errors in both directions and added the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.14.1**. It adds a section on where your text goes and tidies the corpus files. Version 4.14.0 before it added the tools to measure errors in both directions (the catch rate is not published yet), the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).
