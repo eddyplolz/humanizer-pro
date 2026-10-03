@@ -8,23 +8,28 @@ not reach. The maintainer builds them and reruns `fp_measure.py`.
 
 Audit CLI:
 
-- Prose rules and stats skip fenced and inline code by default, so `utilize()` in a README or a
-  quoted leaked token in a code example no longer counts. `--include-code` restores the old
-  behavior. Bypass characters are still judged on the whole text, and self-scan's raw column still
+- Prose rules and stats skip fenced and inline code by default, so `utilize()` in a README no
+  longer counts as wordiness. `--include-code` restores the old behavior. Artifact rules and
+  bypass characters still see the whole text: a chatbot reply pasted inside a ```markdown fence
+  keeps its leaked tokens, and still blocks. Fences count only when they open and close a line,
+  so a sentence that mentions ``` cannot hide the prose after it. Self-scan's raw column still
   counts every match.
 - Several targets in one run (needed by pre-commit), `--version`, and `--sarif PATH` for SARIF
-  2.1.0 output in audit and compare mode (checked against the official schema).
+  2.1.0 output in audit and compare mode (checked against the official schema; columns are
+  declared as Unicode code points).
 - Installable: `pyproject.toml` ships `humanizer_audit` as the zero-dependency `humanizer-audit`
   command (`pipx install git+https://github.com/eddyplolz/humanizer-pro`).
 - A pre-commit hook (`.pre-commit-hooks.yaml`) and a composite GitHub Action (`action.yml`). The
-  action passes inputs through environment variables, never into the script text, and takes
+  action passes inputs through environment variables, never into the script text, accepts
+  space- or newline-separated `paths`, removes a stale SARIF file before running, and takes
   `fail-on: block|review|never`.
 - CI: tests on Python 3.10-3.13, self-scan, a package install, and an action smoke test.
 
 Corpus and measurement:
 
-- Manifest entries carry `label` (human or machine). Machine entries add the generating `model`
-  and a `split` derived from the digest: about a quarter dev, the rest test.
+- Manifest entries carry `label` (human or machine). Machine entries add the generating `model`.
+  Every document, human or machine, falls in a dev or test split chosen by its digest: about a
+  quarter dev, the rest test.
 - New pools:
   - `build-peps`: a docs-register human pool from Python Enhancement Proposals, read at the
     python/peps commit current at the cutoff (public-domain PEPs only).
@@ -33,11 +38,16 @@ Corpus and measurement:
   - `build-wildchat`: WildChat-1M first replies in English with no code (ODC-BY).
   - `scripts/generate_machine.py`: current Claude models on 60 committed prompts across wiki,
     news, essay, and docs. It uses the official SDK and no refusal fallbacks, so each label names
-    the model that wrote the text.
-- `fp_measure.py` (results schema v2) computes false-positive rates on human documents only. It
-  reports the catch rate on the machine test split, by register and by model, with Wilson
-  intervals, using the same "flagged" definition. A rule scorecard compares each rule's human and
-  machine-dev firing rates; it is the one place rule tuning may look.
+    the model that wrote the text. `--limit` is a trial run that saves nothing, and a run that
+    produces nothing keeps the existing pool.
+  - Every builder that can come back empty (`build-peps`, `build-raid`, `build-wildchat`,
+    `build-hf-news`) now keeps the existing pool instead of saving an empty one. `build-peps` also
+    checks the pinned commit's date itself and stops if any download fails.
+- `fp_measure.py` (results schema v2) publishes both rates on the test split only: the
+  false-positive rate on human test documents, and the catch rate on machine test documents, by
+  register and by model, with Wilson intervals and the same "flagged" definition. A rule scorecard
+  compares each rule's firing rate on human dev and machine dev documents; it is the one place
+  rule tuning may look, so neither published rate grades its own tuning.
 - Wiki entries moved from the `maintainer` author tier to `mixed`. A wiki page holds other
   editors' text too. Only the label changed; digests and ids did not.
 
