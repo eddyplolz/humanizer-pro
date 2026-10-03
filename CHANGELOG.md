@@ -26,6 +26,12 @@ Audit CLI:
   `[Company]`, `[Date]`, and skips Markdown links, reference links, and wiki links.
 - Each change has a regression test that failed before it. The false-positive rates in
   `corpus/RESULTS.md` were not re-measured for these rules; the next corpus run covers them.
+- Humanizer damage is now a finding: `artifact.humanizer_whitespace` (thin, hair, and similar
+  typographic spaces between letters; the non-breaking space is exempt), `family9.humanizer_spacing`
+  (a sentence boundary with the space removed), and `family9.tortured_phrase` (mechanical synonym
+  swaps such as 'counterfeit consciousness'). These are what rewrite-to-evade tools leave
+  behind. The messages say 'check', never 'AI': second-language writers produce the same
+  phrases. Catalog §9.12 and artifact reference §13 describe them.
 - Document paths in text and JSON output use forward slashes on every OS, as the SARIF
   output already did. On Windows they were backslashes.
 

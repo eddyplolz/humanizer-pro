@@ -111,6 +111,20 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
   the piece. Then read the surrounding claim with suspicion: a disclaimer usually sits next to a
   hedge the model could not verify.
 
+### 13. Humanizer damage
+- **Looks like:** what "humanizer" tools leave behind when they rewrite text to dodge detectors
+  (Pangram's August 2025 review of 20 of them): a thin space (U+2009) or hair space (U+200A) where
+  a keyboard space belongs, a sentence boundary with the space removed (`...the end.Next, we`), and
+  one-for-one synonym swaps that no writer chooses (`counterfeit consciousness` for *artificial
+  intelligence*, `irregular timberland` for *random forest*, `bosom peril` for *breast cancer*).
+- **Detection:** `artifact.humanizer_whitespace` for the space characters (the non-breaking space
+  is exempt: editors and web copy use it); `family9.humanizer_spacing` and
+  `family9.tortured_phrase` for the other two, as prose warnings.
+- **Fix:** Restore the plain space, the sentence break, and the intended term. Then read the whole
+  piece: a tool that did this once did it elsewhere, and the text's meaning may have drifted with
+  the swaps. A tortured phrase can also be a second-language writer's choice, which is why the
+  finding says "check the intended term" and never "AI".
+
 ## Why "delete only" is not enough
 Every artifact above sits where a **real reference or value** belonged. The model emitted the stub
 because it was citing (or pretending to cite) a source. Removing the stub silently can leave an

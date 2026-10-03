@@ -1042,3 +1042,17 @@ def test_generic_bracket_placeholders_are_flagged_but_links_are_not() -> None:
         assert "artifact.bracket_placeholder" in _ids_for(text), text
     for text in ("See [Your account](https://example.com/account).", "Read [Company][1] for details.\n\n[1]: https://example.com", "Linked as [[Date]] on the wiki."):
         assert "artifact.bracket_placeholder" not in _ids_for(text), text
+
+
+def test_humanizer_damage_is_flagged() -> None:
+    ids = _ids_for("We fixed the bug.Next, we shipped it.")
+    assert "family9.humanizer_spacing" in ids
+    assert "family9.humanizer_spacing" not in _ids_for("See e.g.The Times for 3.Mb files.")
+    assert "family9.humanizer_spacing" not in _ids_for("We fixed the bug. Next, we shipped it.")
+    ids = _ids_for("The counterfeit consciousness model used an irregular timberland.")
+    assert ids.count("family9.tortured_phrase") == 2
+    assert "family9.tortured_phrase" not in _ids_for("The artificial intelligence model used a random forest.")
+    thin = "The\u2009model\u2009works."
+    assert "artifact.humanizer_whitespace" in _ids_for(thin)
+    assert "artifact.humanizer_whitespace" not in _ids_for("The\u00a0model works.")  # NBSP is ordinary
+    assert "artifact.humanizer_whitespace" not in _ids_for("The model works.")
