@@ -1,0 +1,80 @@
+name: Humanizer audit
+description: Audit Markdown and text for AI-writing tells and leaked chatbot artifacts, with SARIF output for code scanning.
+author: Humanizer Pro contributors
+branding:
+  icon: edit-3
+  color: gray-dark
+
+inputs:
+  paths:
+    description: Space-separated files or directories to audit.
+    required: false
+    default: "."
+  fail-on:
+    description: "Which outcome fails the step: block (exit 2 only), review (exit 1 or 2), or never."
+    required: false
+    default: block
+  fail-score:
+    description: Risk score that counts as review (exit 1).
+    required: false
+    default: "60"
+  sarif-file:
+    description: Where to write the SARIF log. Empty to skip.
+    required: false
+    default: humanizer-audit.sarif
+  include-code:
+    description: Set to "true" to apply prose rules inside code too.
+    required: false
+    default: "false"
+
+outputs:
+  exit-code:
+    description: "The audit exit code: 0 pass, 1 review, 2 block, 3 usage or read error."
+    value: ${{ steps.audit.outputs.exit-code }}
+  sarif-file:
+    description: Path of the SARIF log, if written.
+    value: ${{ steps.audit.outputs.sarif-file }}
+
+runs:
+  using: composite
+  steps:
+    - id: audit
+      shell: bash
+      # Inputs travel as environment variables, never interpolated into the
+      # script, so a crafted input cannot inject shell.
+      env:
+        HA_SCRIPT: ${{ github.action_path }}/scripts/humanizer_audit.py
+        HA_PATHS: ${{ inputs.paths }}
+        HA_FAIL_ON: ${{ inputs.fail-on }}
+        HA_FAIL_SCORE: ${{ inputs.fail-score }}
+        HA_SARIF: ${{ inputs.sarif-file }}
+        HA_INCLUDE_CODE: ${{ inputs.include-code }}
+      run: |
+        set -u
+        python_bin="$(command -v python3 || command -v python)"
+        args=(--fail-score "$HA_FAIL_SCORE")
+        if [ -n "$HA_SARIF" ]; then args+=(--sarif "$HA_SARIF"); fi
+        if [ "$HA_INCLUDE_CODE" = "true" ]; then args+=(--include-code); fi
+        read -r -a targets <<< "$HA_PATHS"
+        if [ "${#targets[@]}" -eq 0 ]; then targets=(.); fi
+        set +e
+        "$python_bin" "$HA_SCRIPT" "${targets[@]}" "${args[@]}"
+        code=$?
+        set -e
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+        if [ -n "$HA_SARIF" ] && [ -f "$HA_SARIF" ]; then
+          echo "sarif-file=$HA_SARIF" >> "$GITHUB_OUTPUT"
+        fi
+        case "$HA_FAIL_ON" in
+          never) threshold=99 ;;
+          review) threshold=1 ;;
+          block) threshold=2 ;;
+          *) echo "::error::fail-on must be block, review, or never (got '$HA_FAIL_ON')"; exit 3 ;;
+        esac
+        if [ "$code" -ge 3 ]; then
+          echo "::error::humanizer-audit could not run (exit $code)"
+          exit "$code"
+        fi
+        if [ "$code" -ge "$threshold" ]; then
+          exit "$code"
+        fi

@@ -723,3 +723,208 @@ def test_text_report_survives_a_narrow_output_encoding(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert b"family7.rhetorical_formula" in result.stdout
+
+
+# ------------------------------------------------- v4.14.0: code, targets, SARIF
+
+
+CODE_DOC = (
+    "Call `utilize()` to start.\n\n"
+    "```text\nciteturn0search0 is a delve into the vibrant tapestry\n```\n"
+)
+
+
+def test_code_is_masked_by_default_and_restorable() -> None:
+    module = _load_audit_module()
+    masked = module.audit_text(CODE_DOC, "x")
+    assert masked["findings"] == []
+    assert masked["stats"]["code_block_count"] == 1
+    raw = {f["id"] for f in module.audit_text(CODE_DOC, "x", include_code=True)["findings"]}
+    assert {"artifact.chatgpt_citation_stub", "clarity.wordiness"} <= raw
+
+
+def test_bypass_characters_inside_code_are_still_flagged() -> None:
+    text = "Plain intro.\n\n```\nab​cd\n```\n"
+    ids = {f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]}
+    assert "artifact.bypass_characters" in ids
+
+
+def test_include_code_flag_on_the_cli(tmp_path: Path) -> None:
+    doc = tmp_path / "doc.md"
+    doc.write_text(CODE_DOC, encoding="utf-8")
+    assert run_audit(str(doc)).returncode == 0
+    assert run_audit(str(doc), "--include-code").returncode == 2
+
+
+def test_several_targets_are_audited_once_each() -> None:
+    clean = "eval/fixtures/clean-human.md"
+    returncode, payload = audit_json(clean, "eval/fixtures/ai-slop-general.md", clean)
+    assert [d["path"] for d in payload["documents"]] == [clean, "eval/fixtures/ai-slop-general.md"]
+    assert returncode == 1
+
+
+def test_version_flag() -> None:
+    result = run_audit("--version")
+    assert result.returncode == 0
+    assert result.stdout.strip() == f"humanizer-audit {_load_audit_module().__version__}"
+
+
+def _sarif(tmp_path: Path, *args: str) -> dict:
+    out = tmp_path / "out.sarif"
+    run_audit(*args, "--sarif", str(out))
+    return json.loads(out.read_text(encoding="utf-8"))
+
+
+def test_sarif_for_an_audit(tmp_path: Path) -> None:
+    log = _sarif(tmp_path, "eval/fixtures/artifact-leakage.md")
+    assert log["version"] == "2.1.0"
+    run = log["runs"][0]
+    assert run["tool"]["driver"]["name"] == "humanizer-audit"
+    rule_ids = [rule["id"] for rule in run["tool"]["driver"]["rules"]]
+    assert len(rule_ids) == len(set(rule_ids))
+    assert run["results"]
+    for result in run["results"]:
+        assert result["level"] in {"error", "warning", "note"}
+        assert rule_ids[result["ruleIndex"]] == result["ruleId"]
+        location = result["locations"][0]["physicalLocation"]
+        assert location["artifactLocation"]["uri"] == "eval/fixtures/artifact-leakage.md"
+        assert location["region"]["startLine"] >= 1 and location["region"]["startColumn"] >= 1
+    assert any(r["level"] == "error" for r in run["results"])
+
+
+def test_sarif_for_compare_points_at_the_right_side(tmp_path: Path) -> None:
+    log = _sarif(
+        tmp_path,
+        "--compare",
+        "eval/fixtures/fidelity/original.md",
+        "eval/fixtures/fidelity/revised-drift.md",
+    )
+    uris = {
+        r["ruleId"].rsplit(".", 1)[-1]: r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
+        for r in log["runs"][0]["results"]
+    }
+    assert uris["dropped"] == "eval/fixtures/fidelity/original.md"
+    assert uris["introduced"] == "eval/fixtures/fidelity/revised-drift.md"
+
+
+def test_sarif_write_failure_exits_3(tmp_path: Path) -> None:
+    result = run_audit("eval/fixtures/clean-human.md", "--sarif", str(tmp_path / "missing" / "x.sarif"))
+    assert result.returncode == 3
+
+
+# ------------------------------------------------- distribution: action, hook, wheel
+
+
+def _action_script() -> str:
+    """The composite step's `run: |` block, de-indented."""
+    lines = (ROOT / "action.yml").read_text(encoding="utf-8").splitlines()
+    start = next(i for i, line in enumerate(lines) if line.strip() == "run: |") + 1
+    body = []
+    for line in lines[start:]:
+        if line.strip() and not line.startswith(" " * 8):
+            break
+        body.append(line[8:])
+    return "\n".join(body) + "\n"
+
+
+def _run_action(tmp_path: Path, **inputs: str) -> tuple[int, dict[str, str]]:
+    output = tmp_path / "github_output"
+    output.write_text("", encoding="utf-8")
+    env = {
+        **os.environ,
+        "GITHUB_OUTPUT": str(output),
+        "HA_SCRIPT": str(CLI),
+        "HA_PATHS": inputs.get("paths", "."),
+        "HA_FAIL_ON": inputs.get("fail_on", "block"),
+        "HA_FAIL_SCORE": inputs.get("fail_score", "60"),
+        "HA_SARIF": inputs.get("sarif", str(tmp_path / "out.sarif")),
+        "HA_INCLUDE_CODE": inputs.get("include_code", "false"),
+    }
+    result = subprocess.run(
+        ["bash", "-e", "-c", _action_script()], cwd=ROOT, env=env, capture_output=True, check=False
+    )
+    pairs = dict(
+        line.split("=", 1) for line in output.read_text(encoding="utf-8").splitlines() if "=" in line
+    )
+    return result.returncode, pairs
+
+
+def test_action_fail_on_policies(tmp_path: Path) -> None:
+    slop = "eval/fixtures/ai-slop-general.md"  # exit 1 (review)
+    assert _run_action(tmp_path, paths=slop, fail_on="block")[0] == 0
+    code, outputs = _run_action(tmp_path, paths=slop, fail_on="review")
+    assert code == 1 and outputs["exit-code"] == "1"
+    assert outputs["sarif-file"].endswith("out.sarif")
+    assert _run_action(tmp_path, paths="eval/fixtures/artifact-leakage.md", fail_on="block")[0] == 2
+    assert _run_action(tmp_path, paths="eval/fixtures/artifact-leakage.md", fail_on="never")[0] == 0
+    assert _run_action(tmp_path, paths="no/such/file.md", fail_on="never")[0] == 3
+    assert _run_action(tmp_path, paths=slop, fail_on="sometimes")[0] == 3
+
+
+def test_action_inputs_are_not_shell_interpolated(tmp_path: Path) -> None:
+    canary = tmp_path / "pwned"
+    code, _outputs = _run_action(tmp_path, paths=f"eval/fixtures/clean-human.md; touch {canary}")
+    assert not canary.exists()
+    assert code == 3  # the literal "; touch ..." is just a missing path
+    text = (ROOT / "action.yml").read_text(encoding="utf-8")
+    assert "${{ inputs." not in _action_script()
+    assert "scripts/humanizer_audit.py" in text
+
+
+def test_pre_commit_hook_points_at_the_console_script() -> None:
+    hooks = (ROOT / ".pre-commit-hooks.yaml").read_text(encoding="utf-8")
+    assert "entry: humanizer-audit" in hooks
+    assert "language: python" in hooks
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'humanizer-audit = "humanizer_audit:main"' in pyproject
+
+
+def test_wheel_installs_a_working_console_script(tmp_path: Path) -> None:
+    import shutil
+    import venv
+
+    import importlib.util
+
+    pytest = __import__("pytest")
+    if importlib.util.find_spec("pip") is None:
+        pytest.skip("pip is not installed in this interpreter")
+    # An isolated build, as pip does for users. It fetches setuptools, so it
+    # skips (rather than fails) only when no package index is reachable.
+    # Build from a copy so setuptools' build/ and egg-info never touch the checkout.
+    source = tmp_path / "src"
+    (source / "scripts").mkdir(parents=True)
+    for name in ("pyproject.toml", "README.md", "LICENSE"):
+        shutil.copy(ROOT / name, source / name)
+    shutil.copy(CLI, source / "scripts" / "humanizer_audit.py")
+    build = subprocess.run(
+        [sys.executable, "-m", "pip", "wheel", str(source), "--no-deps",
+         "-w", str(tmp_path / "dist"), "-q"],
+        capture_output=True, text=True, check=False,
+    )
+    offline = ("No matching distribution found for setuptools", "Could not find a version")
+    if build.returncode != 0 and any(marker in build.stderr for marker in offline):
+        pytest.skip("no package index reachable for an isolated build")
+    assert build.returncode == 0, build.stderr
+    wheels = list((tmp_path / "dist").glob("humanizer_audit-*.whl"))
+    assert len(wheels) == 1
+    version = _load_audit_module().__version__
+    assert wheels[0].name.startswith(f"humanizer_audit-{version}-")
+    env_dir = tmp_path / "venv"
+    venv.EnvBuilder(with_pip=True).create(env_dir)
+    bindir = env_dir / ("Scripts" if os.name == "nt" else "bin")
+    install = subprocess.run(
+        [str(bindir / "python"), "-m", "pip", "install", "--no-index", "-q", str(wheels[0])],
+        capture_output=True, text=True, check=False,
+    )
+    assert install.returncode == 0, install.stderr
+    exe = shutil.which("humanizer-audit", path=str(bindir))
+    assert exe
+    assert subprocess.run([exe, "--version"], capture_output=True, text=True).stdout.strip() == (
+        f"humanizer-audit {version}"
+    )
+    audited = subprocess.run(
+        [exe, str(ROOT / "eval" / "fixtures" / "artifact-leakage.md"), "--json"],
+        capture_output=True, text=True, check=False,
+    )
+    assert audited.returncode == 2
+    assert json.loads(audited.stdout)["schema"] == "humanizer-audit.v1"
