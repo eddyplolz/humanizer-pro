@@ -50,7 +50,7 @@ release. The full release history is in `CHANGELOG.md`.
   - `generate_machine.py` - maintainer-only current-model generation; needs the `anthropic` SDK.
 - `corpus/`
   - `manifest.json` - hash-only manifest of public-source documents, plus totals for the private
-    pools. The maintainer's own forum and wiki entries live only in the gitignored
+    pools. The forum and wiki pools' entries live only in the gitignored
     `manifest.private.json`; never commit it or copy its digests into the repo.
   - `machine_prompts.json` - committed prompts for `generate_machine.py`; change a prompt only
     under a new id.
