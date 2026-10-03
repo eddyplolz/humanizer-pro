@@ -421,11 +421,11 @@ for the full list and detection regexes. These are deterministic — sweep for t
 chat persona, pasted into prose. Verb-anchored; ordinary `*italic emphasis*` is not this tell.
 **Fix:** delete the marker (llm-artifacts.md §10).
 
-### 9.9 Detector-bypass characters
+### 9.9 Hidden and lookalike characters
 **Watch:** zero-width characters inside words; Cyrillic/Greek lookalike letters spliced into Latin
-words. These arrive from "humanizer" bypass tools, not from authors. The audit CLI normalizes them
-before matching and flags `artifact.bypass_characters` (llm-artifacts.md §11). Treat any hit as the
-strongest possible signal that the text was machine-processed to evade scanners.
+words. They break search, copy-paste, and spell-check, and no author types them. The audit CLI
+normalizes them before matching and flags `artifact.bypass_characters` (llm-artifacts.md §11).
+**Fix:** strip them so the text is plain and searchable.
 
 ### 9.10 Wall-of-text replies (avoid-ai-writing) — *judgment-only*
 **Watch:** in conversational registers only (chat, Discord, forum/issue replies): a reply-length

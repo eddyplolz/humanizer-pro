@@ -366,7 +366,7 @@ It draws on these sources:
 - [blader/humanizer](https://github.com/blader/humanizer) by Siqi Chen (MIT)
 - [Stop Slop](https://github.com/hardikpandya/stop-slop) by Hardik Pandya (MIT)
 - [avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) by Conor Bronsdon (MIT): the vocabulary tiers, strictness rules, self-check, and error-rate measurement design
-- [humanize](https://github.com/harshaneel/humanize) by Harshaneel Gokhale (MIT): rhythm counts and several patterns (its methods for evading detectors were not adopted)
+- [humanize](https://github.com/harshaneel/humanize) by Harshaneel Gokhale (MIT): rhythm counts and several patterns
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) by WikiProject AI Cleanup ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
 - [Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134): the public-domain text of *The Elements of Style* by William Strunk Jr.
 - [US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers) by PleIAs: public-domain newspapers in the human test set
