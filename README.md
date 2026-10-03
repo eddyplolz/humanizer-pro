@@ -258,33 +258,43 @@ This project measures its error rates instead of only describing them. It counts
 
 | What is measured | Writing used | Result |
 |---|---|---|
-| False positives | 1,912 documents written before ChatGPT existed: forum posts, encyclopedia articles, newspapers, and essays (measured with version 4.12.0; the collection now holds 2,145) | 0.0% to 1.5%, depending on the type of writing ([full results](corpus/RESULTS.md)) |
-| Catch rate | Writing from 2023 AI models, real ChatGPT replies, and current Claude models | Not measured yet |
+| False positives | 1,264 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, newspapers, essays, and Python Enhancement Proposals | 0.2% overall; 0.0% to 0.7% by type of writing ([full results](corpus/RESULTS.md)) |
+| Catch rate | 638 test documents from 2023 AI models (RAID) and real ChatGPT replies (WildChat) | 3.1% overall; 0.0% to 5.5% by type of writing |
 
 ### False positives
 
 Every document in the human set was written before ChatGPT was released, so any flag on one is a mistake by definition. The latest rates, at the default threshold, are:
 
-| Type of writing | False-positive rate |
-|---|---|
-| Forum posts | 0.0%, plus 1 post of 764 blocked |
-| Essays | 0.0% |
-| Newspapers (1898 to 1909) | 0.0% |
-| Encyclopedia articles | 1.5% |
+| Type of writing | Documents | False-positive rate |
+|---|---|---|
+| Stack Exchange answers | 450 | 0.0% |
+| Python Enhancement Proposals | 303 | 0.7%, including 1 blocked |
+| Essays | 250 | 0.0% |
+| Newspapers | 257 | 0.4% |
+| Wikipedia articles | 4 | 0.0% |
 
-These rates come from version 4.12.0 and cover the 1,912 documents that were available then, including 261 newspaper pages. Later versions count a block as a false positive and change some rules. The next measurement will replace this table.
+By the period the text was written in:
 
-For documents from public sources, such as old books and newspapers, the project publishes a fingerprint of each one (a unique code), with its date and word count, so anyone can check them. For the forum and encyclopedia pools it publishes totals only. The project never publishes the text, an author's name, or where a document came from.
+| Period | Documents | False-positive rate |
+|---|---|---|
+| Before 1930 | 507 | 0.2% |
+| 1930 to 2017 | 567 | 0.4% |
+| 2018 to 2022 | 190 | 0.0% |
+
+These rates come from the current rules, measured on the test group only (1,264 documents). A block counts as a false positive. The Wikipedia slice is small, so its rate says little yet.
+
+Every document comes from a public source. The project publishes a fingerprint of each one (a unique code), with its date, word count, and a public pointer such as a Wikipedia revision id or a Stack Exchange answer id, so anyone can rebuild the collection and check the numbers. It never publishes the text.
 
 ### Catch rate
 
-Version 4.14.0 added the tools to collect writing by AI, labeled by its source. Those pools have not been built yet, so the public collection holds no AI text today. The planned sources are:
+The AI text comes from 2 public sources, labeled by model:
 
 - text from [RAID](https://github.com/liamdugan/raid), a research benchmark of 2023 AI models
 - first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M), a public collection of real ChatGPT conversations
-- answers from current Claude models to [60 published prompts](corpus/machine_prompts.json)
 
-The catch rate has not been measured yet. When it is, 2 limits will apply:
+A pool of answers from current Claude models to [60 published prompts](corpus/machine_prompts.json) can be added with `scripts/generate_machine.py`; it is not part of the published numbers.
+
+The catch rate at the default threshold is 3.1% overall (20 of 638 test documents): 5.5% on chat replies, 0.0% on news and encyclopedia text. The full table by model is in the [results](corpus/RESULTS.md). 2 limits apply:
 
 - it describes those AI models only
 - the human essays and newspapers are about 100 years old, so part of any gap there reflects the era, not the author
@@ -293,7 +303,7 @@ The catch rate has not been measured yet. When it is, 2 limits will apply:
 
 Every document goes into one of 2 groups, chosen by its fingerprint. About a quarter go into a tuning group, and the rest into a test group.
 
-Rules are adjusted using the tuning group only. The false-positive rates published today predate this split (they come from version 4.12.0). From the next measurement on, every published rate uses the test group only, so a rule cannot be tuned to make its own results look better.
+Rules are adjusted using the tuning group only. Every published rate uses the test group only, so a rule cannot be tuned to make its own results look better.
 
 This project also checks its own documentation with the same rules, using `scripts/self_scan.py`. It publishes 2 scores: one that counts every phrase this page quotes as a bad example, and one that leaves quotes and code out.
 
