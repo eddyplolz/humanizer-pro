@@ -25,6 +25,15 @@ Audit CLI:
   `[Company]`, `[Date]`, and skips Markdown links, reference links, and wiki links.
 - Each change has a regression test that failed before it. The false-positive rates in
   `corpus/RESULTS.md` were not re-measured for these rules; the next corpus run covers them.
+- Document paths in text and JSON output use forward slashes on every OS, as the SARIF
+  output already did. On Windows they were backslashes.
+
+GitHub Action and CI:
+
+- The Action picks the first `python3` or `python` that actually runs. On a Windows runner
+  `python3` can be the Microsoft Store alias, which is on PATH but exits without running.
+- CI now runs the test suite on Windows and macOS (Python 3.12) as well as Ubuntu. The
+  README leads with Windows instructions; until now nothing tested them.
 
 ## 4.14.1 - 2026-10-03
 
