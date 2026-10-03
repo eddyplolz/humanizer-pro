@@ -31,11 +31,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "corpus" / "manifest.json"
-PRIVATE_MANIFEST_PATH = ROOT / "corpus" / "manifest.private.json"  # gitignored
 CACHE_DIR = ROOT / "corpus" / "cache"
 RESULT_SCHEMA = "humanizer-fp-measure.v2"
 DEFAULT_THRESHOLD = 60  # the CLI's default review threshold
 SWEEP = (20, 40, 60, 80)
+# A human set frozen before the cutoff drifts: the further a document sits
+# from the present, the less its prose says about the writing the tool meets
+# today (Ren, Raghavan and Garg 2026 saw a 2010-trained estimator call 15% of
+# 2020 abstracts machine-written). So the rate is also reported by period.
+PERIODS = (("pre-1930", 0, 1929), ("1930-2017", 1930, 2017), ("2018-2022", 2018, 2022))
+
+
+def period_of(date: str) -> str:
+    """Band a manifest date ("1899", "2021-06", "pre-1923", "1900-1922")."""
+    text = str(date or "")
+    if text.startswith("pre-"):
+        return PERIODS[0][0]
+    year = int(text[:4]) if text[:4].isdigit() else None
+    if year is None:
+        return "undated"
+    for name, low, high in PERIODS:
+        if low <= year <= high:
+            return name
+    return "undated"
 FIXTURE_TP = [
     "eval/fixtures/ai-slop-general.md",
     "eval/fixtures/artifact-leakage.md",
@@ -68,10 +86,6 @@ def wilson_interval(hits: int, total: int, z: float = 1.96) -> tuple[float, floa
 
 def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
     entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
-    # The maintainer's own forum and wiki entries are kept out of the public
-    # manifest; they are measured only on a machine that has the private file.
-    if PRIVATE_MANIFEST_PATH.exists():
-        entries = entries + json.loads(PRIVATE_MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     rows, missing = [], []
     for entry in entries:
         path = CACHE_DIR / f"{entry['id']}.txt"
@@ -89,6 +103,7 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
                 "model": entry.get("model"),
                 "register": entry["register"],
                 "author": entry["author"],
+                "period": period_of(entry.get("date", "")),
                 "words": entry["words"],
                 "risk": int(result["risk_score"]),
                 "blocked": any(f["severity"] == "error" for f in result["findings"]),
@@ -218,6 +233,11 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         author: slice_stats([r for r in rows if r["author"] == author], threshold)
         for author in sorted({r["author"] for r in rows})
     }
+    by_period = {
+        period: slice_stats([r for r in rows if r["period"] == period], threshold)
+        for period in [name for name, _lo, _hi in PERIODS] + ["undated"]
+        if any(r["period"] == period for r in rows)
+    }
     sweep = {
         str(t): {
             reg: slice_stats([r for r in rows if r["register"] == reg], t)["fpr"]
@@ -238,6 +258,7 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         "overall": slice_stats(rows, threshold),
         "by_register": by_register,
         "by_author": by_author,
+        "by_period": by_period,
         "threshold_sweep_fpr": sweep,
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
@@ -298,6 +319,8 @@ def render_text(result: dict) -> str:
         lines.append(row(f"register:{reg}", stats))
     for author, stats in result["by_author"].items():
         lines.append(row(f"author:{author}", stats))
+    for period, stats in result.get("by_period", {}).items():
+        lines.append(row(f"period:{period}", stats))
     lines.append("")
     lines.append("FPR by review threshold:")
     header = "  threshold " + " ".join(f"{reg:>8}" for reg in result["by_register"])
@@ -382,6 +405,8 @@ def render_results_md(result: dict) -> str:
         lines.append(row(f"register: {reg}", stats))
     for author, stats in result["by_author"].items():
         lines.append(row(f"author: {author}", stats))
+    for period, stats in result.get("by_period", {}).items():
+        lines.append(row(f"period: {period}", stats))
     # With nothing cached there are no register columns, and an empty table
     # renders as broken Markdown.
     if result["by_register"]:
@@ -453,17 +478,20 @@ def render_results_md(result: dict) -> str:
             "",
             "## Honest limits",
             "",
-            "- Register mapping: forum posts → chat, wiki revisions → wiki,",
-            "  public-domain prose (Strunk 1918, Emerson, Thoreau, Twain) → essay,",
-            "  Internet Archive newspaper issues (1900–1922) and OpenCulture",
-            "  US-PD-Newspapers pages (dated up to 1928) → news. The essay and",
-            "  news slices measure century-old prose, stated rather than hidden.",
+            "- Register mapping: Stack Exchange answers (hobby, language, and",
+            "  workplace sites) → chat, English Wikipedia articles at their last",
+            "  pre-cutoff revision → wiki, public-domain prose (Strunk 1918, Emerson,",
+            "  Thoreau, Twain) → essay, Internet Archive newspaper issues and",
+            "  OpenCulture US-PD-Newspapers pages → news, Python Enhancement",
+            "  Proposals → docs. The essay and news slices measure century-old",
+            "  prose, stated rather than hidden.",
             "- The news pool is OCR of old newsprint: an alphabetic-ratio",
             "  quality gate bounds the OCR noise but does not eliminate it, so a news",
             "  flag can reflect the scan rather than the writing.",
-            "- A wiki entry is the whole page at the maintainer's last pre-cutoff",
-            "  revision, so it can include other editors' text; hence the `mixed`",
-            "  author tier.",
+            "- A Wikipedia entry is a whole article (bounded at 4,000 words), so",
+            "  it is many editors' text; a Stack Exchange entry is one answer, with",
+            "  code and quoted blocks removed. Answers are top-voted, so the chat",
+            "  slice leans toward careful writers.",
             "- Machine text comes from RAID (2023 generators), WildChat (GPT-3.5 and",
             "  GPT-4 replies), and current Claude models on committed prompts. The",
             "  catch rate describes those models only; tells change between model",
@@ -472,10 +500,14 @@ def render_results_md(result: dict) -> str:
             "  essays and news are modern. A gap between the two rates there is partly",
             "  era, not authorship. The wiki, chat, and docs slices compare",
             "  contemporaries more closely.",
-            "- The corpus skews toward one writer and one community; it measures",
-            "  restraint on the registers this skill actually meets, not all prose.",
+            "- Every pool is public and rebuildable from the manifest's pointers",
+            "  (`corpus.py fetch` or the named `build-*` command); every document",
+            "  comes from a public source.",
             "- Registers are measured separately because rates differ by register;",
             "  quoting the overall number alone misrepresents the tool.",
+            "- Periods are measured separately because a human set frozen before the",
+            "  cutoff drifts away from today's writing; the 2018–2022 band is the one",
+            "  closest to the prose the tool meets, and the one to watch.",
         ]
     )
     return "\n".join(lines) + "\n"

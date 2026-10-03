@@ -28,43 +28,6 @@ fp_measure = load_module("fp_measure")
 # ------------------------------------------------------------- extraction
 
 
-def test_bbcode_strip_removes_quotes_and_unwraps_tags() -> None:
-    message = (
-        "[quote=Someone]their words, not mine[/quote]"
-        "My [b]own[/b] reply about the treaty.\\r\\n\\r\\nIt stands."
-    )
-    text = corpus.bbcode_strip(message)
-    assert "their words" not in text
-    assert "My own reply about the treaty." in text
-    assert "It stands." in text
-    assert "[b]" not in text and "\\r" not in text
-
-
-def test_bbcode_strip_removes_nested_quotes_inside_out() -> None:
-    message = "[quote=A][quote=B]inner[/quote]A's own words here[/quote]My reply."
-    assert corpus.bbcode_strip(message) == "My reply."
-
-
-def test_bbcode_strip_unescapes_sql_in_one_pass() -> None:
-    # The dump text C:\\new is an escaped backslash followed by "n".
-    assert corpus.bbcode_strip(r"C:\\new and \'q\' \"x\"\r\nnext") == 'C:\\new and \'q\' "x"\nnext'
-
-
-def test_mybb_rows_carry_edittime_when_present(tmp_path) -> None:
-    sql = (
-        "INSERT INTO `mybb_posts` (`pid`) VALUES "
-        "(1,2,0,3,'S',0,7,'alice',1500000000,'old post',0x7f000001,1,0,0,0,'',1),"
-        "(2,2,0,3,'S',0,7,'alice',1500000000,'edited later',_binary 'ab',1,0,7,1700000000,'',1),"
-        "(3,2,0,3,'S',0,7,'bob',1500000000,'no tail');\n"
-    )
-    dump = tmp_path / "x_sanitized.sql"
-    dump.write_text(sql, encoding="utf-8")
-    rows = list(corpus.iter_mybb_posts(dump))
-    assert [(pid, edittime) for pid, _user, _date, _msg, edittime in rows] == [
-        (1, 0), (2, 1700000000), (3, None),
-    ]
-
-
 def test_wikitext_strip_v2_handles_nesting_v1_kept_for_old_digests() -> None:
     nested = "A [[File:x.jpg|thumb|A [[Foo]] map]] B {{a|{{b|{{c|{{d|{{e|{{f}}}}}}}}}}}} C"
     assert corpus.wikitext_strip(nested) == "A B C"
@@ -160,8 +123,6 @@ def test_manifest_is_structurally_sound() -> None:
     assert len(ids) == len(set(ids)), "entry ids must be unique"
     for entry in entries:
         assert entry["kind"] in corpus.ID_PREFIX
-        # The maintainer's own writing never enters the public manifest.
-        assert entry["kind"] not in corpus.PRIVATE_KINDS, entry["id"]
         assert entry["register"] in corpus.MIN_WORDS
         machine = entry["kind"] in corpus.MACHINE_KINDS
         assert entry["label"] == ("machine" if machine else "human")
@@ -170,27 +131,21 @@ def test_manifest_is_structurally_sound() -> None:
             assert entry["model"]
             assert entry["split"] == corpus.digest_split(entry["sha256"])
         else:
-            assert entry["author"] in ("maintainer", "other", "public-domain", "mixed")
+            # Every document comes from a public source.
+            assert entry["author"] in ("other", "public-domain")
             assert "model" not in entry and "split" not in entry
         assert re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
         prefix = corpus.ID_PREFIX[entry["kind"]]
         assert re.fullmatch(rf"{prefix}-[0-9a-f]{{12}}", entry["id"])
         assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
-    # Only totals are public for the private pools.
-    for kind, pool in manifest.get("private_pools", {}).items():
-        assert kind in corpus.PRIVATE_KINDS
-        assert set(pool) == {"entries", "registers"}
-        assert pool["entries"] == sum(pool["registers"].values())
+    assert "private_pools" not in manifest
 
 
 def test_manifest_is_anonymous() -> None:
-    """Hash-only AND anonymous: no text, no usernames, no personal locators.
-
-    Only public-domain pools (Strunk chunks, Gutenberg works, Internet
-    Archive news chunks) may carry a source, and only public-domain pointers.
-    The forum and wiki pools must never publish a locator of any kind.
-    """
+    """Hash-only: no text, no usernames, and every pointer is to a public
+    source anyone can fetch (a Gutenberg id, an archive identifier, a
+    Wikipedia revision id, a Stack Exchange answer id, a dataset row)."""
     entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     public_keys = {
         "id", "kind", "label", "register", "author", "date", "words",
@@ -202,6 +157,8 @@ def test_manifest_is_anonymous() -> None:
         "news-page": {"url", "ia_identifier", "chunk"},
         "hf-news": {"dataset", "id", "date", "file_name", "chunk"},
         "pep-chunk": {"repo", "commit", "path", "chunk"},
+        "wikipedia-revision": {"site", "title", "revid", "url"},
+        "stackexchange-answer": {"site", "answer_id", "url"},
         "raid-generation": {"dataset", "file", "id"},
         "wildchat-turn": {"dataset", "conversation_hash"},
         "generated": {"prompt_id", "requested_model"},
@@ -209,17 +166,11 @@ def test_manifest_is_anonymous() -> None:
     assert set(source_keys) == set(corpus.PUBLIC_SOURCE_KINDS)
     for entry in entries:
         assert set(entry) <= public_keys
-        if entry["kind"] in source_keys:
-            # A public kind must publish its pointer, and only scalar values.
-            assert entry["source"], f"{entry['id']} has no public source"
-            assert set(entry["source"]) <= source_keys[entry["kind"]]
-            assert all(isinstance(v, (str, int)) for v in entry["source"].values())
-        else:
-            assert "source" not in entry, f"{entry['id']} leaks a source locator"
-            assert entry["author"] in ("maintainer", "other", "mixed")
-            if entry["kind"] == "wiki-revision":
-                # A wiki page can hold other editors' text.
-                assert entry["author"] == "mixed"
+        assert entry["kind"] in source_keys, entry["id"]
+        # Every kind publishes its pointer, and only scalar values.
+        assert entry["source"], f"{entry['id']} has no public source"
+        assert set(entry["source"]) <= source_keys[entry["kind"]]
+        assert all(isinstance(v, (str, int)) for v in entry["source"].values())
 
 
 # ------------------------------------------------------------ fp_measure
@@ -252,7 +203,6 @@ def test_audit_corpus_audits_cached_entries(tmp_path, monkeypatch) -> None:
     cache.mkdir()
     (cache / f"{cached}.txt").write_text("[Your Name] wrote this.", encoding="utf-8")
     monkeypatch.setattr(fp_measure, "MANIFEST_PATH", manifest_path)
-    monkeypatch.setattr(fp_measure, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
     monkeypatch.setattr(fp_measure, "CACHE_DIR", cache)
     rows, missing = fp_measure.audit_corpus(threshold=60)
     assert missing == ["pd-ba9876543210"]
@@ -316,8 +266,6 @@ def test_digest_split_is_a_stable_quarter() -> None:
 def test_save_pool_labels_machine_entries(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
     monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
-    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
-    monkeypatch.setattr(corpus, "LOCAL_SOURCES_PATH", tmp_path / "sources.local.json")
     monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
     fields = {"register": "wiki", "author": "machine", "model": "raid:gpt4", "date": "2023", "extraction": "x"}
     entries = corpus.save_pool("raid-generation", [(fields, f"text {i} " * 40, {"id": str(i)}) for i in range(8)])
@@ -572,7 +520,6 @@ def _measure_fixture(tmp_path, monkeypatch, entries):
     for entry, text in entries:
         (cache / f"{entry['id']}.txt").write_text(text, encoding="utf-8")
     monkeypatch.setattr(fp_measure, "MANIFEST_PATH", manifest_path)
-    monkeypatch.setattr(fp_measure, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
     monkeypatch.setattr(fp_measure, "CACHE_DIR", cache)
     return fp_measure.measure(threshold=5, include_fixture_tp=False)
 
@@ -655,42 +602,124 @@ def test_wildchat_build_keeps_the_pool_when_nothing_arrives(monkeypatch) -> None
     assert saved == []
 
 
-def test_private_pools_never_reach_the_public_manifest(tmp_path, monkeypatch) -> None:
+
+
+# ------------------------------------------------ wikipedia / stack exchange
+
+
+def test_html_strip_keeps_prose_and_drops_code_and_quotes() -> None:
+    markup = (
+        "<p>Use <em>fresh</em> yeast &amp; warm water.</p>"
+        "<pre><code>knead(dough)</code></pre>"
+        "<blockquote><p>Someone else wrote this.</p></blockquote>"
+        "<ul><li>Rest it.</li><li>Bake it.</li></ul>"
+    )
+    text = corpus.html_strip(markup)
+    assert text == "Use fresh yeast & warm water.\n\nRest it.\n\nBake it."
+    assert "knead" not in text and "Someone else" not in text
+
+
+def test_stackexchange_pairs_keeps_only_pre_cutoff_untouched_prose() -> None:
+    prose = "word " * 80
+    items = [
+        {"answer_id": 1, "creation_date": corpus.CUTOFF_EPOCH - 10, "body": f"<p>{prose}</p>"},
+        {"answer_id": 2, "creation_date": corpus.CUTOFF_EPOCH + 10, "body": f"<p>{prose}</p>"},
+        {"answer_id": 3, "creation_date": 1500000000, "last_edit_date": corpus.CUTOFF_EPOCH + 5, "body": f"<p>{prose}</p>"},
+        {"answer_id": 4, "creation_date": 1500000000, "last_edit_date": 1600000000, "body": f"<p>{prose}</p>"},
+        {"answer_id": 5, "creation_date": 1500000000, "body": "<p>too short</p>"},
+    ]
+    pairs, dropped = corpus.stackexchange_pairs(items, "cooking")
+    assert [source["answer_id"] for _f, _t, source in pairs] == [1, 4]
+    assert dropped == {"post-cutoff": 1, "edited-post-cutoff": 1, "word-band": 1}
+    fields, text, source = pairs[1]
+    assert fields == {"register": "chat", "author": "other", "date": "2017-07", "extraction": corpus.HTML_STRIP_VERSION}
+    assert source == {"site": "cooking", "answer_id": 4, "url": "https://cooking.stackexchange.com/a/4"}
+    assert text == prose.strip()
+
+
+def test_wikipedia_pair_strips_wikitext_and_bounds_length() -> None:
+    bold = "'" * 3
+    body = bold + "Marvale" + bold + " is a [[town]] in [[Calder Bay|the bay]].<ref>cite</ref> " + "It has a harbor. " * 60
+    rev = {"title": "Marvale", "revid": 123, "timestamp": "2021-06-01T00:00:00Z", "wikitext": body}
+    fields, text, source = corpus.wikipedia_pair(rev)
+    assert text.startswith("Marvale is a town in the bay.")
+    assert "<ref>" not in text and "[[" not in text
+    assert fields == {"register": "wiki", "author": "other", "date": "2021-06", "extraction": corpus.WIKITEXT_STRIP_VERSION}
+    assert source == {"site": "en.wikipedia.org", "title": "Marvale", "revid": 123, "url": "https://en.wikipedia.org/w/index.php?oldid=123"}
+    assert corpus.wikipedia_pair({**rev, "wikitext": "Too short."}) is None
+    assert corpus.wikipedia_pair({**rev, "wikitext": "word " * (corpus.WIKIPEDIA_MAX_WORDS + 1)}) is None
+
+
+def test_save_manifest_drops_the_old_private_totals(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
     monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
-    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
-    forum = {"id": "forum-0123456789ab", "kind": "forum-post", "register": "chat", "author": "maintainer",
-             "sha256": "0123456789ab" + "0" * 52, "words": 60}
     pd = {"id": "pd-ba9876543210", "kind": "public-domain", "register": "essay", "author": "public-domain",
           "sha256": "ba9876543210" + "0" * 52, "words": 600}
-    corpus.save_manifest({"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": [forum, pd]})
-    public_text = (tmp_path / "manifest.json").read_text(encoding="utf-8")
-    assert "forum-0123456789ab" not in public_text and "0123456789ab" not in public_text
-    public = json.loads(public_text)
+    corpus.save_manifest({"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": [pd],
+                          "private_pools": {"forum-post": {"entries": 5, "registers": {"chat": 5}}}})
+    public = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))
+    assert "private_pools" not in public
     assert [e["id"] for e in public["entries"]] == ["pd-ba9876543210"]
-    assert public["private_pools"] == {"forum-post": {"entries": 1, "registers": {"chat": 1}}}
-    assert {e["id"] for e in corpus.load_manifest()["entries"]} == {"forum-0123456789ab", "pd-ba9876543210"}
-    # A public clone (no private file) keeps the published totals when it saves.
-    (tmp_path / "manifest.private.json").unlink()
-    corpus.save_manifest(corpus.load_manifest())
-    assert json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"] == public["private_pools"]
 
 
-def test_rebuilding_one_private_pool_keeps_the_other_pools_totals(tmp_path, monkeypatch) -> None:
+def test_fetch_rebuilds_wikipedia_and_stackexchange_entries_by_id(tmp_path, monkeypatch) -> None:
+    import argparse
+
+    wikitext = "Prose from the revision. " * 20
+    html = "<p>" + "Prose from the answer. " * 20 + "</p>"
+    wp_text = corpus.wikitext_strip(wikitext)
+    se_text = corpus.html_strip(html)
+    entries = [
+        {"id": f"wp-{corpus.sha256_text(wp_text)[:12]}", "kind": "wikipedia-revision", "register": "wiki",
+         "author": "other", "words": 100, "sha256": corpus.sha256_text(wp_text),
+         "extraction": corpus.WIKITEXT_STRIP_VERSION,
+         "source": {"site": "en.wikipedia.org", "title": "X", "revid": 77, "url": "u"}},
+        {"id": f"se-{corpus.sha256_text(se_text)[:12]}", "kind": "stackexchange-answer", "register": "chat",
+         "author": "other", "words": 100, "sha256": corpus.sha256_text(se_text),
+         "extraction": corpus.HTML_STRIP_VERSION,
+         "source": {"site": "cooking", "answer_id": 9, "url": "u"}},
+    ]
     monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
     monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
-    monkeypatch.setattr(corpus, "PRIVATE_MANIFEST_PATH", tmp_path / "manifest.private.json")
-    published = {"forum-post": {"entries": 5, "registers": {"chat": 5}},
-                 "wiki-revision": {"entries": 3, "registers": {"wiki": 3}}}
-    base = {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "private_pools": published}
-    corpus._write_json(tmp_path / "manifest.json", {**base, "entries": []})
-    wiki = {"id": "wiki-00000000000a", "kind": "wiki-revision", "register": "wiki", "author": "mixed",
-            "sha256": "a" * 64, "words": 400}
-    # A fresh clone rebuilds only the wiki pool: the forum total stays published.
-    corpus.save_manifest({**corpus.load_manifest(), "entries": [wiki]})
-    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
-    assert pools == {"forum-post": published["forum-post"], "wiki-revision": {"entries": 1, "registers": {"wiki": 1}}}
-    # A pool this machine held and then emptied drops out of the totals.
-    corpus.save_manifest({**corpus.load_manifest(), "entries": []})
-    pools = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["private_pools"]
-    assert pools == {"forum-post": published["forum-post"]}
+    monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
+    corpus._write_json(tmp_path / "manifest.json", {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": entries})
+    calls = []
+
+    def fake_api_get(url, params, sleep):
+        calls.append((url, params))
+        assert params["revids"] == "77"
+        return {"query": {"pages": {"1": {"revisions": [{"revid": 77, "slots": {"main": {"*": wikitext}}}]}}}}
+
+    def fake_se_get(path, params, sleep):
+        calls.append((path, params))
+        assert path == "answers/9" and params["site"] == "cooking"
+        return {"items": [{"answer_id": 9, "body": html}]}
+
+    monkeypatch.setattr(corpus, "api_get", fake_api_get)
+    monkeypatch.setattr(corpus, "stackexchange_get", fake_se_get)
+    assert corpus.fetch(argparse.Namespace(sleep=0)) == 0
+    assert len(calls) == 2
+    assert corpus.verify(argparse.Namespace()) == 0
+
+
+def test_period_bands_from_manifest_dates() -> None:
+    assert fp_measure.period_of("pre-1923") == "pre-1930"
+    assert fp_measure.period_of("1900-1922") == "pre-1930"
+    assert fp_measure.period_of("1899") == "pre-1930"
+    assert fp_measure.period_of("2001") == "1930-2017"
+    assert fp_measure.period_of("2021-06") == "2018-2022"
+    assert fp_measure.period_of("") == "undated"
+
+
+def test_measure_reports_false_positives_by_period(tmp_path, monkeypatch) -> None:
+    old = {**_entry("pd-000000000001", "human", register="essay"), "date": "1918"}
+    new = {**_entry("wp-000000000002", "human", register="wiki"), "date": "2021-03"}
+    newer = {**_entry("wp-000000000003", "human", register="wiki"), "date": "2022-10"}
+    result = _measure_fixture(tmp_path, monkeypatch, [(old, PLAIN), (new, SLOP), (newer, PLAIN)])
+    periods = result["by_period"]
+    assert list(periods) == ["pre-1930", "2018-2022"]
+    assert periods["pre-1930"]["n"] == 1 and periods["pre-1930"]["flagged"] == 0
+    assert periods["2018-2022"]["n"] == 2 and periods["2018-2022"]["flagged"] == 1
+    page = fp_measure.render_results_md(result)
+    assert "| period: 2018-2022 | 2 | 1 | 50.0% |" in page
+    assert "period:pre-1930" in fp_measure.render_text(result)

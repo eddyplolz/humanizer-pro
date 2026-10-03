@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+Measurement corpus, public sources only:
+
+- The forum and wiki pools are gone, along with `manifest.private.json`,
+  `sources.local.json`, `build.local.json`, the `private_pools` totals, the MyBB extractor, and the
+  per-user wiki builder. Every document comes from a public source, and no measurement needs a
+  private file.
+- Two public pools replace them: `build-wikipedia` (random English Wikipedia articles at their
+  last pre-cutoff revision, CC BY-SA, pointer = revision id) for the wiki register, and
+  `build-stackexchange` (top-voted pre-cutoff answers from hobby, language, and workplace sites,
+  code and quotes stripped, CC BY-SA, pointer = answer id) for the chat register. `fetch` rebuilds
+  both by id, so every published number can be checked by anyone.
+- Every manifest entry now carries a public pointer, and the anonymity test checks the pointer
+  shape kind by kind.
+- `corpus/RESULTS.md` and the README's error-rate tables are regenerated from this corpus with the
+  current rules, on the test split only, in both directions (false positives on human text, catch
+  rate on RAID and WildChat).
+
 - README: the measurement section now says what was measured (1,912 documents with the 4.12.0
   rules), that the public collection holds no AI text yet, and that the dev/test split applies
   from the next measurement on. The newspaper date range is 1898 to 1909. Install snippets pin
