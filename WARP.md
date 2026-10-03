@@ -56,6 +56,9 @@ release. The full release history is in `CHANGELOG.md`.
 - `pyproject.toml`, `action.yml`, `.pre-commit-hooks.yaml` - the `humanizer-audit` console script,
   the GitHub Action, and the pre-commit hook. The version lives in `humanizer_audit.__version__`.
 - `.github/workflows/ci.yml` - tests on Python 3.10-3.13, self-scan, package install, action smoke.
+- `.github/workflows/release.yml` - on every push to `main`, publishes a release for
+  `__version__` if none exists, with that version's CHANGELOG section as the notes. A release is
+  therefore just: bump the version, add the CHANGELOG section, merge.
 - `tests/`
   - pytest coverage for the audit CLI, fixture contracts, compare-mode name fidelity, and the
     corpus tools.
