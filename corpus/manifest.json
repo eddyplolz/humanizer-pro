@@ -22616,44 +22616,28 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2290b1583baa",
+      "extraction": "chunk.v2",
+      "id": "pd-03c6a992e116",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2290b1583baacd22b8a917efa061f4ecf2a49ba45e9d318255f60e602967e51d",
+      "sha256": "03c6a992e11684caa2c80fe1dbfe05eacedc89f01e071e7a9ae89be60124c9e1",
       "source": {
-        "chunk": 32,
+        "chunk": 3,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 522
+      "words": 509
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-250c1d57c1ab",
+      "extraction": "chunk.v2",
+      "id": "pd-0c61f103917e",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "250c1d57c1abaa81aa25476c4cf2b7d0ced8b2c2d5c005fb8dc61502a9a6420a",
-      "source": {
-        "chunk": 6,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 502
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2a6e2fd17d03",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "2a6e2fd17d03ca358d796c5503849fd76a1095f0a7a334ce5c73518f9dcb0b51",
+      "sha256": "0c61f103917e2b949095d01bd51e34bcbdee246091dc278a9dd602112d1fb294",
       "source": {
         "chunk": 24,
         "chunk_words": 500,
@@ -22664,14 +22648,14 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2c5a8aabd415",
+      "extraction": "chunk.v2",
+      "id": "pd-14726b29c750",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2c5a8aabd415dfbe9cdc3563162f46416c34b81b9ba869a34432ad52f90e9496",
+      "sha256": "14726b29c7505ad41626010e85311278917358f64221598fea81dcf305299075",
       "source": {
-        "chunk": 33,
+        "chunk": 4,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22680,110 +22664,94 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-2ef47f77ed6e",
+      "extraction": "chunk.v2",
+      "id": "pd-159f6e269714",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "2ef47f77ed6ee09953578c7e390b6b99e2ba9b08b4d0e749b0b883c3324fb405",
+      "sha256": "159f6e269714b1b21222841c0850fa1b1e63a83af050996e9defa743d0f51992",
       "source": {
-        "chunk": 7,
+        "chunk": 5,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 501
+      "words": 511
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-33e96cd2cb64",
+      "extraction": "chunk.v2",
+      "id": "pd-1ac1f067bcb8",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "33e96cd2cb64061677e1dff71d0418f4339a4518834066424c2346506aedbe4e",
+      "sha256": "1ac1f067bcb87a281d7c2d5aaaa7a3979cf2a0de8d41e1053c61cbc6c7459980",
       "source": {
-        "chunk": 26,
+        "chunk": 1,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 504
+      "words": 561
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-406815607eb1",
+      "extraction": "chunk.v2",
+      "id": "pd-293793813b1a",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "406815607eb12ba1d23b4934dacf498522780a1c4977bdedefc6b8f9cb511f07",
+      "sha256": "293793813b1a7b9ab324d319f65a99dcfff92d06952104c755874ab8ad585ec1",
       "source": {
-        "chunk": 3,
+        "chunk": 17,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 505
+      "words": 543
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4206be50a664",
+      "extraction": "chunk.v2",
+      "id": "pd-2ad34074304c",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4206be50a664b7ac18fed6507fb28e56da22a27e78108b2426dcb65c8f62797c",
+      "sha256": "2ad34074304c75d26ced82c13725e083043ab49f4394ebf036e4269f0d694e42",
       "source": {
-        "chunk": 31,
+        "chunk": 11,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 599
+      "words": 508
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4b839e25254d",
+      "extraction": "chunk.v2",
+      "id": "pd-37700fb9bff7",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4b839e25254dcde948a45a7a1ef4ffe91d3b79eea5188e32720e02b0ab67f49c",
+      "sha256": "37700fb9bff712e79fb3972e4323830b03ef7b4e1dda6b32d423081574796f01",
       "source": {
-        "chunk": 14,
+        "chunk": 16,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 501
+      "words": 533
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-4d5b3e140fac",
+      "extraction": "chunk.v2",
+      "id": "pd-3a016d1e2a93",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "4d5b3e140fac7f52ca6452a6e50c9115f298cba991b51c4e5d007b526d26717a",
+      "sha256": "3a016d1e2a93afcf751ed8d875a85b0d175668a4ff7f81705ad343ad0253a62a",
       "source": {
-        "chunk": 13,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 537
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-5b2d07c93379",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "5b2d07c93379a11fb76cc143aa4e632025f7f578dddb352b58e932e01a7c76a3",
-      "source": {
-        "chunk": 22,
+        "chunk": 9,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22792,30 +22760,14 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-5cb1b23ee87a",
+      "extraction": "chunk.v2",
+      "id": "pd-533e726675c4",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "5cb1b23ee87ac7963b297162b3db537e931d83cdc812458b100449dee00e19d0",
+      "sha256": "533e726675c42eea1ed3885c26c5a521d320d3c2790c1df2905d0bcd2b7f3ab9",
       "source": {
-        "chunk": 29,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 504
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-6195ccca62f6",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "6195ccca62f6f4de7c80fbe9d66ac6765da952bc09bfead9fe2da52ba70c430c",
-      "source": {
-        "chunk": 27,
+        "chunk": 23,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -22824,238 +22776,46 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-65ecae351221",
+      "extraction": "chunk.v2",
+      "id": "pd-5ffabd336d70",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "65ecae351221d68411b367b2473e5732d242a3b29888bdfa80d3508d4492cd93",
-      "source": {
-        "chunk": 1,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 501
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-66a31555b3d0",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "66a31555b3d0e4191c5384baf9a8681ff2c467de52654e73ca73fe120fbb037e",
-      "source": {
-        "chunk": 2,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 509
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-714768ec3651",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "714768ec3651c126d8e7048278d656c39c65061857913fefd24b350c4a34da40",
-      "source": {
-        "chunk": 23,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 506
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-818ca6943579",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "818ca69435797c74f7e7a1f3ce799fe7482f5a7daed9c4535ca824963f4fa274",
-      "source": {
-        "chunk": 12,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 500
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-84ad1530c1e6",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "84ad1530c1e6da2308369c8b37442ceb74f68517eba1e19513a5e342eb20169a",
+      "sha256": "5ffabd336d70cb6caac2ad6947c551215fd52210229598e65d76925dd2f6c918",
       "source": {
         "chunk": 21,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 513
+      "words": 538
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-88e2e30dcefa",
+      "extraction": "chunk.v2",
+      "id": "pd-64330c01bdea",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "88e2e30dcefaa3d92524c5f0849b358ab21c93d96d661c12be2782a18ab0e15c",
+      "sha256": "64330c01bdea2828aab4603b65354a57a3a2f32b0a9baecf0753c8d54b12314c",
       "source": {
-        "chunk": 30,
+        "chunk": 7,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
-      "words": 544
+      "words": 568
     },
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-89ffaaca96d6",
+      "extraction": "chunk.v2",
+      "id": "pd-65bfbd8c0d0a",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "89ffaaca96d6464ffa15a7d5cc555ddc4bf6dfd56bd80d1773302c104bad26d8",
+      "sha256": "65bfbd8c0d0a2a89e1774b8fb9497a2893d3896ada7a5e14b5a3acc74869b917",
       "source": {
-        "chunk": 17,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 510
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-91ffc4e04298",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "91ffc4e04298924822aad6637f8030ef79731bc0d4d490ac442e7384336e18f3",
-      "source": {
-        "chunk": 19,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 507
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-924f05468a0d",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "924f05468a0d6365159e33694cab5cf2e9151de96c30c22b6530247d48a984bb",
-      "source": {
-        "chunk": 9,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 502
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-99d66c83932c",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "99d66c83932c4b17d25c61393d17f0f80e006ed6e98ade0b5a2509a44a55127e",
-      "source": {
-        "chunk": 15,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 505
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-9c9d430c18a2",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "9c9d430c18a2df0bde982ec0af695659e16447db5d648729bcd7d18828d72e59",
-      "source": {
-        "chunk": 25,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 610
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-a97656df15dc",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "a97656df15dc616b4c514dabfd5b7ad96146ea55a0b0982d4d1b9b667b73e5b5",
-      "source": {
-        "chunk": 18,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 509
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-be122358a6fa",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "be122358a6fa3d58c2c8bf89840bd3d80a84949cbb7bd1c68c9c12b78f731f38",
-      "source": {
-        "chunk": 11,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 506
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-c267d471c19b",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "c267d471c19b32bc2ff97aadbe0d2e69b3415fd2073a9a4274af81a37fed73ad",
-      "source": {
-        "chunk": 16,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 519
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-d9133e004229",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "d9133e00422985da6720c09d3c39392bf17b710c6cac27a1abcabefead487e7d",
-      "source": {
-        "chunk": 20,
+        "chunk": 14,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
@@ -23064,85 +22824,229 @@
     {
       "author": "public-domain",
       "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-ddc3d379dbfb",
+      "extraction": "chunk.v2",
+      "id": "pd-68bc77a5d368",
       "kind": "public-domain",
       "label": "human",
       "register": "essay",
-      "sha256": "ddc3d379dbfb2c2f1a34dbc0cd5dc7777735b9ef12f1946cbd4cf4c190775e5a",
+      "sha256": "68bc77a5d368b3c16f01d6b839c6fa34f71f5d25e7374eb73114c080d240ca13",
       "source": {
-        "chunk": 28,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 501
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-e1878e6f35ce",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "e1878e6f35ce0ce261063c33117f751bb0a3e486c673579472e1a0a0c7afec9c",
-      "source": {
-        "chunk": 4,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 531
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-e59eb25696b8",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "e59eb25696b897895adc1a6fe467814b088c8497b15ca2f8d211448675e427df",
-      "source": {
-        "chunk": 8,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 560
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-ec7953206394",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "ec7953206394a89546de3bdc6ae633fe5c13d7023bda1342917e446373c2f17c",
-      "source": {
-        "chunk": 5,
-        "chunk_words": 500,
-        "work": "reference/elements-of-style-1918.md"
-      },
-      "words": 501
-    },
-    {
-      "author": "public-domain",
-      "date": "1918",
-      "extraction": "chunk.v1",
-      "id": "pd-fe41b686c2c5",
-      "kind": "public-domain",
-      "label": "human",
-      "register": "essay",
-      "sha256": "fe41b686c2c54834ba5ba8e3d12218b78ee0b2820fd003d31062667cc3487ccb",
-      "source": {
-        "chunk": 10,
+        "chunk": 19,
         "chunk_words": 500,
         "work": "reference/elements-of-style-1918.md"
       },
       "words": 500
     },
     {
-      "author": "maintainer",
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-68d2a379315b",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "68d2a379315b135c5eabc99b66202fc79d7a9eb75753006d9674cdcc7fa0f83b",
+      "source": {
+        "chunk": 18,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 501
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-78eb346bae00",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "78eb346bae00add1b09e3ade828fae16ff38e28c0c7757cdccc2d606367bab90",
+      "source": {
+        "chunk": 22,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 520
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-7f112bb38cb1",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7f112bb38cb16068e77eca80200c7edcbcbe02fbbd3b0f19285a75841be5213e",
+      "source": {
+        "chunk": 10,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 506
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-804e588f6eff",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "804e588f6effcbd4576fbf38671ee6617321b8a65758741a60044a9f6d26e95c",
+      "source": {
+        "chunk": 6,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 513
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-9139ddfaabf4",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9139ddfaabf48107a89e111adcad23677b212812d629997ddc338a8aa77336b9",
+      "source": {
+        "chunk": 13,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 504
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-966ef2153734",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "966ef2153734516d81b2c09d1a23c0ed1babb2f8ed17275dbad2f6c1fa3042cd",
+      "source": {
+        "chunk": 8,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 523
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-9be505f6eb21",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9be505f6eb210a2201d88375cb68d97dc76277a8b92a0f79bfa805282906640f",
+      "source": {
+        "chunk": 15,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 568
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-ad15e0a1ed90",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ad15e0a1ed90535cffb8713cc4b3c626092705944f91aab6244e9e8dca5a509a",
+      "source": {
+        "chunk": 12,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 511
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d623dea32517",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d623dea3251793611b8cc07cb0652b29a1563c14e7eefe006efcb16a39f2d0b8",
+      "source": {
+        "chunk": 26,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 536
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d7e70adbab3e",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d7e70adbab3eb9fff08cecc79f1d5286baad0b28787279f9c1c29e5f26651d83",
+      "source": {
+        "chunk": 20,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 503
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-d7ec3329b179",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d7ec3329b17948dd290ea72cd871d6b35cd5875c74446031e37f560dc2c8b3ee",
+      "source": {
+        "chunk": 2,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 500
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-e685c92dc9e3",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e685c92dc9e33352d82d0c82b53eabcede73403c5da2d4e805eeb42b5efa55b3",
+      "source": {
+        "chunk": 27,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 340
+    },
+    {
+      "author": "public-domain",
+      "date": "1918",
+      "extraction": "chunk.v2",
+      "id": "pd-ef5d17721f6b",
+      "kind": "public-domain",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ef5d17721f6b1a1b25db46e3fa6bf7ff3b330610587ef77e1c40f2aacbaebaa2",
+      "source": {
+        "chunk": 25,
+        "chunk_words": 500,
+        "work": "reference/elements-of-style-1918.md"
+      },
+      "words": 545
+    },
+    {
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0068f9bdb393",
@@ -23153,7 +23057,7 @@
       "words": 173
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-009e26577f47",
@@ -23164,7 +23068,7 @@
       "words": 29249
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0110bea9e950",
@@ -23175,7 +23079,7 @@
       "words": 165
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-01575660405b",
@@ -23186,7 +23090,7 @@
       "words": 387
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0195ee2f3580",
@@ -23197,7 +23101,7 @@
       "words": 2479
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-039699861787",
@@ -23208,7 +23112,7 @@
       "words": 291
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-040cfdbdc89f",
@@ -23219,7 +23123,7 @@
       "words": 1114
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0411413d4673",
@@ -23230,7 +23134,7 @@
       "words": 239
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-04ba344a4db0",
@@ -23241,7 +23145,7 @@
       "words": 2692
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-051f86e7ad08",
@@ -23252,7 +23156,7 @@
       "words": 395
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-058fc02edd90",
@@ -23263,7 +23167,7 @@
       "words": 333
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-05925fdce26c",
@@ -23274,7 +23178,7 @@
       "words": 255
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0609f257647d",
@@ -23285,7 +23189,7 @@
       "words": 340
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-06f5a99ce35f",
@@ -23296,7 +23200,7 @@
       "words": 320
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-070612c14fbb",
@@ -23307,7 +23211,7 @@
       "words": 302
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-074fe853349d",
@@ -23318,7 +23222,7 @@
       "words": 587
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2017-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-076c3565abc1",
@@ -23329,7 +23233,7 @@
       "words": 486
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-07b192b2a9e9",
@@ -23340,7 +23244,7 @@
       "words": 177
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-09688d214e8e",
@@ -23351,7 +23255,7 @@
       "words": 3657
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-09a7f8f39537",
@@ -23362,7 +23266,7 @@
       "words": 438
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-09bc697b26b7",
@@ -23373,7 +23277,7 @@
       "words": 664
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-09fdecccb2a4",
@@ -23384,7 +23288,7 @@
       "words": 348
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0a69f7809837",
@@ -23395,7 +23299,7 @@
       "words": 431
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0b05e4440190",
@@ -23406,7 +23310,7 @@
       "words": 661
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0b86f7df90ed",
@@ -23417,7 +23321,7 @@
       "words": 274
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0bdad2b53758",
@@ -23428,7 +23332,7 @@
       "words": 437
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0bee2c6077da",
@@ -23439,7 +23343,7 @@
       "words": 1102
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0c166fe36b28",
@@ -23450,7 +23354,7 @@
       "words": 904
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0d535021ce42",
@@ -23461,7 +23365,7 @@
       "words": 489
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0db4e620e90e",
@@ -23472,7 +23376,7 @@
       "words": 301
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0dcfd921da04",
@@ -23483,7 +23387,7 @@
       "words": 230
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0e1e3053ebdd",
@@ -23494,7 +23398,7 @@
       "words": 451
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0e4d7aae6fe8",
@@ -23505,7 +23409,7 @@
       "words": 1123
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0e893bc57764",
@@ -23516,7 +23420,7 @@
       "words": 913
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0eadd00b3123",
@@ -23527,7 +23431,7 @@
       "words": 1086
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0eaed4b36841",
@@ -23538,7 +23442,7 @@
       "words": 260
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0ecfa8706a87",
@@ -23549,7 +23453,7 @@
       "words": 524
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-0f3df27a9611",
@@ -23560,7 +23464,7 @@
       "words": 267
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-102847f019b9",
@@ -23571,7 +23475,7 @@
       "words": 1390
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1028902d71fa",
@@ -23582,7 +23486,7 @@
       "words": 1513
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-10909eface02",
@@ -23593,7 +23497,7 @@
       "words": 500
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1090c4382b13",
@@ -23604,7 +23508,7 @@
       "words": 220
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-109c80a02ca8",
@@ -23615,7 +23519,7 @@
       "words": 154
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-112b37dc8ded",
@@ -23626,7 +23530,7 @@
       "words": 617
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1234513440a4",
@@ -23637,7 +23541,7 @@
       "words": 477
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-12d476437b14",
@@ -23648,7 +23552,7 @@
       "words": 223
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-12dcf99df8b3",
@@ -23659,7 +23563,7 @@
       "words": 1238
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-12f94c4381de",
@@ -23670,7 +23574,7 @@
       "words": 660
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-13b444d76fe8",
@@ -23681,7 +23585,7 @@
       "words": 248
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-14280a6e80e9",
@@ -23692,7 +23596,7 @@
       "words": 166
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-147f5c1f3113",
@@ -23703,7 +23607,7 @@
       "words": 17853
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-14cffda03d94",
@@ -23714,7 +23618,7 @@
       "words": 237
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1562f74103fd",
@@ -23725,7 +23629,7 @@
       "words": 940
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-158f01bc4ca5",
@@ -23736,7 +23640,7 @@
       "words": 153
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1596d468e28f",
@@ -23747,7 +23651,7 @@
       "words": 191
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-15d533c09b0d",
@@ -23758,7 +23662,7 @@
       "words": 309
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1882a89c06e6",
@@ -23769,7 +23673,7 @@
       "words": 2642
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-194de3212d08",
@@ -23780,7 +23684,7 @@
       "words": 162
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-19a3285adddd",
@@ -23791,7 +23695,7 @@
       "words": 2416
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1aa22d6f2340",
@@ -23802,7 +23706,7 @@
       "words": 150
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1b5ac82e7fd8",
@@ -23813,7 +23717,7 @@
       "words": 200
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1befa5defbe7",
@@ -23824,7 +23728,7 @@
       "words": 268
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1c03a50cc969",
@@ -23835,7 +23739,7 @@
       "words": 204
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1c24082fef4e",
@@ -23846,7 +23750,7 @@
       "words": 615
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1c87ed1c955d",
@@ -23857,7 +23761,7 @@
       "words": 209
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1d67e5ab61d5",
@@ -23868,7 +23772,7 @@
       "words": 1906
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1d950ef4283c",
@@ -23879,7 +23783,7 @@
       "words": 456
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1e6ab8ccac47",
@@ -23890,7 +23794,7 @@
       "words": 1845
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1ede7768957a",
@@ -23901,7 +23805,7 @@
       "words": 1080
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1f334f78a858",
@@ -23912,7 +23816,7 @@
       "words": 993
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1fa545d616b5",
@@ -23923,7 +23827,7 @@
       "words": 249
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-1fecec1b4a62",
@@ -23934,7 +23838,7 @@
       "words": 638
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-211e4d6a05ca",
@@ -23945,7 +23849,7 @@
       "words": 406
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-218a5d908abf",
@@ -23956,7 +23860,7 @@
       "words": 356
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-22fe7d443d6e",
@@ -23967,7 +23871,7 @@
       "words": 243
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2322ff7d7fc4",
@@ -23978,7 +23882,7 @@
       "words": 905
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-232f32ed4382",
@@ -23989,7 +23893,7 @@
       "words": 558
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-236551f830c5",
@@ -24000,7 +23904,7 @@
       "words": 748
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-24dea72d6f5f",
@@ -24011,7 +23915,7 @@
       "words": 755
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-24ea3c568fd4",
@@ -24022,7 +23926,7 @@
       "words": 224
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2576bc3c0333",
@@ -24033,7 +23937,7 @@
       "words": 2443
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-287f6f3095f7",
@@ -24044,7 +23948,7 @@
       "words": 381
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-28c49f43d247",
@@ -24055,7 +23959,7 @@
       "words": 258
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-28f663a9fb65",
@@ -24066,7 +23970,7 @@
       "words": 350
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2a04866ca350",
@@ -24077,7 +23981,7 @@
       "words": 1852
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2a155cb2c36d",
@@ -24088,7 +23992,7 @@
       "words": 231
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2b222ab052be",
@@ -24099,7 +24003,7 @@
       "words": 1285
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2b23674015e3",
@@ -24110,7 +24014,7 @@
       "words": 292
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2b300cb13099",
@@ -24121,7 +24025,7 @@
       "words": 666
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2bde544d8867",
@@ -24132,7 +24036,7 @@
       "words": 171
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2be93974869c",
@@ -24143,7 +24047,7 @@
       "words": 581
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2c5235e83eba",
@@ -24154,7 +24058,7 @@
       "words": 1476
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2c61a8f95b57",
@@ -24165,7 +24069,7 @@
       "words": 205
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2cb3ef627854",
@@ -24176,7 +24080,7 @@
       "words": 1134
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2cb94bc68ba5",
@@ -24187,7 +24091,7 @@
       "words": 805
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2d475f6ad358",
@@ -24198,7 +24102,7 @@
       "words": 3795
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2d6b4d78ec18",
@@ -24209,7 +24113,7 @@
       "words": 1147
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2d8fbb92cafc",
@@ -24220,7 +24124,7 @@
       "words": 1395
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2ebf30db1692",
@@ -24231,7 +24135,7 @@
       "words": 683
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2f5714836e35",
@@ -24242,7 +24146,7 @@
       "words": 529
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2f67618372ab",
@@ -24253,7 +24157,7 @@
       "words": 551
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-2fb70c95ee4e",
@@ -24264,7 +24168,7 @@
       "words": 691
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-30417691b737",
@@ -24275,7 +24179,7 @@
       "words": 274
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-306a1ac863a2",
@@ -24286,7 +24190,7 @@
       "words": 729
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-30b6b4ef41ef",
@@ -24297,7 +24201,7 @@
       "words": 155
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-31a8aa584fee",
@@ -24308,7 +24212,7 @@
       "words": 210
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-31e52ec919ab",
@@ -24319,7 +24223,7 @@
       "words": 290
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-329000b2b4b6",
@@ -24330,7 +24234,7 @@
       "words": 1122
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-33a1ddf10a6d",
@@ -24341,7 +24245,7 @@
       "words": 719
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3446da55ec95",
@@ -24352,7 +24256,7 @@
       "words": 433
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-345221692166",
@@ -24363,7 +24267,7 @@
       "words": 284
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3481dec626af",
@@ -24374,7 +24278,7 @@
       "words": 275
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-34998f1b637d",
@@ -24385,7 +24289,7 @@
       "words": 1031
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3549fb4d26a4",
@@ -24396,7 +24300,7 @@
       "words": 333
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3587b5bf3a83",
@@ -24407,7 +24311,7 @@
       "words": 423
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-361873e05dd9",
@@ -24418,7 +24322,7 @@
       "words": 204
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-366282d8d1af",
@@ -24429,7 +24333,7 @@
       "words": 1262
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-370844c8ddc5",
@@ -24440,7 +24344,7 @@
       "words": 1621
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-370a8a8cfe40",
@@ -24451,7 +24355,7 @@
       "words": 8330
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-375238e0be40",
@@ -24462,7 +24366,7 @@
       "words": 485
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3810121c7437",
@@ -24473,7 +24377,7 @@
       "words": 597
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-384025272431",
@@ -24484,7 +24388,7 @@
       "words": 232
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-38c1e54299db",
@@ -24495,7 +24399,7 @@
       "words": 197
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3958b5b909cc",
@@ -24506,7 +24410,7 @@
       "words": 2077
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-397780c29a41",
@@ -24517,7 +24421,7 @@
       "words": 1593
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3a8260b879a8",
@@ -24528,7 +24432,7 @@
       "words": 702
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3bc66a2b2a08",
@@ -24539,7 +24443,7 @@
       "words": 373
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3bf4a5f37984",
@@ -24550,7 +24454,7 @@
       "words": 412
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3c1f7a0e3741",
@@ -24561,7 +24465,7 @@
       "words": 327
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3c84dd38de4d",
@@ -24572,7 +24476,7 @@
       "words": 283
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3c88f9f6034a",
@@ -24583,7 +24487,7 @@
       "words": 4129
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3cc11dffc0c4",
@@ -24594,7 +24498,7 @@
       "words": 364
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3d18e96da0f1",
@@ -24605,7 +24509,7 @@
       "words": 598
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3ddf890077c0",
@@ -24616,7 +24520,7 @@
       "words": 315
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3ee645af4e28",
@@ -24627,7 +24531,7 @@
       "words": 425
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3f13f18bc796",
@@ -24638,7 +24542,7 @@
       "words": 372
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3fb439e9288a",
@@ -24649,7 +24553,7 @@
       "words": 1448
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-3fbc279ba7d6",
@@ -24660,7 +24564,7 @@
       "words": 555
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-40be92472ab2",
@@ -24671,7 +24575,7 @@
       "words": 222
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-40f0600798b4",
@@ -24682,7 +24586,7 @@
       "words": 407
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-411d6cb4683e",
@@ -24693,7 +24597,7 @@
       "words": 971
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4189808d64c2",
@@ -24704,7 +24608,7 @@
       "words": 1158
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-41a7c3d9ee19",
@@ -24715,7 +24619,7 @@
       "words": 372
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-42f2d6c2fff7",
@@ -24726,7 +24630,7 @@
       "words": 1366
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-42f90e26d7e4",
@@ -24737,7 +24641,7 @@
       "words": 877
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-43a6dd9a05b0",
@@ -24748,7 +24652,7 @@
       "words": 366
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-43b9ab46596f",
@@ -24759,7 +24663,7 @@
       "words": 4241
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-43fcf8a2c087",
@@ -24770,7 +24674,7 @@
       "words": 250
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-44a44ce94d80",
@@ -24781,7 +24685,7 @@
       "words": 605
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-44fdae703469",
@@ -24792,7 +24696,7 @@
       "words": 484
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-453a24804d2f",
@@ -24803,7 +24707,7 @@
       "words": 170
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4567f4a2c62b",
@@ -24814,7 +24718,7 @@
       "words": 697
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-45fbb0155d12",
@@ -24825,7 +24729,7 @@
       "words": 621
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4679ac404030",
@@ -24836,7 +24740,7 @@
       "words": 438
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4718accbc0cf",
@@ -24847,7 +24751,7 @@
       "words": 2277
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-48233511fbda",
@@ -24858,7 +24762,7 @@
       "words": 605
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-48a7e495afd8",
@@ -24869,7 +24773,7 @@
       "words": 313
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-49b6dc83896c",
@@ -24880,7 +24784,7 @@
       "words": 554
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-49e2fd16a9ca",
@@ -24891,7 +24795,7 @@
       "words": 232
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-49f10b21a9ce",
@@ -24902,7 +24806,7 @@
       "words": 1194
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4a4a1c092321",
@@ -24913,7 +24817,7 @@
       "words": 289
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4a50707d79b7",
@@ -24924,7 +24828,7 @@
       "words": 950
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4a91a71d4607",
@@ -24935,7 +24839,7 @@
       "words": 502
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4af7baffab93",
@@ -24946,7 +24850,7 @@
       "words": 207
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4b4a628365ec",
@@ -24957,7 +24861,7 @@
       "words": 226
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4ba5a9e63b1b",
@@ -24968,7 +24872,7 @@
       "words": 1078
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4bf667499333",
@@ -24979,7 +24883,7 @@
       "words": 511
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4bf9fc93531b",
@@ -24990,7 +24894,7 @@
       "words": 440
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4bffacb41e06",
@@ -25001,7 +24905,7 @@
       "words": 164
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4c71ad758251",
@@ -25012,7 +24916,7 @@
       "words": 320
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4cd893d71dd8",
@@ -25023,7 +24927,7 @@
       "words": 404
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4d204f80c08d",
@@ -25034,7 +24938,7 @@
       "words": 166
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4d66572c6acd",
@@ -25045,7 +24949,7 @@
       "words": 1354
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4d6ad63bee41",
@@ -25056,7 +24960,7 @@
       "words": 3679
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4da89cd87838",
@@ -25067,7 +24971,7 @@
       "words": 1364
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4dbfde887d0b",
@@ -25078,7 +24982,7 @@
       "words": 188
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4ddfe197fdfb",
@@ -25089,7 +24993,7 @@
       "words": 1692
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4ed8c7b89284",
@@ -25100,7 +25004,7 @@
       "words": 213
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4ee3f3e57a54",
@@ -25111,7 +25015,7 @@
       "words": 259
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4f290e70dd6c",
@@ -25122,7 +25026,7 @@
       "words": 393
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4f9cba2064eb",
@@ -25133,7 +25037,7 @@
       "words": 1363
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-4fa080a4efc4",
@@ -25144,7 +25048,7 @@
       "words": 231
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5158fabfebb0",
@@ -25155,7 +25059,7 @@
       "words": 350
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5198be1b570c",
@@ -25166,7 +25070,7 @@
       "words": 352
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-51b52adb24f6",
@@ -25177,7 +25081,7 @@
       "words": 247
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-51cce2eee92c",
@@ -25188,7 +25092,7 @@
       "words": 324
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5231938e5fa4",
@@ -25199,7 +25103,7 @@
       "words": 167
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5235919d1d43",
@@ -25210,7 +25114,7 @@
       "words": 317
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5264b134ecb6",
@@ -25221,7 +25125,7 @@
       "words": 226
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-528543c4ba84",
@@ -25232,7 +25136,7 @@
       "words": 234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-52afc59cc3c3",
@@ -25243,7 +25147,7 @@
       "words": 251
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-53e3c35a0934",
@@ -25254,7 +25158,7 @@
       "words": 253
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5403c994a91c",
@@ -25265,7 +25169,7 @@
       "words": 1927
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-540b65ab100c",
@@ -25276,7 +25180,7 @@
       "words": 564
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-547d70fed839",
@@ -25287,7 +25191,7 @@
       "words": 400
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5537994adb99",
@@ -25298,7 +25202,7 @@
       "words": 195
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5555d1f34874",
@@ -25309,7 +25213,7 @@
       "words": 355
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-556d7dce36a1",
@@ -25320,7 +25224,7 @@
       "words": 477
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-55aee618aedd",
@@ -25331,7 +25235,7 @@
       "words": 442
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-55d7e5edeef6",
@@ -25342,7 +25246,7 @@
       "words": 779
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-55f4736fabe4",
@@ -25353,7 +25257,7 @@
       "words": 372
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-56082ef38c18",
@@ -25364,7 +25268,7 @@
       "words": 1136
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5693555429d1",
@@ -25375,7 +25279,7 @@
       "words": 376
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-56fb5527ee0a",
@@ -25386,7 +25290,7 @@
       "words": 263
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-57122f0b6391",
@@ -25397,7 +25301,7 @@
       "words": 667
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-572975e5256a",
@@ -25408,7 +25312,7 @@
       "words": 171
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-57e619442470",
@@ -25419,7 +25323,7 @@
       "words": 359
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5815e39f7345",
@@ -25430,7 +25334,7 @@
       "words": 1137
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-594b1996daff",
@@ -25441,7 +25345,7 @@
       "words": 321
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-59672e68ea3d",
@@ -25452,7 +25356,7 @@
       "words": 486
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5a1b98d4c584",
@@ -25463,7 +25367,7 @@
       "words": 195
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5aeefdabd596",
@@ -25474,7 +25378,7 @@
       "words": 167
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5bb31fba89b1",
@@ -25485,7 +25389,7 @@
       "words": 169
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5c220c966785",
@@ -25496,7 +25400,7 @@
       "words": 1097
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5c624bd8ba7e",
@@ -25507,7 +25411,7 @@
       "words": 447
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5d0ca4c59791",
@@ -25518,7 +25422,7 @@
       "words": 248
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5d6169b4532f",
@@ -25529,7 +25433,7 @@
       "words": 392
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5db591a5469c",
@@ -25540,7 +25444,7 @@
       "words": 208
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5decb7e6cdf8",
@@ -25551,7 +25455,7 @@
       "words": 1152
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5e363cc11cb8",
@@ -25562,7 +25466,7 @@
       "words": 3586
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-5e813ffb0ae3",
@@ -25573,7 +25477,7 @@
       "words": 2413
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-60329ce187e7",
@@ -25584,7 +25488,7 @@
       "words": 261
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-60b25940e39b",
@@ -25595,7 +25499,7 @@
       "words": 825
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-60c3de0f6965",
@@ -25606,7 +25510,7 @@
       "words": 170
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-60f1d7ea31a8",
@@ -25617,7 +25521,7 @@
       "words": 450
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-614e76721408",
@@ -25628,7 +25532,7 @@
       "words": 188
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-61eace24711e",
@@ -25639,7 +25543,7 @@
       "words": 211
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6256029e0968",
@@ -25650,7 +25554,7 @@
       "words": 386
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-628d8263ab65",
@@ -25661,7 +25565,7 @@
       "words": 1219
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-640a004ef91e",
@@ -25672,7 +25576,7 @@
       "words": 765
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-64aeb0163838",
@@ -25683,7 +25587,7 @@
       "words": 1065
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6595142fdc9a",
@@ -25694,7 +25598,7 @@
       "words": 791
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-66534786bb43",
@@ -25705,7 +25609,7 @@
       "words": 400
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-665c611ddc32",
@@ -25716,7 +25620,7 @@
       "words": 536
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6685ce9b6735",
@@ -25727,7 +25631,7 @@
       "words": 435
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-66adf6de1793",
@@ -25738,7 +25642,7 @@
       "words": 154
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-670882002c8b",
@@ -25749,7 +25653,7 @@
       "words": 3432
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-681b39f9797f",
@@ -25760,7 +25664,7 @@
       "words": 396
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6844f527fb4d",
@@ -25771,7 +25675,7 @@
       "words": 184
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-685dbfdd742d",
@@ -25782,7 +25686,7 @@
       "words": 3209
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-68b47ff39cda",
@@ -25793,7 +25697,7 @@
       "words": 173
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-694cbedff5ea",
@@ -25804,7 +25708,7 @@
       "words": 373
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-698d18e8f51b",
@@ -25815,7 +25719,7 @@
       "words": 445
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-69b91a599b1a",
@@ -25826,7 +25730,7 @@
       "words": 150
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6a005589478c",
@@ -25837,7 +25741,7 @@
       "words": 263
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6a0687312e40",
@@ -25848,7 +25752,7 @@
       "words": 262
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6a636068a12c",
@@ -25859,7 +25763,7 @@
       "words": 372
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6a894cf69eda",
@@ -25870,7 +25774,7 @@
       "words": 2558
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6aa0f170d0a8",
@@ -25881,7 +25785,7 @@
       "words": 1142
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6aa61a92673d",
@@ -25892,7 +25796,7 @@
       "words": 473
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6b05acca99a6",
@@ -25903,7 +25807,7 @@
       "words": 174
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6b35ff61afca",
@@ -25914,7 +25818,7 @@
       "words": 471
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6b9e520e7e1b",
@@ -25925,7 +25829,7 @@
       "words": 527
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6bae8ef84f47",
@@ -25936,7 +25840,7 @@
       "words": 364
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6bb6630e6f31",
@@ -25947,7 +25851,7 @@
       "words": 242
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6c3d4412e837",
@@ -25958,7 +25862,7 @@
       "words": 179
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6d4d87cf876c",
@@ -25969,7 +25873,7 @@
       "words": 194
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6d94a3a38554",
@@ -25980,7 +25884,7 @@
       "words": 234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6e052b61aea7",
@@ -25991,7 +25895,7 @@
       "words": 231
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6ed129a37066",
@@ -26002,7 +25906,7 @@
       "words": 1584
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6f4e29d60cdd",
@@ -26013,7 +25917,7 @@
       "words": 180
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-6f78ccd63cc6",
@@ -26024,7 +25928,7 @@
       "words": 213
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-700b164b71d2",
@@ -26035,7 +25939,7 @@
       "words": 150
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-703204d640e8",
@@ -26046,7 +25950,7 @@
       "words": 638
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-70c95456f737",
@@ -26057,7 +25961,7 @@
       "words": 1095
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-722a54db6b60",
@@ -26068,7 +25972,7 @@
       "words": 408
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7256ac7b7115",
@@ -26079,7 +25983,7 @@
       "words": 901
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-72fc7ce15579",
@@ -26090,7 +25994,7 @@
       "words": 234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-73413326da6a",
@@ -26101,7 +26005,7 @@
       "words": 162
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-735355a06610",
@@ -26112,7 +26016,7 @@
       "words": 5560
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-73852566c92d",
@@ -26123,7 +26027,7 @@
       "words": 312
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-74400a6bb09c",
@@ -26134,7 +26038,7 @@
       "words": 4226
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7441b9f2489b",
@@ -26145,7 +26049,7 @@
       "words": 264
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-75f06757a4c2",
@@ -26156,7 +26060,7 @@
       "words": 272
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7608d2251a72",
@@ -26167,7 +26071,7 @@
       "words": 280
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-76219da95a9a",
@@ -26178,7 +26082,7 @@
       "words": 507
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7641b40c97c9",
@@ -26189,7 +26093,7 @@
       "words": 247
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-767868979bc7",
@@ -26200,7 +26104,7 @@
       "words": 1705
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-768f4f186bff",
@@ -26211,7 +26115,7 @@
       "words": 1651
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-76c6279c0758",
@@ -26222,7 +26126,7 @@
       "words": 1464
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-77bed12ad412",
@@ -26233,7 +26137,7 @@
       "words": 388
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-77c3c565f1ce",
@@ -26244,7 +26148,7 @@
       "words": 372
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-77ee3f3ba5cb",
@@ -26255,7 +26159,7 @@
       "words": 185
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-781bc8a131dd",
@@ -26266,7 +26170,7 @@
       "words": 397
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7844c45382b9",
@@ -26277,7 +26181,7 @@
       "words": 292
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-78ef7fca451b",
@@ -26288,7 +26192,7 @@
       "words": 480
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-79707739ea04",
@@ -26299,7 +26203,7 @@
       "words": 868
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7acd6a66cbab",
@@ -26310,7 +26214,7 @@
       "words": 1119
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7ad64c15c66a",
@@ -26321,7 +26225,7 @@
       "words": 259
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7b7544f0608a",
@@ -26332,7 +26236,7 @@
       "words": 215
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7bb5530ecf85",
@@ -26343,7 +26247,7 @@
       "words": 392
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7c741accda61",
@@ -26354,7 +26258,7 @@
       "words": 535
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7d4d8c75ce52",
@@ -26365,7 +26269,7 @@
       "words": 260
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7d5bfbf9f633",
@@ -26376,7 +26280,7 @@
       "words": 243
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7d72caa95b20",
@@ -26387,7 +26291,7 @@
       "words": 687
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7da9edefb90e",
@@ -26398,7 +26302,7 @@
       "words": 332
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7db82b6f05e7",
@@ -26409,7 +26313,7 @@
       "words": 501
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-7e163c6b9b7d",
@@ -26420,7 +26324,7 @@
       "words": 312
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-806d1371ffec",
@@ -26431,7 +26335,7 @@
       "words": 262
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8078c9e2ef29",
@@ -26442,7 +26346,7 @@
       "words": 179
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-809fbb2a2976",
@@ -26453,7 +26357,7 @@
       "words": 575
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8160154a7a4d",
@@ -26464,7 +26368,7 @@
       "words": 2983
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2017-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-82132c09caa8",
@@ -26475,7 +26379,7 @@
       "words": 825
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-821793a85709",
@@ -26486,7 +26390,7 @@
       "words": 3294
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-823e411bcc59",
@@ -26497,7 +26401,7 @@
       "words": 431
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-82476a22719e",
@@ -26508,7 +26412,7 @@
       "words": 224
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-82c222e04f0c",
@@ -26519,7 +26423,7 @@
       "words": 446
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-83215eb965bb",
@@ -26530,7 +26434,7 @@
       "words": 150
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-83573a126e78",
@@ -26541,7 +26445,7 @@
       "words": 454
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-83c181f9dd28",
@@ -26552,7 +26456,7 @@
       "words": 1458
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-83e4eaac7a35",
@@ -26563,7 +26467,7 @@
       "words": 5957
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-842cca63af4b",
@@ -26574,7 +26478,7 @@
       "words": 497
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8531f94ea6c5",
@@ -26585,7 +26489,7 @@
       "words": 821
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-85a3adeb34bc",
@@ -26596,7 +26500,7 @@
       "words": 270
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-85aa1967100a",
@@ -26607,7 +26511,7 @@
       "words": 317
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-877e3fc96f8d",
@@ -26618,7 +26522,7 @@
       "words": 156
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-879f73b56077",
@@ -26629,7 +26533,7 @@
       "words": 668
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-88748f3e4235",
@@ -26640,7 +26544,7 @@
       "words": 939
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-88f8f426b41f",
@@ -26651,7 +26555,7 @@
       "words": 25078
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-89d05b6ab66a",
@@ -26662,7 +26566,7 @@
       "words": 414
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8a8569fb2161",
@@ -26673,7 +26577,7 @@
       "words": 798
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8aee6e9a129d",
@@ -26684,7 +26588,7 @@
       "words": 186
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8b0fb1fb2584",
@@ -26695,7 +26599,7 @@
       "words": 219
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8b79a22125ea",
@@ -26706,7 +26610,7 @@
       "words": 228
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8bd2cbedcb2a",
@@ -26717,7 +26621,7 @@
       "words": 199
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8c09f89f9915",
@@ -26728,7 +26632,7 @@
       "words": 720
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8cb0d48b11aa",
@@ -26739,7 +26643,7 @@
       "words": 1050
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8da7d5cdda20",
@@ -26750,7 +26654,7 @@
       "words": 1233
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8e05b4e4459c",
@@ -26761,7 +26665,7 @@
       "words": 379
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8f5b7bcab5e8",
@@ -26772,7 +26676,7 @@
       "words": 733
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8f5bacf858e8",
@@ -26783,7 +26687,7 @@
       "words": 296
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8f82fe3e9437",
@@ -26794,7 +26698,7 @@
       "words": 401
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8fb1624b82f8",
@@ -26805,7 +26709,7 @@
       "words": 193
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-8fe19a7eff36",
@@ -26816,7 +26720,7 @@
       "words": 475
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-902849179262",
@@ -26827,7 +26731,7 @@
       "words": 532
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9034f0429e43",
@@ -26838,7 +26742,7 @@
       "words": 208
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9142ecde7495",
@@ -26849,7 +26753,7 @@
       "words": 556
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-91f938a056db",
@@ -26860,7 +26764,7 @@
       "words": 163
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-937e25fcc973",
@@ -26871,7 +26775,7 @@
       "words": 221
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-939d1c116b2e",
@@ -26882,7 +26786,7 @@
       "words": 610
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-93cf459c2795",
@@ -26893,7 +26797,7 @@
       "words": 200
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-93e9d17b47eb",
@@ -26904,7 +26808,7 @@
       "words": 684
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-94427fefe292",
@@ -26915,7 +26819,7 @@
       "words": 614
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2017-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-94aea3a32e2e",
@@ -26926,7 +26830,7 @@
       "words": 10612
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-94d3e432f064",
@@ -26937,7 +26841,7 @@
       "words": 406
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9508894d3462",
@@ -26948,7 +26852,7 @@
       "words": 452
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-951c8e58dfad",
@@ -26959,7 +26863,7 @@
       "words": 2234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-957baa36e490",
@@ -26970,7 +26874,7 @@
       "words": 333
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9587853ae1c4",
@@ -26981,7 +26885,7 @@
       "words": 1493
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-95a82a46d686",
@@ -26992,7 +26896,7 @@
       "words": 739
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-96be9c7ef427",
@@ -27003,7 +26907,7 @@
       "words": 339
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-980cc44a88e0",
@@ -27014,7 +26918,7 @@
       "words": 623
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-988571bee420",
@@ -27025,7 +26929,7 @@
       "words": 305
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-98ebf4e0c2b2",
@@ -27036,7 +26940,7 @@
       "words": 622
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-994625737879",
@@ -27047,7 +26951,7 @@
       "words": 907
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-995646c500fb",
@@ -27058,7 +26962,7 @@
       "words": 262
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-995c379d0b57",
@@ -27069,7 +26973,7 @@
       "words": 1357
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-998c6848feba",
@@ -27080,7 +26984,7 @@
       "words": 727
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-99a116acc298",
@@ -27091,7 +26995,7 @@
       "words": 2740
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-99ac3d69e497",
@@ -27102,7 +27006,7 @@
       "words": 221
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-99bec2b9a899",
@@ -27113,7 +27017,7 @@
       "words": 748
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-99d7ee7f851a",
@@ -27124,7 +27028,7 @@
       "words": 711
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9a335f227b07",
@@ -27135,7 +27039,7 @@
       "words": 195
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9add4107225d",
@@ -27146,7 +27050,7 @@
       "words": 238
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9d2630a46e9c",
@@ -27157,7 +27061,7 @@
       "words": 601
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9ee14de520ad",
@@ -27168,7 +27072,7 @@
       "words": 337
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9fd5474ab850",
@@ -27179,7 +27083,7 @@
       "words": 1903
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-9fdf054f622e",
@@ -27190,7 +27094,7 @@
       "words": 474
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a070fcb15e6f",
@@ -27201,7 +27105,7 @@
       "words": 963
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a25395f51f29",
@@ -27212,7 +27116,7 @@
       "words": 154
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a33afff12c6b",
@@ -27223,7 +27127,7 @@
       "words": 509
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a38a4a536434",
@@ -27234,7 +27138,7 @@
       "words": 3142
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a47fecf25e77",
@@ -27245,7 +27149,7 @@
       "words": 252
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a4c4ff876c0e",
@@ -27256,7 +27160,7 @@
       "words": 310
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a554bc88b7c4",
@@ -27267,7 +27171,7 @@
       "words": 174
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a61d22ae433b",
@@ -27278,7 +27182,7 @@
       "words": 877
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a691d3972f57",
@@ -27289,7 +27193,7 @@
       "words": 433
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a7f79daf470c",
@@ -27300,7 +27204,7 @@
       "words": 971
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a8eb1c3506ec",
@@ -27311,7 +27215,7 @@
       "words": 336
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a9524cb2a1e2",
@@ -27322,7 +27226,7 @@
       "words": 2112
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-a9f7edcf9786",
@@ -27333,7 +27237,7 @@
       "words": 1132
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-aa3d69d16de8",
@@ -27344,7 +27248,7 @@
       "words": 473
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-aab91862187b",
@@ -27355,7 +27259,7 @@
       "words": 954
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-aadc49d12aec",
@@ -27366,7 +27270,7 @@
       "words": 902
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-aae804bf0b09",
@@ -27377,7 +27281,7 @@
       "words": 366
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ac1a5429ca38",
@@ -27388,7 +27292,7 @@
       "words": 921
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ac61fb93a36d",
@@ -27399,7 +27303,7 @@
       "words": 1810
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ade7a69aa6c8",
@@ -27410,7 +27314,7 @@
       "words": 816
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ae935fede1b3",
@@ -27421,7 +27325,7 @@
       "words": 270
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-af03aa1f2fb1",
@@ -27432,7 +27336,7 @@
       "words": 1356
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-af147f892ca8",
@@ -27443,7 +27347,7 @@
       "words": 3815
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b0a443ced45b",
@@ -27454,7 +27358,7 @@
       "words": 3489
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b0d6fba64ce6",
@@ -27465,7 +27369,7 @@
       "words": 174
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b1be5e4ebf02",
@@ -27476,7 +27380,7 @@
       "words": 444
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b2995cd73957",
@@ -27487,7 +27391,7 @@
       "words": 1317
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b3466ac37d92",
@@ -27498,7 +27402,7 @@
       "words": 327
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b38be2466320",
@@ -27509,7 +27413,7 @@
       "words": 828
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b3af972d027e",
@@ -27520,7 +27424,7 @@
       "words": 345
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b3e8ba4c3dd4",
@@ -27531,7 +27435,7 @@
       "words": 163
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b430eade88d7",
@@ -27542,7 +27446,7 @@
       "words": 207
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b53eec9d202b",
@@ -27553,7 +27457,7 @@
       "words": 655
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b6009e612ba9",
@@ -27564,7 +27468,7 @@
       "words": 9633
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b6596b880c9a",
@@ -27575,7 +27479,7 @@
       "words": 542
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b7de2018dd8a",
@@ -27586,7 +27490,7 @@
       "words": 1851
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b83f83cac340",
@@ -27597,7 +27501,7 @@
       "words": 420
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b8fa722b4d5f",
@@ -27608,7 +27512,7 @@
       "words": 536
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b94027d51ea1",
@@ -27619,7 +27523,7 @@
       "words": 1135
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b9766ae1e72b",
@@ -27630,7 +27534,7 @@
       "words": 172
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-b97cb95dca91",
@@ -27641,7 +27545,7 @@
       "words": 162
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ba0a5e95d032",
@@ -27652,7 +27556,7 @@
       "words": 548
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ba934a9b895d",
@@ -27663,7 +27567,7 @@
       "words": 1999
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bac3cbc727e7",
@@ -27674,7 +27578,7 @@
       "words": 447
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bc0ab1186200",
@@ -27685,7 +27589,7 @@
       "words": 341
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bd3084c6f18e",
@@ -27696,7 +27600,7 @@
       "words": 3077
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bd79ba7dca1d",
@@ -27707,7 +27611,7 @@
       "words": 1144
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-be06b0660d67",
@@ -27718,7 +27622,7 @@
       "words": 5794
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-be13aa67227f",
@@ -27729,7 +27633,7 @@
       "words": 223
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-be2b283ecb4b",
@@ -27740,7 +27644,7 @@
       "words": 590
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-be390247275b",
@@ -27751,7 +27655,7 @@
       "words": 6444
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bf21cfd248e5",
@@ -27762,7 +27666,7 @@
       "words": 150
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-bfd936cd6a1b",
@@ -27773,7 +27677,7 @@
       "words": 242
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c03b172a262f",
@@ -27784,7 +27688,7 @@
       "words": 317
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c0ee96e22c01",
@@ -27795,7 +27699,7 @@
       "words": 841
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c1395a9ff09b",
@@ -27806,7 +27710,7 @@
       "words": 151
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c14b3f8f63ca",
@@ -27817,7 +27721,7 @@
       "words": 342
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c1e75f614aa6",
@@ -27828,7 +27732,7 @@
       "words": 201
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c2d359e990ef",
@@ -27839,7 +27743,7 @@
       "words": 598
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c35e352c9aaf",
@@ -27850,7 +27754,7 @@
       "words": 984
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c391b1e104f1",
@@ -27861,7 +27765,7 @@
       "words": 1019
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c39b3435f75f",
@@ -27872,7 +27776,7 @@
       "words": 295
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c4289cdc2966",
@@ -27883,7 +27787,7 @@
       "words": 285
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c4423e4c2924",
@@ -27894,7 +27798,7 @@
       "words": 352
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c458a6b24530",
@@ -27905,7 +27809,7 @@
       "words": 793
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c46aa60b9d3c",
@@ -27916,7 +27820,7 @@
       "words": 828
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c4985d752043",
@@ -27927,7 +27831,7 @@
       "words": 499
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c49a4665d316",
@@ -27938,7 +27842,7 @@
       "words": 767
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c5b72b58e128",
@@ -27949,7 +27853,7 @@
       "words": 1905
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c777dd3f436e",
@@ -27960,7 +27864,7 @@
       "words": 747
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c7b393b3be94",
@@ -27971,7 +27875,7 @@
       "words": 1375
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c7f35611c294",
@@ -27982,7 +27886,7 @@
       "words": 477
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c8038c470399",
@@ -27993,7 +27897,7 @@
       "words": 233
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c8ab19809c02",
@@ -28004,7 +27908,7 @@
       "words": 205
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c9cc7778409d",
@@ -28015,7 +27919,7 @@
       "words": 869
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c9e72517c491",
@@ -28026,7 +27930,7 @@
       "words": 1024
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-c9f2e865a54f",
@@ -28037,7 +27941,7 @@
       "words": 757
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ca5ca2e54d94",
@@ -28048,7 +27952,7 @@
       "words": 189
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ca74f165d668",
@@ -28059,7 +27963,7 @@
       "words": 319
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cb0bdf0296cb",
@@ -28070,7 +27974,7 @@
       "words": 411
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cca5c9ef1326",
@@ -28081,7 +27985,7 @@
       "words": 252
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cce537264830",
@@ -28092,7 +27996,7 @@
       "words": 307
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cdb661ded4be",
@@ -28103,7 +28007,7 @@
       "words": 173
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ce4bcd2aed71",
@@ -28114,7 +28018,7 @@
       "words": 411
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cf0b355a940e",
@@ -28125,7 +28029,7 @@
       "words": 4970
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cf319779b487",
@@ -28136,7 +28040,7 @@
       "words": 197
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-cf928d47d15c",
@@ -28147,7 +28051,7 @@
       "words": 277
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d04351dd248a",
@@ -28158,7 +28062,7 @@
       "words": 1237
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d178e9913987",
@@ -28169,7 +28073,7 @@
       "words": 490
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d255e785fdc9",
@@ -28180,7 +28084,7 @@
       "words": 703
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d25dd5781738",
@@ -28191,7 +28095,7 @@
       "words": 450
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d27e5b3d33fa",
@@ -28202,7 +28106,7 @@
       "words": 732
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d3258eb79631",
@@ -28213,7 +28117,7 @@
       "words": 195
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d3a475673b69",
@@ -28224,7 +28128,7 @@
       "words": 273
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d40f3100e7cc",
@@ -28235,7 +28139,7 @@
       "words": 188
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d4958e7d4fee",
@@ -28246,7 +28150,7 @@
       "words": 1887
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d550bd865aa6",
@@ -28257,7 +28161,7 @@
       "words": 1316
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d60ef662d767",
@@ -28268,7 +28172,7 @@
       "words": 424
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-11",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d62825ae49ba",
@@ -28279,7 +28183,7 @@
       "words": 151
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d67efafd9e42",
@@ -28290,7 +28194,7 @@
       "words": 259
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d69bcb4cd681",
@@ -28301,7 +28205,7 @@
       "words": 824
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d776b7c97e74",
@@ -28312,7 +28216,7 @@
       "words": 402
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d7be00446393",
@@ -28323,7 +28227,7 @@
       "words": 1163
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d87b23bdf0ff",
@@ -28334,7 +28238,7 @@
       "words": 291
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d8bc0b775546",
@@ -28345,7 +28249,7 @@
       "words": 1169
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-d99475c951c5",
@@ -28356,7 +28260,7 @@
       "words": 254
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-da3bc81294a1",
@@ -28367,7 +28271,7 @@
       "words": 254
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-daeac0d47ae1",
@@ -28378,7 +28282,7 @@
       "words": 1948
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-db069de0eb54",
@@ -28389,7 +28293,7 @@
       "words": 769
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-db376e0415d7",
@@ -28400,7 +28304,7 @@
       "words": 972
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-dc1f5bdd3093",
@@ -28411,7 +28315,7 @@
       "words": 341
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-dcbf009a83e7",
@@ -28422,7 +28326,7 @@
       "words": 2902
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-dd6f95971536",
@@ -28433,7 +28337,7 @@
       "words": 312
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-de313e14a4e8",
@@ -28444,7 +28348,7 @@
       "words": 1234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-defffe48b926",
@@ -28455,7 +28359,7 @@
       "words": 186
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-dfad524d95a5",
@@ -28466,7 +28370,7 @@
       "words": 489
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e023243082ab",
@@ -28477,7 +28381,7 @@
       "words": 920
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e102aa41a222",
@@ -28488,7 +28392,7 @@
       "words": 339
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e1303415c56a",
@@ -28499,7 +28403,7 @@
       "words": 151
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e185c67cb593",
@@ -28510,7 +28414,7 @@
       "words": 1043
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e29a6f6b4deb",
@@ -28521,7 +28425,7 @@
       "words": 166
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e31b50a8eeab",
@@ -28532,7 +28436,7 @@
       "words": 586
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e357de64a1fa",
@@ -28543,7 +28447,7 @@
       "words": 2131
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e36962e5f5c9",
@@ -28554,7 +28458,7 @@
       "words": 2608
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e4b886dfb777",
@@ -28565,7 +28469,7 @@
       "words": 926
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e5456f67cc06",
@@ -28576,7 +28480,7 @@
       "words": 640
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e71fb7172b87",
@@ -28587,7 +28491,7 @@
       "words": 1595
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e7bdde7e4a68",
@@ -28598,7 +28502,7 @@
       "words": 279
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-e8beec197e79",
@@ -28609,7 +28513,7 @@
       "words": 155
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ea1d511b7a0b",
@@ -28620,7 +28524,7 @@
       "words": 504
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ea73b9b4d819",
@@ -28631,7 +28535,7 @@
       "words": 228
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ea91c8416649",
@@ -28642,7 +28546,7 @@
       "words": 421
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ea9a43b0c419",
@@ -28653,7 +28557,7 @@
       "words": 284
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-09",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-eb5248c4df2f",
@@ -28664,7 +28568,7 @@
       "words": 350
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-eb54ce012764",
@@ -28675,7 +28579,7 @@
       "words": 263
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ec5db01c0eb0",
@@ -28686,7 +28590,7 @@
       "words": 264
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ecd37a47b331",
@@ -28697,7 +28601,7 @@
       "words": 163
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-04",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ed497a58636c",
@@ -28708,7 +28612,7 @@
       "words": 380
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ed4e5c9ae57e",
@@ -28719,7 +28623,7 @@
       "words": 265
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-edf4278dea0a",
@@ -28730,7 +28634,7 @@
       "words": 717
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ee4044a25633",
@@ -28741,7 +28645,7 @@
       "words": 1853
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-eefb3f5f2bfc",
@@ -28752,7 +28656,7 @@
       "words": 203
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ef0706bc93ea",
@@ -28763,7 +28667,7 @@
       "words": 550
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ef0a34fbd99a",
@@ -28774,7 +28678,7 @@
       "words": 243
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f026bf20dab4",
@@ -28785,7 +28689,7 @@
       "words": 1361
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f0645c17835d",
@@ -28796,7 +28700,7 @@
       "words": 1665
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f19bdd2c76f6",
@@ -28807,7 +28711,7 @@
       "words": 306
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f23c6f839b3d",
@@ -28818,7 +28722,7 @@
       "words": 357
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f2433c79d14b",
@@ -28829,7 +28733,7 @@
       "words": 2704
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-02",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f2bdbc001092",
@@ -28840,7 +28744,7 @@
       "words": 291
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f3637ee28008",
@@ -28851,7 +28755,7 @@
       "words": 371
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f3ac3f3a97a2",
@@ -28862,7 +28766,7 @@
       "words": 446
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f51c8bcd06e2",
@@ -28873,7 +28777,7 @@
       "words": 763
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f55705f653da",
@@ -28884,7 +28788,7 @@
       "words": 776
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f62b33de737c",
@@ -28895,7 +28799,7 @@
       "words": 234
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f6e9dd919c63",
@@ -28906,7 +28810,7 @@
       "words": 159
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f7129abc4728",
@@ -28917,7 +28821,7 @@
       "words": 173
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f7262d4dc2fe",
@@ -28928,7 +28832,7 @@
       "words": 421
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f75585258ee2",
@@ -28939,7 +28843,7 @@
       "words": 1257
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f7937601824f",
@@ -28950,7 +28854,7 @@
       "words": 292
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f80d5ac98571",
@@ -28961,7 +28865,7 @@
       "words": 347
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f81c95320618",
@@ -28972,7 +28876,7 @@
       "words": 267
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f83e28167a89",
@@ -28983,7 +28887,7 @@
       "words": 949
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-06",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f8ad3c092759",
@@ -28994,7 +28898,7 @@
       "words": 248
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-10",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f8c1c08e79ff",
@@ -29005,7 +28909,7 @@
       "words": 588
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f964d8b11661",
@@ -29016,7 +28920,7 @@
       "words": 214
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f9680fcb06a5",
@@ -29027,7 +28931,7 @@
       "words": 2958
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f9789aa0bc6f",
@@ -29038,7 +28942,7 @@
       "words": 179
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2021-05",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f9b041cd1673",
@@ -29049,7 +28953,7 @@
       "words": 11183
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-01",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-f9b46ef20d83",
@@ -29060,7 +28964,7 @@
       "words": 219
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-03",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fa3df6e6a0ae",
@@ -29071,7 +28975,7 @@
       "words": 570
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fa7cc40dbaa0",
@@ -29082,7 +28986,7 @@
       "words": 306
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fc4a3eccf83e",
@@ -29093,7 +28997,7 @@
       "words": 1548
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-07",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fca866c92227",
@@ -29104,7 +29008,7 @@
       "words": 156
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fcf9411a00e4",
@@ -29115,7 +29019,7 @@
       "words": 5548
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2019-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-fef272dd8dd4",
@@ -29126,7 +29030,7 @@
       "words": 1092
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2020-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ff2e7739ddc1",
@@ -29137,7 +29041,7 @@
       "words": 257
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ffc04aed6f40",
@@ -29148,7 +29052,7 @@
       "words": 577
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2018-12",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ffd577cd4b03",
@@ -29159,7 +29063,7 @@
       "words": 316
     },
     {
-      "author": "maintainer",
+      "author": "mixed",
       "date": "2022-08",
       "extraction": "wikitext-strip.v1",
       "id": "wiki-ffe34e9261bb",

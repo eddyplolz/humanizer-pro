@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -534,9 +535,41 @@ def test_mattr_matches_hand_computed_windows() -> None:
     assert mattr(["a", "a", "b", "a"], 2) == 0.83
     # window=3 over [a,b,c,d]: every window all-unique -> 1.0.
     assert mattr(["a", "b", "c", "d"], 3) == 1.0
-    # shorter than one window degrades to plain TTR: [a,a] -> 1 unique / 2 -> 0.5.
-    assert mattr(["a", "a"], 50) == 0.5
-    assert mattr([]) == 0.0
+    # Shorter than one window: no windowed value exists, so None rather than a
+    # plain TTR that would not be comparable with a real MATTR.
+    assert mattr(["a", "a"], 50) is None
+    assert mattr([]) is None
+    # Exactly one window is the plain TTR of that window.
+    assert mattr(["a", "a"], 2) == 0.5
+
+
+def test_mattr_rejects_non_positive_window() -> None:
+    mattr = _load_audit_module().moving_avg_type_token_ratio
+    for window in (0, -1):
+        try:
+            mattr(["a", "b"], window)
+        except ValueError:
+            continue
+        raise AssertionError(f"window={window} should raise ValueError")
+
+
+def test_mattr_sliding_count_matches_per_window_sets() -> None:
+    import random
+
+    mattr = _load_audit_module().moving_avg_type_token_ratio
+    rng = random.Random(7)
+    for _ in range(200):
+        tokens = [rng.choice("abcdeAB") for _ in range(rng.randint(1, 120))]
+        window = rng.randint(1, len(tokens))
+        lowered = [token.lower() for token in tokens]
+        count = len(lowered) - window + 1
+        types = sum(len(set(lowered[i : i + window])) for i in range(count))
+        assert mattr(tokens, window) == round(types / (count * window), 2)
+
+
+def test_short_document_reports_null_mattr() -> None:
+    _returncode, payload = audit_json("--stdin", input_text="A short note about the plan.")
+    assert payload["documents"][0]["stats"]["mattr_50"] is None
 
 
 def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
@@ -548,11 +581,395 @@ def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
     assert 0.0 <= high <= 1.0
     assert low < high
     # It is a diagnostic stat only: it appears in the stats block and never as
-    # a finding, and it never moves the risk score (repetitive human-style prose
-    # with no other tell stays at score 0).
-    returncode, payload = audit_json("--stdin", input_text="cat dog " * 60)
+    # a finding, and changing its value moves neither findings nor score.
+    _returncode, payload = audit_json("--stdin", input_text="cat dog " * 60)
     document = payload["documents"][0]
     assert "mattr_50" in document["stats"]
     assert not any("mattr" in fid for fid in finding_ids(document))
-    assert document["risk_score"] == 0
-    assert returncode == 0
+    text = (ROOT / "eval" / "fixtures" / "ai-slop-general.md").read_text(encoding="utf-8")
+    baseline = module.audit_text(text, "x")
+    original = module.moving_avg_type_token_ratio
+    try:
+        for forced in (0.0, 1.0, None):
+            module.moving_avg_type_token_ratio = lambda *_args, value=forced: value
+            forced_result = module.audit_text(text, "x")
+            assert forced_result["stats"]["mattr_50"] == forced
+            assert forced_result["findings"] == baseline["findings"]
+            assert forced_result["risk_score"] == baseline["risk_score"]
+    finally:
+        module.moving_avg_type_token_ratio = original
+
+
+# ------------------------------------------------- full-repo review fixes
+
+
+def _ids_for(text: str) -> list[str]:
+    return [f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]]
+
+
+def test_usage_errors_exit_3_not_block() -> None:
+    assert run_audit().returncode == 3
+    assert run_audit("--bogus", "x").returncode == 3
+    assert run_audit("--fail-score", "abc", "x").returncode == 3
+
+
+def test_stdin_is_strict_utf8_and_newline_normalized() -> None:
+    bad = subprocess.run(
+        [sys.executable, str(CLI), "--stdin"], input=b"caf\xc3\xa9 \xff",
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    assert bad.returncode == 3
+    good = subprocess.run(
+        [sys.executable, str(CLI), "--stdin", "--json"], input="Ab café.\r\nNext line.\r\n".encode(),
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    assert good.returncode == 0
+    stats = json.loads(good.stdout)["documents"][0]["stats"]
+    assert stats["words"] == 4
+
+
+def test_rhetorical_formula_stays_inside_one_sentence() -> None:
+    far_apart = "This is not just a test.\n\nMuch later, but unrelated, the end."
+    assert "family7.rhetorical_formula" not in _ids_for(far_apart)
+    assert "family7.rhetorical_formula" in _ids_for("It is not just fast but cheap.")
+    assert "family7.rhetorical_formula" in _ids_for("Not only fast, but also cheap.")
+
+
+def test_of_course_bang_is_detected_before_a_space() -> None:
+    assert "family9.chatbot_residue" in _ids_for("Of course! Here is the plan.")
+
+
+def test_one_phrase_is_not_scored_twice() -> None:
+    assert _ids_for("It is important to note the plan.") == ["family5.syntactic_tell"]
+    assert _ids_for("The tool has the ability to parse files.") == ["family6.verbosity_padding"]
+
+
+def test_one_repeated_vocab_word_is_not_a_cluster() -> None:
+    assert "family4.ai_vocab_cluster" not in _ids_for(
+        "The robust design was robust. We tested robust estimators."
+    )
+    assert "family4.ai_vocab_cluster" not in _ids_for("The landscape of the landscape.")
+    assert "family4.ai_vocab_cluster" in _ids_for("A robust, vibrant tapestry.")
+
+
+def test_word_tokenizer_handles_accents_and_curly_apostrophes() -> None:
+    words = _load_audit_module().words
+    assert words("café naïve don’t state-of-the-art") == [
+        "café", "naïve", "don’t", "state-of-the-art",
+    ]
+
+
+def test_low_variance_message_is_a_full_sentence() -> None:
+    text = "One two three four. " * 4
+    findings = _load_audit_module().audit_text(text, "x")["findings"]
+    message = next(f["message"] for f in findings if f["id"] == "structure.low_sentence_variance")
+    assert not message.endswith(" even")
+
+
+def _compare_ids(original: str, revised: str) -> list[tuple[str, str]]:
+    result = _load_audit_module().compare_texts(original, revised, "a", "b")
+    return [(f["id"], f["evidence"]) for f in result["findings"]]
+
+
+def test_dropping_first_quote_does_not_shift_later_quotes() -> None:
+    original = 'Intro "alpha beta gamma" mid "delta epsilon" end "zeta eta theta".'
+    revised = 'Intro mid "delta epsilon" end "zeta eta theta".'
+    quote_findings = [item for item in _compare_ids(original, revised) if ".quote." in item[0]]
+    assert quote_findings == [("compare.quote.dropped", '"alpha beta gamma"')]
+
+
+def test_changed_quote_is_still_reported_as_changed() -> None:
+    quote_findings = [
+        item
+        for item in _compare_ids('A "one two three" B "four five six"', 'A "one two THREE" B "four five six"')
+        if ".quote." in item[0]
+    ]
+    assert quote_findings == [("compare.quote.changed", '"one two three"')]
+
+
+def test_repeated_link_label_retarget_is_reported() -> None:
+    original = "See [docs](https://a.com/1) and [docs](https://a.com/2)."
+    revised = "See [docs](https://a.com/9) and [docs](https://a.com/2)."
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert "compare.citation.changed_target" in ids
+
+
+def test_tilde_fences_are_code_blocks() -> None:
+    original = "Text.\n\n~~~\nx = 1\n~~~\n"
+    ids = [item[0] for item in _compare_ids(original, original.replace("1", "2"))]
+    assert ids == ["compare.code_block.changed"]
+    assert _load_audit_module().stats_for(original)["code_block_count"] == 1
+
+
+def test_empty_directory_warns_on_stderr(tmp_path: Path) -> None:
+    result = run_audit(str(tmp_path))
+    assert result.returncode == 0
+    assert "no .md or .txt files" in result.stderr
+
+
+def test_skill_md_stays_under_line_limit() -> None:
+    # WARP.md: "Keep under 350 lines for v4.x."
+    lines = (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
+    assert len(lines) < 350, len(lines)
+
+
+def test_text_report_survives_a_narrow_output_encoding(tmp_path: Path) -> None:
+    sample = tmp_path / "cyr.md"
+    sample.write_text("It is not just Привет but more.\n", encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(CLI), str(sample)],
+        cwd=ROOT, capture_output=True, check=False,
+        env={**os.environ, "PYTHONIOENCODING": "cp1252"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert b"family7.rhetorical_formula" in result.stdout
+
+
+# ------------------------------------------------- v4.14.0: code, targets, SARIF
+
+
+CODE_DOC = (
+    "Call `utilize()` to start.\n\n"
+    "```text\nIt is a delve into the vibrant, robust tapestry\n```\n"
+)
+
+
+def test_code_is_masked_for_prose_rules_and_restorable() -> None:
+    module = _load_audit_module()
+    masked = module.audit_text(CODE_DOC, "x")
+    assert masked["findings"] == []
+    assert masked["stats"]["code_block_count"] == 1
+    raw = {f["id"] for f in module.audit_text(CODE_DOC, "x", include_code=True)["findings"]}
+    assert {"clarity.wordiness", "family4.ai_vocab_cluster"} <= raw
+
+
+def test_artifacts_inside_code_still_block() -> None:
+    # A chatbot reply pasted with its ```markdown wrapper keeps its leaks.
+    wrapped = (
+        "```markdown\n# Erie Canal\n\nThe canal opened in 1825.citeturn0search3 "
+        ":contentReference[oaicite:0]{index=0}\n```\n"
+    )
+    ids = {f["id"] for f in _load_audit_module().audit_text(wrapped, "x")["findings"]}
+    assert {"artifact.chatgpt_citation_stub", "artifact.content_reference"} <= ids
+
+
+def test_a_passing_mention_of_a_fence_does_not_mask_prose() -> None:
+    text = (
+        "To show code, wrap it in ``` fences.\n\n"
+        "A delve into the vibrant, robust tapestry.\n\n```\ncode\n```\n"
+    )
+    ids = {f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]}
+    assert "family4.ai_vocab_cluster" in ids
+
+
+def test_bypass_characters_inside_code_are_still_flagged() -> None:
+    text = "Plain intro.\n\n```\nab​cd\n```\n"
+    ids = {f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]}
+    assert "artifact.bypass_characters" in ids
+
+
+def test_include_code_flag_on_the_cli(tmp_path: Path) -> None:
+    doc = tmp_path / "doc.md"
+    doc.write_text(CODE_DOC, encoding="utf-8")
+    assert run_audit(str(doc), "--json").returncode == 0
+    _code, payload = audit_json(str(doc), "--include-code")
+    assert "clarity.wordiness" in finding_ids(payload["documents"][0])
+
+
+def test_several_targets_are_audited_once_each() -> None:
+    clean = "eval/fixtures/clean-human.md"
+    returncode, payload = audit_json(clean, "eval/fixtures/ai-slop-general.md", clean)
+    assert [d["path"] for d in payload["documents"]] == [clean, "eval/fixtures/ai-slop-general.md"]
+    assert returncode == 1
+
+
+def test_version_flag() -> None:
+    result = run_audit("--version")
+    assert result.returncode == 0
+    assert result.stdout.strip() == f"humanizer-audit {_load_audit_module().__version__}"
+
+
+def _sarif(tmp_path: Path, *args: str) -> dict:
+    out = tmp_path / "out.sarif"
+    run_audit(*args, "--sarif", str(out))
+    return json.loads(out.read_text(encoding="utf-8"))
+
+
+def test_sarif_for_an_audit(tmp_path: Path) -> None:
+    log = _sarif(tmp_path, "eval/fixtures/artifact-leakage.md")
+    assert log["version"] == "2.1.0"
+    run = log["runs"][0]
+    assert run["columnKind"] == "unicodeCodePoints"
+    assert run["tool"]["driver"]["name"] == "humanizer-audit"
+    rule_ids = [rule["id"] for rule in run["tool"]["driver"]["rules"]]
+    assert len(rule_ids) == len(set(rule_ids))
+    assert run["results"]
+    for result in run["results"]:
+        assert result["level"] in {"error", "warning", "note"}
+        assert rule_ids[result["ruleIndex"]] == result["ruleId"]
+        location = result["locations"][0]["physicalLocation"]
+        assert location["artifactLocation"]["uri"] == "eval/fixtures/artifact-leakage.md"
+        assert location["region"]["startLine"] >= 1 and location["region"]["startColumn"] >= 1
+    assert any(r["level"] == "error" for r in run["results"])
+
+
+def test_sarif_for_compare_points_at_the_right_side(tmp_path: Path) -> None:
+    log = _sarif(
+        tmp_path,
+        "--compare",
+        "eval/fixtures/fidelity/original.md",
+        "eval/fixtures/fidelity/revised-drift.md",
+    )
+    uris = {
+        r["ruleId"].rsplit(".", 1)[-1]: r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
+        for r in log["runs"][0]["results"]
+    }
+    assert uris["dropped"] == "eval/fixtures/fidelity/original.md"
+    assert uris["introduced"] == "eval/fixtures/fidelity/revised-drift.md"
+
+
+def test_sarif_write_failure_exits_3(tmp_path: Path) -> None:
+    result = run_audit("eval/fixtures/clean-human.md", "--sarif", str(tmp_path / "missing" / "x.sarif"))
+    assert result.returncode == 3
+
+
+# ------------------------------------------------- distribution: action, hook, wheel
+
+
+def _action_script() -> str:
+    """The composite step's `run: |` block, de-indented."""
+    lines = (ROOT / "action.yml").read_text(encoding="utf-8").splitlines()
+    start = next(i for i, line in enumerate(lines) if line.strip() == "run: |") + 1
+    body = []
+    for line in lines[start:]:
+        if line.strip() and not line.startswith(" " * 8):
+            break
+        body.append(line[8:])
+    return "\n".join(body) + "\n"
+
+
+def _run_action(tmp_path: Path, **inputs: str) -> tuple[int, dict[str, str]]:
+    output = tmp_path / "github_output"
+    output.write_text("", encoding="utf-8")
+    env = {
+        **os.environ,
+        "GITHUB_OUTPUT": str(output),
+        "HA_SCRIPT": str(CLI),
+        "HA_PATHS": inputs.get("paths", "."),
+        "HA_FAIL_ON": inputs.get("fail_on", "block"),
+        "HA_FAIL_SCORE": inputs.get("fail_score", "60"),
+        "HA_SARIF": inputs.get("sarif", str(tmp_path / "out.sarif")),
+        "HA_INCLUDE_CODE": inputs.get("include_code", "false"),
+    }
+    result = subprocess.run(
+        ["bash", "-e", "-c", _action_script()], cwd=ROOT, env=env, capture_output=True, check=False
+    )
+    pairs = dict(
+        line.split("=", 1) for line in output.read_text(encoding="utf-8").splitlines() if "=" in line
+    )
+    return result.returncode, pairs
+
+
+def test_action_fail_on_policies(tmp_path: Path) -> None:
+    slop = "eval/fixtures/ai-slop-general.md"  # exit 1 (review)
+    assert _run_action(tmp_path, paths=slop, fail_on="block")[0] == 0
+    code, outputs = _run_action(tmp_path, paths=slop, fail_on="review")
+    assert code == 1 and outputs["exit-code"] == "1"
+    assert outputs["sarif-file"].endswith("out.sarif")
+    assert _run_action(tmp_path, paths="eval/fixtures/artifact-leakage.md", fail_on="block")[0] == 2
+    assert _run_action(tmp_path, paths="eval/fixtures/artifact-leakage.md", fail_on="never")[0] == 0
+    assert _run_action(tmp_path, paths="no/such/file.md", fail_on="never")[0] == 3
+    assert _run_action(tmp_path, paths=slop, fail_on="sometimes")[0] == 3
+
+
+def test_action_inputs_are_not_shell_interpolated(tmp_path: Path) -> None:
+    canary = tmp_path / "pwned"
+    code, _outputs = _run_action(tmp_path, paths=f"eval/fixtures/clean-human.md; touch {canary}")
+    assert not canary.exists()
+    assert code == 3  # the literal "; touch ..." is just a missing path
+    text = (ROOT / "action.yml").read_text(encoding="utf-8")
+    assert "${{ inputs." not in _action_script()
+    assert "scripts/humanizer_audit.py" in text
+
+
+def test_pre_commit_hook_points_at_the_console_script() -> None:
+    hooks = (ROOT / ".pre-commit-hooks.yaml").read_text(encoding="utf-8")
+    assert "entry: humanizer-audit" in hooks
+    assert "language: python" in hooks
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'humanizer-audit = "humanizer_audit:main"' in pyproject
+
+
+def test_wheel_installs_a_working_console_script(tmp_path: Path) -> None:
+    import shutil
+    import venv
+
+    import importlib.util
+
+    pytest = __import__("pytest")
+    if importlib.util.find_spec("pip") is None:
+        pytest.skip("pip is not installed in this interpreter")
+    # An isolated build, as pip does for users. It fetches setuptools, so it
+    # skips (rather than fails) only when no package index is reachable.
+    # Build from a copy so setuptools' build/ and egg-info never touch the checkout.
+    source = tmp_path / "src"
+    (source / "scripts").mkdir(parents=True)
+    for name in ("pyproject.toml", "README.md", "LICENSE"):
+        shutil.copy(ROOT / name, source / name)
+    shutil.copy(CLI, source / "scripts" / "humanizer_audit.py")
+    build = subprocess.run(
+        [sys.executable, "-m", "pip", "wheel", str(source), "--no-deps",
+         "-w", str(tmp_path / "dist"), "-q"],
+        capture_output=True, text=True, check=False,
+    )
+    offline = ("No matching distribution found for setuptools", "Could not find a version")
+    if build.returncode != 0 and any(marker in build.stderr for marker in offline):
+        pytest.skip("no package index reachable for an isolated build")
+    assert build.returncode == 0, build.stderr
+    wheels = list((tmp_path / "dist").glob("humanizer_audit-*.whl"))
+    assert len(wheels) == 1
+    version = _load_audit_module().__version__
+    assert wheels[0].name.startswith(f"humanizer_audit-{version}-")
+    env_dir = tmp_path / "venv"
+    venv.EnvBuilder(with_pip=True).create(env_dir)
+    bindir = env_dir / ("Scripts" if os.name == "nt" else "bin")
+    install = subprocess.run(
+        [str(bindir / "python"), "-m", "pip", "install", "--no-index", "-q", str(wheels[0])],
+        capture_output=True, text=True, check=False,
+    )
+    assert install.returncode == 0, install.stderr
+    exe = shutil.which("humanizer-audit", path=str(bindir))
+    assert exe
+    assert subprocess.run([exe, "--version"], capture_output=True, text=True).stdout.strip() == (
+        f"humanizer-audit {version}"
+    )
+    audited = subprocess.run(
+        [exe, str(ROOT / "eval" / "fixtures" / "artifact-leakage.md"), "--json"],
+        capture_output=True, text=True, check=False,
+    )
+    assert audited.returncode == 2
+    assert json.loads(audited.stdout)["schema"] == "humanizer-audit.v1"
+
+
+def test_version_is_consistent_across_the_repo() -> None:
+    import re
+
+    version = _load_audit_module().__version__
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    assert f'version: "{version}"' in skill
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert re.search(r"^## (\S+)", changelog, re.M).group(1) == version
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert f"Current release: **v{version}**" in readme
+
+
+def test_action_reads_multi_line_paths_and_drops_stale_sarif(tmp_path: Path) -> None:
+    stale = tmp_path / "out.sarif"
+    stale.write_text("stale", encoding="utf-8")
+    paths = "eval/fixtures/clean-human.md\neval/fixtures/artifact-leakage.md"
+    code, outputs = _run_action(tmp_path, paths=paths, fail_on="never")
+    assert code == 0 and outputs["exit-code"] == "2"  # the second line was audited
+    assert json.loads(stale.read_text(encoding="utf-8"))["version"] == "2.1.0"
+    stale.write_text("stale", encoding="utf-8")
+    code, outputs = _run_action(tmp_path, paths="no/such/file.md", fail_on="never")
+    assert code == 3 and not stale.exists() and "sarif-file" not in outputs

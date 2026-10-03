@@ -5,27 +5,53 @@
 `self_scan.py` runs the audit over this repository's own documentation and gates the
 exemption-adjusted score against `self_scan_budgets.json` (exit 1 on any file over budget or
 missing a budget). Fenced code, inline code, tables, blockquotes, and quoted spans are exempt —
-they are the quoted examples the docs exist to show. Run `py -3 scripts/self_scan.py` (or with
-`--json`). Budgets are measured regression ceilings; lower them when a doc improves, and treat
+they are the quoted examples the docs exist to show. Run `py -3 scripts/self_scan.py` (POSIX:
+`python3 scripts/self_scan.py`; add `--json` for JSON). Budgets are measured regression ceilings; lower them when a doc improves, and treat
 raising one as a decision that belongs in a reviewed change.
 
-## Corpus and FP Measurement
+## Corpus and Error-Rate Measurement
 
-`corpus.py` builds and verifies the hash-only human-control corpus described by
-`corpus/manifest.json`. Every corpus document predates ChatGPT (cutoff 2022-11-01), so any audit
-flag on one is a false positive by construction. The manifest is anonymous by design: it holds
+`corpus.py` builds and verifies the hash-only corpus described by `corpus/manifest.json`. Every
+human document predates ChatGPT (cutoff 2022-11-01), so any audit flag on one is a false positive
+by construction. Machine documents carry `label: machine` and the generating `model`. Every
+document falls in a dev or test split derived from its digest (about a quarter dev); machine
+entries record it as `split`, and `fp_measure.py` derives it for human entries. The manifest is anonymous by design: it holds
 register, author tier, date, word count, and SHA-256 digest per document — no text, no usernames,
 no source locators. Entry ids derive from the digest, so they name content without describing it.
 The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
 `corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pools are
-the exception: the in-repo Strunk chunks, the Gutenberg essay works (`build-essays`), and the
-Internet Archive news chunks (`build-news`, OCR-quality-gated, rate-limit-aware) publish their
-public-domain sources so those slices are independently rebuildable. `verify` checks every cached
+the exception: the in-repo Strunk chunks (`build-pd`, offline), the Gutenberg essay works
+(`build-essays`), the Internet Archive news chunks (`build-news`), and the OpenCulture
+US-PD-Newspapers pages (`build-hf-news`), and the PEPs (`build-peps`, read at the python/peps commit
+current at the cutoff; set `GITHUB_TOKEN` to raise the API rate limit) publish their sources so
+those slices can be rebuilt. The machine pools publish theirs too: `build-raid` streams RAID's
+non-adversarial training file (MIT; its test labels are hidden), `build-wildchat` reads WildChat-1M
+first replies through the Hugging Face rows API (ODC-BY; set `HF_TOKEN` if the dataset asks you to
+accept its terms), and `scripts/generate_machine.py` asks current Claude models the prompts in
+`corpus/machine_prompts.json`. That script needs `pip install anthropic` and an API key, uses no
+refusal fallbacks so every label names the model that wrote the text, and replaces the generated
+pool on each full run. `--dry-run` prints the request count, and `--limit N` is a trial run that
+saves nothing. A builder that collects nothing keeps the existing pool. The news builds are OCR-quality-gated and retry rate limits. `fetch` restores the Strunk
+pool and wiki revisions and names the `build-*` command for any other missing kind. `verify` checks every cached
 file against its digest; a test enforces the anonymity contract on every entry.
 
-`fp_measure.py` audits the cached corpus and prints false-positive rates by register and author
-slice with Wilson 95% intervals, a review-threshold sweep, and the rules that fire most often on
-human text. Results are published in `corpus/RESULTS.md`. It claims no true-positive rate: the
+Anonymity has one known limit. Full SHA-256 digests, the `maintainer` author tier, and the
+deterministic extraction code are all public, so someone who already holds a candidate forum post
+or wiki revision can extract and hash it and confirm that it is in the corpus. The manifest names
+no one, but it can confirm a guess. Truncated or salted digests would close this and would also
+end independent verification of the public-domain pools, so the trade-off is left to the
+maintainer.
+
+Extraction versions are recorded per entry. `fetch` rebuilds wiki entries with the extractor named
+in their `extraction` field (`wikitext-strip.v1` stays byte-for-byte for existing digests); new
+builds use the current version. A wiki entry is the whole page at the maintainer's last pre-cutoff
+revision, so it can hold other editors' text.
+
+`fp_measure.py` audits the cached corpus. On human test documents it prints false-positive rates
+by register and author slice with Wilson 95% intervals, a review-threshold sweep, and the rules that
+fire most often. On machine test documents it prints the catch rate with the same "flagged"
+definition, by register and by model. A rule scorecard compares each rule's firing rate on human
+dev and machine dev documents. Tune rules from the scorecard, never from test-split numbers. Results are published in `corpus/RESULTS.md`. The
 `--include-fixture-tp` flag audits this repo's own AI fixtures, but those tuned the rules, so that
 readout is labeled anecdotal.
 
@@ -52,6 +78,13 @@ cat draft.md | python3 scripts/humanizer_audit.py --stdin --json
 python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 ```
 
+Installed with `pipx install git+https://github.com/eddyplolz/humanizer-pro`, the same tool is the
+`humanizer-audit` command. It takes several files or folders at once, writes SARIF 2.1.0 with
+`--sarif PATH`, and keeps its prose rules out of fenced and inline code unless you pass
+`--include-code`. Artifact rules always read the whole text. The repo also
+ships a pre-commit hook (`.pre-commit-hooks.yaml`) and a GitHub Action (`action.yml`, input
+`fail-on: block|review|never`); README.md shows both configurations.
+
 ## AI Check Workflows
 
 Use the CLI for score-only "AI check," "score this," "audit only," and "do not rewrite" requests.
@@ -76,8 +109,8 @@ otherwise identical source URL is not treated as drift.
 |---:|---|
 | 0 | Pass: no blocker and risk score is below the threshold. |
 | 1 | Review: no blocker, but the risk score met or exceeded `--fail-score`. |
-| 2 | Block: artifact, placeholder, citation stub, or tracking URL found. |
-| 3 | CLI usage or read error. |
+| 2 | Block: artifact, placeholder, citation stub, tracking URL, or bypass characters found. In `--compare` mode, any protected-content drift. |
+| 3 | CLI usage or read error (argparse usage errors included). |
 
 The default review threshold is `--fail-score 60`.
 
@@ -86,7 +119,8 @@ The default review threshold is `--fail-score 60`.
 `--json` emits schema `humanizer-audit.v1` with:
 
 - `summary`: document count, max risk score, max severity, finding counts, and exit code.
-- `documents[].stats`: rhythm and structure metrics.
+- `documents[].stats`: rhythm and structure metrics, plus `type_token_ratio` and `mattr_50`
+  (diagnostic only; `null` below 50 tokens; see `reference/mattr-calibration.md`).
 - `documents[].findings`: family hits, source-risk flags, artifacts, severity, line/column, and
   quoted evidence.
 - `compare.findings`: protected-content drift findings when `--compare` is used.

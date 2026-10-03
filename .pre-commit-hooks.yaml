@@ -1,0 +1,10 @@
+# pre-commit hook: audit staged Markdown and text files for AI-writing tells
+# and leaked chatbot artifacts. Exit 1 (review) or 2 (block) fails the hook.
+- id: humanizer-audit
+  name: humanizer-audit
+  description: Audit prose for AI-writing tells and leaked chatbot artifacts.
+  entry: humanizer-audit
+  language: python
+  files: \.(md|markdown|txt)$
+  # A block-only variant: add `args: [--fail-score, "101"]` in your config so
+  # only hard artifacts (exit 2) fail the commit.
