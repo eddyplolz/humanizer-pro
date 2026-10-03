@@ -34,7 +34,7 @@ Humanizer Pro:
 
 - finds those habits and explains each one
 - rewrites the draft in plain language, if you ask it to
-- checks that a rewrite kept every fact, number, name, link, and quote
+- checks that a rewrite kept the numbers, dates, full names, links, and quotes it can detect
 - flags text that a chatbot left behind, such as citation codes and placeholder fields
 
 Here is an example.
@@ -162,7 +162,7 @@ You can:
 - add `--json` to get results a program can read
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)
-- use `--compare original.md revised.md` to check that a rewrite kept every number, date, name, link, citation, quote, and code sample
+- use `--compare original.md revised.md` to check that a rewrite kept the numbers, dates, names of 2 or more words, links, citations, quotes, and code samples in the original (it does not catch every change: a one-word name or a changed fact, such as "delayed" becoming "canceled," can pass)
 
 ### Understand the result
 
