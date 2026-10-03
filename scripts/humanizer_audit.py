@@ -45,7 +45,7 @@ WORD_WITH_HOMOGLYPH_RE = re.compile(
 
 # Invisible characters split into two policies. The always-strip set has no
 # legitimate use in the registers this skill meets (prose, wiki, chat), so a
-# hit is bypass evidence wherever it lands: zero-width space, word joiner, the
+# hit is stray junk wherever it lands: zero-width space, word joiner, the
 # invisible math operators, a non-leading byte-order mark, and the deprecated
 # Mongolian vowel separator. Unicode tag characters (U+E0000-E007F) and
 # noncharacters carry the same verdict and are matched by range below — the tag
@@ -134,7 +134,7 @@ def _in_joining_script(char: str) -> bool:
 
 
 def _strip_invisible(cp: int, prev_char: str, next_char: str) -> bool:
-    """Decide whether a managed invisible character is bypass residue to remove.
+    """Decide whether a managed invisible character is stray and should go.
 
     The conditional joiners and variation selectors are kept when a neighbour
     supplies the legitimate context (an emoji run, or a joining-script letter)
@@ -155,7 +155,7 @@ def _strip_invisible(cp: int, prev_char: str, next_char: str) -> bool:
 
 
 def _strip_invisibles(body: str, offset_base: int) -> tuple[str, int, int]:
-    """Remove bypass invisibles from ``body``, keeping legitimate joiners.
+    """Remove stray invisibles from ``body``, keeping legitimate joiners.
 
     Returns (cleaned_text, removed_count, first_removed_offset). Neighbour
     lookups use the original text so an emoji or Arabic run is judged before any
@@ -767,7 +767,7 @@ def normalize_url(raw_url: str) -> str:
 
 
 def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
-    """Undo detector-bypass tricks before pattern matching.
+    """Strip hidden and lookalike characters before pattern matching.
 
     Returns (normalized_text, counts, first_offset). Invisible bypass characters
     are removed -- a single leading BOM is ordinary file encoding, not a trick,
@@ -1628,7 +1628,7 @@ def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]
             "line": line,
             "column": column,
             "evidence": f"invisible={counts['invisible']}, homoglyph={counts['homoglyph']}",
-            "message": "Invisible or homoglyph characters consistent with detector-bypass tricks",
+            "message": "Invisible or lookalike characters; strip them",
             "source_risk": False,
         }
     ]

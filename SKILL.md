@@ -11,7 +11,7 @@ description: >
   formatting), wiki-specific neutrality/source risks, and mechanical artifact leakage
   (citeturn0search0, contentReference, oaicite, oai_citation, grok_card, web/attached_file tags,
   roleplay markers, AI-referrer URL params like utm_source=chatgpt.com or utm_source=claude.ai,
-  zero-width/homoglyph bypass characters) plus unfilled placeholders ([Your Name], 2025-XX-XX,
+  hidden or lookalike characters) plus unfilled placeholders ([Your Name], 2025-XX-XX,
   INSERT_, PASTE_..._HERE).
 allowed-tools:
   - Read
@@ -52,7 +52,7 @@ Keep this file as the operating core. Load references only when the mode calls f
 ## Mode Routing
 
 - **Quick rewrite:** Triggered by "humanize this," "make this less AI," or a simple pasted draft.
-  Run the artifact sweep, make the edit, and return only the cleaned text unless flags are serious.
+  Treat it as AI-written unless told otherwise: sweep artifacts, edit every tell, return the text.
 - **AI check / audit-only:** Triggered by "check this," "score this," "audit only," "AI check,"
   "do not rewrite," "check only," file-based audit, or CI/pre-publish review. Load
   `reference/ai-check.md`. When the installed repo is available, run `scripts/humanizer_audit.py` for
@@ -84,11 +84,13 @@ Normal output is concise. Full audits are opt-in.
 
 1. **Density and co-occurrence beat single instances.** One "crucial" is coincidence. A paragraph
    with "crucial," "vibrant," "testament," and "pivotal" is the tell.
-2. **Don't over-correct.** Perfect grammar, a formal register, a lone em dash, one "however," or one
-   passive sentence are weak signals. Edit clusters and formulas; leave clean prose alone.
+2. **Match the depth of the edit to the text.** AI-written text, or anything the user asks to
+   humanize, gets the full edit: every tell goes, however isolated. Text that already reads as a
+   person wrote it (`worked-examples.md` Example 4) gets restraint: one em dash is not a tell.
 3. **Don't swap templates.** "Moreover" to "Here's the thing" is not a fix. State the point plainly.
-4. **Beware fake voice.** Forced casualness, strategic profanity, ellipses, meta-commentary, and
-   formulaic spontaneity are new tells, not personality.
+4. **Voice on request, never as a reflex.** Asked for voice ("sound like me," "it reads flat"),
+   add it: first person, a stance, rhythm that follows meaning, detail the source supports.
+   Otherwise keep the source's tone. Forced casualness and meta-commentary are tells either way.
 5. **Tells evolve.** Treat word lists as dated clues. Flag a word because it clusters and reads as a
    machine default here, not because it appears on a list.
 6. **Multi-pass until clean.** The first rewrite removes obvious tells and often exposes subtler
@@ -212,7 +214,7 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
 - **Artifact tokens and placeholders:** `citeturn0search0`, `contentReference`, `oaicite`,
   `oai_citation`, `grok_card`, `【85†...】`, AI-referrer URL params (`utm_source=chatgpt.com`,
   `utm_source=claude.ai`, `referrer=grok.com`, ...), `*nods*`-style roleplay markers,
-  zero-width/homoglyph bypass characters, `[Your Name]`, `2025-XX-XX`, `INSERT_...`,
+  hidden or lookalike characters, `[Your Name]`, `2025-XX-XX`, `INSERT_...`,
   `PASTE_..._HERE`. -> run `llm-artifacts.md`; delete and restore-or-flag the reference.
 
 ---
@@ -241,10 +243,10 @@ scheduled spontaneity, and rhetorical questions used for fake intimacy.
 
 **The provenance test governs every edit: did this information come from the source?** Subtracting
 and sharpening are in scope — cutting filler, making an existing claim concrete, surfacing a buried
-point. Adding stance, personality, or fact is not. Never inject into a text that did not already
-contain it:
+point. Adding fact is not; stance or personality only when the user asked for voice. Never inject
+into a text that did not already contain it:
 
-- **Fake first person.** If the source has no "I," the rewrite has no "I."
+- **Unrequested first person.** No "I" in the source and no request for voice means no "I."
 - **Invented specifics.** A number, name, date, or mechanism the source never contained. This is
   the most tempting fix because it always reads better, and a fabricated specific is worse than the
   vague phrasing it replaced. Flag the gap; never fill it.
@@ -277,7 +279,7 @@ original never had) is an anti-swap failure to fix, not to explain away.
 - Wiki/article mode: unsupported claim, puffery, or vague significance? Source, neutralize, or flag.
 - Anti-swap: did a fix add fake voice, binary contrast, another formula, or a specific the source
   never contained? Undo it.
-- Restraint: was clean human prose rewritten? Put it back.
+- Restraint: was prose that already read as human rewritten? Put it back. AI text gets the full edit.
 
 ---
 
@@ -292,7 +294,7 @@ Rate 1-10 on each dimension when the user asks for an audit or when risk is high
 | Trust | Respects the reader's intelligence? |
 | Authenticity | Person with judgment, or costume? |
 | Density | Anything cuttable? |
-| Restraint | Did we edit only actual tells and leave clean prose alone? |
+| Restraint | Did every tell in AI text go, and did human prose stay as it was? |
 
 Below 42/60 means revise. A low Restraint score means put edits back, not cut more.
 
@@ -319,7 +321,8 @@ Below 42/60 means revise. A low Restraint score means put edits back, not cut mo
    than half the counts in the 10-20 band, no three neighbors within 5 words of each other. The
    number list beats feel: a read-through always sounds varied to the model that wrote it.
 8. **Anti-swap check.** Remove any tell introduced by your edit.
-9. **Restraint check.** Compare against `worked-examples.md` Example 4. Leave clean prose alone.
+9. **Restraint check.** Human text: compare with `worked-examples.md` Example 4, put clean prose
+   back. AI text: confirm no tell survived.
 10. **Present.** Concise final for quick rewrites; full audit only when requested or needed.
 
 ---

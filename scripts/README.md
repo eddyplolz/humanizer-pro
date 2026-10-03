@@ -93,8 +93,7 @@ Use the CLI for score-only "AI check," "score this," "audit only," and "do not r
 Return the risk score, pass/review/block status, blocker flags, tell-family hits, source-risk notes,
 and brief quoted evidence. Do not rewrite the text unless the user separately asks.
 
-The CLI is local and deterministic. It does not call detector APIs, make detector-bypass claims, or
-support optimize-until-green loops.
+The CLI is local and deterministic.
 
 ## Compare Mode
 

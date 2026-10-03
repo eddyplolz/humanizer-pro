@@ -26,7 +26,7 @@ release. The full release history is in `CHANGELOG.md`.
   - Regenerate with `skill-creator` if the skill name, description, or primary invocation changes.
 - `reference/`
   - `tell-catalog.md` - full pattern library with watch-words and examples.
-  - `llm-artifacts.md` - deterministic detector for leaked tokens/placeholders.
+  - `llm-artifacts.md` - deterministic sweep for leaked tokens and placeholders.
   - `ai-check.md` - score-only audit mode for "check this," "score this," and "do not rewrite."
   - `worked-examples.md` - full before/audit/after edits, including the restraint case.
   - `style-principles.md` - compact Elements of Style operating checklist.
@@ -149,9 +149,8 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 - AI check mode is score-only. It reports blockers, family hits, source-risk notes, and evidence; it
   must not rewrite unless the user separately asks.
 - Compare mode is a fidelity guard only. It checks protected facts and evidence markers; it must not
-  become a style scorer or detector-bypass loop.
-- Do not add detector APIs, automatic memory accumulation, autonomous optimization loops, or large
-  dependencies for this audit-tooling slice.
+  become a style scorer.
+- Do not add automatic memory accumulation or large dependencies for this audit-tooling slice.
 - If behavior changes, add a `CHANGELOG.md` entry, update the current-release line in `README.md`,
   and bump `__version__` in `scripts/humanizer_audit.py` with `metadata.version` in `SKILL.md`.
 
