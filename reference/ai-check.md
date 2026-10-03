@@ -57,6 +57,9 @@ writing — academic integrity, hiring, publication, or attribution.
    python3 scripts/humanizer_audit.py path/to/draft.md --json
    ```
 
+   Fenced and inline code are skipped by default, so API names and quoted examples in a README do
+   not count as prose. Add `--include-code` when the code itself is under review.
+
 3. If only pasted text is available, audit the text directly with the nine-family checklist and the
    same output categories.
 4. Quote short evidence. Do not quote more than needed to identify the issue.

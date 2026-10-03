@@ -928,3 +928,15 @@ def test_wheel_installs_a_working_console_script(tmp_path: Path) -> None:
     )
     assert audited.returncode == 2
     assert json.loads(audited.stdout)["schema"] == "humanizer-audit.v1"
+
+
+def test_version_is_consistent_across_the_repo() -> None:
+    import re
+
+    version = _load_audit_module().__version__
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    assert f'version: "{version}"' in skill
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert re.search(r"^## (\S+)", changelog, re.M).group(1) == version
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert f"Current release: **v{version}**" in readme

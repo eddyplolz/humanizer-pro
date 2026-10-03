@@ -1,5 +1,54 @@
 # Changelog
 
+## 4.14.0 - 2026-10-03
+
+Two-way measurement and distribution. No catch rate is published yet: the machine pools are
+built from Hugging Face, RAID, and the Claude API, which the build machine for this release could
+not reach. The maintainer builds them and reruns `fp_measure.py`.
+
+Audit CLI:
+
+- Prose rules and stats skip fenced and inline code by default, so `utilize()` in a README or a
+  quoted leaked token in a code example no longer counts. `--include-code` restores the old
+  behavior. Bypass characters are still judged on the whole text, and self-scan's raw column still
+  counts every match.
+- Several targets in one run (needed by pre-commit), `--version`, and `--sarif PATH` for SARIF
+  2.1.0 output in audit and compare mode (checked against the official schema).
+- Installable: `pyproject.toml` ships `humanizer_audit` as the zero-dependency `humanizer-audit`
+  command (`pipx install git+https://github.com/eddyplolz/humanizer-pro`).
+- A pre-commit hook (`.pre-commit-hooks.yaml`) and a composite GitHub Action (`action.yml`). The
+  action passes inputs through environment variables, never into the script text, and takes
+  `fail-on: block|review|never`.
+- CI: tests on Python 3.10-3.13, self-scan, a package install, and an action smoke test.
+
+Corpus and measurement:
+
+- Manifest entries carry `label` (human or machine). Machine entries add the generating `model`
+  and a `split` derived from the digest: about a quarter dev, the rest test.
+- New pools:
+  - `build-peps`: a docs-register human pool from Python Enhancement Proposals, read at the
+    python/peps commit current at the cutoff (public-domain PEPs only).
+  - `build-raid`: RAID's non-adversarial training file (MIT); sampled generations without
+    repetition penalty, from chat and instruction-tuned models only.
+  - `build-wildchat`: WildChat-1M first replies in English with no code (ODC-BY).
+  - `scripts/generate_machine.py`: current Claude models on 60 committed prompts across wiki,
+    news, essay, and docs. It uses the official SDK and no refusal fallbacks, so each label names
+    the model that wrote the text.
+- `fp_measure.py` (results schema v2) computes false-positive rates on human documents only. It
+  reports the catch rate on the machine test split, by register and by model, with Wilson
+  intervals, using the same "flagged" definition. A rule scorecard compares each rule's human and
+  machine-dev firing rates; it is the one place rule tuning may look.
+- Wiki entries moved from the `maintainer` author tier to `mixed`. A wiki page holds other
+  editors' text too. Only the label changed; digests and ids did not.
+
+Docs and checks:
+
+- README: CI badge, a two-way results table that says plainly what isn't measured yet, real CLI
+  output, and install, pre-commit, Action, and SARIF instructions.
+- The SKILL.md self-scan budget drops from 100 (a ceiling the score can't exceed, so never a gate)
+  to its measured 95.
+- A test keeps the version in `humanizer_audit.py`, SKILL.md, CHANGELOG.md, and README.md in step.
+
 ## 4.13.0 - 2026-10-03
 
 Fixes from a full-repo review. Rule changes below only stop false or double matches, but they

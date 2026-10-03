@@ -47,6 +47,10 @@ Before promotion, check:
 - Does it preserve source discipline?
 - Does it avoid fake voice and anti-swap failures?
 - Does it pass the clean-human restraint fixture?
+- Once the corpus has machine documents: does the rule fire clearly more often on the machine dev
+  split than on human text (the rule scorecard in `corpus/RESULTS.md`)? A ratio near 1 means it
+  costs false positives without catching anything. Never tune against the test split; it is what
+  the published catch rate is measured on.
 
 ## 5. Promotion
 
