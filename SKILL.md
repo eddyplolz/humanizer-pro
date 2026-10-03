@@ -3,16 +3,13 @@ name: humanizer-pro
 description: >
   Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read
   as human: "humanize this," de-slop a draft, "sounds too AI," "check this," "score this,"
-  "audit only," "AI check," "do not rewrite," style edit, Elements of Style pass, wiki/article
-  rewrite, Wikipedia-style or encyclopedic article draft, neutral tone, wikitext, citations,
-  source-bound writing, or cleaning up chatbot residue. Covers prose tells (significance and
-  promotional inflation, vague attribution, superficial -ing phrases, AI vocabulary, syntactic tells,
-  verbosity and padding, rhetorical formulas, binary contrasts, rule of three, em-dash overuse,
-  formatting), wiki-specific neutrality/source risks, and mechanical artifact leakage
-  (citeturn0search0, contentReference, oaicite, oai_citation, grok_card, web/attached_file tags,
-  roleplay markers, AI-referrer URL params like utm_source=chatgpt.com or utm_source=claude.ai,
-  zero-width/homoglyph bypass characters) plus unfilled placeholders ([Your Name], 2025-XX-XX,
-  INSERT_, PASTE_..._HERE).
+  "audit only," "AI check," "do not rewrite," style edit, Elements of Style pass, wiki or
+  Wikipedia-style article draft or rewrite, neutral tone, wikitext, citations, source-bound
+  writing, or cleaning up chatbot residue. Covers prose tells (inflated significance, vague
+  attribution, AI vocabulary, padding, rhetorical formulas, rule of three, em-dash overuse,
+  formatting), wiki neutrality and source risks, leaked chatbot artifacts (citation tokens,
+  attached-file tags, roleplay markers, AI-referrer URL parameters, zero-width or homoglyph
+  bypass characters), and unfilled placeholders such as [Your Name] or INSERT_ markers.
 allowed-tools:
   - Read
   - Write
@@ -55,8 +52,11 @@ Keep this file as the operating core. Load references only when the mode calls f
   Run the artifact sweep, make the edit, and return only the cleaned text unless flags are serious.
 - **AI check / audit-only:** Triggered by "check this," "score this," "audit only," "AI check,"
   "do not rewrite," "check only," file-based audit, or CI/pre-publish review. Load
-  `reference/ai-check.md`. When the installed repo is available, run `scripts/humanizer_audit.py` for
-  deterministic artifact, source-risk, tell-family, rhythm, and JSON checks. Return score, blocker
+  `reference/ai-check.md`. When the installed repo is available, run the audit CLI for
+  deterministic artifact, source-risk, tell-family, rhythm, and JSON checks: the
+  `humanizer-audit` command if it is installed, otherwise `scripts/humanizer_audit.py` resolved
+  from this skill's own directory (the folder holding this SKILL.md), never from the working
+  directory. Return score, blocker
   flags, family hits, source-risk notes, and quoted evidence. Do not rewrite unless the user
   separately asks. Reject detector-bypass claims and optimize-until-green loops.
 - **Deep edit / full audit:** Triggered by "full audit," "what makes this AI," risky publication, or
@@ -254,7 +254,8 @@ contain it:
   sentences by rewriting them, not by breaking them.
 
 When the installed repo is available, back this mechanically: run
-`scripts/humanizer_audit.py --compare original.md revised.md` after a deep edit — any
+`humanizer-audit --compare original.md revised.md` (or `scripts/humanizer_audit.py` from this
+skill's directory) after a deep edit — any
 `compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement that the
 original never had) is an anti-swap failure to fix, not to explain away.
 
@@ -341,6 +342,6 @@ add personality.
 
 ## Sources
 
-This skill synthesizes Wikipedia: Signs of AI writing, the user's "Comprehensive Analysis of
-AI-Generated Writing Tells," Stop Slop by Hardik Pandya, and William Strunk Jr.'s public-domain
+This skill synthesizes Wikipedia: Signs of AI writing, the "Comprehensive Analysis of
+AI-Generated Writing Tells" survey, Stop Slop by Hardik Pandya, and William Strunk Jr.'s public-domain
 Elements of Style. Detail lives in `reference/`; keep this core lean.
