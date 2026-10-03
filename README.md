@@ -43,7 +43,7 @@ This project publishes its error rates in both directions, with 95% intervals an
 | Flags human writing | 2,145 documents written before ChatGPT (chat, wiki, news, essays) | 0.0% to 1.5% by register at the default threshold. Measured on 4.12.0; rerun pending ([table](corpus/RESULTS.md)). |
 | Catches AI writing | Held-out test split of RAID, WildChat, and current Claude models | Not measured yet. The builders ship in 4.14.0; the first run is pending. |
 
-Both numbers come from `scripts/fp_measure.py`, and the method is in [The evidence](#the-evidence). A rule earns its place only if it fires more on AI text than on human text, and that comparison uses a separate dev split so the published catch rate stays honest.
+Both numbers come from `scripts/fp_measure.py`, and the method is in [The evidence](#the-evidence). A rule earns its place only if it fires more on AI text than on human text. That comparison uses a separate dev split, so neither published rate grades its own tuning.
 
 ## What it will not do
 
@@ -154,7 +154,7 @@ Useful variations:
 1. Pass several files or folders; a folder means every `.md` and `.txt` inside, recursively.
 2. Add `--json` for machine-readable output (schema `humanizer-audit.v1`).
 3. Add `--sarif out.sarif` to also write SARIF 2.1.0, which GitHub code scanning shows as annotations on pull requests.
-4. Code is skipped by default: `utilize()` inside backticks is an API name, not wordiness. Add `--include-code` to check code too.
+4. Code is skipped by the prose rules: `utilize()` inside backticks is an API name, not wordiness. Leaked chatbot tokens are still caught inside code. Add `--include-code` to apply the prose rules to code too.
 5. Run `--compare original.md revised.md` to check that a rewrite kept its facts: numbers, dates, names, link targets, citations, quotes, and code blocks. Compare mode judges fidelity only, never style.
 
 Exit codes:
@@ -228,7 +228,7 @@ Error rates get measured here, not asserted.
 
 Note: these rates count reviews (exit 1) only. One human chat post was blocked (exit 2); from 4.13.0, `fp_measure.py` counts a block as a false positive, so the next measurement will show it. The corpus publishes digests, dates, and word counts, never text, names, or source locations.
 
-**Catch rate.** From 4.14.0 the corpus also takes machine-written documents, labelled by source: generations from [RAID](https://github.com/liamdugan/raid) (2023 models, non-adversarial), first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M) (GPT-3.5 and GPT-4), and current Claude models answering [60 committed prompts](corpus/machine_prompts.json). About a quarter of them form a dev split. That split is the only one rule tuning may look at, through a per-rule scorecard. The published catch rate uses the remaining test split, with the same "flagged" definition as the false-positive rate. The first full run is pending, so no catch rate is claimed yet. Two caveats will travel with the number: it describes those models only, and human essays and news in the corpus are a century old, so a gap there is partly era.
+**Catch rate.** From 4.14.0 the corpus also takes machine-written documents, labelled by source: generations from [RAID](https://github.com/liamdugan/raid) (2023 models, non-adversarial), first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M) (GPT-3.5 and GPT-4), and current Claude models answering [60 committed prompts](corpus/machine_prompts.json). Every document, human or machine, falls in a dev or test split chosen by its digest; about a quarter are dev. Rule tuning looks only at the dev split, through a per-rule scorecard. Both published rates use the test split, with the same "flagged" definition. The first full run is pending, so no catch rate is claimed yet. Two caveats will travel with the number: it describes those models only, and human essays and news in the corpus are a century old, so a gap there is partly era.
 
 A docs register joins the human side too: Python Enhancement Proposals read at the last commit before the cutoff.
 
@@ -296,4 +296,4 @@ Pattern sources, with thanks:
 
 ## Version history
 
-Current release: **v4.14.0**. It measures in both directions: the corpus takes labelled machine text with a held-out test split, and `fp_measure.py` reports a catch rate next to the false-positive rate, plus a per-rule scorecard. The audit installs as a command, runs as a pre-commit hook or a GitHub Action, writes SARIF for code scanning, and skips code by default. v4.13.0 before it was a bug-fix release from a full-repo review. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
+Current release: **v4.14.0**. It measures in both directions: the corpus takes labelled machine text with a held-out test split, and `fp_measure.py` reports a catch rate next to the false-positive rate, plus a per-rule scorecard. The audit installs as a command, runs as a pre-commit hook or a GitHub Action, writes SARIF for code scanning, and keeps its prose rules out of code. v4.13.0 before it was a bug-fix release from a full-repo review. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
