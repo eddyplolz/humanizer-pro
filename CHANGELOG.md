@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.14.1 - 2026-10-03
+
+Privacy update.
+
+- The maintainer's own forum and wiki entries leave the public manifest. They now live only in
+  the gitignored `corpus/manifest.private.json`, and the public file shows totals for those pools
+  (`private_pools`). The extraction code is public, so a published digest of that writing could
+  be used to match posts to accounts. Public-source digests stay public so anyone can verify them.
+  `corpus.py` and `fp_measure.py` read both files when the private one exists.
+- Test fixtures and code comments drawn from real-world editing work were replaced with invented
+  examples.
+- README: a "Your privacy" section says what the checker, the skill, SARIF output, and the
+  GitHub Action do with your text.
+- CLAUDE.md: rules for commit identity, examples, and private corpus data.
+
 ## 4.14.0 - 2026-10-03
 
 Two-way measurement and distribution. No catch rate is published yet: the machine pools are

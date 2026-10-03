@@ -16,15 +16,16 @@ It runs on your computer. It does not need an account, an API key, or a network 
 
 1. [What it does](#what-it-does)
 2. [What it does not do](#what-it-does-not-do)
-3. [Install the skill](#install-the-skill)
-4. [Use the skill](#use-the-skill)
-5. [Check files from the command line](#check-files-from-the-command-line)
-6. [Check files automatically](#check-files-automatically)
-7. [How well it works](#how-well-it-works)
-8. [How it decides](#how-it-decides)
-9. [Help improve it](#help-improve-it)
-10. [Credits and license](#credits-and-license)
-11. [Version history](#version-history)
+3. [Your privacy](#your-privacy)
+4. [Install the skill](#install-the-skill)
+5. [Use the skill](#use-the-skill)
+6. [Check files from the command line](#check-files-from-the-command-line)
+7. [Check files automatically](#check-files-automatically)
+8. [How well it works](#how-well-it-works)
+9. [How it decides](#how-it-decides)
+10. [Help improve it](#help-improve-it)
+11. [Credits and license](#credits-and-license)
+12. [Version history](#version-history)
 
 ## What it does
 
@@ -69,6 +70,17 @@ It does not rewrite text that is already clean. A built-in restraint check retur
 
 > [!IMPORTANT]
 > A high score shows writing habits. It does not prove that a machine wrote the text, and it proves nothing about a person. Research has found that AI detectors wrongly flag more than 60% of essays by people writing in English as a second language (Liang et al., Stanford, *Patterns*, 2023). Do not use this tool as the only basis for an academic, hiring, or authorship decision.
+
+## Your privacy
+
+The command-line checker reads files on your computer and sends nothing anywhere. It makes no network connections and keeps no logs.
+
+The skill runs inside your coding agent, such as Claude Code or Codex. Your text goes wherever your agent already sends it, and nowhere else.
+
+Two features can put your text somewhere else, and only when you choose them:
+
+- SARIF results contain short quotes from your text. If you upload them to GitHub code scanning, those quotes are stored with your repository's code scanning results.
+- The GitHub Action runs in your own GitHub Actions workflow, so your files are read on GitHub's servers, as with any other check you run there.
 
 ## Install the skill
 
@@ -262,7 +274,7 @@ Every document in the human set was written before ChatGPT was released, so any 
 
 These rates come from version 4.12.0 and cover the 1,912 documents that were available then, including 261 newspaper pages. Later versions count a block as a false positive and change some rules. The next measurement will replace this table.
 
-The project publishes only fingerprints of these documents: a unique code for each, plus the date and word count. It never publishes the text, the author's name, or where it came from.
+For documents from public sources, such as old books and newspapers, the project publishes a fingerprint of each one (a unique code), with its date and word count, so anyone can check them. For forum posts and encyclopedia articles written by people, it publishes only totals. Their fingerprints stay on the maintainer's computer, so nobody can use them to match a post to an account. The project never publishes the text, an author's name, or where a private document came from.
 
 ### Catch rate
 
@@ -364,4 +376,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.14.0**. This version measures errors in both directions, installs as a command, runs as a pre-commit check or a GitHub Action, and shows results on pull requests. Version 4.13.0 before it fixed bugs found in a full review of the project. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.14.1**, a privacy update. It keeps the maintainer's own writing out of the public corpus files and adds a section on where your text goes. Version 4.14.0 before it measured errors in both directions and added the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).
