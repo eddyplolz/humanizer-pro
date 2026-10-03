@@ -21,3 +21,8 @@ __pycache__/
 corpus/cache/
 corpus/build.local.json
 corpus/sources.local.json
+
+# Python packaging
+build/
+dist/
+*.egg-info/
