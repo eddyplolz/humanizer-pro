@@ -1,5 +1,139 @@
 # Changelog
 
+## 4.14.0 - 2026-10-03
+
+Two-way measurement and distribution. No catch rate is published yet: the machine pools are
+built from Hugging Face, RAID, and the Claude API, which the build machine for this release could
+not reach. The maintainer builds them and reruns `fp_measure.py`.
+
+Audit CLI:
+
+- Prose rules and stats skip fenced and inline code by default, so `utilize()` in a README no
+  longer counts as wordiness. `--include-code` restores the old behavior. Artifact rules and
+  bypass characters still see the whole text: a chatbot reply pasted inside a ```markdown fence
+  keeps its leaked tokens, and still blocks. Fences count only when they open and close a line,
+  so a sentence that mentions ``` cannot hide the prose after it. Self-scan's raw column still
+  counts every match.
+- Several targets in one run (needed by pre-commit), `--version`, and `--sarif PATH` for SARIF
+  2.1.0 output in audit and compare mode (checked against the official schema; columns are
+  declared as Unicode code points).
+- Installable: `pyproject.toml` ships `humanizer_audit` as the zero-dependency `humanizer-audit`
+  command (`pipx install git+https://github.com/eddyplolz/humanizer-pro`).
+- A pre-commit hook (`.pre-commit-hooks.yaml`) and a composite GitHub Action (`action.yml`). The
+  action passes inputs through environment variables, never into the script text, accepts
+  space- or newline-separated `paths`, removes a stale SARIF file before running, and takes
+  `fail-on: block|review|never`.
+- CI: tests on Python 3.10-3.13, self-scan, a package install, and an action smoke test.
+
+Corpus and measurement:
+
+- Manifest entries carry `label` (human or machine). Machine entries add the generating `model`.
+  Every document, human or machine, falls in a dev or test split chosen by its digest: about a
+  quarter dev, the rest test.
+- New pools:
+  - `build-peps`: a docs-register human pool from Python Enhancement Proposals, read at the
+    python/peps commit current at the cutoff (public-domain PEPs only).
+  - `build-raid`: RAID's non-adversarial training file (MIT); sampled generations without
+    repetition penalty, from chat and instruction-tuned models only.
+  - `build-wildchat`: WildChat-1M first replies in English with no code (ODC-BY).
+  - `scripts/generate_machine.py`: current Claude models on 60 committed prompts across wiki,
+    news, essay, and docs. It uses the official SDK and no refusal fallbacks, so each label names
+    the model that wrote the text. `--limit` is a trial run that saves nothing, and a run that
+    produces nothing keeps the existing pool.
+  - Every builder that can come back empty (`build-peps`, `build-raid`, `build-wildchat`,
+    `build-hf-news`) now keeps the existing pool instead of saving an empty one. `build-peps` also
+    checks the pinned commit's date itself and stops if any download fails.
+- `fp_measure.py` (results schema v2) publishes both rates on the test split only: the
+  false-positive rate on human test documents, and the catch rate on machine test documents, by
+  register and by model, with Wilson intervals and the same "flagged" definition. A rule scorecard
+  compares each rule's firing rate on human dev and machine dev documents; it is the one place
+  rule tuning may look, so neither published rate grades its own tuning.
+- Wiki entries moved from the `maintainer` author tier to `mixed`. A wiki page holds other
+  editors' text too. Only the label changed; digests and ids did not.
+
+Docs and checks:
+
+- README: CI badge, a two-way results table that says plainly what isn't measured yet, real CLI
+  output, and install, pre-commit, Action, and SARIF instructions.
+- The SKILL.md self-scan budget drops from 100 (a ceiling the score can't exceed, so never a gate)
+  to its measured 95.
+- A test keeps the version in `humanizer_audit.py`, SKILL.md, CHANGELOG.md, and README.md in step.
+
+## 4.13.0 - 2026-10-03
+
+Fixes from a full-repo review. Rule changes below only stop false or double matches, but they
+were made without the corpus cache, so `corpus/RESULTS.md` still shows 4.12.0 numbers until the
+maintainer reruns `scripts/fp_measure.py --write-results corpus/RESULTS.md`.
+
+Audit CLI:
+
+- Usage errors (no input, unknown flag, bad `--fail-score`) now exit 3 as documented. argparse
+  exited 2, the code reserved for "block", so a typo in a CI command read as a leaked artifact.
+- `family7.rhetorical_formula`: "not just ... but" and "not only ... but also" must sit in one
+  sentence. The DOTALL pattern matched "not just" in one paragraph to the last "but" anywhere later.
+- `family9.chatbot_residue`: "of course!" now matches. Its closing `\b` after "!" only matched when
+  a letter followed with no space, so the phrase never fired in real text.
+- One phrase, one score: "it is important to note" is family5-only (it was also family3), and
+  "has the ability to" is family6-only (it was also `clarity.wordiness`).
+- `family4.ai_vocab_cluster` counts distinct words. One topical word repeated ("robust ...
+  robust ... robust") no longer reads as a cluster.
+- The word tokenizer handles letters in any script, curly apostrophes, and multi-part hyphenated
+  words. "café" was split into "caf", and "don’t" into two words, which skewed word counts,
+  sentence lengths, and MATTR.
+- `mattr_50` is `null` below one 50-token window instead of silently falling back to plain TTR, a
+  window below 1 raises `ValueError` instead of dividing by zero or going negative, and the
+  computation is a linear sliding count.
+- `--stdin` decodes strict UTF-8 like file input (not the platform locale) and normalizes newlines.
+- A directory with no `.md` or `.txt` files now says so on stderr.
+- The `structure.low_sentence_variance` message was a cut-off sentence; it is complete now.
+
+Compare mode:
+
+- Quotes and code blocks are aligned before comparison. Dropping the first quote used to shift every
+  later quote into a false "changed" pair and report the wrong quote as dropped.
+- A retargeted link is caught when its label repeats; the label map kept only the last link.
+- Tilde (`~~~`) fences count as code blocks, in compare and in `code_block_count`.
+
+Corpus and measurement:
+
+- The Strunk pool no longer includes the Project Gutenberg header and licence. Seven of the 33
+  "1918 Strunk" chunks held that modern text. The pool is rebuilt from the repo: 27 chunks, and the
+  manifest now has 2,145 entries.
+- `fp_measure.py` counts a blocked (exit 2) human document as a false positive at any score; it
+  was listed only in a side column. The median is a true median, the "CLI default" label shows only
+  for the default threshold, and an empty cache no longer renders a broken sweep table.
+- Cache reads are byte-exact in `verify` and `fp_measure.py`, and entry ids are checked before any
+  path is built from them.
+- Corpus extraction fixes, versioned so existing entries still verify:
+  - `bbcode-strip.v2`: nested quote blocks are removed inside out, so an inner quote no longer
+    leaks the outer quoted author's words into the post, and SQL escapes are decoded in one pass
+    (`C:\\new` stayed a newline before).
+  - `build-forum` reads each post's `edittime` and drops posts edited after the cutoff, since
+    MyBB stores the edited text in place. It counts rows whose dump has no parseable `edittime`.
+  - `wikitext-strip.v2`: templates and links resolve innermost first until nothing changes. A
+    media caption holding a link no longer leaves `]]` behind, and templates nested deeper than
+    four levels are removed. `wikitext-strip.v1` is kept unchanged, and `fetch` rebuilds each wiki
+    entry with the extractor it was built with.
+  - The word counter and the OCR alphabetic gate count curly apostrophes inside words
+    (`ocr-chunk.v3`, `chunk.v2`), and OCR cleaning folds stray carriage returns.
+- The audit's text report no longer crashes (exit 1, read as "review") when a Windows pipe can't
+  encode quoted evidence; characters the stream can't hold are escaped.
+- `build-news` retries rate limits and transient failures (a read timeout used to abort the whole
+  build) and sorts its Internet Archive search so reruns select the same issues. The dead loc.gov
+  retry helper is gone. `fetch` batches wiki revisions per API endpoint, names the `build-*`
+  command for each missing kind, and exits 1 while entries stay uncached.
+
+Docs:
+
+- `reference/mattr-calibration.md` corrected: the 4.12.0 "AI contrast" set included the human
+  control and three other non-AI fixtures. On the four real AI fixtures MATTR is 0.84 to 0.89 and
+  no threshold in the table catches any of them (previously reported as 0.71 to 0.92, with catch
+  rates of 12.5% and 37.5%). The page now states the length mismatch and that the human figures
+  can't be reproduced.
+- SKILL.md is back under its 350-line limit (the second-pass list moved to
+  `reference/tell-catalog.md`); a test now enforces it.
+- WARP.md, README.md, and scripts/README.md file lists and commands brought up to date.
+
 ## 4.12.0 - 2026-09-10
 
 - Added **MATTR** (moving-average type-token ratio over 50-token windows) as a diagnostic stat in the
@@ -14,6 +148,9 @@
   exactly the register this skill most often audits. With no machine-generated corpus to establish a
   true-positive rate, MATTR is surfaced for analysis, not verdicts. Method and figures:
   `reference/mattr-calibration.md`.
+- *Corrected in 4.13.0:* the AI-fixture range and catch rates above came from a contrast set that
+  included the human control and other non-AI fixtures. The four AI fixtures score 0.84-0.89 and
+  none is caught at any threshold in the table.
 
 ## 4.11.2 - 2026-09-10
 
