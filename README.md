@@ -62,11 +62,31 @@ eval/fixtures/ai-slop-general.md — risk 60
 
 ## What it does not do
 
-Humanizer Pro will not help you get past AI detectors. It does not use invisible characters, synonym swaps, or claims that text is "undetectable."
+Humanizer Pro is not a way past AI detectors, and it is built so that it cannot become one. Clear, fluent prose is what the strongest detectors catch most reliably; the only text that slips past them is damaged text (typos, odd spacing, thin-space characters, synonym swaps that no writer would make). This tool aims for clear prose and flags that kind of damage as a defect. If you need text to pass a detector, this is the wrong tool, and the honest advice is to write the piece yourself.
+
+These are non-goals, and pull requests that add them are declined:
+
+- adding typos, grammar errors, or "natural" mistakes
+- swapping in invisible, thin-space, or lookalike characters
+- replacing precise terms with synonyms to dodge a word list
+- rewriting toward a "burstiness" or "perplexity" target
+- splicing in copied human text
+- looping a rewrite against a detector until it passes
+- any "percent human" score or "undetectable" claim
 
 It does not add a fake personality. Swapping one stock phrase for a casual one trades one habit for another, so the skill avoids both.
 
 It does not rewrite text that is already clean. A built-in restraint check returns good writing close to how it arrived.
+
+### Good uses
+
+- Editing your own draft so it says what you meant, in fewer words.
+- Cleaning up a draft you wrote with AI help, then checking every fact against your sources before you publish it.
+- Catching chatbot residue (citation codes, placeholder fields, "As an AI language model") before a document goes out.
+- Smoothing a second-language writer's text without flattening their voice.
+- Checking that honest writing would not read as stock prose, and seeing exactly which lines look that way.
+
+What a high score means is on the line below, and it is the only claim this tool makes about any text.
 
 > [!IMPORTANT]
 > A high score shows writing habits. It does not prove that a machine wrote the text, and it proves nothing about a person. Research has found that AI detectors wrongly flag more than 60% of essays by people writing in English as a second language (Liang et al., Stanford, *Patterns*, 2023). Do not use this tool as the only basis for an academic, hiring, or authorship decision.

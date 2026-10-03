@@ -13,6 +13,12 @@
 - Residue from real-world editing work replaced with invented names in a test fixture and two
   source notes.
 
+README:
+
+- "What it does not do" now says why the tool cannot be an evasion tool (clear prose is what
+  detectors catch; only damaged text slips past), lists the non-goals that pull requests will not
+  add, and adds a "Good uses" list.
+
 Skill:
 
 - Four operating principles added (10 to 13): keep the precise word, rewrite or cut the sentence
