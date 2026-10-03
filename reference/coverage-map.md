@@ -29,6 +29,7 @@ CLI-side half: every rule id the CLI can emit must appear in this file.
 | `artifact.roleplay_marker` | §10 Roleplay action markers |
 | `artifact.bypass_characters` | §11 Hidden and lookalike characters (emitted by the normalization pre-pass) |
 | `artifact.assistant_self_disclosure` | §12 Assistant self-disclosure |
+| `artifact.humanizer_whitespace` | §13 Humanizer damage (typographic spaces) |
 
 ### Tell-family rules (`tell-catalog.md`; sentinel phrases, severity warning)
 
@@ -49,6 +50,8 @@ always says more than the regex.
 | `family8.markdown_structure` | §8.3–8.11 structure and markup tells |
 | `family8.list_label_period` | §8.14 list-label periods |
 | `family9.chatbot_residue` | §9.1–9.5, §9.11 chat wrappers, sycophancy, summaries, RLHF framing |
+| `family9.humanizer_spacing` | §9.12 humanizer damage: sentence boundary with the space removed |
+| `family9.tortured_phrase` | §9.12 humanizer damage: mechanical synonym swaps |
 
 ### Clarity rules (Tier 1B; info severity, zero risk weight)
 
