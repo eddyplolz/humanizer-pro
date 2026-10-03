@@ -249,7 +249,7 @@ circle back→revisit; on the same page→agreed; leverage→use; synergy→(cut
 ## Family 7 — Rhetorical formulas
 
 ### 7.1 Binary contrasts (SS)
-**Watch:** "Not because X. Because Y.", "X isn't the problem. Y is.", "The answer isn't X. It's Y."
+**Watch:** "Not because X. Because Y.", "X isn't the problem. Y is.", "The answer isn't X. It's Y.", "It's not just X; it's Y.", "This is not just a car. It's a lifestyle."
 > **Before:** Not because the technology is complex. Because people are.  **After:** The hard part is people, not technology.
 
 ### 7.2 Negative parallelism (WP)
@@ -398,7 +398,7 @@ misanchored one needs the register, which a regex cannot read.
 > **Before:** Great question! You're absolutely right that this is complex.  **After:** (answer the question.)
 
 ### 9.3 Knowledge-cutoff disclaimers (WP)
-**Watch:** "as of my last update", "Up to my last training update", "While specific details are limited/scarce…", "based on available information".
+**Watch:** "as of my last update", "as of my knowledge cutoff in 2023", "Up to my last training update", "my training data only goes up to", "While specific details are limited/scarce…", "based on available information". The assistant naming itself ("As an AI language model, I…") is an artifact, not a tell: see `llm-artifacts.md` §12.
 > **Before:** While specific details are limited in available sources, it was likely founded in the 1990s.  **After:** It was founded in 1994 (registration records).
 
 ### 9.4 Section summaries (WP, historical-but-recurring)
