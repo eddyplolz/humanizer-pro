@@ -85,6 +85,29 @@ def test_slice_stats_literal() -> None:
     assert stats["blocked"] == 1
 
 
+def test_blocked_document_counts_as_flagged_at_any_score() -> None:
+    rows = [{"risk": 10, "blocked": True}, {"risk": 0, "blocked": False}]
+    stats = fp_measure.slice_stats(rows, threshold=60)
+    assert stats["flagged"] == 1
+    assert stats["fpr"] == 0.5
+
+
+def test_median_risk_is_a_true_median() -> None:
+    rows = [{"risk": 0, "blocked": False}, {"risk": 100, "blocked": False}]
+    assert fp_measure.slice_stats(rows, threshold=60)["median_risk"] == 50
+
+
+def test_results_page_handles_empty_cache_and_threshold_label() -> None:
+    empty = {
+        "threshold": 40, "corpus_documents": 0, "missing_cache": ["x"],
+        "overall": fp_measure.slice_stats([], 40), "by_register": {}, "by_author": {},
+        "threshold_sweep_fpr": {"40": {}}, "top_rules_on_human_text": [],
+    }
+    page = fp_measure.render_results_md(empty)
+    assert "(the CLI default)" not in page
+    assert "| Threshold |  |" not in page
+
+
 # --------------------------------------------------------------- manifest
 
 
@@ -162,3 +185,30 @@ def test_fp_measure_cli_runs() -> None:
     payload = json.loads(result.stdout)
     assert payload["schema"] == "humanizer-fp-measure.v1"
     assert "by_register" in payload and "overall" in payload
+
+
+def test_public_domain_pool_rebuilds_offline_without_gutenberg_boilerplate() -> None:
+    """The Strunk pool is reproducible from the repo alone and holds only the
+    book: no Project Gutenberg header or licence text."""
+    chunks = corpus.gutenberg_chunks(corpus.PD_SOURCE.read_text(encoding="utf-8"))
+    digests = {corpus.sha256_text(chunk) for chunk in chunks}
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    published = {e["sha256"] for e in manifest["entries"] if e["kind"] == "public-domain"}
+    assert digests == published
+    for chunk in chunks:
+        assert "Project Gutenberg" not in chunk
+        assert "START OF" not in chunk and "END OF" not in chunk
+
+
+def test_cache_path_rejects_malformed_ids() -> None:
+    for bad in ("../x", "pd-../../etc", "PD-0123456789ab", "pd-0123"):
+        with pytest.raises(ValueError):
+            corpus.cache_path(bad)
+    assert corpus.cache_path("pd-0123456789ab").name == "pd-0123456789ab.txt"
+
+
+def test_cache_round_trip_is_byte_exact(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path)
+    text = "line one\rstill line one\nline two"
+    corpus.write_cache("pd-0123456789ab", text)
+    assert corpus.read_cache("pd-0123456789ab") == text
