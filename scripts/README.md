@@ -15,11 +15,14 @@ raising one as a decision that belongs in a reviewed change.
 human document predates ChatGPT (cutoff 2022-11-01), so any audit flag on one is a false positive
 by construction. Machine documents carry `label: machine` and the generating `model`. Every
 document falls in a dev or test split derived from its digest (about a quarter dev); machine
-entries record it as `split`, and `fp_measure.py` derives it for human entries. The manifest is anonymous by design: it holds
-register, author tier, date, word count, and SHA-256 digest per document — no text, no usernames,
-no source locators. Entry ids derive from the digest, so they name content without describing it.
+entries record it as `split`, and `fp_measure.py` derives it for human entries. The public manifest
+holds register, author tier, date, word count, and SHA-256 digest per document from public sources,
+and no text, usernames, or private locators. Entry ids derive from the digest, so they name content
+without describing it. Entries for the maintainer's own writing (the forum and wiki pools) are kept
+out of it entirely: they live in the gitignored `corpus/manifest.private.json`, and the public file
+shows only their totals (`private_pools`). The tools read both files when the private one exists.
 The text lives in the gitignored `corpus/cache/` and the source locators in the gitignored
-`corpus/sources.local.json`; both stay on the maintainer's machine. The public-domain pools are
+`corpus/sources.local.json`; all three stay on the maintainer's machine. The public-domain pools are
 the exception: the in-repo Strunk chunks (`build-pd`, offline), the Gutenberg essay works
 (`build-essays`), the Internet Archive news chunks (`build-news`), and the OpenCulture
 US-PD-Newspapers pages (`build-hf-news`), and the PEPs (`build-peps`, read at the python/peps commit
@@ -35,12 +38,11 @@ saves nothing. A builder that collects nothing keeps the existing pool. The news
 pool and wiki revisions and names the `build-*` command for any other missing kind. `verify` checks every cached
 file against its digest; a test enforces the anonymity contract on every entry.
 
-Anonymity has one known limit. Full SHA-256 digests, the `maintainer` author tier, and the
-deterministic extraction code are all public, so someone who already holds a candidate forum post
-or wiki revision can extract and hash it and confirm that it is in the corpus. The manifest names
-no one, but it can confirm a guess. Truncated or salted digests would close this and would also
-end independent verification of the public-domain pools, so the trade-off is left to the
-maintainer.
+Why the private pools are kept out: the extraction code is public, so a published digest of a
+forum post or wiki revision would let anyone who can read that forum or wiki hash candidate posts
+and confirm which accounts are the maintainer's. With only totals published, there is nothing to
+match against. Public-domain digests stay public, because those sources are public anyway and the
+digests let anyone verify the rebuild.
 
 Extraction versions are recorded per entry. `fetch` rebuilds wiki entries with the extractor named
 in their `extraction` field (`wikitext-strip.v1` stays byte-for-byte for existing digests); new

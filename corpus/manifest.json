@@ -14642,5 +14642,19 @@
       "words": 545
     }
   ],
+  "private_pools": {
+    "forum-post": {
+      "entries": 764,
+      "registers": {
+        "chat": 764
+      }
+    },
+    "wiki-revision": {
+      "entries": 548,
+      "registers": {
+        "wiki": 548
+      }
+    }
+  },
   "schema": "humanizer-corpus-manifest.v1"
 }
