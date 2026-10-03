@@ -19,8 +19,16 @@ Subcommands:
   build-forum   read MyBB dump SQL files, extract pre-cutoff posts
   build-wiki    fetch a wiki user's pre-cutoff revisions via the MediaWiki API
   build-pd      chunk the in-repo public-domain Strunk text
-  fetch         repopulate the cache (public-domain always; others need
-                the maintainer's sources.local.json)
+  build-essays  chunk public-domain Gutenberg essay works
+  build-news    fetch public-domain newspaper OCR (Internet Archive)
+  build-hf-news grow the news pool from OpenCulture (HF rows API)
+  build-peps    docs-register pool: PEPs at the last pre-cutoff commit
+  build-raid    machine pool: RAID generations (non-adversarial, MIT)
+  build-wildchat machine pool: WildChat-1M first replies (ODC-BY)
+                (scripts/generate_machine.py adds current Claude models)
+  fetch         repopulate the cache (public-domain always; wiki needs the
+                maintainer's sources.local.json; other kinds name their
+                build-* subcommand)
   verify        check every cached file against its manifest sha256
 
 Maintainer-local settings (dump paths, identity mapping, wiki endpoint) come
@@ -34,9 +42,11 @@ import argparse
 import hashlib
 import http.client
 import json
+import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -53,9 +63,10 @@ MANIFEST_SCHEMA = "humanizer-corpus-manifest.v1"
 SOURCES_SCHEMA = "humanizer-corpus-sources.v1"
 CUTOFF = "2022-11-01"
 CUTOFF_EPOCH = 1667260800  # 2022-11-01T00:00:00Z
-MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200}
-BBCODE_STRIP_VERSION = "bbcode-strip.v1"
-WIKITEXT_STRIP_VERSION = "wikitext-strip.v1"
+MIN_WORDS = {"chat": 50, "wiki": 150, "essay": 150, "news": 200, "docs": 150}
+BBCODE_STRIP_VERSION = "bbcode-strip.v2"
+WIKITEXT_STRIP_VERSION = "wikitext-strip.v2"
+CHUNK_VERSION = "chunk.v2"
 USER_AGENT = "humanizer-pro-corpus/1.0"
 ID_PREFIX = {
     "forum-post": "forum",
@@ -64,9 +75,36 @@ ID_PREFIX = {
     "news-page": "news",
     "gutenberg-work": "guten",
     "hf-news": "hfnews",
+    "pep-chunk": "pep",
+    "raid-generation": "raid",
+    "wildchat-turn": "wildchat",
+    "generated": "gen",
 }
 # Kinds whose sources are public-domain pointers and may publish in the manifest.
-PUBLIC_SOURCE_KINDS = ("public-domain", "news-page", "gutenberg-work", "hf-news")
+PUBLIC_SOURCE_KINDS = (
+    "public-domain",
+    "news-page",
+    "gutenberg-work",
+    "hf-news",
+    "pep-chunk",
+    "raid-generation",
+    "wildchat-turn",
+    "generated",
+)
+# Machine-written kinds. Their entries carry label "machine" and the
+# generating model; every other kind is human by provenance.
+MACHINE_KINDS = ("raid-generation", "wildchat-turn", "generated")
+# About a quarter of all documents, human and machine, form the dev split, the
+# only part rule tuning may look at. Published rates use the test split.
+DEV_SPLIT_HEX = "0123"
+
+
+def digest_split(digest: str) -> str:
+    """dev or test, from the content digest: stable, and needs no stored seed.
+
+    Machine entries record it in the manifest; for human entries fp_measure
+    derives it from the same digest, so old manifests need no rewrite."""
+    return "dev" if digest[0] in DEV_SPLIT_HEX else "test"
 
 
 # ---------------------------------------------------------------- utilities
@@ -77,7 +115,8 @@ def sha256_text(text: str) -> str:
 
 
 def word_count(text: str) -> int:
-    return len(re.findall(r"[A-Za-z0-9''-]+", text))
+    # Straight and curly apostrophes, so "don’t" is one word.
+    return len(re.findall(r"[A-Za-z0-9'’-]+", text))
 
 
 def load_manifest() -> dict:
@@ -111,9 +150,26 @@ def save_local_sources(sources: dict) -> None:
     )
 
 
+ENTRY_ID_RE = re.compile(r"[a-z]+-[0-9a-f]{12}")
+
+
+def cache_path(entry_id: str) -> Path:
+    """Cache file for an entry id, refusing ids that could leave CACHE_DIR."""
+    if not ENTRY_ID_RE.fullmatch(entry_id):
+        raise ValueError(f"malformed corpus entry id: {entry_id!r}")
+    return CACHE_DIR / f"{entry_id}.txt"
+
+
 def write_cache(entry_id: str, text: str) -> None:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    (CACHE_DIR / f"{entry_id}.txt").write_text(text, encoding="utf-8", newline="\n")
+    cache_path(entry_id).write_text(text, encoding="utf-8", newline="\n")
+
+
+def read_cache(entry_id: str) -> str:
+    """Cached text exactly as written. read_text() would translate a lone CR
+    or CRLF to LF, so a corrupted file could still match its digest and a
+    text holding a literal CR could never match it."""
+    return cache_path(entry_id).read_bytes().decode("utf-8")
 
 
 def load_local_config() -> dict:
@@ -134,7 +190,7 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
     manifest = load_manifest()
     local = load_local_sources()
     for entry_id in [e["id"] for e in manifest["entries"] if e["id"].startswith(f"{prefix}-")]:
-        (CACHE_DIR / f"{entry_id}.txt").unlink(missing_ok=True)
+        cache_path(entry_id).unlink(missing_ok=True)
         local["sources"].pop(entry_id, None)
     manifest["entries"] = [
         e for e in manifest["entries"] if not e["id"].startswith(f"{prefix}-")
@@ -154,11 +210,13 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
         entry = {
             "id": entry_id,
             "kind": kind,
-            "label": "human",
+            "label": "machine" if kind in MACHINE_KINDS else "human",
             "words": word_count(text),
             "sha256": digest,
             **public_fields,
         }
+        if kind in MACHINE_KINDS:
+            entry["split"] = digest_split(digest)
         if kind in PUBLIC_SOURCE_KINDS:
             entry["source"] = source  # public-domain pointer; reveals nothing personal
         else:
@@ -176,9 +234,13 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
 # ---------------------------------------------------------- text extraction
 
 
+# Innermost block only: its body holds no opening tag of the same name, so
+# nested quotes are removed from the inside out rather than the outer opener
+# pairing with the inner closer and leaking the quoted author's words.
 BBCODE_BLOCK_RE = re.compile(
-    r"\[(quote|code|php|html)(?:=[^\]]*)?\].*?\[/\1\]", re.S | re.I
+    r"\[(quote|code|php|html)(?:=[^\]]*)?\](?:(?!\[\1(?:=[^\]]*)?\]).)*?\[/\1\]", re.S | re.I
 )
+SQL_ESCAPES = {"n": "\n", "r": "\r", "t": "\t", "0": "\0", "Z": "\x1a"}
 BBCODE_TAG_RE = re.compile(r"\[/?[a-zA-Z*][^\]]*\]")
 
 
@@ -188,9 +250,14 @@ def bbcode_strip(message: str) -> str:
     Quote and code blocks are removed outright: quoted text is another
     author's writing and code is not prose. Remaining tags are unwrapped.
     """
-    text = message.replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\r", "\n")
-    text = text.replace("\\\"", '"').replace("\\'", "'").replace("\\\\", "\\")
-    text = BBCODE_BLOCK_RE.sub(" ", text)
+    # One pass over escape pairs. Chained replace() calls read the "\\n" in
+    # an escaped backslash followed by "n" (C:\\new) as a newline.
+    text = re.sub(r"\\(.)", lambda m: SQL_ESCAPES.get(m.group(1), m.group(1)), message, flags=re.S)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    while True:
+        text, count = BBCODE_BLOCK_RE.subn(" ", text)
+        if not count:
+            break
     text = BBCODE_TAG_RE.sub("", text)
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
@@ -213,8 +280,10 @@ HEADING_RE = re.compile(r"^=+\s*(.*?)\s*=+\s*$", re.M)
 HTML_TAG_RE = re.compile(r"</?[a-zA-Z][^>]*>")
 
 
-def wikitext_strip(wikitext: str) -> str:
-    """Reduce wikitext to plain prose so markup never counts as a tell."""
+def wikitext_strip_v1(wikitext: str) -> str:
+    """The wikitext-strip.v1 extraction, kept byte-for-byte so `fetch` can
+    rebuild existing v1 entries to their published digests. New builds use
+    ``wikitext_strip`` (v2)."""
     text = wikitext
     for regex in WIKI_DROP_RES:
         text = regex.sub(" ", text)
@@ -224,6 +293,46 @@ def wikitext_strip(wikitext: str) -> str:
             break
     text = WIKILINK_PIPED_RE.sub(r"\1", text)
     text = WIKILINK_RE.sub(r"\1", text)
+    return _wikitext_finish(text)
+
+
+MEDIA_LINK_RE = re.compile(r"\[\[(?:File|Image|Category):[^\[\]]*\]\]", re.I)
+INNER_PIPED_LINK_RE = re.compile(r"\[\[(?!(?:File|Image|Category):)[^\[\]|]*\|([^\[\]]*)\]\]", re.I)
+INNER_LINK_RE = re.compile(r"\[\[(?!(?:File|Image|Category):)([^\[\]|]*)\]\]", re.I)
+WIKI_NEST_LIMIT = 100
+
+
+def wikitext_strip(wikitext: str) -> str:
+    """Reduce wikitext to plain prose so markup never counts as a tell (v2).
+
+    v1 unwrapped at most four template levels and dropped a media link at its
+    first "]]", so a caption holding a link ("[[File:x|A [[Foo]] map]]") left
+    " map]]" behind. v2 resolves templates and links innermost first until
+    nothing changes.
+    """
+    text = wikitext
+    for regex in WIKI_DROP_RES[:4]:
+        text = regex.sub(" ", text)
+    for _ in range(WIKI_NEST_LIMIT):
+        text, n = TEMPLATE_RE.subn(" ", text)
+        if not n:
+            break
+    for _ in range(WIKI_NEST_LIMIT):
+        before = text
+        text = INNER_PIPED_LINK_RE.sub(r"\1", text)
+        text = INNER_LINK_RE.sub(r"\1", text)
+        text = EXTLINK_RE.sub(r"\1", text)
+        text = BARE_EXTLINK_RE.sub(" ", text)
+        text = MEDIA_LINK_RE.sub(" ", text)
+        if text == before:
+            break
+    return _wikitext_finish(text)
+
+
+WIKITEXT_STRIPPERS = {"wikitext-strip.v1": wikitext_strip_v1, WIKITEXT_STRIP_VERSION: wikitext_strip}
+
+
+def _wikitext_finish(text: str) -> str:
     text = EXTLINK_RE.sub(r"\1", text)
     text = BARE_EXTLINK_RE.sub(" ", text)
     text = HEADING_RE.sub(r"\1", text)
@@ -243,6 +352,12 @@ POSTS_INSERT_RE = re.compile(r"INSERT INTO `mybb_posts`[^;]*?VALUES\s*(.*?);\r?\
 POST_ROW_RE = re.compile(
     r"\((\d+),\s*\d+,\s*\d+,\s*\d+,\s*'(?:[^'\\]|\\.)*',\s*-?\d+,\s*(\d+),\s*"
     r"'((?:[^'\\]|\\.)*)',\s*(\d+),\s*'((?:[^'\\]|\\.)*)'"
+    # Optional tail: ipaddress (quoted, hex, _binary, or NULL), includesig,
+    # smilieoff, edituid, then edittime. MyBB stores the edited text in place,
+    # so a post edited after the cutoff is not pre-cutoff text. A dump whose
+    # rows lack these columns yields None and is counted, not guessed.
+    r"(?:,\s*(?:'(?:[^'\\]|\\.)*'|_binary\s*'(?:[^'\\]|\\.)*'|0x[0-9A-Fa-f]*|NULL)"
+    r",\s*-?\d+,\s*-?\d+,\s*-?\d+,\s*(\d+))?"
 )
 
 
@@ -250,8 +365,14 @@ def iter_mybb_posts(sql_path: Path):
     text = sql_path.read_text(encoding="utf-8", errors="replace")
     for insert in POSTS_INSERT_RE.finditer(text):
         for row in POST_ROW_RE.finditer(insert.group(1)):
-            pid, _uid, username, dateline, message = row.groups()
-            yield int(pid), username, int(dateline), message
+            pid, _uid, username, dateline, message, edittime = row.groups()
+            yield (
+                int(pid),
+                username,
+                int(dateline),
+                message,
+                int(edittime) if edittime is not None else None,
+            )
 
 
 def build_forum(args: argparse.Namespace) -> int:
@@ -269,10 +390,15 @@ def build_forum(args: argparse.Namespace) -> int:
     dropped = Counter()
     for sql_path in dumps:
         forum = sql_path.stem.replace("_sanitized", "")
-        for pid, username, dateline, message in iter_mybb_posts(sql_path):
+        for pid, username, dateline, message, edittime in iter_mybb_posts(sql_path):
             if dateline >= CUTOFF_EPOCH:
                 dropped["post-cutoff"] += 1
                 continue
+            if edittime is not None and edittime >= CUTOFF_EPOCH:
+                dropped["edited-post-cutoff"] += 1
+                continue
+            if edittime is None:
+                dropped["edittime-unknown"] += 1
             text = bbcode_strip(message)
             if word_count(text) < MIN_WORDS["chat"]:
                 dropped["under-min-words"] += 1
@@ -295,7 +421,9 @@ def build_forum(args: argparse.Namespace) -> int:
         f"forum: {len(entries)} entries cached "
         f"({by_author['maintainer']} maintainer, {by_author['other']} other); "
         f"dropped {dropped['post-cutoff']} post-cutoff, "
-        f"{dropped['under-min-words']} under {MIN_WORDS['chat']} words"
+        f"{dropped['edited-post-cutoff']} edited after the cutoff, "
+        f"{dropped['under-min-words']} under {MIN_WORDS['chat']} words; "
+        f"{dropped['edittime-unknown']} kept with no parseable edittime"
     )
     return 0
 
@@ -371,7 +499,9 @@ def build_wiki(args: argparse.Namespace) -> int:
                     (
                         {
                             "register": "wiki",
-                            "author": "maintainer",
+                            # A page at the maintainer's last pre-cutoff
+                            # revision can hold other editors' text.
+                            "author": "mixed",
                             "date": rev["timestamp"][:7],
                             "extraction": WIKITEXT_STRIP_VERSION,
                         },
@@ -399,26 +529,18 @@ PD_CHUNK_WORDS = 500
 
 
 def build_pd(_args: argparse.Namespace) -> int:
-    text = PD_SOURCE.read_text(encoding="utf-8")
-    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
-    chunks: list[str] = []
-    current: list[str] = []
-    current_words = 0
-    for paragraph in paragraphs:
-        current.append(paragraph)
-        current_words += word_count(paragraph)
-        if current_words >= PD_CHUNK_WORDS:
-            chunks.append("\n\n".join(current))
-            current, current_words = [], 0
-    if current and current_words >= MIN_WORDS["essay"]:
-        chunks.append("\n\n".join(current))
+    # The in-repo file is a full Project Gutenberg download. Chunk only the
+    # book between the START/END markers: the header and the licence are
+    # modern Gutenberg text, not 1918 Strunk, and counted as such they put
+    # post-1918 prose into the "1918" essay slice.
+    chunks = gutenberg_chunks(PD_SOURCE.read_text(encoding="utf-8"))
     pairs = [
         (
             {
                 "register": "essay",
                 "author": "public-domain",
                 "date": "1918",
-                "extraction": "chunk.v1",
+                "extraction": CHUNK_VERSION,
             },
             chunk,
             {
@@ -445,25 +567,38 @@ NEWS_CHUNK_MIN, NEWS_CHUNK_MAX = 200, 1200
 NEWS_CHUNKS_PER_ISSUE = 3
 NEWS_MIN_ALPHA_RATIO = 0.72
 NEWS_MIN_THE_RATIO = 0.02  # crude English check: "the" frequency
-OCR_CLEAN_VERSION = "ocr-chunk.v2"
+OCR_CLEAN_VERSION = "ocr-chunk.v3"
 
 
-def api_get_with_retry(url: str, params: dict, sleep: float, attempts: int = 5) -> dict:
-    """loc.gov JSON with backoff: the API 503s hard on bursts, for minutes."""
+FETCH_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException)
+
+
+def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4, headers: dict | None = None) -> str:
+    """fetch_text with linear backoff on rate limits and transient failures.
+
+    Archive endpoints answer bursts with 429/503, and a read timeout raises
+    TimeoutError (an OSError, not a URLError). Other HTTP errors (404 and the
+    like) are permanent and raise at once.
+    """
     for attempt in range(1, attempts + 1):
         try:
-            return api_get(url, params, sleep)
+            return fetch_text(url, sleep, headers)
         except urllib.error.HTTPError as error:
-            if error.code in (429, 503) and attempt < attempts:
-                wait = 90 * attempt
-                print(f"rate-limited ({error.code}); backing off {wait}s", flush=True)
-                time.sleep(wait)
-                continue
-            raise
+            if error.code not in (429, 503) or attempt == attempts:
+                raise
+            wait = 30 * attempt
+        except FETCH_ERRORS:
+            if attempt == attempts:
+                raise
+            wait = 10 * attempt
+        print(f"fetch failed for {url}; retrying in {wait}s", flush=True)
+        time.sleep(wait)
     raise RuntimeError("unreachable")
 
 
 def ocr_clean(text: str) -> str:
+    # JSON-escaped CRs in HF rows survive fetch_text's newline pass.
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
@@ -473,7 +608,7 @@ def alpha_ratio(text: str) -> float:
     tokens = text.split()
     if not tokens:
         return 0.0
-    alpha = sum(1 for token in tokens if re.fullmatch(r"[A-Za-z''-]+[.,;:!?\"')]*", token))
+    alpha = sum(1 for token in tokens if re.fullmatch(r"[A-Za-z'’-]+[.,;:!?\"'’)]*", token))
     return alpha / len(tokens)
 
 
@@ -540,12 +675,15 @@ def build_news(args: argparse.Namespace) -> int:
         {
             "q": IA_QUERY,
             "fl[]": "identifier",
+            # Without an explicit sort the result order is not stable, so a
+            # rebuild could select different issues.
+            "sort[]": "identifier asc",
             "rows": str(args.issues),
             "page": "1",
             "output": "json",
         }
     )
-    payload = json.loads(fetch_text(search_url, args.sleep))
+    payload = json.loads(fetch_text_with_retry(search_url, args.sleep))
     identifiers = [
         doc["identifier"] for doc in payload.get("response", {}).get("docs", [])
     ]
@@ -558,8 +696,8 @@ def build_news(args: argparse.Namespace) -> int:
             break
         url = f"https://archive.org/download/{ident}/{ident}_djvu.txt"
         try:
-            raw = fetch_text(url, args.sleep)
-        except (urllib.error.HTTPError, urllib.error.URLError):
+            raw = fetch_text_with_retry(url, args.sleep)
+        except FETCH_ERRORS:
             dropped["download-failed"] += 1
             continue
         kept_this_issue = 0
@@ -639,7 +777,7 @@ def build_hf_news(args: argparse.Namespace) -> int:
         )
         try:
             payload = json.loads(fetch_text(f"{HF_ROWS_API}?{query}", args.sleep))
-        except (urllib.error.URLError, OSError, http.client.HTTPException) as error:
+        except FETCH_ERRORS as error:
             dropped["offset-fetch-failed"] += 1
             print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
             continue
@@ -686,6 +824,9 @@ def build_hf_news(args: argparse.Namespace) -> int:
                     )
                 )
                 kept_this_page += 1
+    if not pairs:
+        print("FAIL: no OpenCulture chunks collected; the existing pool was kept", file=sys.stderr)
+        return 1
     entries = save_pool("hf-news", pairs)
     print(
         f"hf-news: {len(entries)} chunks cached (target {args.target}); "
@@ -708,8 +849,8 @@ START_MARKER_RE = re.compile(r"\*\*\* ?START OF.*?\*\*\*", re.S)
 END_MARKER_RE = re.compile(r"\*\*\* ?END OF.*", re.S)
 
 
-def fetch_text(url: str, sleep: float) -> str:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+def fetch_text(url: str, sleep: float, headers: dict | None = None) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
     with urllib.request.urlopen(request, timeout=120) as response:
         raw = response.read().decode("utf-8", errors="replace")
     time.sleep(sleep)
@@ -717,20 +858,26 @@ def fetch_text(url: str, sleep: float) -> str:
     return raw.replace("\r\n", "\n").replace("\r", "\n")
 
 
-def gutenberg_chunks(raw: str) -> list[str]:
-    body = START_MARKER_RE.split(raw, maxsplit=1)[-1]
-    body = END_MARKER_RE.sub("", body)
+def paragraph_chunks(body: str, chunk_words: int, min_words: int) -> list[str]:
+    """Group whole paragraphs into chunks of at least ``chunk_words`` words;
+    a final remainder is kept only if it reaches ``min_words``."""
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
     chunks, current, current_words = [], [], 0
     for paragraph in paragraphs:
         current.append(paragraph)
         current_words += word_count(paragraph)
-        if current_words >= PD_CHUNK_WORDS:
+        if current_words >= chunk_words:
             chunks.append("\n\n".join(current))
             current, current_words = [], 0
-    if current and current_words >= MIN_WORDS["essay"]:
+    if current and current_words >= min_words:
         chunks.append("\n\n".join(current))
     return chunks
+
+
+def gutenberg_chunks(raw: str) -> list[str]:
+    body = START_MARKER_RE.split(raw, maxsplit=1)[-1]
+    body = END_MARKER_RE.sub("", body)
+    return paragraph_chunks(body, PD_CHUNK_WORDS, MIN_WORDS["essay"])
 
 
 def build_essays(args: argparse.Namespace) -> int:
@@ -747,7 +894,7 @@ def build_essays(args: argparse.Namespace) -> int:
                         "register": "essay",
                         "author": "public-domain",
                         "date": "pre-1923",
-                        "extraction": "chunk.v1",
+                        "extraction": CHUNK_VERSION,
                     },
                     chunk,
                     {
@@ -765,69 +912,420 @@ def build_essays(args: argparse.Namespace) -> int:
     return 0
 
 
+# ------------------------------------------------------------- PEPs (docs)
+
+
+GITHUB_API = "https://api.github.com"
+PEPS_REPO = "python/peps"
+PEP_FILE_RE = re.compile(r"(?:^|/)pep-(\d{4})\.(?:txt|rst)$")
+PEP_HEADER_RE = re.compile(r"^[A-Z][A-Za-z-]*:\s")
+PEP_CREATED_RE = re.compile(r"^Created:\s*.*?(\d{4})", re.M)
+PEP_PUBLIC_DOMAIN_RE = re.compile(r"placed\s+in\s+the\s+public\s+domain", re.I)
+RST_STOP_HEADINGS = {"copyright", "references", "footnotes"}
+RST_ADORNMENT_RE = re.compile(r"""^([=\-~^"'`#*+:.])\1{2,}\s*$""")
+RST_SIMPLE_TABLE_RE = re.compile(r"^=+(?:\s+=+)+\s*$")
+RST_INLINE_LITERAL_RE = re.compile(r"``[^`]+``")
+RST_LINK_RE = re.compile(r"`([^`<]+?)\s*<[^>]+>`__?")
+RST_ROLE_RE = re.compile(r":[a-z][\w-]*:`([^`]+)`")
+RST_REF_RE = re.compile(r"`([^`]+)`_{1,2}")
+RST_FOOTNOTE_REF_RE = re.compile(r"\s*\[(?:#\w*|\d+|\*)\]_")
+RST_EMPHASIS_RE = re.compile(r"\*\*([^*\n]+)\*\*|\*([^*\n]+)\*")
+RST_BULLET_RE = re.compile(r"^[ \t]*(?:[-*+]|#\.|\d+\.)[ \t]+", re.M)
+RST_STRIP_VERSION = "rst-strip.v1"
+PEP_CHUNK_WORDS = 500
+PEP_CHUNKS_PER_PEP = 2
+
+
+def rst_strip(raw: str) -> str:
+    """Reduce a PEP's reStructuredText to prose: no header block, code,
+    directives, tables, or reference sections."""
+    lines = raw.replace("\r\n", "\n").split("\n")
+    # The RFC 822-style header block ends at the first blank line.
+    if lines and PEP_HEADER_RE.match(lines[0]):
+        while lines and lines[0].strip():
+            lines.pop(0)
+    out: list[str] = []
+    skip_indent: int | None = None
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip())
+        if skip_indent is not None:
+            # Inside a literal block or directive: skip blank and indented lines.
+            if not stripped or indent > skip_indent:
+                continue
+            skip_indent = None
+            # Keep the paragraph break the skipped block stood in.
+            if out and out[-1]:
+                out.append("")
+        following = lines[index + 1].strip() if index + 1 < len(lines) else ""
+        if stripped.lower() in RST_STOP_HEADINGS and RST_ADORNMENT_RE.match(following):
+            break
+        if stripped.startswith(".. ") or stripped == "..":
+            skip_indent = indent
+            continue
+        if RST_ADORNMENT_RE.match(stripped) or RST_SIMPLE_TABLE_RE.match(stripped):
+            continue
+        if stripped.startswith(("+-", "+=", "|")):
+            continue
+        if stripped.endswith("::"):
+            skip_indent = indent
+            line = line.rstrip()[:-2].rstrip()
+            if line.strip():
+                out.append(line.strip() + ":")
+            continue
+        out.append(stripped)
+    text = "\n".join(out)
+    # Keep the literal's text so the sentence around it stays whole.
+    text = RST_INLINE_LITERAL_RE.sub(lambda m: m.group(0)[2:-2], text)
+    text = RST_LINK_RE.sub(r"\1", text)
+    text = RST_ROLE_RE.sub(r"\1", text)
+    text = RST_REF_RE.sub(r"\1", text)
+    text = RST_FOOTNOTE_REF_RE.sub("", text)
+    text = RST_EMPHASIS_RE.sub(lambda m: m.group(1) or m.group(2), text)
+    text = RST_BULLET_RE.sub("", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" +([.,;:])", r"\1", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def pep_pairs(files: list[tuple[str, str]], commit: str, target: int) -> tuple[list, Counter]:
+    """Chunk PEP sources into corpus pairs. ``files`` is [(path, raw)]."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for path, raw in sorted(files, key=lambda item: item[0]):
+        if len(pairs) >= target:
+            break
+        if not PEP_PUBLIC_DOMAIN_RE.search(raw):
+            dropped["not-public-domain"] += 1
+            continue
+        created = PEP_CREATED_RE.search(raw)
+        chunks = paragraph_chunks(rst_strip(raw), PEP_CHUNK_WORDS, MIN_WORDS["docs"])
+        if not chunks:
+            dropped["too-short"] += 1
+            continue
+        for index, chunk in enumerate(chunks[:PEP_CHUNKS_PER_PEP], start=1):
+            if len(pairs) >= target:
+                break
+            pairs.append(
+                (
+                    {
+                        "register": "docs",
+                        "author": "other",
+                        "date": created.group(1) if created else "pre-2022",
+                        "extraction": RST_STRIP_VERSION,
+                    },
+                    chunk,
+                    {"repo": PEPS_REPO, "commit": commit, "path": path, "chunk": index},
+                )
+            )
+    return pairs, dropped
+
+
+def github_json(url: str, sleep: float) -> object:
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return json.loads(fetch_text_with_retry(url, sleep, headers=headers))
+
+
+def build_peps(args: argparse.Namespace) -> int:
+    """Docs-register human pool: Python Enhancement Proposals, public domain.
+
+    The text is read at the python/peps commit that was current at the
+    cutoff, so every word predates it; later edits never enter the corpus.
+    """
+    try:
+        commits = github_json(
+            f"{GITHUB_API}/repos/{PEPS_REPO}/commits?until={CUTOFF}T00:00:00Z&per_page=1",
+            args.sleep,
+        )
+        commit = commits[0]["sha"]
+        committed = commits[0]["commit"]["committer"]["date"]
+        # Guard the cutoff on the response itself rather than trusting how
+        # the API interprets `until`.
+        if committed >= f"{CUTOFF}T00:00:00Z":
+            print(f"FAIL: commit {commit[:12]} is dated {committed}, not before {CUTOFF}", file=sys.stderr)
+            return 1
+        tree = github_json(f"{GITHUB_API}/repos/{PEPS_REPO}/git/trees/{commit}?recursive=1", args.sleep)
+    except FETCH_ERRORS as error:
+        print(f"FAIL: GitHub API unreachable ({error})", file=sys.stderr)
+        return 1
+    if tree.get("truncated"):
+        print("WARNING: GitHub truncated the tree listing; some PEPs may be missing")
+    paths = sorted(
+        item["path"] for item in tree.get("tree", [])
+        if item.get("type") == "blob" and PEP_FILE_RE.search(item["path"])
+    )
+    print(f"peps: {len(paths)} PEP files at {commit[:12]} (last commit before {CUTOFF})", flush=True)
+    files: list[tuple[str, str]] = []
+    failed = 0
+    for path in paths:
+        url = f"https://raw.githubusercontent.com/{PEPS_REPO}/{commit}/{path}"
+        try:
+            files.append((path, fetch_text_with_retry(url, args.sleep)))
+        except FETCH_ERRORS:
+            failed += 1
+    if failed:
+        print(f"FAIL: {failed} PEP downloads failed; the existing pool was kept", file=sys.stderr)
+        return 1
+    pairs, dropped = pep_pairs(files, commit, args.target)
+    if not pairs:
+        print("FAIL: no PEP chunks produced; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("pep-chunk", pairs)
+    print(
+        f"peps: {len(entries)} chunks cached (target {args.target}); "
+        f"{failed} downloads failed; drops: {dict(dropped)}"
+    )
+    return 0
+
+
+# ------------------------------------------------- machine pools (labelled)
+
+
+RAID_URL = "https://dataset.raid-bench.xyz/train_none.csv"  # MIT; test labels are hidden
+RAID_DOMAINS = {"wiki": "wiki", "news": "news", "reddit": "chat"}
+# Instruction-tuned or chat generators only: GPT-2 and the base models are
+# not what people paste into documents.
+RAID_MODELS = ("chatgpt", "gpt4", "gpt3", "llama-chat", "mistral-chat", "mpt-chat", "cohere-chat")
+RAID_EXTRACTION = "raid.v1"
+
+
+def raid_pairs(rows, per_cell: int) -> tuple[list, Counter]:
+    """Select RAID generations: sampling without repetition penalty, no
+    adversarial attack, up to ``per_cell`` per (domain, model)."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    cells: Counter = Counter()
+    wanted = len(RAID_DOMAINS) * len(RAID_MODELS) * per_cell
+    for row in rows:
+        domain, model = row.get("domain"), row.get("model")
+        if domain not in RAID_DOMAINS or model not in RAID_MODELS:
+            continue
+        if row.get("attack", "none") != "none" or row.get("decoding") != "sampling" or row.get(
+            "repetition_penalty"
+        ) != "no":
+            dropped["decoding-or-attack"] += 1
+            continue
+        if cells[(domain, model)] >= per_cell:
+            continue
+        register = RAID_DOMAINS[domain]
+        text = (row.get("generation") or "").strip()
+        if word_count(text) < MIN_WORDS[register]:
+            dropped["under-min-words"] += 1
+            continue
+        cells[(domain, model)] += 1
+        pairs.append(
+            (
+                {
+                    "register": register,
+                    "author": "machine",
+                    "model": f"raid:{model}",
+                    "date": "2023",
+                    "extraction": RAID_EXTRACTION,
+                },
+                text,
+                {"dataset": "liamdugan/raid", "file": "train_none.csv", "id": str(row.get("id", ""))},
+            )
+        )
+        if len(pairs) >= wanted:
+            break
+    return pairs, dropped
+
+
+def build_raid(args: argparse.Namespace) -> int:
+    """Machine pool from RAID (Dugan et al., ACL 2024), streamed, not stored whole."""
+    import csv
+    import io
+
+    csv.field_size_limit(min(sys.maxsize, 2**31 - 1))
+    request = urllib.request.Request(RAID_URL, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            reader = csv.DictReader(io.TextIOWrapper(response, encoding="utf-8", newline=""))
+            pairs, dropped = raid_pairs(reader, args.per_cell)
+    except FETCH_ERRORS as error:
+        print(f"FAIL: RAID download failed ({error}); nothing saved", file=sys.stderr)
+        return 1
+    if not pairs:
+        print("FAIL: no RAID generations matched; the existing pool was kept", file=sys.stderr)
+        return 1
+    cells = Counter((meta["model"], meta["register"]) for meta, _text, _source in pairs)
+    short = {f"{model}/{register}": n for (model, register), n in sorted(cells.items()) if n < args.per_cell}
+    entries = save_pool("raid-generation", pairs)
+    print(f"raid: {len(entries)} generations cached; drops: {dict(dropped)}")
+    if short or len(cells) < len(RAID_DOMAINS) * len(RAID_MODELS):
+        print(f"NOTE: cells below quota or empty: {short or 'some cells empty'}")
+    return 0
+
+
+WILDCHAT_DATASET = "allenai/WildChat-1M"  # ODC-BY
+WILDCHAT_OFFSETS = tuple(range(0, 800_001, 100_000))
+WILDCHAT_EXTRACTION = "wildchat-first-reply.v1"
+WILDCHAT_MAX_WORDS = 1200
+
+
+def wildchat_pairs(rows, target: int) -> tuple[list, Counter]:
+    """First assistant reply of English conversations, prose only."""
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for row in rows:
+        if len(pairs) >= target:
+            break
+        if row.get("language") != "English":
+            dropped["not-english"] += 1
+            continue
+        reply = next(
+            (turn.get("content") or "" for turn in row.get("conversation") or [] if turn.get("role") == "assistant"),
+            "",
+        ).strip()
+        if "```" in reply:
+            dropped["code-reply"] += 1
+            continue
+        words = word_count(reply)
+        if not (MIN_WORDS["chat"] <= words <= WILDCHAT_MAX_WORDS):
+            dropped["word-band"] += 1
+            continue
+        timestamp = str(row.get("timestamp") or "")
+        pairs.append(
+            (
+                {
+                    "register": "chat",
+                    "author": "machine",
+                    "model": f"wildchat:{row.get('model') or 'unknown'}",
+                    "date": timestamp[:7] if re.match(r"\d{4}-\d{2}", timestamp) else "2023",
+                    "extraction": WILDCHAT_EXTRACTION,
+                },
+                reply,
+                {"dataset": WILDCHAT_DATASET, "conversation_hash": str(row.get("conversation_hash") or "")},
+            )
+        )
+    return pairs, dropped
+
+
+def build_wildchat(args: argparse.Namespace) -> int:
+    """Machine pool from WildChat-1M through the Hugging Face rows API.
+
+    Set HF_TOKEN if the dataset asks you to accept its terms first.
+    """
+    token = os.environ.get("HF_TOKEN")
+    headers = {"Authorization": f"Bearer {token}"} if token else None
+    rows: list[dict] = []
+    for offset in WILDCHAT_OFFSETS:
+        query = urllib.parse.urlencode(
+            {"dataset": WILDCHAT_DATASET, "config": "default", "split": "train", "offset": offset, "length": "100"}
+        )
+        try:
+            payload = json.loads(fetch_text_with_retry(f"{HF_ROWS_API}?{query}", args.sleep, headers=headers))
+        except FETCH_ERRORS as error:
+            print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
+            continue
+        rows.extend(item.get("row", {}) for item in payload.get("rows", []))
+    pairs, dropped = wildchat_pairs(rows, args.target)
+    if not pairs:
+        print(
+            "FAIL: no WildChat replies collected (gated dataset without HF_TOKEN, or offline?); "
+            "the existing pool was kept",
+            file=sys.stderr,
+        )
+        return 1
+    entries = save_pool("wildchat-turn", pairs)
+    print(f"wildchat: {len(entries)} replies cached (target {args.target}); drops: {dict(dropped)}")
+    return 0
+
+
 # ---------------------------------------------------------- fetch / verify
 
 
+REBUILD_HINT = {
+    "gutenberg-work": "build-essays",
+    "news-page": "build-news",
+    "hf-news": "build-hf-news",
+    "forum-post": "build-forum",
+    "pep-chunk": "build-peps",
+    "raid-generation": "build-raid",
+    "wildchat-turn": "build-wildchat",
+    "generated": "scripts/generate_machine.py",
+}
+
+
 def fetch(args: argparse.Namespace) -> int:
-    """Repopulate cache: public-domain from the repo, others via local sources."""
+    """Repopulate cache: public-domain from the repo, wiki via local sources.
+
+    Other kinds are rebuilt by their own build-* subcommand; fetch says which
+    ones are missing and exits non-zero while any entry stays uncached.
+    """
     manifest = load_manifest()
     local = load_local_sources()["sources"]
-    missing = [
-        entry
-        for entry in manifest["entries"]
-        if not (CACHE_DIR / f"{entry['id']}.txt").exists()
-    ]
+    missing = [entry for entry in manifest["entries"] if not cache_path(entry["id"]).exists()]
     if any(e["kind"] == "public-domain" for e in missing):
         build_pd(args)
     wiki_entries = [
         e for e in missing if e["kind"] == "wiki-revision" and e["id"] in local
     ]
-    unsourced = [
-        e
-        for e in missing
-        if e["kind"] != "public-domain" and e["id"] not in local
-    ]
-    if unsourced:
+    unsourced_wiki = sum(
+        1 for e in missing if e["kind"] == "wiki-revision" and e["id"] not in local
+    )
+    if unsourced_wiki:
         print(
-            f"NOTE: {len(unsourced)} entries have no locator in "
+            f"NOTE: {unsourced_wiki} wiki entries have no locator in "
             f"{LOCAL_SOURCES_PATH.name} on this machine (the corpus is anonymous "
-            "by design); rebuild them with the build-* subcommands where the "
-            "sources are available."
+            "by design)."
         )
-    for start in range(0, len(wiki_entries), 50):
-        batch = wiki_entries[start : start + 50]
-        payload = api_get(
-            local[batch[0]["id"]]["api"],
-            {
-                "action": "query",
-                "prop": "revisions",
-                "revids": "|".join(str(local[e["id"]]["revid"]) for e in batch),
-                "rvprop": "ids|content",
-                "rvslots": "main",
-            },
-            args.sleep,
-        )
-        by_revid = {local[e["id"]]["revid"]: e for e in batch}
-        for page in payload.get("query", {}).get("pages", {}).values():
-            for rev in page.get("revisions", []):
-                entry = by_revid.get(rev["revid"])
-                if entry:
-                    write_cache(
-                        entry["id"],
-                        wikitext_strip(rev.get("slots", {}).get("main", {}).get("*", "")),
-                    )
-    print(f"fetch: attempted {len(wiki_entries)} wiki entries; run verify next")
-    return 0
+    by_kind = Counter(e["kind"] for e in missing if e["kind"] in REBUILD_HINT)
+    for kind, count in sorted(by_kind.items()):
+        print(f"NOTE: {count} {kind} entries missing; rebuild them with `{REBUILD_HINT[kind]}`.")
+    # Batch per API endpoint: a batch must not borrow the first entry's wiki.
+    by_api: dict[str, list[dict]] = {}
+    for entry in wiki_entries:
+        by_api.setdefault(local[entry["id"]]["api"], []).append(entry)
+    for api_url, api_entries in sorted(by_api.items()):
+        for start in range(0, len(api_entries), 50):
+            batch = api_entries[start : start + 50]
+            payload = api_get(
+                api_url,
+                {
+                    "action": "query",
+                    "prop": "revisions",
+                    "revids": "|".join(str(local[e["id"]]["revid"]) for e in batch),
+                    "rvprop": "ids|content",
+                    "rvslots": "main",
+                },
+                args.sleep,
+            )
+            by_revid = {local[e["id"]]["revid"]: e for e in batch}
+            for page in payload.get("query", {}).get("pages", {}).values():
+                for rev in page.get("revisions", []):
+                    entry = by_revid.get(rev["revid"])
+                    if not entry:
+                        continue
+                    # Rebuild with the extraction the entry was published
+                    # with, or its digest can never match.
+                    strip = WIKITEXT_STRIPPERS.get(entry.get("extraction", ""))
+                    if strip is None:
+                        print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
+                        continue
+                    write_cache(entry["id"], strip(rev.get("slots", {}).get("main", {}).get("*", "")))
+    still_missing = sum(
+        1 for entry in load_manifest()["entries"] if not cache_path(entry["id"]).exists()
+    )
+    print(
+        f"fetch: attempted {len(wiki_entries)} wiki entries; "
+        f"{still_missing} entries still uncached; run verify next"
+    )
+    return 1 if still_missing else 0
 
 
 def verify(_args: argparse.Namespace) -> int:
     manifest = load_manifest()
     missing, mismatched, ok = [], [], 0
     for entry in manifest["entries"]:
-        path = CACHE_DIR / f"{entry['id']}.txt"
+        path = cache_path(entry["id"])
         if not path.exists():
             missing.append(entry["id"])
-        elif sha256_text(path.read_text(encoding="utf-8")) != entry["sha256"]:
+        elif sha256_text(read_cache(entry["id"])) != entry["sha256"]:
             mismatched.append(entry["id"])
         else:
             ok += 1
@@ -882,6 +1380,20 @@ def main(argv: list[str] | None = None) -> int:
     p_hf.add_argument("--target", type=int, default=350)
     p_hf.add_argument("--sleep", type=float, default=1.5)
     p_hf.set_defaults(func=build_hf_news)
+
+    p_peps = sub.add_parser("build-peps", help="docs-register human pool from pre-cutoff PEPs")
+    p_peps.add_argument("--target", type=int, default=400)
+    p_peps.add_argument("--sleep", type=float, default=0.2)
+    p_peps.set_defaults(func=build_peps)
+
+    p_raid = sub.add_parser("build-raid", help="machine pool from RAID (non-adversarial)")
+    p_raid.add_argument("--per-cell", type=int, default=25, help="documents per (domain, model)")
+    p_raid.set_defaults(func=build_raid)
+
+    p_wildchat = sub.add_parser("build-wildchat", help="machine pool from WildChat-1M replies")
+    p_wildchat.add_argument("--target", type=int, default=300)
+    p_wildchat.add_argument("--sleep", type=float, default=1.5)
+    p_wildchat.set_defaults(func=build_wildchat)
 
     p_fetch = sub.add_parser("fetch", help="repopulate cache from the manifest")
     p_fetch.add_argument("--sleep", type=float, default=1.0)

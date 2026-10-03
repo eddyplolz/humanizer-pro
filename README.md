@@ -1,5 +1,7 @@
 # Humanizer Pro
 
+[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 AI drafts have habits. "In today's rapidly evolving landscape." A bold list where every line starts the same way. A "crucial" every third paragraph. Readers notice, and once they notice, they stop trusting the text.
 
 Humanizer Pro finds those habits and removes them without touching the writing that was already good. It runs as a skill inside Claude Code, Codex, and similar coding agents, and it includes a small Python tool that scores any text file from your terminal. Everything runs on your machine. No accounts, no API keys, no network calls.
@@ -19,6 +21,29 @@ It will not help you fool AI detectors, and it will not bolt a fake personality 
 > Good collaboration depends less on the tool than on whether people know what decisions they own, where work is tracked, and how quickly blockers get resolved.
 
 The first version performs. The second one says something.
+
+The terminal checker explains the first version line by line (abridged):
+
+```text
+$ humanizer-audit eval/fixtures/ai-slop-general.md
+eval/fixtures/ai-slop-general.md — risk 60
+  WARNING L3:C1 family3.filler_framing — Filler framing or superficial analysis [In today's]
+  WARNING L3:C37 family4.ai_vocab_cluster — AI-vocabulary cluster [cornerstone, crucial, enhance, foster, landscape, robust, unlock, vibrant]
+  WARNING L6:C29 family5.syntactic_tell — Syntactic tell or hedged construction [It is important to note]
+  WARNING L6:C75 family7.rhetorical_formula — Rhetorical formula or forced cadence [not just about tools, but]
+  WARNING L7:C80 family3.filler_framing — Filler framing or superficial analysis [In conclusion]
+```
+
+## Measured both ways
+
+This project publishes its error rates in both directions, with 95% intervals and the method: how often it flags human writing, and how often it catches AI writing.
+
+| Direction | Corpus | Result |
+|---|---|---|
+| Flags human writing | 2,145 documents written before ChatGPT (chat, wiki, news, essays) | 0.0% to 1.5% by register at the default threshold. Measured on 4.12.0; rerun pending ([table](corpus/RESULTS.md)). |
+| Catches AI writing | Held-out test split of RAID, WildChat, and current Claude models | Not measured yet. The builders ship in 4.14.0; the first run is pending. |
+
+Both numbers come from `scripts/fp_measure.py`, and the method is in [The evidence](#the-evidence). A rule earns its place only if it fires more on AI text than on human text. That comparison uses a separate dev split, so neither published rate grades its own tuning.
 
 ## What it will not do
 
@@ -101,9 +126,16 @@ Details worth knowing:
 
 This section is for people who want checks in scripts, CI, or the terminal. You do not need it to use the skill.
 
-`scripts/humanizer_audit.py` is a single-file Python tool with no dependencies. It reads text, reports problems with line numbers and quoted evidence, and exits with a code your scripts can branch on. It never rewrites anything.
+`humanizer-audit` is a single-file Python tool with no dependencies. It reads text, reports problems with line numbers and quoted evidence, and exits with a code your scripts can branch on. It never rewrites anything.
 
-To score one file:
+Install it as a command (Python 3.10 or newer):
+
+```bash
+pipx install git+https://github.com/eddyplolz/humanizer-pro
+humanizer-audit path/to/draft.md
+```
+
+Or run it from a clone without installing anything:
 
 Windows:
 
@@ -119,9 +151,11 @@ python3 scripts/humanizer_audit.py path/to/draft.md
 
 Useful variations:
 
-1. Point it at a folder and it audits every `.md` and `.txt` inside, recursively.
+1. Pass several files or folders; a folder means every `.md` and `.txt` inside, recursively.
 2. Add `--json` for machine-readable output (schema `humanizer-audit.v1`).
-3. Run `--compare original.md revised.md` to check that a rewrite kept its facts: numbers, dates, names, link targets, citations, quotes, and code blocks. Compare mode judges fidelity only, never style.
+3. Add `--sarif out.sarif` to also write SARIF 2.1.0, which GitHub code scanning shows as annotations on pull requests.
+4. Code is skipped by the prose rules: `utilize()` inside backticks is an API name, not wordiness. Leaked chatbot tokens are still caught inside code. Add `--include-code` to apply the prose rules to code too.
+5. Run `--compare original.md revised.md` to check that a rewrite kept its facts: numbers, dates, names, link targets, citations, quotes, and code blocks. Compare mode judges fidelity only, never style.
 
 Exit codes:
 
@@ -133,6 +167,37 @@ Exit codes:
 | 3 | Usage or read error. |
 
 In CI, treat 1 as "a human should look at this" and 2 as "do not ship."
+
+### In pre-commit
+
+```yaml
+repos:
+  - repo: https://github.com/eddyplolz/humanizer-pro
+    rev: main  # pin a release tag or commit once you adopt it
+    hooks:
+      - id: humanizer-audit
+```
+
+### In GitHub Actions
+
+```yaml
+permissions:
+  contents: read
+  security-events: write  # for the SARIF upload
+steps:
+  - uses: actions/checkout@v4
+  - id: audit
+    uses: eddyplolz/humanizer-pro@main  # pin a release tag or commit
+    with:
+      paths: docs README.md
+      fail-on: block  # block | review | never
+  - uses: github/codeql-action/upload-sarif@v3
+    if: always()
+    with:
+      sarif_file: humanizer-audit.sarif
+```
+
+The action needs Python 3 on the runner; GitHub's Ubuntu and macOS runners have it.
 
 ## How it decides
 
@@ -150,16 +215,22 @@ Strictness also adapts to what you are writing. A chat message, an essay, a news
 
 ## The evidence
 
-Claims about false positives get measured here, not asserted. The repo carries a hash-only corpus of 2,151 human documents, all written before ChatGPT existed, so any flag on one is a false positive by construction. Rates at the default threshold ([full table and method](corpus/RESULTS.md)):
+Error rates get measured here, not asserted.
+
+**False positives.** The repo carries a hash-only corpus of 2,145 human documents, all written before ChatGPT existed, so any flag on one is a false positive by construction. Rates at the default threshold, measured on the 1,912 documents cached at the time (news n=261) and before the 4.13.0 fixes ([full table and method](corpus/RESULTS.md)):
 
 | Register | False-positive rate |
 |---|---|
-| Chat (forum posts) | 0.0% |
+| Chat (forum posts) | 0.0% (plus 1 of 764 blocked; see note) |
 | Essays | 0.0% |
-| News (1900–1922 newspapers) | 0.0% |
+| News (1898–1928 newspapers) | 0.0% |
 | Encyclopedia articles | 1.5% |
 
-The corpus publishes digests, dates, and word counts, never text, names, or source locations. No true-positive rate is claimed: there is no machine-generated corpus here yet, and honest numbers beat impressive ones.
+Note: these rates count reviews (exit 1) only. One human chat post was blocked (exit 2); from 4.13.0, `fp_measure.py` counts a block as a false positive, so the next measurement will show it. The corpus publishes digests, dates, and word counts, never text, names, or source locations.
+
+**Catch rate.** From 4.14.0 the corpus also takes machine-written documents, labelled by source: generations from [RAID](https://github.com/liamdugan/raid) (2023 models, non-adversarial), first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M) (GPT-3.5 and GPT-4), and current Claude models answering [60 committed prompts](corpus/machine_prompts.json). Every document, human or machine, falls in a dev or test split chosen by its digest; about a quarter are dev. Rule tuning looks only at the dev split, through a per-rule scorecard. Both published rates use the test split, with the same "flagged" definition. The first full run is pending, so no catch rate is claimed yet. Two caveats will travel with the number: it describes those models only, and human essays and news in the corpus are a century old, so a gap there is partly era.
+
+A docs register joins the human side too: Python Enhancement Proposals read at the last commit before the cutoff.
 
 The repo also eats its own cooking. `scripts/self_scan.py` audits these very docs against recorded budgets, and both the raw and the exemption-adjusted scores are published on purpose: the raw number counts every tell this README quotes in order to warn you about it, and showing only the flattering column is the exact behavior this project exists to criticize.
 
@@ -168,13 +239,17 @@ The repo also eats its own cooking. `scripts/self_scan.py` audits these very doc
 | Path | What it is |
 |---|---|
 | `SKILL.md` | The skill's operating core: routing, principles, checklists, scoring. |
-| `reference/` | The deep material: full tell catalog, worked examples, style and wiki guides, register profiles, improvement loop. |
+| `reference/` | The deep material: full tell catalog, artifact detector, AI-check mode, worked examples, style and wiki guides, register profiles, coverage map, MATTR calibration, improvement loop. |
 | `scripts/humanizer_audit.py` | The audit and compare CLI. |
 | `scripts/self_scan.py` | Audits this repo's own docs against recorded budgets. |
-| `scripts/corpus.py` and `scripts/fp_measure.py` | Build the human-control corpus and measure false-positive rates. |
-| `corpus/` | Hash-only corpus manifest and measured results. |
+| `scripts/corpus.py` and `scripts/fp_measure.py` | Build the corpus and measure false-positive and catch rates. |
+| `scripts/generate_machine.py` | Maintainer tool: current-model machine text for the catch rate (needs the `anthropic` SDK and an API key). |
+| `corpus/` | Hash-only corpus manifest, generation prompts, and measured results. |
+| `pyproject.toml`, `action.yml`, `.pre-commit-hooks.yaml` | Packaging, the GitHub Action, and the pre-commit hook. |
 | `eval/` | Fixtures and machine-readable expectations for the CLI. |
-| `tests/` | Pytest suite for the CLI. |
+| `tests/` | Pytest suite for the CLI, compare mode, and corpus tools. |
+| `CHANGELOG.md` | Full release history. |
+| `WARP.md` | Maintainer guide: file roles, commands, change rules. |
 | `agents/openai.yaml` | Codex-facing name, description, and default prompt. |
 
 ## Contributing
@@ -184,7 +259,7 @@ New rules enter through a review loop, not a hot take: Observation, then Candida
 Before a pull request, run the checks:
 
 1. `py -3 -m pytest -q tests` (Mac or Linux: `python3 -m pytest -q tests`). Everything should pass.
-2. `py -3 scripts/self_scan.py`. It should exit 0.
+2. `py -3 scripts/self_scan.py` (Mac or Linux: `python3 scripts/self_scan.py`). It should exit 0.
 
 ## Credits and licensing
 
@@ -213,7 +288,12 @@ Pattern sources, with thanks:
   Jr.'s public-domain *The Elements of Style* text.
 - **[OpenCulture / US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers)** by
   PleIAs - public-domain newspaper text used (hash-only) in the human-control corpus's news pool.
+- **[RAID](https://github.com/liamdugan/raid)** by Dugan et al. (ACL 2024) - MIT. Machine-text pool.
+- **[WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M)** by Ai2 - ODC-BY. Machine-text
+  pool.
+- **[Python Enhancement Proposals](https://github.com/python/peps)** - public domain. Docs-register
+  human pool.
 
 ## Version history
 
-Current release: **v4.12.0**, which adds MATTR (moving-average type-token ratio) as a diagnostic lexical-diversity stat. It is reported for analysis only, never as a finding or a score input: calibration against pre-2022 encyclopedic prose showed MATTR cannot separate AI from human writing without over-flagging the encyclopedic register, so it informs rather than judges. Just before it, v4.11.2 relabeled the bypass count `invisible`, v4.11.1 closed a variation-selector shielding hole, and v4.11.0 hardened the detector-bypass pass against Unicode tag characters and noncharacters. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
+Current release: **v4.14.0**. It measures in both directions: the corpus takes labelled machine text with a held-out test split, and `fp_measure.py` reports a catch rate next to the false-positive rate, plus a per-rule scorecard. The audit installs as a command, runs as a pre-commit hook or a GitHub Action, writes SARIF for code scanning, and keeps its prose rules out of code. v4.13.0 before it was a bug-fix release from a full-repo review. The full history back to 1.0.0 is in [CHANGELOG.md](CHANGELOG.md).
