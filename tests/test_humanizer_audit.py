@@ -998,3 +998,47 @@ def test_readme_pins_the_current_version_in_install_snippets() -> None:
     pins = re.findall(r"(?:rev: |eddyplolz/humanizer-pro@)v(\d+\.\d+\.\d+)", readme)
     assert pins, "no version pins found in README"
     assert set(pins) == {version}, f"README pins {sorted(set(pins))}, code is {version}"
+
+def test_assistant_self_disclosure_blocks() -> None:
+    # The most famous leak of all scored zero before 4.15.0.
+    for text in (
+        "As an AI language model, I cannot browse the internet.",
+        "As an AI assistant I do not have personal opinions.",
+        "I'm just an AI, so I can't verify that.",
+        "As a large language model, I don't have access to real-time data.",
+    ):
+        ids = _ids_for(text)
+        assert "artifact.assistant_self_disclosure" in ids, text
+    module = _load_audit_module()
+    result = module.audit_text("As an AI language model, I cannot browse the internet.", "x")
+    hit = next(f for f in result["findings"] if f["id"] == "artifact.assistant_self_disclosure")
+    assert hit["severity"] == "error"  # an artifact: exit 2, not a warning
+    assert "artifact.assistant_self_disclosure" not in _ids_for("The film is about an AI language model that falls in love.")
+
+
+def test_knowledge_cutoff_variants_are_chatbot_residue() -> None:
+    for text in (
+        "As of my last knowledge update, the policy was unchanged.",
+        "As of my knowledge cutoff in 2023, the merger had not closed.",
+        "Up to my last training update, no successor had been named.",
+        "My training data only goes up to 2023.",
+    ):
+        assert "family9.chatbot_residue" in _ids_for(text), text
+    assert "family9.chatbot_residue" not in _ids_for("As of my last visit, the bridge was still closed.")
+
+
+def test_not_just_x_its_y_is_a_rhetorical_formula() -> None:
+    for text in (
+        "It's not just about flexibility; it's about trust.",
+        "This is not just a car. It's a lifestyle.",
+        "It's not just faster, it's smarter.",
+    ):
+        assert "family7.rhetorical_formula" in _ids_for(text), text
+    assert "family7.rhetorical_formula" not in _ids_for("He had not just arrived when the phone rang.")
+
+
+def test_generic_bracket_placeholders_are_flagged_but_links_are_not() -> None:
+    for text in ("Dear [Recipient Name],", "Signed, [Author Name]", "Contact [Company] at [Email Address].", "Delivered on [Date]."):
+        assert "artifact.bracket_placeholder" in _ids_for(text), text
+    for text in ("See [Your account](https://example.com/account).", "Read [Company][1] for details.\n\n[1]: https://example.com", "Linked as [[Date]] on the wiki."):
+        assert "artifact.bracket_placeholder" not in _ids_for(text), text

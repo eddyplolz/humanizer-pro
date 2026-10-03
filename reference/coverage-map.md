@@ -28,6 +28,7 @@ CLI-side half: every rule id the CLI can emit must appear in this file.
 | `artifact.placeholder_date` | §9 Placeholder dates |
 | `artifact.roleplay_marker` | §10 Roleplay action markers |
 | `artifact.bypass_characters` | §11 Detector-bypass characters (emitted by the normalization pre-pass) |
+| `artifact.assistant_self_disclosure` | §12 Assistant self-disclosure |
 
 ### Tell-family rules (`tell-catalog.md`; sentinel phrases, severity warning)
 

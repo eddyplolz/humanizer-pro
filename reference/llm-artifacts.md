@@ -13,7 +13,7 @@ Source: Wikipedia "Signs of AI writing" §Markup, §Phrasal templates (real on-w
 Run this union regex over any drafted/pasted text before delivering it:
 
 ```
-rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|oaicite|oai_citation|attributableIndex|grok[_-](card|render)|grok-card|\[attached_file:\d+\]|\[web:\d+\]|【\d+†|utm_source=chatgpt\.com|\bINSERT_[A-Z_]+\b|PASTE_[A-Z_]+_HERE|20\d{2}-XX-XX|\[(Your Name|Entertainer's Name|insert|describe)[^\]]*\]"
+rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|oaicite|oai_citation|attributableIndex|grok[_-](card|render)|grok-card|\[attached_file:\d+\]|\[web:\d+\]|【\d+†|utm_source=chatgpt\.com|\bINSERT_[A-Z_]+\b|PASTE_[A-Z_]+_HERE|20\d{2}-XX-XX|\[(Your Name|Entertainer's Name|insert|describe)[^\]]*\]|\[(Recipient|Company|Author|Client|Candidate|Date|Email|Phone|Address|Title|Name)( \w+){0,3}\](?!\s*[\(\[:])|\bas an? (ai|large language model)( (language )?(model|assistant))?,? i\b"
 ```
 
 (The PUA characters around `turnN` are invisible; matching `turn\d+search\d+` etc. catches them anyway.)
@@ -68,7 +68,7 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
 - **Looks like:** `[Your Name]`, `[Entertainer's Name]`, `[Describe the specific section…]`,
   `[insert date]`, `INSERT_SOURCE_URL_30`, `PASTE_YOUTUBE_VIDEO_URL_HERE`, `SOURCE_PUBLISHER`,
   `<!-- Add if available with citation -->`.
-- **Regex:** `\[(?:Your Name|Entertainer's Name|insert[^\]]*|describe[^\]]*|link to[^\]]*)\]|\bINSERT_[A-Z0-9_]+\b|PASTE_[A-Z0-9_]+_HERE|\bSOURCE_[A-Z_]+\b|<!--\s*Add (?:if available|[^>]*)-->`
+- **Regex:** `\[(?:Your Name|Entertainer's Name|insert[^\]]*|describe[^\]]*|link to[^\]]*|(?:Recipient|Company|Author|Client|Candidate|Date|Email|Phone|Address|Title|Name)(?: \w+){0,3})\](?!\s*[\(\[:])|\bINSERT_[A-Z0-9_]+\b|PASTE_[A-Z0-9_]+_HERE|\bSOURCE_[A-Z_]+\b|<!--\s*Add (?:if available|[^>]*)-->`
 - **Fix:** The author forgot to fill the blank. Supply the real value, or remove the sentence if the
   value is unknown — never ship the bracketed stub.
 
@@ -100,6 +100,16 @@ rg -nP "cite​?turn\d+\w+|turn\d+(search|image|news|file)\d+|contentReference|o
   Greek prose never matches — only mixed-script words do.
 - **Fix:** Remove the characters and treat the text with suspicion: someone or something tried to
   make it pass a scanner, which is itself the strongest tell on this page.
+
+### 12. Assistant self-disclosure
+- **Looks like:** `As an AI language model, I cannot…`, `As an AI assistant I don't have personal
+  opinions`, `I'm just an AI`, `As a large language model, I don't have access to real-time data`,
+  `I cannot browse the internet`.
+- **Regex:** `\b(?:as an? (?:ai|artificial intelligence|large language model|llm)(?: (?:language )?(?:model|assistant|chatbot|system))?,? i\b|i(?:'m| am) (?:just |only )?an? (?:ai|artificial intelligence|large language model|llm)(?: (?:language )?(?:model|assistant|chatbot))?\b|i (?:do not|don't) have (?:access to )?real-time (?:data|information|access)|i (?:cannot|can't|am unable to) browse the internet)`
+  (anchored on the first person: a sentence *about* a language model is not this tell).
+- **Fix:** Delete the sentence. It is the assistant talking about itself, and it was never part of
+  the piece. Then read the surrounding claim with suspicion: a disclaimer usually sits next to a
+  hedge the model could not verify.
 
 ## Why "delete only" is not enough
 Every artifact above sits where a **real reference or value** belonged. The model emitted the stub
