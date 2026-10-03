@@ -58,6 +58,11 @@ Docs and checks:
 - The SKILL.md self-scan budget drops from 100 (a ceiling the score can't exceed, so never a gate)
   to its measured 95.
 - A test keeps the version in `humanizer_audit.py`, SKILL.md, CHANGELOG.md, and README.md in step.
+- README rewritten in plain-language, task-first style (GOV.UK conventions, American English), with
+  a contents list, numbered setup steps, and an options table for the GitHub Action.
+- A release workflow publishes a GitHub release once CI passes on `main` for a version with no
+  release yet, using that version's CHANGELOG section as the notes. It runs only after a
+  successful CI run for a push to `main`.
 
 ## 4.13.0 - 2026-10-03
 
