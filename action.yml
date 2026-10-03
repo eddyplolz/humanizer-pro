@@ -7,7 +7,7 @@ branding:
 
 inputs:
   paths:
-    description: Space-separated files or directories to audit.
+    description: Files or directories to audit, separated by spaces or newlines.
     required: false
     default: "."
   fail-on:
@@ -53,9 +53,18 @@ runs:
         set -u
         python_bin="$(command -v python3 || command -v python)"
         args=(--fail-score "$HA_FAIL_SCORE")
-        if [ -n "$HA_SARIF" ]; then args+=(--sarif "$HA_SARIF"); fi
+        if [ -n "$HA_SARIF" ]; then
+          # Never publish a SARIF file left over from an earlier run.
+          rm -f -- "$HA_SARIF"
+          args+=(--sarif "$HA_SARIF")
+        fi
         if [ "$HA_INCLUDE_CODE" = "true" ]; then args+=(--include-code); fi
-        read -r -a targets <<< "$HA_PATHS"
+        # Split on spaces, tabs, and newlines (a multi-line `paths: |` works),
+        # with globbing off so patterns are passed through literally.
+        set -f
+        # shellcheck disable=SC2206
+        targets=($HA_PATHS)
+        set +f
         if [ "${#targets[@]}" -eq 0 ]; then targets=(.); fi
         set +e
         "$python_bin" "$HA_SCRIPT" "${targets[@]}" "${args[@]}"

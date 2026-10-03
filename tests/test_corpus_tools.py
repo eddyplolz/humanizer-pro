@@ -140,7 +140,7 @@ def test_results_page_handles_empty_cache_and_threshold_label() -> None:
         "threshold": 40, "corpus_documents": 0, "missing_cache": ["x"],
         "overall": fp_measure.slice_stats([], 40), "by_register": {}, "by_author": {},
         "threshold_sweep_fpr": {"40": {}}, "top_rules_on_human_text": [],
-        "machine_documents": 0, "catch_rate": None, "rule_scorecard": [],
+        "machine_documents": 0, "human_dev_documents": 0, "catch_rate": None, "rule_scorecard": [],
     }
     page = fp_measure.render_results_md(empty)
     assert "(the CLI default)" not in page
@@ -166,7 +166,7 @@ def test_manifest_is_structurally_sound() -> None:
         if machine:
             assert entry["author"] == "machine"
             assert entry["model"]
-            assert entry["split"] == corpus.machine_split(entry["sha256"])
+            assert entry["split"] == corpus.digest_split(entry["sha256"])
         else:
             assert entry["author"] in ("maintainer", "other", "public-domain", "mixed")
             assert "model" not in entry and "split" not in entry
@@ -234,8 +234,8 @@ def test_audit_corpus_audits_cached_entries(tmp_path, monkeypatch) -> None:
     cached = "pd-0123456789ab"
     manifest = {
         "entries": [
-            {"id": cached, "register": "essay", "author": "public-domain", "words": 9},
-            {"id": "pd-ba9876543210", "register": "essay", "author": "public-domain", "words": 9},
+            {"id": cached, "register": "essay", "author": "public-domain", "words": 9, "sha256": "f" * 64},
+            {"id": "pd-ba9876543210", "register": "essay", "author": "public-domain", "words": 9, "sha256": "f" * 64},
         ]
     }
     manifest_path = tmp_path / "manifest.json"
@@ -297,11 +297,11 @@ def test_cache_round_trip_is_byte_exact(tmp_path, monkeypatch) -> None:
 # ------------------------------------------------------- new pools (v4.14.0)
 
 
-def test_machine_split_is_a_stable_quarter() -> None:
-    assert corpus.machine_split("0" + "f" * 63) == "dev"
-    assert corpus.machine_split("3" + "0" * 63) == "dev"
-    assert corpus.machine_split("4" + "0" * 63) == "test"
-    assert corpus.machine_split("f" * 64) == "test"
+def test_digest_split_is_a_stable_quarter() -> None:
+    assert corpus.digest_split("0" + "f" * 63) == "dev"
+    assert corpus.digest_split("3" + "0" * 63) == "dev"
+    assert corpus.digest_split("4" + "0" * 63) == "test"
+    assert corpus.digest_split("f" * 64) == "test"
 
 
 def test_save_pool_labels_machine_entries(tmp_path, monkeypatch) -> None:
@@ -314,7 +314,7 @@ def test_save_pool_labels_machine_entries(tmp_path, monkeypatch) -> None:
     assert len(entries) == 8
     for entry in entries:
         assert entry["label"] == "machine" and entry["model"] == "raid:gpt4"
-        assert entry["split"] == corpus.machine_split(entry["sha256"])
+        assert entry["split"] == corpus.digest_split(entry["sha256"])
         assert entry["id"].startswith("raid-")
         assert entry["source"] == {"id": entry["source"]["id"]}
     human = corpus.save_pool("pep-chunk", [({"register": "docs", "author": "other", "date": "2001", "extraction": "x"}, "words " * 200, {"path": "p"})])
@@ -359,6 +359,16 @@ Copyright
 
 This document has been placed in the public domain.
 """
+
+
+def test_rst_strip_keeps_paragraph_breaks_around_skipped_blocks() -> None:
+    text = corpus.rst_strip(
+        "Intro.\n\n.. note::\n\n   hidden\n\nAfter the directive.\n\n"
+        "* bullet one\n* bullet two\n\nThe example::\n\n    code\n\ncontinues here.\n"
+    )
+    assert text == (
+        "Intro.\n\nAfter the directive.\n\nbullet one\nbullet two\n\nThe example:\n\ncontinues here."
+    )
 
 
 def test_rst_strip_keeps_prose_and_drops_markup() -> None:
@@ -556,8 +566,10 @@ def _measure_fixture(tmp_path, monkeypatch, entries):
     return fp_measure.measure(threshold=5, include_fixture_tp=False)
 
 
-def _entry(entry_id, label, register="wiki", split=None, model=None):
-    entry = {"id": entry_id, "label": label, "register": register, "author": "other", "words": 20}
+def _entry(entry_id, label, register="wiki", split="test", model=None):
+    # The digest's first hex digit decides the split: 0-3 dev, else test.
+    digest = ("0" if split == "dev" else "f") * 64
+    entry = {"id": entry_id, "label": label, "register": register, "author": "other", "words": 20, "sha256": digest}
     if label == "machine":
         entry.update({"split": split, "model": model, "author": "machine"})
     return entry
@@ -567,11 +579,15 @@ def test_measure_keeps_machine_rows_out_of_fpr(tmp_path, monkeypatch) -> None:
     result = _measure_fixture(tmp_path, monkeypatch, [
         (_entry("wiki-000000000001", "human"), PLAIN),
         (_entry("wiki-000000000002", "human"), PLAIN),
+        # Human dev documents feed only the scorecard, never the published FPR.
+        (_entry("wiki-000000000006", "human", split="dev"), SLOP),
+        (_entry("wiki-000000000007", "human", split="dev"), PLAIN),
         (_entry("raid-000000000003", "machine", split="test", model="raid:gpt4"), SLOP),
         (_entry("raid-000000000004", "machine", split="test", model="raid:gpt4"), PLAIN),
         (_entry("raid-000000000005", "machine", split="dev", model="raid:gpt4"), SLOP),
     ])
     assert result["corpus_documents"] == 2 and result["machine_documents"] == 3
+    assert result["human_dev_documents"] == 2
     assert result["overall"]["n"] == 2 and result["overall"]["flagged"] == 0
     catch = result["catch_rate"]
     assert catch["split"] == "test"
@@ -580,8 +596,8 @@ def test_measure_keeps_machine_rows_out_of_fpr(tmp_path, monkeypatch) -> None:
     assert catch["by_register"]["wiki"]["n"] == 2
     card = {item["rule"]: item for item in result["rule_scorecard"]}
     residue = card["family9.chatbot_residue"]
-    assert residue["machine_share"] == 1.0  # the one dev document
-    assert residue["human_share"] == 0.0 and residue["ratio"] is None
+    assert residue["machine_share"] == 1.0  # the one machine dev document
+    assert residue["human_share"] == 0.5 and residue["ratio"] == 2.0  # 1 of 2 human dev
     page = fp_measure.render_results_md(result)
     assert "## Catch rate on machine text (test split)" in page
     assert "| model: `raid:gpt4` | 2 | 1 | 50.0% |" in page
@@ -593,3 +609,36 @@ def test_measure_without_machine_rows_says_not_measured(tmp_path, monkeypatch) -
     assert result["catch_rate"] is None and result["rule_scorecard"] == []
     assert "Not measured yet" in fp_measure.render_results_md(result)
     assert "Catch rate: not measured" in fp_measure.render_text(result)
+
+
+
+def test_generate_trial_run_and_empty_run_never_touch_the_pool(monkeypatch, capsys) -> None:
+    import types
+
+    saved = []
+    monkeypatch.setattr(generate.corpus, "save_pool", lambda kind, pairs: saved.append(pairs) or [])
+    fake = types.SimpleNamespace(
+        Anthropic=lambda **_kw: _FakeClient([("end_turn", "word " * 200)] * 10 + [("refusal", "")] * 10),
+        **{name: getattr(_FakeErrors, name) for name in dir(_FakeErrors) if not name.startswith("_")},
+    )
+    monkeypatch.setitem(sys.modules, "anthropic", fake)
+    assert generate.main(["--limit", "1", "--models", "m1"]) == 0
+    assert saved == [] and "trial run" in capsys.readouterr().out
+    fake.Anthropic = lambda **_kw: _FakeClient([("refusal", "")] * 200)
+    assert generate.main(["--models", "m1"]) == 1
+    assert saved == []
+
+
+def test_wildchat_build_keeps_the_pool_when_nothing_arrives(monkeypatch) -> None:
+    saved = []
+    monkeypatch.setattr(corpus, "save_pool", lambda kind, pairs: saved.append(kind) or [])
+
+    def offline(*_args, **_kwargs):
+        raise OSError("offline")
+
+    monkeypatch.setattr(corpus, "fetch_text_with_retry", offline)
+    import argparse
+
+    assert corpus.build_wildchat(argparse.Namespace(target=10, sleep=0)) == 1
+    assert corpus.build_peps(argparse.Namespace(target=10, sleep=0)) == 1
+    assert saved == []

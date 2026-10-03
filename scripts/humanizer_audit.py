@@ -543,9 +543,10 @@ SOURCE_RISK_RULES = [
     ),
 ]
 
-# Backtick and tilde fences (CommonMark allows both); the closer must match the
-# opener.
-CODE_BLOCK_RE = re.compile(r"(```|~~~)[^\n`~]*(?:\n.*?)?\1", re.S)
+# Backtick and tilde fences (CommonMark allows both). Opener and closer each
+# start a line and the closer matches the opener, so a sentence that mentions
+# ``` in passing cannot pair with a later fence and swallow the prose between.
+CODE_BLOCK_RE = re.compile(r"^[ \t]*(```|~~~)[^\n`~]*\n(?:.*?\n)?[ \t]*\1[ \t]*$", re.M | re.S)
 URL_RE = re.compile(r"https?://[^\s<>\]\)\"'|{}]+", re.I)
 MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[([^\]\n]+)\]\(([^)\s]+(?:\s+\"[^\"]*\")?)\)")
 FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]\n]+\]")
@@ -1633,16 +1634,17 @@ def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]
     ]
 
 
-# Inline code: a double-backtick span (which may hold a single backtick) or a
-# single-backtick span, never across a line break.
-INLINE_CODE_RE = re.compile(r"``[^\n]+?``|`[^`\n]+`")
+# Inline code: a run of N backticks closed by a run of exactly N, on one line.
+INLINE_CODE_RE = re.compile(r"(?<!`)(`+)(?!`)[^\n]+?(?<!`)\1(?!`)")
 
 
 def mask_code(text: str) -> str:
     """Blank fenced and inline code, keeping every offset and line break.
 
-    Code is not prose: `utilize()` in a README is an API name, not wordiness,
-    and a fenced example of a leaked token is documentation, not a leak.
+    Code is not prose: `utilize()` in a README is an API name, not wordiness.
+    Only the prose rules and stats see the masked text. Artifact rules always
+    see everything: a chatbot reply pasted with its ```markdown wrapper still
+    carries its leaked citation tokens.
     """
     fenced = blank_spans(text, regex_spans(text, CODE_BLOCK_RE))
     return blank_spans(fenced, regex_spans(fenced, INLINE_CODE_RE))
@@ -1654,14 +1656,16 @@ def audit_text(text: str, path: str, include_code: bool = False) -> dict[str, ob
     # Bypass characters are judged on the whole text above; code is masked
     # only for the prose rules and stats below.
     code_block_count = len(CODE_BLOCK_RE.findall(text))
+    full_text = text
     if not include_code:
         text = mask_code(text)
+    # Masking blanks characters in place, so line starts are the same for both.
     starts = line_starts(text)
     stats = stats_for(text)
     stats["code_block_count"] = code_block_count
     findings = []
     findings.extend(bypass_findings(bypass_counts, bypass_offset, original_starts))
-    findings.extend(regex_findings(text, ARTIFACT_RULES, starts))
+    findings.extend(regex_findings(full_text, ARTIFACT_RULES, starts))
     findings.extend(regex_findings(text, FAMILY_RULES, starts))
     findings.extend(ai_vocab_findings(text, starts))
     findings.extend(regex_findings(text, SOURCE_RISK_RULES, starts))
@@ -1850,6 +1854,8 @@ def render_sarif(result: dict[str, object]) -> dict[str, object]:
                         "rules": rules,
                     }
                 },
+                # Columns count Python code points, not SARIF's default UTF-16 units.
+                "columnKind": "unicodeCodePoints",
                 "results": results,
             }
         ],
@@ -1911,11 +1917,15 @@ def main(argv: list[str] | None = None) -> int:
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
             paths: list[Path] = []
+            seen: set[Path] = set()
             for target in args.targets:
                 found = iter_input_files(Path(target))
                 if not found:
                     print(f"humanizer-audit: no .md or .txt files under {target}", file=sys.stderr)
-                paths.extend(path for path in found if path not in paths)
+                for path in found:
+                    if path not in seen:
+                        seen.add(path)
+                        paths.append(path)
             documents = audit_paths(paths, args.include_code)
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}

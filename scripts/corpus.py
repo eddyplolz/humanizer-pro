@@ -91,16 +91,19 @@ PUBLIC_SOURCE_KINDS = (
     "wildchat-turn",
     "generated",
 )
-# Machine-written kinds. Their entries carry label "machine", the generating
-# model, and a dev/test split; every other kind is human by provenance.
+# Machine-written kinds. Their entries carry label "machine" and the
+# generating model; every other kind is human by provenance.
 MACHINE_KINDS = ("raid-generation", "wildchat-turn", "generated")
-# About a quarter of machine documents form the dev split, the only part rule
-# tuning may look at. The published catch rate uses the test split.
+# About a quarter of all documents, human and machine, form the dev split, the
+# only part rule tuning may look at. Published rates use the test split.
 DEV_SPLIT_HEX = "0123"
 
 
-def machine_split(digest: str) -> str:
-    """dev or test, from the content digest: stable, and needs no stored seed."""
+def digest_split(digest: str) -> str:
+    """dev or test, from the content digest: stable, and needs no stored seed.
+
+    Machine entries record it in the manifest; for human entries fp_measure
+    derives it from the same digest, so old manifests need no rewrite."""
     return "dev" if digest[0] in DEV_SPLIT_HEX else "test"
 
 
@@ -213,7 +216,7 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
             **public_fields,
         }
         if kind in MACHINE_KINDS:
-            entry["split"] = machine_split(digest)
+            entry["split"] = digest_split(digest)
         if kind in PUBLIC_SOURCE_KINDS:
             entry["source"] = source  # public-domain pointer; reveals nothing personal
         else:
@@ -821,6 +824,9 @@ def build_hf_news(args: argparse.Namespace) -> int:
                     )
                 )
                 kept_this_page += 1
+    if not pairs:
+        print("FAIL: no OpenCulture chunks collected; the existing pool was kept", file=sys.stderr)
+        return 1
     entries = save_pool("hf-news", pairs)
     print(
         f"hf-news: {len(entries)} chunks cached (target {args.target}); "
@@ -924,7 +930,7 @@ RST_ROLE_RE = re.compile(r":[a-z][\w-]*:`([^`]+)`")
 RST_REF_RE = re.compile(r"`([^`]+)`_{1,2}")
 RST_FOOTNOTE_REF_RE = re.compile(r"\s*\[(?:#\w*|\d+|\*)\]_")
 RST_EMPHASIS_RE = re.compile(r"\*\*([^*\n]+)\*\*|\*([^*\n]+)\*")
-RST_BULLET_RE = re.compile(r"^\s*(?:[-*+]|#\.|\d+\.)\s+", re.M)
+RST_BULLET_RE = re.compile(r"^[ \t]*(?:[-*+]|#\.|\d+\.)[ \t]+", re.M)
 RST_STRIP_VERSION = "rst-strip.v1"
 PEP_CHUNK_WORDS = 500
 PEP_CHUNKS_PER_PEP = 2
@@ -948,6 +954,9 @@ def rst_strip(raw: str) -> str:
             if not stripped or indent > skip_indent:
                 continue
             skip_indent = None
+            # Keep the paragraph break the skipped block stood in.
+            if out and out[-1]:
+                out.append("")
         following = lines[index + 1].strip() if index + 1 < len(lines) else ""
         if stripped.lower() in RST_STOP_HEADINGS and RST_ADORNMENT_RE.match(following):
             break
@@ -1033,6 +1042,12 @@ def build_peps(args: argparse.Namespace) -> int:
             args.sleep,
         )
         commit = commits[0]["sha"]
+        committed = commits[0]["commit"]["committer"]["date"]
+        # Guard the cutoff on the response itself rather than trusting how
+        # the API interprets `until`.
+        if committed >= f"{CUTOFF}T00:00:00Z":
+            print(f"FAIL: commit {commit[:12]} is dated {committed}, not before {CUTOFF}", file=sys.stderr)
+            return 1
         tree = github_json(f"{GITHUB_API}/repos/{PEPS_REPO}/git/trees/{commit}?recursive=1", args.sleep)
     except FETCH_ERRORS as error:
         print(f"FAIL: GitHub API unreachable ({error})", file=sys.stderr)
@@ -1052,7 +1067,13 @@ def build_peps(args: argparse.Namespace) -> int:
             files.append((path, fetch_text_with_retry(url, args.sleep)))
         except FETCH_ERRORS:
             failed += 1
+    if failed:
+        print(f"FAIL: {failed} PEP downloads failed; the existing pool was kept", file=sys.stderr)
+        return 1
     pairs, dropped = pep_pairs(files, commit, args.target)
+    if not pairs:
+        print("FAIL: no PEP chunks produced; the existing pool was kept", file=sys.stderr)
+        return 1
     entries = save_pool("pep-chunk", pairs)
     print(
         f"peps: {len(entries)} chunks cached (target {args.target}); "
@@ -1128,8 +1149,15 @@ def build_raid(args: argparse.Namespace) -> int:
     except FETCH_ERRORS as error:
         print(f"FAIL: RAID download failed ({error}); nothing saved", file=sys.stderr)
         return 1
+    if not pairs:
+        print("FAIL: no RAID generations matched; the existing pool was kept", file=sys.stderr)
+        return 1
+    cells = Counter((meta["model"], meta["register"]) for meta, _text, _source in pairs)
+    short = {f"{model}/{register}": n for (model, register), n in sorted(cells.items()) if n < args.per_cell}
     entries = save_pool("raid-generation", pairs)
     print(f"raid: {len(entries)} generations cached; drops: {dict(dropped)}")
+    if short or len(cells) < len(RAID_DOMAINS) * len(RAID_MODELS):
+        print(f"NOTE: cells below quota or empty: {short or 'some cells empty'}")
     return 0
 
 
@@ -1196,6 +1224,13 @@ def build_wildchat(args: argparse.Namespace) -> int:
             continue
         rows.extend(item.get("row", {}) for item in payload.get("rows", []))
     pairs, dropped = wildchat_pairs(rows, args.target)
+    if not pairs:
+        print(
+            "FAIL: no WildChat replies collected (gated dataset without HF_TOKEN, or offline?); "
+            "the existing pool was kept",
+            file=sys.stderr,
+        )
+        return 1
     entries = save_pool("wildchat-turn", pairs)
     print(f"wildchat: {len(entries)} replies cached (target {args.target}); drops: {dict(dropped)}")
     return 0

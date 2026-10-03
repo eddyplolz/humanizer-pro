@@ -139,8 +139,8 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 - Runtime scripts must stay deterministic and zero-dependency unless a later approved plan changes
   that constraint. `scripts/generate_machine.py` is the one exception: a maintainer tool that
   imports the `anthropic` SDK lazily and is not shipped in the package.
-- Tune rules against the dev split and the rule scorecard only; the test split exists so the
-  published catch rate is not graded by the rules it measures.
+- Tune rules against the dev split and the rule scorecard only. Both published rates use the
+  test split, so they are not graded by the tuning they measure.
 - AI check mode is score-only. It reports blockers, family hits, source-risk notes, and evidence; it
   must not rewrite unless the user separately asks.
 - Compare mode is a fidelity guard only. It checks protected facts and evidence markers; it must not

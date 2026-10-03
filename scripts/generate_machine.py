@@ -117,7 +117,11 @@ def generate_pairs(client, errors, prompts: list[dict], models: list[str], max_t
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--models", nargs="+", default=list(DEFAULT_MODELS))
-    parser.add_argument("--limit", type=int, help="Use only the first N prompts (a cheap trial run).")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Use only the first N prompts: a trial run that reports counts and saves nothing.",
+    )
     parser.add_argument("--max-tokens", type=int, default=DEFAULT_MAX_TOKENS)
     parser.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"])
     parser.add_argument("--dry-run", action="store_true", help="Print the plan; call nothing.")
@@ -136,6 +140,13 @@ def main(argv: list[str] | None = None) -> int:
         pairs, counts = generate_pairs(client, anthropic, prompts, args.models, args.max_tokens, args.effort)
     except anthropic.APIStatusError as error:
         print(f"FAIL: {type(error).__name__}: {error.message}; nothing saved", file=sys.stderr)
+        return 1
+    if args.limit is not None:
+        # Saving replaces the whole pool, which costs money to rebuild.
+        print(f"trial run: {dict(counts)}; the generated pool was not changed")
+        return 0
+    if not pairs:
+        print(f"FAIL: no documents generated ({dict(counts)}); the existing pool was kept", file=sys.stderr)
         return 1
     entries = corpus.save_pool("generated", pairs)
     print(f"generated: {len(entries)} documents cached; {dict(counts)}")

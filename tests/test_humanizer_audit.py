@@ -730,17 +730,36 @@ def test_text_report_survives_a_narrow_output_encoding(tmp_path: Path) -> None:
 
 CODE_DOC = (
     "Call `utilize()` to start.\n\n"
-    "```text\nciteturn0search0 is a delve into the vibrant tapestry\n```\n"
+    "```text\nIt is a delve into the vibrant, robust tapestry\n```\n"
 )
 
 
-def test_code_is_masked_by_default_and_restorable() -> None:
+def test_code_is_masked_for_prose_rules_and_restorable() -> None:
     module = _load_audit_module()
     masked = module.audit_text(CODE_DOC, "x")
     assert masked["findings"] == []
     assert masked["stats"]["code_block_count"] == 1
     raw = {f["id"] for f in module.audit_text(CODE_DOC, "x", include_code=True)["findings"]}
-    assert {"artifact.chatgpt_citation_stub", "clarity.wordiness"} <= raw
+    assert {"clarity.wordiness", "family4.ai_vocab_cluster"} <= raw
+
+
+def test_artifacts_inside_code_still_block() -> None:
+    # A chatbot reply pasted with its ```markdown wrapper keeps its leaks.
+    wrapped = (
+        "```markdown\n# Erie Canal\n\nThe canal opened in 1825.citeturn0search3 "
+        ":contentReference[oaicite:0]{index=0}\n```\n"
+    )
+    ids = {f["id"] for f in _load_audit_module().audit_text(wrapped, "x")["findings"]}
+    assert {"artifact.chatgpt_citation_stub", "artifact.content_reference"} <= ids
+
+
+def test_a_passing_mention_of_a_fence_does_not_mask_prose() -> None:
+    text = (
+        "To show code, wrap it in ``` fences.\n\n"
+        "A delve into the vibrant, robust tapestry.\n\n```\ncode\n```\n"
+    )
+    ids = {f["id"] for f in _load_audit_module().audit_text(text, "x")["findings"]}
+    assert "family4.ai_vocab_cluster" in ids
 
 
 def test_bypass_characters_inside_code_are_still_flagged() -> None:
@@ -752,8 +771,9 @@ def test_bypass_characters_inside_code_are_still_flagged() -> None:
 def test_include_code_flag_on_the_cli(tmp_path: Path) -> None:
     doc = tmp_path / "doc.md"
     doc.write_text(CODE_DOC, encoding="utf-8")
-    assert run_audit(str(doc)).returncode == 0
-    assert run_audit(str(doc), "--include-code").returncode == 2
+    assert run_audit(str(doc), "--json").returncode == 0
+    _code, payload = audit_json(str(doc), "--include-code")
+    assert "clarity.wordiness" in finding_ids(payload["documents"][0])
 
 
 def test_several_targets_are_audited_once_each() -> None:
@@ -779,6 +799,7 @@ def test_sarif_for_an_audit(tmp_path: Path) -> None:
     log = _sarif(tmp_path, "eval/fixtures/artifact-leakage.md")
     assert log["version"] == "2.1.0"
     run = log["runs"][0]
+    assert run["columnKind"] == "unicodeCodePoints"
     assert run["tool"]["driver"]["name"] == "humanizer-audit"
     rule_ids = [rule["id"] for rule in run["tool"]["driver"]["rules"]]
     assert len(rule_ids) == len(set(rule_ids))
@@ -940,3 +961,15 @@ def test_version_is_consistent_across_the_repo() -> None:
     assert re.search(r"^## (\S+)", changelog, re.M).group(1) == version
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert f"Current release: **v{version}**" in readme
+
+
+def test_action_reads_multi_line_paths_and_drops_stale_sarif(tmp_path: Path) -> None:
+    stale = tmp_path / "out.sarif"
+    stale.write_text("stale", encoding="utf-8")
+    paths = "eval/fixtures/clean-human.md\neval/fixtures/artifact-leakage.md"
+    code, outputs = _run_action(tmp_path, paths=paths, fail_on="never")
+    assert code == 0 and outputs["exit-code"] == "2"  # the second line was audited
+    assert json.loads(stale.read_text(encoding="utf-8"))["version"] == "2.1.0"
+    stale.write_text("stale", encoding="utf-8")
+    code, outputs = _run_action(tmp_path, paths="no/such/file.md", fail_on="never")
+    assert code == 3 and not stale.exists() and "sarif-file" not in outputs
