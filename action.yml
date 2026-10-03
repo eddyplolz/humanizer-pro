@@ -51,7 +51,14 @@ runs:
         HA_INCLUDE_CODE: ${{ inputs.include-code }}
       run: |
         set -u
-        python_bin="$(command -v python3 || command -v python)"
+        # The first candidate that can run a one-liner wins. On a Windows
+        # runner "python3" can be the Microsoft Store alias, which is on
+        # PATH but only prints a hint and exits 49.
+        python_bin=""
+        for candidate in python3 python; do
+          if "$candidate" -c "import sys" > /dev/null 2>&1; then python_bin="$candidate"; break; fi
+        done
+        if [ -z "$python_bin" ]; then echo "::error::no working python3 or python on PATH"; exit 3; fi
         args=(--fail-score "$HA_FAIL_SCORE")
         if [ -n "$HA_SARIF" ]; then
           # Never publish a SARIF file left over from an earlier run.
