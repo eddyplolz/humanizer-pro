@@ -274,7 +274,7 @@ Every document in the human set was written before ChatGPT was released, so any 
 
 These rates come from version 4.12.0 and cover the 1,912 documents that were available then, including 261 newspaper pages. Later versions count a block as a false positive and change some rules. The next measurement will replace this table.
 
-For documents from public sources, such as old books and newspapers, the project publishes a fingerprint of each one (a unique code), with its date and word count, so anyone can check them. For forum posts and encyclopedia articles written by people, it publishes only totals. Their fingerprints stay on the maintainer's computer, so nobody can use them to match a post to an account. The project never publishes the text, an author's name, or where a private document came from.
+For documents from public sources, such as old books and newspapers, the project publishes a fingerprint of each one (a unique code), with its date and word count, so anyone can check them. For the forum and encyclopedia pools it publishes totals only. The project never publishes the text, an author's name, or where a document came from.
 
 ### Catch rate
 
@@ -376,4 +376,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.14.1**, a privacy update. It keeps the maintainer's own writing out of the public corpus files and adds a section on where your text goes. Version 4.14.0 before it measured errors in both directions and added the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.14.1**. It adds a section on where your text goes and tidies the corpus files. Version 4.14.0 before it measured errors in both directions and added the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).

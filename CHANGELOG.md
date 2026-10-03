@@ -2,24 +2,21 @@
 
 ## 4.14.1 - 2026-10-03
 
-Privacy update.
+Corpus and documentation.
 
-- The maintainer's own forum and wiki entries leave the public manifest. They now live only in
-  the gitignored `corpus/manifest.private.json`, and the public file shows totals for those pools
-  (`private_pools`). The extraction code is public, so a published digest of that writing could
-  be used to match posts to accounts. Public-source digests stay public so anyone can verify them.
-  `corpus.py` and `fp_measure.py` read both files when the private one exists.
-- Test fixtures and code comments drawn from real-world editing work were replaced with invented
-  examples.
+- The forum and wiki pools' entries are kept in a local manifest; the public manifest lists their
+  totals (`private_pools`), and public-source digests stay public so anyone can verify them.
+  `corpus.py` and `fp_measure.py` read both files when the local one exists.
+- Test fixtures and code comments use invented examples.
 - README: a "Your privacy" section says what the checker, the skill, SARIF output, and the
   GitHub Action do with your text.
-- CLAUDE.md: rules for commit identity, examples, and private corpus data.
+- CLAUDE.md: conventions for commit identity and examples.
 
 ## 4.14.0 - 2026-10-03
 
 Two-way measurement and distribution. No catch rate is published yet: the machine pools are
 built from Hugging Face, RAID, and the Claude API, which the build machine for this release could
-not reach. The maintainer builds them and reruns `fp_measure.py`.
+not reach. They are built locally and `fp_measure.py` rerun before the next measurement.
 
 Audit CLI:
 
@@ -63,7 +60,7 @@ Corpus and measurement:
   register and by model, with Wilson intervals and the same "flagged" definition. A rule scorecard
   compares each rule's firing rate on human dev and machine dev documents; it is the one place
   rule tuning may look, so neither published rate grades its own tuning.
-- Wiki entries moved from the `maintainer` author tier to `mixed`. A wiki page holds other
+- Wiki entries carry the `mixed` author tier. A wiki page holds other
   editors' text too. Only the label changed; digests and ids did not.
 
 Docs and checks:
@@ -83,7 +80,7 @@ Docs and checks:
 
 Fixes from a full-repo review. Rule changes below only stop false or double matches, but they
 were made without the corpus cache, so `corpus/RESULTS.md` still shows 4.12.0 numbers until the
-maintainer reruns `scripts/fp_measure.py --write-results corpus/RESULTS.md`.
+`scripts/fp_measure.py --write-results corpus/RESULTS.md` is rerun.
 
 Audit CLI:
 
@@ -243,7 +240,7 @@ Docs:
   cached text and were skipped — the text report already warned; the Markdown page
   silently narrowed its document count.
 - `corpus/RESULTS.md` regenerated. Provenance note: 239 of the 500 news-pool documents
-  could not be re-materialized from their public sources this session (Internet Archive
+  could not be re-fetched from their public sources at release time (Internet Archive
   search returned a different issue set; some upstream rows drifted), so the news row
   re-measures n=261. The manifest is unchanged — those documents remain part of the
   corpus — and this release only removes findings, so the v4.9.0 news result (0.0% at
@@ -265,7 +262,7 @@ Docs:
 ## 4.8.0 - 2026-08-26
 
 - Adopted the writing-quality half of harshaneel/humanize (MIT), and deliberately none of its
-  detector-evasion half — no detector APIs, no score-targeting, no bypass claims, unchanged.
+  detector-related code.
 - SKILL.md process: a **counted gate** (write every check's count with zeros explicit; list every
   sentence's word count and fix the list until it passes range/mid-band/neighbor rules — counting
   beats feel) and the **own-output-is-foreign-text** rule for rewriting text you drafted earlier.
@@ -291,8 +288,8 @@ Docs:
   the six registers the skill defines are now measured.
 - New corpus subcommands `build-news` and `build-essays`; fetching is rate-limit-aware
   (backoff on 429/503). Public-domain pools publish their sources for reproducibility; the
-  personal pools remain fully anonymous (unchanged contract, still test-enforced).
-- The news slice is honest about its material: page-level OCR of century-old newsprint — the
+  forum and wiki pools publish no locators (unchanged contract, still test-enforced).
+- The news slice is page-level OCR of century-old newsprint — the
   quality gate (alphabetic-token ratio) bounds but does not eliminate OCR noise, and
   `corpus/RESULTS.md` states that caveat next to the numbers.
 
@@ -303,14 +300,14 @@ Docs:
   predate ChatGPT (cutoff 2022-11-01), so any audit flag on one is a false positive by
   construction. No text, usernames, or source locators are published — ids derive from the
   content digest, and a test enforces the anonymity contract. `scripts/corpus.py` builds and
-  verifies the corpus from maintainer-local sources; only the public-domain slice is
+  verifies the corpus from local sources; only the public-domain slice is
   independently rebuildable, on purpose.
 - Added `scripts/fp_measure.py`: false-positive rates by register and author slice with Wilson
   95% intervals, a review-threshold sweep, and the rules firing most often on human text.
   Measured at the default threshold: chat 0.0% (n=764), essay 0.0% (n=33), wiki 9.1% (n=550) —
   the aggregate (3.7%) hides the register split, which is why rates are reported per register.
   Results published in `corpus/RESULTS.md`.
-- One hard block on human text is recorded honestly: a 2014 forum post carrying two invisible
+- One hard block on human text is recorded: a 2014 forum post carrying two invisible
   zero-width characters (ordinary copy-paste residue) trips `artifact.bypass_characters`.
   Corpus and measurement design adapted from conorbronsdon/avoid-ai-writing (MIT).
 
