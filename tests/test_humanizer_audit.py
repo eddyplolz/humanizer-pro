@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -710,3 +711,15 @@ def test_skill_md_stays_under_line_limit() -> None:
     # WARP.md: "Keep under 350 lines for v4.x."
     lines = (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
     assert len(lines) < 350, len(lines)
+
+
+def test_text_report_survives_a_narrow_output_encoding(tmp_path: Path) -> None:
+    sample = tmp_path / "cyr.md"
+    sample.write_text("It is not just Привет but more.\n", encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(CLI), str(sample)],
+        cwd=ROOT, capture_output=True, check=False,
+        env={**os.environ, "PYTHONIOENCODING": "cp1252"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert b"family7.rhetorical_formula" in result.stdout

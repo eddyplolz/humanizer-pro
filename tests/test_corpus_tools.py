@@ -40,6 +40,44 @@ def test_bbcode_strip_removes_quotes_and_unwraps_tags() -> None:
     assert "[b]" not in text and "\\r" not in text
 
 
+def test_bbcode_strip_removes_nested_quotes_inside_out() -> None:
+    message = "[quote=A][quote=B]inner[/quote]A's own words here[/quote]My reply."
+    assert corpus.bbcode_strip(message) == "My reply."
+
+
+def test_bbcode_strip_unescapes_sql_in_one_pass() -> None:
+    # The dump text C:\\new is an escaped backslash followed by "n".
+    assert corpus.bbcode_strip(r"C:\\new and \'q\' \"x\"\r\nnext") == 'C:\\new and \'q\' "x"\nnext'
+
+
+def test_mybb_rows_carry_edittime_when_present(tmp_path) -> None:
+    sql = (
+        "INSERT INTO `mybb_posts` (`pid`) VALUES "
+        "(1,2,0,3,'S',0,7,'alice',1500000000,'old post',0x7f000001,1,0,0,0,'',1),"
+        "(2,2,0,3,'S',0,7,'alice',1500000000,'edited later',_binary 'ab',1,0,7,1700000000,'',1),"
+        "(3,2,0,3,'S',0,7,'bob',1500000000,'no tail');\n"
+    )
+    dump = tmp_path / "x_sanitized.sql"
+    dump.write_text(sql, encoding="utf-8")
+    rows = list(corpus.iter_mybb_posts(dump))
+    assert [(pid, edittime) for pid, _user, _date, _msg, edittime in rows] == [
+        (1, 0), (2, 1700000000), (3, None),
+    ]
+
+
+def test_wikitext_strip_v2_handles_nesting_v1_kept_for_old_digests() -> None:
+    nested = "A [[File:x.jpg|thumb|A [[Foo]] map]] B {{a|{{b|{{c|{{d|{{e|{{f}}}}}}}}}}}} C"
+    assert corpus.wikitext_strip(nested) == "A B C"
+    # v1 is frozen: existing wiki entries were hashed with it.
+    assert "map]]" in corpus.wikitext_strip_v1(nested)
+    assert corpus.WIKITEXT_STRIPPERS["wikitext-strip.v1"] is corpus.wikitext_strip_v1
+
+
+def test_word_count_treats_curly_apostrophe_as_inside_a_word() -> None:
+    assert corpus.word_count("don’t stop") == 2
+    assert corpus.alpha_ratio("don’t stop’") == 1.0
+
+
 def test_wikitext_strip_reduces_markup_to_prose() -> None:
     wikitext = (
         "{{Infobox nation|name=Testland}}\n"
@@ -154,9 +192,13 @@ def test_manifest_is_anonymous() -> None:
     for entry in entries:
         assert set(entry) <= public_keys
         if entry["kind"] in source_keys:
-            assert set(entry.get("source", {})) <= source_keys[entry["kind"]]
+            # A public kind must publish its pointer, and only scalar values.
+            assert entry["source"], f"{entry['id']} has no public source"
+            assert set(entry["source"]) <= source_keys[entry["kind"]]
+            assert all(isinstance(v, (str, int)) for v in entry["source"].values())
         else:
             assert "source" not in entry, f"{entry['id']} leaks a source locator"
+            assert entry["author"] in ("maintainer", "other")
 
 
 # ------------------------------------------------------------ fp_measure
@@ -171,6 +213,29 @@ def test_audit_corpus_accounts_for_every_entry() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     rows, missing = fp_measure.audit_corpus(threshold=60)
     assert len(rows) + len(missing) == len(manifest["entries"])
+
+
+def test_audit_corpus_audits_cached_entries(tmp_path, monkeypatch) -> None:
+    """With a cache present, entries are audited, not just counted missing."""
+    cached = "pd-0123456789ab"
+    manifest = {
+        "entries": [
+            {"id": cached, "register": "essay", "author": "public-domain", "words": 9},
+            {"id": "pd-ba9876543210", "register": "essay", "author": "public-domain", "words": 9},
+        ]
+    }
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    (cache / f"{cached}.txt").write_text("[Your Name] wrote this.", encoding="utf-8")
+    monkeypatch.setattr(fp_measure, "MANIFEST_PATH", manifest_path)
+    monkeypatch.setattr(fp_measure, "CACHE_DIR", cache)
+    rows, missing = fp_measure.audit_corpus(threshold=60)
+    assert missing == ["pd-ba9876543210"]
+    assert [row["id"] for row in rows] == [cached]
+    assert rows[0]["blocked"] is True
+    assert fp_measure.slice_stats(rows, 60)["flagged"] == 1
 
 
 def test_fp_measure_cli_runs() -> None:

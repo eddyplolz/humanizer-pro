@@ -1808,6 +1808,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"humanizer-audit: {exc}", file=sys.stderr)
         return 3
 
+    # The text report quotes evidence verbatim, and a Windows pipe or redirect
+    # encodes stdout as cp1252, which cannot hold Cyrillic, CJK, or emoji
+    # evidence. Escape what the stream cannot encode instead of crashing.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="backslashreplace")
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     elif args.compare:
