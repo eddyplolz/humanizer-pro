@@ -2,7 +2,7 @@
 
 The complete pattern library behind `SKILL.md`. Nine families. Each sub-tell lists its **watch-words**,
 the **problem**, a **before → after**, and **source** (WP = Wikipedia "Signs of AI writing", PDF =
-"Comprehensive Analysis of AI-Generated Writing Tells", SS = Stop Slop).
+the "Comprehensive Analysis of AI-Generated Writing Tells" survey, SS = Stop Slop).
 
 **Read this with the operating principles in mind** (see `SKILL.md`): hunt *clusters*, not single
 words; don't over-correct legitimate prose; don't swap one template for another. For artifact tokens
