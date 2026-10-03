@@ -60,8 +60,9 @@ Docs and checks:
 - A test keeps the version in `humanizer_audit.py`, SKILL.md, CHANGELOG.md, and README.md in step.
 - README rewritten in plain-language, task-first style (GOV.UK conventions, American English), with
   a contents list, numbered setup steps, and an options table for the GitHub Action.
-- A release workflow publishes a GitHub release whenever `main` carries a version with no release
-  yet, using that version's CHANGELOG section as the notes.
+- A release workflow publishes a GitHub release once CI passes on `main` for a version with no
+  release yet, using that version's CHANGELOG section as the notes. It runs only after a
+  successful CI run for a push to `main`.
 
 ## 4.13.0 - 2026-10-03
 
