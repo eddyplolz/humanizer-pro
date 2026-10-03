@@ -12,6 +12,20 @@
 - Self-scan budget for SKILL.md lowered from 95 to 60 after the description shrank.
 - Fixture names are invented in a test fixture and two source notes.
 
+Audit CLI:
+
+- New artifact rule `artifact.assistant_self_disclosure` (severity error, exit 2): "As an AI
+  language model, I…", "I'm just an AI", "I don't have access to real-time data", "I cannot
+  browse the internet". The most recognizable chatbot leak scored zero before this.
+- `family9.chatbot_residue` now catches the knowledge-cutoff variants: "as of my knowledge cutoff
+  in 2023", "up to my last training update", "my training data only goes up to".
+- `family7.rhetorical_formula` now catches the "not just X; it's Y" and "not just X. It's Y."
+  contrasts, anchored on a preceding copula so "had not just arrived" stays clear.
+- `artifact.bracket_placeholder` now covers generic fill-in blanks such as `[Recipient Name]`,
+  `[Company]`, `[Date]`, and skips Markdown links, reference links, and wiki links.
+- Each change has a regression test that failed before it. The false-positive rates in
+  `corpus/RESULTS.md` were not re-measured for these rules; the next corpus run covers them.
+
 ## 4.14.1 - 2026-10-03
 
 Corpus and documentation.
