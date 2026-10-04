@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "humanizer-audit"
+name = "humanizer-pro"
 dynamic = ["version"]
 description = "Deterministic, zero-dependency audit for AI-writing tells, leaked chatbot artifacts, and rewrite fidelity."
 readme = "README.md"
@@ -25,6 +25,8 @@ humanizer-audit = "humanizer_audit:main"
 
 [project.urls]
 Homepage = "https://github.com/eddyplolz/humanizer-pro"
+Changelog = "https://github.com/eddyplolz/humanizer-pro/blob/main/CHANGELOG.md"
+Issues = "https://github.com/eddyplolz/humanizer-pro/issues"
 
 [tool.setuptools]
 # Ship only the audit CLI. The corpus and measurement scripts are maintainer

@@ -943,10 +943,10 @@ def test_wheel_installs_a_working_console_script(tmp_path: Path) -> None:
     if build.returncode != 0 and any(marker in build.stderr for marker in offline):
         pytest.skip("no package index reachable for an isolated build")
     assert build.returncode == 0, build.stderr
-    wheels = list((tmp_path / "dist").glob("humanizer_audit-*.whl"))
+    wheels = list((tmp_path / "dist").glob("humanizer_pro-*.whl"))
     assert len(wheels) == 1
     version = _load_audit_module().__version__
-    assert wheels[0].name.startswith(f"humanizer_audit-{version}-")
+    assert wheels[0].name.startswith(f"humanizer_pro-{version}-")
     env_dir = tmp_path / "venv"
     venv.EnvBuilder(with_pip=True).create(env_dir)
     bindir = env_dir / ("Scripts" if os.name == "nt" else "bin")
