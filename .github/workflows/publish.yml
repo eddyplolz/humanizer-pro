@@ -1,0 +1,57 @@
+name: Publish to PyPI
+
+# Uploads the package when a GitHub release is published. The Release
+# workflow creates that release once CI is green on main for a new version,
+# so every upload corresponds to a tested, tagged commit. Authentication is
+# PyPI trusted publishing: no token is stored in the repository.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build the distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+      - name: Check the version matches the tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version="$(python3 -c "import ast; t=ast.parse(open('scripts/humanizer_audit.py').read()); print(next(n.value.value for n in t.body if isinstance(n, ast.Assign) and getattr(n.targets[0], 'id', '') == '__version__'))")"
+          if [ "v$version" != "$TAG" ]; then
+            echo "::error::package version $version does not match release tag $TAG"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Upload to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/humanizer-pro
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
