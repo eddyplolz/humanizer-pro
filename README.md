@@ -1,16 +1,32 @@
 # Humanizer Pro
 
-[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg)
 
-Humanizer Pro finds the habits that make writing sound machine-made and removes them. It leaves good writing alone.
+**Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,264 human-written documents: 0.2%.
 
-You can use it in 3 ways:
+| Before | After | What changed |
+|---|---|---|
+| In today's rapidly evolving digital landscape, effective collaboration serves as a crucial cornerstone for organizations seeking to unlock their full potential. | Good collaboration depends less on the tool than on whether people know what decisions they own, where work is tracked, and how quickly blockers get resolved. | Stock opener cut; "serves as a cornerstone" became a plain claim; the vague promise became three concrete conditions. |
+| It is important to note that this approach is not just about tools, but about creating a vibrant culture of innovation. | *(folded into the sentence above)* | "It is important to note" and "not just X, but Y" are formulas, and "vibrant culture of innovation" said nothing the first sentence did not. |
 
-- as a skill inside Claude Code, Codex, and similar coding agents
-- as a command that checks text files on your computer
-- as an automatic check in Git or GitHub Actions
+Three ways to use it:
 
-It runs on your computer. It does not need an account, an API key, or a network connection.
+```bash
+# 1. As a skill in Claude Code (then type /humanizer-pro)
+git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humanizer-pro
+
+# 2. As a skill in Codex and other agents
+git clone https://github.com/eddyplolz/humanizer-pro.git ~/.agents/skills/humanizer-pro
+
+# 3. As a command-line checker (Python 3.10+)
+pip install git+https://github.com/eddyplolz/humanizer-pro.git && humanizer-audit draft.md
+```
+
+Windows paths and the GitHub Action are in [Install the skill](#install-the-skill) and [Check files automatically](#check-files-automatically).
+
+**Who it is for:** anyone cleaning up an AI draft before it goes out; editors and docs teams who want a check in CI; Wikipedia and wiki editors, since it knows wikitext and neutral tone; and coding agents auditing their own prose.
+
+**What makes it different from a "humanizer" website:** your text never leaves your machine, every flag comes with the reason and the line, a compare mode proves the rewrite kept your numbers, names, dates, and links, and the error rates are measured on public data you can rebuild yourself.
 
 ## Contents
 
