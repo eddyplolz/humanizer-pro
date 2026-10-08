@@ -1,12 +1,20 @@
 name: Publish to PyPI
 
-# Uploads the package when a GitHub release is published. The Release
-# workflow creates that release once CI is green on main for a new version,
-# so every upload corresponds to a tested, tagged commit. Authentication is
-# PyPI trusted publishing: no token is stored in the repository.
+# Uploads the package for a GitHub release. The Release workflow creates the
+# release once CI is green on main for a new version and then starts this
+# workflow by name, because a release created with the workflow token does
+# not fire the release event on its own. Every upload corresponds to a
+# tested, tagged commit. Authentication is PyPI trusted publishing: no token
+# is stored in the repository.
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish, for example v4.15.0
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -18,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ inputs.tag || github.event.release.tag_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -28,7 +36,7 @@ jobs:
           python -m build
       - name: Check the version matches the tag
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ inputs.tag || github.event.release.tag_name }}
         run: |
           version="$(python3 -c "import ast; t=ast.parse(open('scripts/humanizer_audit.py').read()); print(next(n.value.value for n in t.body if isinstance(n, ast.Assign) and getattr(n.targets[0], 'id', '') == '__version__'))")"
           if [ "v$version" != "$TAG" ]; then
