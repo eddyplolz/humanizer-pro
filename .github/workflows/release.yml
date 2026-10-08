@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: release
@@ -54,3 +55,6 @@ jobs:
             exit 1
           fi
           gh release create "$TAG" --target "$TESTED_SHA" --title "$TAG" --notes-file notes.md
+          # A release made with the workflow token fires no release event, so
+          # start the publish workflow by name.
+          gh workflow run publish.yml --ref main -f tag="$TAG"
