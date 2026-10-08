@@ -43,7 +43,7 @@ jobs:
             echo "::error::package version $version does not match release tag $TAG"
             exit 1
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist/
