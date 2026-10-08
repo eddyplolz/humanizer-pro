@@ -19,7 +19,7 @@ git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humani
 git clone https://github.com/eddyplolz/humanizer-pro.git ~/.agents/skills/humanizer-pro
 
 # 3. As a command-line checker (Python 3.10+)
-pip install git+https://github.com/eddyplolz/humanizer-pro.git && humanizer-audit draft.md
+pip install humanizer-pro && humanizer-audit draft.md
 ```
 
 Windows paths and the GitHub Action are in [Install the skill](#install-the-skill) and [Check files automatically](#check-files-automatically).
@@ -212,7 +212,7 @@ The checker ends with an exit code that scripts can act on.
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v4.14.1
+    rev: v4.15.0
     hooks:
       - id: humanizer-audit
 ```
@@ -241,7 +241,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: eddyplolz/humanizer-pro@v4.14.1
+      - uses: eddyplolz/humanizer-pro@v4.15.0
         with:
           paths: docs README.md
           fail-on: block
@@ -402,4 +402,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.14.1**. It adds a section on where your text goes and tidies the corpus files. Version 4.14.0 before it added the tools to measure errors in both directions (the catch rate is not published yet), the command, the pre-commit check, and the GitHub Action. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.15.0**. It puts the package on PyPI, rebuilds the measurement corpus from public sources only, publishes error rates in both directions, adds four editing principles and several new checks to the audit, and tests on Windows and macOS. Every change is listed in the [changelog](CHANGELOG.md).

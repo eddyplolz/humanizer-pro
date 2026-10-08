@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.15.0 - 2026-10-08
 
 Measurement corpus, public sources only:
 
@@ -19,10 +19,11 @@ Measurement corpus, public sources only:
   current rules, on the test split only, in both directions (false positives on human text, catch
   rate on RAID and WildChat).
 
-- README: the measurement section now says what was measured (1,912 documents with the 4.12.0
-  rules), that the public collection holds no AI text yet, and that the dev/test split applies
-  from the next measurement on. The newspaper date range is 1898 to 1909. Install snippets pin
-  the current release, and a test keeps them pinned.
+- README: the measurement section says what was measured and on which split, in both
+  directions. The newspaper date range is 1898 to 1909. Install snippets pin the current
+  release, and a test keeps them pinned. The first screen now opens with the purpose, the
+  measured false-positive rate, a before-and-after table, the install commands, and who the
+  tool is for.
 - SKILL.md: the description is 810 characters, under the 1,024-character skill-loader limit (it
   was 1,049), and a test keeps it there. The audit CLI is resolved from the skill's own directory
   or the installed `humanizer-audit` command, never from the working directory.
@@ -63,7 +64,15 @@ GitHub Action and CI:
 - The Action picks the first `python3` or `python` that actually runs. On a Windows runner
   `python3` can be the Microsoft Store alias, which is on PATH but exits without running.
 - CI now runs the test suite on Windows and macOS (Python 3.12) as well as Ubuntu. The
-  README leads with Windows instructions; until now nothing tested them.
+  README leads with Windows instructions; until now nothing tested them. The tests pin their
+  subprocess pipes to UTF-8 and run the Action script through Git Bash on Windows, where a
+  bare `bash` is the WSL launcher.
+
+Packaging:
+
+- The package is published on PyPI as `humanizer-pro` (`pip install humanizer-pro`); the
+  console script is still `humanizer-audit`. A publish workflow builds and uploads on every
+  GitHub release through PyPI trusted publishing, so no token is stored anywhere.
 
 ## 4.14.1 - 2026-10-03
 
