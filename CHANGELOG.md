@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.16.0 - 2026-10-09
 
 - Two structure signals in the audit CLI: `structure.uniform_paragraphs` (four or more prose
   paragraphs of nearly the same length; on the corpus it fires on 1.1% of human documents and 33%
