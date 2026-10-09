@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -1111,3 +1112,157 @@ def test_list_item_length_uniformity_is_measured_and_flagged() -> None:
     varied = "Plan:\n\n- Short.\n- A somewhat longer item with more to say about it.\n- Mid length item here.\n- One."
     stats = module.stats_for(varied)
     assert "structure.uniform_list_items" not in {f["id"] for f in module.rhythm_findings(stats)}
+
+
+def _meaning_findings(original: str, revised: str) -> list[tuple[str, str, str]]:
+    result = _load_audit_module().compare_texts(original, revised, "a", "b")
+    return [(f["id"], f["side"], f["message"]) for f in result["findings"] if f["id"].startswith("compare.meaning.")]
+
+
+def test_dropped_claim_strength_hedge_is_reported() -> None:
+    findings = _meaning_findings(
+        "The new policy may reduce wait times at the clinic.",
+        "The new policy reduces wait times at the clinic.",
+    )
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.hedge_dropped", "original")]
+    assert "may" in findings[0][2]
+
+
+def test_reducing_a_hedge_stack_to_one_modal_is_not_drift() -> None:
+    assert (
+        _meaning_findings(
+            "The new policy could potentially possibly reduce wait times at the clinic.",
+            "The new policy could reduce wait times at the clinic.",
+        )
+        == []
+    )
+
+
+def test_introduced_hedge_is_reported_on_the_revised_side() -> None:
+    findings = _meaning_findings(
+        "The bridge collapsed during the storm last winter.",
+        "The bridge reportedly collapsed during the storm last winter.",
+    )
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.hedge_introduced", "revised")]
+
+
+def test_negation_flip_is_reported_in_both_directions() -> None:
+    affirmed = "The council approved the harbor plan after the second hearing."
+    negated = "The council did not approve the harbor plan after the second hearing."
+    assert [(f[0], f[1]) for f in _meaning_findings(negated, affirmed)] == [("compare.meaning.negation_changed", "original")]
+    assert [(f[0], f[1]) for f in _meaning_findings(affirmed, negated)] == [("compare.meaning.negation_changed", "revised")]
+
+
+def test_contraction_and_no_longer_count_as_negation() -> None:
+    assert _meaning_findings(
+        "The plant doesn't run the night shift during the summer months.",
+        "The plant runs the night shift during the summer months.",
+    ) != []
+    assert _meaning_findings(
+        "The plant no longer runs the night shift during the summer months.",
+        "The plant runs the night shift during the summer months.",
+    ) != []
+
+
+def test_not_only_is_not_a_negation() -> None:
+    assert (
+        _meaning_findings(
+            "The plan not only cut costs but also raised output at both mills.",
+            "The plan cut costs and raised output at both mills.",
+        )
+        == []
+    )
+
+
+def test_dropped_causal_link_is_reported() -> None:
+    findings = _meaning_findings(
+        "Sales fell last quarter because the main factory closed for repairs.",
+        "Sales fell last quarter. The main factory closed for repairs.",
+    )
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.causal_dropped", "original")]
+
+
+def test_introduced_causal_link_is_reported() -> None:
+    findings = _meaning_findings(
+        "Sales fell last quarter. The main factory closed for repairs.",
+        "Sales fell last quarter because the main factory closed for repairs.",
+    )
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.causal_introduced", "revised")]
+
+
+def test_dropped_counter_claim_sentence_is_reported() -> None:
+    original = (
+        "The tax cut raised revenue in the first year. "
+        "Critics note, however, that the gain had vanished by the third year."
+    )
+    findings = _meaning_findings(original, "The tax cut raised revenue in the first year.")
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.counter_claim_dropped", "original")]
+
+
+def test_lost_concession_is_reported_as_a_dropped_counter_claim() -> None:
+    findings = _meaning_findings(
+        "Although the trial enrolled only forty patients, the drug cut symptoms by half.",
+        "The drug cut symptoms by half in the trial.",
+    )
+    assert ("compare.meaning.counter_claim_dropped", "original") in [(f[0], f[1]) for f in findings]
+
+
+def test_meaning_checks_skip_code_blocks() -> None:
+    original = "Setup.\n\n```python\nif not ready:\n    wait()\n```\n"
+    revised = "Setup.\n\n```python\nif ready:\n    wait()\n```\n"
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert ids == ["compare.code_block.changed"]
+
+
+def test_meaning_drift_alone_exits_with_review_not_block() -> None:
+    module = _load_audit_module()
+    compare = module.compare_texts(
+        "The new policy may reduce wait times at the clinic.",
+        "The new policy reduces wait times at the clinic.",
+        "a",
+        "b",
+    )
+    summary = module.summarize_compare(compare)
+    assert summary["max_severity"] == "warning"
+    assert summary["exit_code"] == 1
+    assert summary["source_risk_count"] == 0
+
+
+def test_unchanged_sentence_is_never_reported_as_introduced() -> None:
+    kept = "Sales fell last quarter because the main factory closed for repairs."
+    original = "Sales fell last quarter. " + kept
+    assert _meaning_findings(original, kept) == []
+
+
+def _worked_example_pairs() -> list[tuple[str, str, str]]:
+    text = (ROOT / "reference" / "worked-examples.md").read_text(encoding="utf-8")
+    pairs = []
+    for example in re.split(r"^## Example ", text, flags=re.M)[1:]:
+        title = example.splitlines()[0]
+        sections = {
+            match.group(1).strip(): match.group(2).strip()
+            for match in re.finditer(r"^### ([^\n]+)\n(.*?)(?=^### |\Z)", example, flags=re.M | re.S)
+        }
+        before = next((body for name, body in sections.items() if name.startswith("Before")), None)
+        after = sections.get("Final") or sections.get("After")
+        if before and after:
+            pairs.append((title, before, after))
+    return pairs
+
+
+def test_meaning_checks_are_silent_on_the_approved_worked_examples() -> None:
+    # The skill's own before/after rewrites are the approved baseline: a lexicon
+    # change that makes any of them warn is a regression, not a finding.
+    pairs = _worked_example_pairs()
+    assert len(pairs) == 3, [pair[0] for pair in pairs]
+    for title, before, after in pairs:
+        assert _meaning_findings(before, after) == [], title
+
+
+def test_formulaic_challenges_sentence_is_not_a_protected_counter_claim() -> None:
+    # Catalog 3.5: the skill removes this formula, so cutting it is not drift.
+    original = (
+        "The town has a weekly market and two libraries. "
+        "Despite challenges typical of urban areas, the town continues to thrive thanks to ongoing initiatives."
+    )
+    assert _meaning_findings(original, "The town has a weekly market and two libraries.") == []

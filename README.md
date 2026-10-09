@@ -190,7 +190,7 @@ You can:
 - add `--json` to get results a program can read
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)
-- use `--compare original.md revised.md` to check that a rewrite kept the numbers, dates, names of 2 or more words, links, citations, quotes, and code samples in the original (it does not catch every change: a one-word name or a changed fact, such as "delayed" becoming "canceled," can pass)
+- use `--compare original.md revised.md` to check that a rewrite kept the numbers, dates, names of 2 or more words, links, citations, quotes, and code samples in the original, and to get a review warning when a sentence lost a hedge such as "may," flipped between "did" and "did not," lost a "because," or dropped a "however" sentence (it does not catch every change: a one-word name or a changed fact, such as "delayed" becoming "canceled," can pass)
 
 ### Understand the result
 
@@ -199,7 +199,7 @@ The checker ends with an exit code that scripts can act on.
 | Code | Meaning | What to do |
 |---|---|---|
 | 0 | Pass | Nothing. |
-| 1 | Review: the risk score reached the threshold (60 unless you set `--fail-score`) | Read the findings and decide. |
+| 1 | Review: the risk score reached the threshold (60 unless you set `--fail-score`), or in compare mode a sentence's meaning may have shifted | Read the findings and decide. |
 | 2 | Block: leaked chatbot text, a placeholder, or hidden characters | Fix before you publish. |
 | 3 | The checker could not run, for example a wrong option or a missing file | Check the command. |
 

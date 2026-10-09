@@ -26,6 +26,19 @@
         "compare.code_block.changed",
         "compare.source_statement.evidence_marker_dropped"
       ]
+    },
+    {
+      "name": "meaning-drift",
+      "original": "eval/fixtures/fidelity/meaning-original.md",
+      "revised": "eval/fixtures/fidelity/meaning-revised.md",
+      "expected_exit": 1,
+      "expected_findings": 4,
+      "required_ids": [
+        "compare.meaning.hedge_dropped",
+        "compare.meaning.negation_changed",
+        "compare.meaning.causal_dropped",
+        "compare.meaning.counter_claim_dropped"
+      ]
     }
   ]
 }

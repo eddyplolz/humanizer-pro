@@ -679,6 +679,39 @@ REPORTING_LANGUAGE_RE = re.compile(
     r"researchers|observers|experts|said|announced|published|filed)\b",
     re.I,
 )
+# Fidelity drift (compare mode). These words change WHAT a sentence asserts,
+# not how it sounds: how strongly a claim is made, whether it is affirmed or
+# denied, whether one thing is said to cause another, and whether a concession
+# or counter-claim survives. Stylistic softeners the skill is allowed to cut
+# (somewhat, relatively, arguably, generally) are left out on purpose, and a
+# hedge stack trimmed to a single modal raises nothing because the modal stays.
+CLAIM_HEDGE_RE = re.compile(
+    r"\b(?:may|might|could|likely|unlikely|probably|possibly|perhaps|apparently|seemingly|"
+    r"appears?|appeared|seems?|seemed|suggests?|suggested|estimated|approximately|roughly|"
+    r"reportedly|allegedly|purportedly|preliminary|tentative|at least|up to|in some cases|"
+    r"not always|not yet)\b",
+    re.I,
+)
+# "not only ... but also" is emphasis, not denial, and "no doubt" is the opposite of one.
+NEGATION_RE = re.compile(
+    r"\b(?:not(?!\s+only\b)|no(?!\s+doubt\b)|never|none|neither|nor|cannot|without|\w+n['\u2019]t)\b",
+    re.I,
+)
+CAUSAL_RE = re.compile(
+    r"\b(?:because|due to|owing to|as a result|therefore|thus|hence|consequently|so that|"
+    r"led to|leads? to|caused?|causes|causing|resulting in|results? in|a result of|thanks to|"
+    r"driven by|stems? from|stemmed from|in response to|which is why|that is why)\b",
+    re.I,
+)
+# "Despite challenges typical of..., X continues to thrive" is catalog 3.5, a
+# formula the skill removes, not a concession the rewrite must keep.
+CHALLENGES_FORMULA_RE = re.compile(r"\bdespite\b[^.;]{0,80}?\bchallenges\b", re.I)
+CONTRAST_RE = re.compile(
+    r"\b(?:however|but(?!\s+also\b)|although|though|(?<!not )(?<!as )yet|despite|in spite of|"
+    r"nevertheless|nonetheless|whereas|on the other hand|in contrast|by contrast|conversely|"
+    r"even so|that said|critics|skeptics|opponents|disputed?|contested|caveat|except)\b",
+    re.I,
+)
 NAME_CONNECTORS = {"and", "de", "del", "du", "for", "la", "le", "of", "the", "van", "von"}
 NAME_EXCLUDE_START = {"A", "An", "As", "At", "By", "For", "From", "If", "In", "It", "On", "Or", "The", "This", "To"}
 # A capital is evidence of a proper noun only when the author chose it. At the
@@ -1057,12 +1090,13 @@ def compare_finding(
     starts: list[int],
     side: str,
     source_risk: bool = False,
+    severity: str = "error",
 ) -> dict[str, object]:
     line, column = line_column(starts, token.offset)
     return {
         "id": finding_id,
         "family": None,
-        "severity": "error",
+        "severity": severity,
         "line": line,
         "column": column,
         "evidence": token.evidence,
@@ -1216,12 +1250,26 @@ def compare_ordered_tokens(
     return findings
 
 
+SENTENCE_RE = re.compile(r".+?(?:(?<=[.!?])\s+(?=[A-Z0-9\"“'])|\n{2,}|$)", re.S)
+
+
+def iter_sentences(text: str, skip_code: bool = False) -> list[tuple[str, int]]:
+    """(sentence, offset) pairs. With skip_code, fenced blocks are blanked in
+    place so offsets still map to the original text."""
+    if skip_code:
+        text = CODE_BLOCK_RE.sub(lambda match: " " * len(match.group(0)), text)
+    sentences = []
+    for match in SENTENCE_RE.finditer(text):
+        sentence = match.group(0).strip()
+        if sentence:
+            sentences.append((sentence, match.start() + len(match.group(0)) - len(match.group(0).lstrip())))
+    return sentences
+
+
 def sentence_records(text: str) -> list[dict[str, object]]:
     records = []
-    pattern = re.compile(r".+?(?:(?<=[.!?])\s+(?=[A-Z0-9\"“'])|\n{2,}|$)", re.S)
-    for match in pattern.finditer(text):
-        sentence = match.group(0).strip()
-        if not sentence or not SOURCE_MARKER_RE.search(sentence):
+    for sentence, offset in iter_sentences(text):
+        if not SOURCE_MARKER_RE.search(sentence):
             continue
         records.append(
             {
@@ -1229,7 +1277,27 @@ def sentence_records(text: str) -> list[dict[str, object]]:
                 "normalized": normalize_sentence(sentence),
                 "terms": meaningful_terms(sentence),
                 "markers": evidence_markers(sentence),
-                "offset": match.start() + len(match.group(0)) - len(match.group(0).lstrip()),
+                "offset": offset,
+            }
+        )
+    return records
+
+
+def meaning_records(text: str) -> list[dict[str, object]]:
+    """Every prose sentence with the words that fix its meaning: claim-strength
+    hedges, negation, causal links, and contrast or counter-claim markers."""
+    records = []
+    for sentence, offset in iter_sentences(text, skip_code=True):
+        records.append(
+            {
+                "text": sentence,
+                "normalized": normalize_sentence(sentence),
+                "terms": meaningful_terms(sentence),
+                "offset": offset,
+                "hedges": {match.lower() for match in CLAIM_HEDGE_RE.findall(sentence)},
+                "negation": {match.lower() for match in NEGATION_RE.findall(sentence)},
+                "causal": {match.lower() for match in CAUSAL_RE.findall(sentence)},
+                "contrast": {match.lower() for match in CONTRAST_RE.findall(CHALLENGES_FORMULA_RE.sub(" ", sentence))},
             }
         )
     return records
@@ -1348,6 +1416,107 @@ def compare_source_statements(
     return findings
 
 
+def compare_meaning(
+    original_text: str,
+    revised_text: str,
+    original_starts: list[int],
+    revised_starts: list[int],
+) -> list[dict[str, object]]:
+    """Meaning drift between matched sentences. Each original sentence is paired
+    with the revised sentence sharing the most meaningful terms (at least 0.4
+    overlap); a sentence with no partner is reported only when it carried a
+    counter-claim, because cutting padding is allowed and cutting the other
+    side of an argument is not. Warning severity: these are reading prompts for
+    the reviewer, not proof, so compare exits 1 (review) rather than 2 (block)."""
+    original_records = meaning_records(original_text)
+    revised_records = meaning_records(revised_text)
+    revised_norms = {record["normalized"] for record in revised_records}
+    original_norms = {record["normalized"] for record in original_records}
+    # A revised sentence that survived unchanged is never a candidate: it is
+    # already accounted for, and pairing it with some other original would
+    # report drift on text that is identical on both sides.
+    candidates = [record for record in revised_records if record["normalized"] not in original_norms]
+    findings: list[dict[str, object]] = []
+    seen: set[tuple[str, str, int]] = set()
+
+    def report(finding_id: str, message: str, record: dict[str, object], side: str) -> None:
+        key = (finding_id, side, int(record["offset"]))
+        if key in seen:
+            return
+        seen.add(key)
+        token = ProtectedToken("meaning", str(record["normalized"]), evidence(str(record["text"])), int(record["offset"]))
+        starts = original_starts if side == "original" else revised_starts
+        findings.append(compare_finding(finding_id, message, token, starts, side, False, "warning"))
+
+    def listed(values: set[str]) -> str:
+        return ", ".join(sorted(values))
+
+    for record in original_records:
+        if record["normalized"] in revised_norms:
+            continue
+        candidate, score = best_sentence_match(record, candidates)
+        if candidate is None or score < 0.4:
+            if record["contrast"]:
+                report(
+                    "compare.meaning.counter_claim_dropped",
+                    f"Sentence carrying a counter-claim or concession ({listed(record['contrast'])}) has no counterpart in the revision",
+                    record,
+                    "original",
+                )
+            continue
+        if record["hedges"] and not candidate["hedges"]:
+            report(
+                "compare.meaning.hedge_dropped",
+                f"Claim is stated more firmly than the original, which hedged it ({listed(record['hedges'])})",
+                record,
+                "original",
+            )
+        if candidate["hedges"] and not record["hedges"]:
+            report(
+                "compare.meaning.hedge_introduced",
+                f"Claim is hedged ({listed(candidate['hedges'])}) where the original stated it plainly",
+                candidate,
+                "revised",
+            )
+        if bool(record["negation"]) != bool(candidate["negation"]):
+            if record["negation"]:
+                report(
+                    "compare.meaning.negation_changed",
+                    f"Original denies this ({listed(record['negation'])}); the revision affirms it",
+                    record,
+                    "original",
+                )
+            else:
+                report(
+                    "compare.meaning.negation_changed",
+                    f"Revision denies this ({listed(candidate['negation'])}); the original affirms it",
+                    candidate,
+                    "revised",
+                )
+        if record["causal"] and not candidate["causal"]:
+            report(
+                "compare.meaning.causal_dropped",
+                f"Causal link ({listed(record['causal'])}) is missing from the revised sentence",
+                record,
+                "original",
+            )
+        if candidate["causal"] and not record["causal"]:
+            report(
+                "compare.meaning.causal_introduced",
+                f"Causal link ({listed(candidate['causal'])}) is not in the original sentence",
+                candidate,
+                "revised",
+            )
+        if record["contrast"] and not candidate["contrast"]:
+            report(
+                "compare.meaning.counter_claim_dropped",
+                f"Concession or counter-claim marker ({listed(record['contrast'])}) is missing from the revised sentence",
+                record,
+                "original",
+            )
+    return findings
+
+
 def name_extractor_for(original_text: str, revised_text: str):
     """Name extractor bound to the joint lowercase vocabulary of both texts."""
     ordinary = name_vocabulary(original_text, revised_text)
@@ -1389,6 +1558,7 @@ def compare_texts(original_text: str, revised_text: str, original_path: str, rev
         )
     )
     findings.extend(compare_source_statements(original_text, revised_text, original_starts, revised_starts))
+    findings.extend(compare_meaning(original_text, revised_text, original_starts, revised_starts))
     findings.sort(key=lambda item: (str(item["side"]), int(item["line"]), int(item["column"]), str(item["id"])))
     return {
         "original": original_path,
@@ -1844,7 +2014,8 @@ def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, 
 
 def summarize_compare(compare: dict[str, object]) -> dict[str, object]:
     findings = list(compare["findings"])
-    exit_code = 2 if findings else 0
+    has_error = any(finding["severity"] == "error" for finding in findings)
+    exit_code = 2 if has_error else 1 if findings else 0
     return {
         "documents": 2,
         "comparisons": 1,

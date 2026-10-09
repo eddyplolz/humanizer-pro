@@ -256,10 +256,11 @@ into a text that did not already contain it:
 - **Staccato conversion.** Chopping ordinary sentences into fragments to manufacture rhythm. Vary
   sentences by rewriting them, not by breaking them.
 
-When the installed repo is available, back this mechanically: run `humanizer-audit --compare
-original.md revised.md` after every pass, always against the text the user handed over, never the
-previous pass, so drift cannot build up across passes. Any `compare.*.introduced` finding (a number,
-date, name, URL, citation, or sourced statement the original never had) is an anti-swap failure to fix.
+When the installed repo is available, back this mechanically: run `humanizer-audit --compare original.md
+revised.md` after every pass, always against the text the user handed over, never the previous pass.
+Any `compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement the original
+never had) is an anti-swap failure to fix. A `compare.meaning.*` warning (hedge, negation, causal link, or
+counter-claim changed) means reread that pair: restore the original meaning, or keep the edit if it held.
 
 ---
 
