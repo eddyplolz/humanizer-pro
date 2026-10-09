@@ -365,6 +365,9 @@ not proof of AI — only its over-frequency + the "not X — but Y" pattern.
 
 ### 8.12 Paragraph uniformity & mechanical structure (PDF)
 **Problem:** Every paragraph 3–5 sentences, topic→2-3 support→transition. No one-line paragraphs, no long ones. **Fix:** vary length deliberately; use a one-sentence paragraph for emphasis.
+The audit CLI measures this: `structure.uniform_paragraphs` fires when four or more prose paragraphs
+have nearly the same word count (1.1% of human documents in the corpus, 33% of machine ones), and
+`structure.uniform_list_items` when four or more list items do.
 
 ### 8.13 Information-architecture tells (PDF)
 **Watch:** setup paragraph → bulleted list → philosophical ending; hedging-then-certainty ("Of course,

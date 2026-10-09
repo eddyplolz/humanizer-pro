@@ -257,9 +257,9 @@ into a text that did not already contain it:
   sentences by rewriting them, not by breaking them.
 
 When the installed repo is available, back this mechanically: run `humanizer-audit --compare
-original.md revised.md` (or `scripts/humanizer_audit.py` from this skill's directory) after a deep
-edit — any `compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement
-that the original never had) is an anti-swap failure to fix, not to explain away.
+original.md revised.md` after every pass, always against the text the user handed over, never the
+previous pass, so drift cannot build up across passes. Any `compare.*.introduced` finding (a number,
+date, name, URL, citation, or sourced statement the original never had) is an anti-swap failure to fix.
 
 ---
 
@@ -269,7 +269,7 @@ that the original never had) is an anti-swap failure to fix, not to explain away
 - AI-vocab cluster of 3+? Thin it.
 - Repeated discourse-marker openings? Cut most.
 - Anticipatory "it" / existential "there"? State the subject.
-- Same sentence or paragraph length repeating? Vary only where meaning supports it.
+- Sentences, paragraphs, or list items all the same length? Vary only where meaning supports it.
 - Rule of three where one or two items suffice? Cut.
 - Consecutive sentences opening with the same word, or mirrored subject shapes? Vary one.
 - Helpful-assistant framing (walking the reader through, both-sides hedging)? Say the thing.

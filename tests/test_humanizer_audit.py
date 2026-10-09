@@ -1073,3 +1073,41 @@ def test_humanizer_damage_is_flagged() -> None:
     assert "artifact.humanizer_whitespace" in _ids_for(thin)
     assert "artifact.humanizer_whitespace" not in _ids_for("The\u00a0model works.")  # NBSP is ordinary
     assert "artifact.humanizer_whitespace" not in _ids_for("The model works.")
+
+
+def _uniform_paragraphs(n: int = 5, words_each: int = 40) -> str:
+    base = "The committee met on Tuesday and reviewed the budget for the coming year in some detail. "
+    para = (base * 3)[: words_each * 6]
+    return "\n\n".join(para for _ in range(n))
+
+
+def test_paragraph_length_uniformity_is_measured_and_flagged() -> None:
+    module = _load_audit_module()
+    uniform = _uniform_paragraphs()
+    stats = module.stats_for(uniform)
+    assert stats["paragraph_length_cv"] == 0.0
+    ids = {f["id"] for f in module.rhythm_findings(stats)}
+    assert "structure.uniform_paragraphs" in ids
+    varied = "\n\n".join(
+        " ".join(f"word{i}" for i in range(n)) + "." for n in (12, 55, 23, 90, 7)
+    )
+    stats = module.stats_for(varied)
+    assert stats["paragraph_length_cv"] > 0.5
+    assert "structure.uniform_paragraphs" not in {f["id"] for f in module.rhythm_findings(stats)}
+
+
+def test_paragraph_uniformity_needs_four_paragraphs() -> None:
+    module = _load_audit_module()
+    stats = module.stats_for(_uniform_paragraphs(n=3))
+    assert "structure.uniform_paragraphs" not in {f["id"] for f in module.rhythm_findings(stats)}
+
+
+def test_list_item_length_uniformity_is_measured_and_flagged() -> None:
+    module = _load_audit_module()
+    uniform = "Plan:\n\n" + "\n".join(f"- Item {i} covers the same ground in exactly eight words" for i in range(5))
+    stats = module.stats_for(uniform)
+    assert stats["bullet_length_cv"] == 0.0
+    assert "structure.uniform_list_items" in {f["id"] for f in module.rhythm_findings(stats)}
+    varied = "Plan:\n\n- Short.\n- A somewhat longer item with more to say about it.\n- Mid length item here.\n- One."
+    stats = module.stats_for(varied)
+    assert "structure.uniform_list_items" not in {f["id"] for f in module.rhythm_findings(stats)}
