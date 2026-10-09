@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Tests: cover URL normalization boundary handling and invalid input rejection.
+
 - Two structure signals in the audit CLI: `structure.uniform_paragraphs` (four or more prose
   paragraphs of nearly the same length; on the corpus it fires on 1.1% of human documents and 33%
   of machine documents) and `structure.uniform_list_items` (four or more list items of nearly the

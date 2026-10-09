@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 import json
 import os
 import subprocess
@@ -1111,3 +1113,14 @@ def test_list_item_length_uniformity_is_measured_and_flagged() -> None:
     varied = "Plan:\n\n- Short.\n- A somewhat longer item with more to say about it.\n- Mid length item here.\n- One."
     stats = module.stats_for(varied)
     assert "structure.uniform_list_items" not in {f["id"] for f in module.rhythm_findings(stats)}
+
+
+def test_normalize_url_handles_boundaries_and_invalid_type() -> None:
+    audit = _load_audit_module()
+
+    assert audit.normalize_url(" \tHTTPS://Example.COM/path?keep=&UTM_Source=newsletter#part... ") == "https://example.com/path?keep=#part"
+    assert audit.normalize_url("https://example.com/?referrer=" + next(iter(audit.AI_REFERRER_HOSTS))) == "https://example.com/"
+    assert audit.normalize_url("...?!") == ""
+
+    with pytest.raises(AttributeError):
+        audit.normalize_url(None)
