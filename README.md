@@ -167,7 +167,7 @@ The checker reads text files and lists each problem with its line number and the
 Install it with [pipx](https://pipx.pypa.io/):
 
 ```bash
-pipx install git+https://github.com/eddyplolz/humanizer-pro
+pipx install humanizer-pro
 ```
 
 You can also run it from a downloaded copy of this repository, without installing anything:
@@ -240,7 +240,7 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: eddyplolz/humanizer-pro@v4.15.0
         with:
           paths: docs README.md
