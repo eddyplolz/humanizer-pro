@@ -82,9 +82,11 @@ always says more than the regex.
 ### Compare mode (fidelity guards, not tells)
 
 All ids under the `compare.` prefix (`compare.<kind>.dropped` / `.introduced` / `.changed` /
-`compare.citation.changed_target` / `compare.source_statement.*`) enforce the source-discipline
-promises in `wiki-mode.md` and the never-inject rules in `SKILL.md`. They judge protected-content
-drift only, never style.
+`compare.citation.changed_target` / `compare.source_statement.*` / `compare.meaning.*`) enforce the
+source-discipline promises in `wiki-mode.md` and the never-inject rules in `SKILL.md`. They judge
+protected-content drift and, under `compare.meaning.*` (hedge dropped or introduced, negation
+changed, causal link dropped or introduced, counter-claim dropped), sentence-level meaning drift,
+never style. The meaning ids are warnings (exit 1); the rest are errors (exit 2).
 
 ## B. Judgment-only (no CLI rule, on purpose)
 
