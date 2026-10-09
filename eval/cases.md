@@ -15,6 +15,7 @@ behavior and automated contracts for the deterministic audit CLI.
 | `fixtures/style-elements.md` | Improve clarity, concrete language, paragraph unity, and emphasis without flattening the writer's legitimate voice. |
 | `fixtures/fidelity/original.md` + `revised-good.md` | `--compare` exits clean when protected facts and source targets are preserved, including normalized tracking parameters. |
 | `fixtures/fidelity/original.md` + `revised-drift.md` | `--compare` blocks protected-content drift in numbers, dates, URLs, citations, quotes, code, and evidence markers. |
+| `fixtures/fidelity/meaning-original.md` + `meaning-revised.md` | `--compare` exits 1 (review) with four `compare.meaning.*` warnings: hedge dropped, negation flipped, causal link dropped, concession dropped. |
 
 ## Required Checks
 
@@ -23,6 +24,8 @@ behavior and automated contracts for the deterministic audit CLI.
 - `py -3 scripts/humanizer_audit.py eval/fixtures --json` returns schema `humanizer-audit.v1`.
 - `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/original.md eval/fixtures/fidelity/revised-drift.md --json`
   returns protected-content drift findings without style scoring.
+- `py -3 scripts/humanizer_audit.py --compare eval/fixtures/fidelity/meaning-original.md eval/fixtures/fidelity/meaning-revised.md`
+  exits 1 with four `compare.meaning.*` warnings and no error-severity finding.
 - Simple "humanize this" returns only the final rewrite plus serious source-risk notes.
 - Explicit "full audit" returns score, artifact flags, family-tagged rationale, draft rewrite, final
   rewrite, and what stayed on purpose.

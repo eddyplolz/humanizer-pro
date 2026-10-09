@@ -105,12 +105,23 @@ fenced code blocks, and source-dependent sentences whose evidence markers were d
 URL comparison normalizes tracking parameters such as `utm_source`, so removing tracking noise from an
 otherwise identical source URL is not treated as drift.
 
+It also pairs each original sentence with its closest revised sentence and raises a warning (exit 1,
+review) under `compare.meaning.*` when the pair disagrees on a claim-strength hedge (`may`, `likely`,
+`reportedly`), on negation, or on a causal link (`because`, `led to`), or when a sentence carrying a
+concession or counter-claim (`however`, `although`, `critics`) has no counterpart at all. These are
+reading prompts, not proof: the word lists are short on purpose and are not calibrated on human
+rewrite pairs. A hedge stack trimmed to one modal raises nothing, nor does cutting the formulaic
+"despite challenges" sentence (catalog 3.5). On the three before/after pairs in
+`reference/worked-examples.md` the meaning checks raise zero findings against the approved rewrites,
+and a test keeps it that way. Known noise, all at warning level: the month "May" reads as a hedge,
+"except" reads as a contrast marker, and "not yet" counts as both a hedge and a negation.
+
 ## Exit Codes
 
 | Code | Meaning |
 |---:|---|
 | 0 | Pass: no blocker and risk score is below the threshold. |
-| 1 | Review: no blocker, but the risk score met or exceeded `--fail-score`. |
+| 1 | Review: no blocker, but the risk score met or exceeded `--fail-score`. In `--compare` mode, meaning drift between matched sentences. |
 | 2 | Block: artifact, placeholder, citation stub, tracking URL, or bypass characters found. In `--compare` mode, any protected-content drift. |
 | 3 | CLI usage or read error (argparse usage errors included). |
 
@@ -125,6 +136,6 @@ The default review threshold is `--fail-score 60`.
   (diagnostic only; `null` below 50 tokens; see `reference/mattr-calibration.md`).
 - `documents[].findings`: family hits, source-risk flags, artifacts, severity, line/column, and
   quoted evidence.
-- `compare.findings`: protected-content drift findings when `--compare` is used.
+- `compare.findings`: protected-content and meaning drift findings when `--compare` is used.
 
 The schema is intentionally compact so it can be used in CI, pre-publish checks, or agent workflows.

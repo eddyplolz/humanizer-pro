@@ -9,6 +9,14 @@
   `paragraph_length_cv`, `prose_paragraphs`, and `bullet_length_cv`.
 - SKILL.md: the compare check runs after every pass against the text the user handed over, never
   the previous pass, so fidelity cannot drift across passes.
+- Compare mode reads meaning as well as protected content. `compare.meaning.hedge_dropped`,
+  `hedge_introduced`, `negation_changed`, `causal_dropped`, `causal_introduced`, and
+  `counter_claim_dropped` fire as warnings when an original sentence and its closest revised
+  counterpart disagree on a claim-strength hedge, on negation, or on a causal link, or when a
+  concession or counter-claim sentence has no counterpart. Compare now exits 1 (review) for
+  warnings and keeps 2 (block) for protected-content drift. Zero findings on the three approved
+  rewrites in `reference/worked-examples.md`, enforced by a test. New fixture pair
+  `eval/fixtures/fidelity/meaning-*.md`.
 
 ## 4.15.0 - 2026-10-08
 
