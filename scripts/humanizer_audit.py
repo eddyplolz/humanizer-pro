@@ -1503,6 +1503,20 @@ def max_uniform_run(sentence_lengths: list[int]) -> int:
     return best
 
 
+def prose_paragraph_lengths(text: str) -> list[int]:
+    """Word counts of the prose paragraphs: blank-line blocks that are not
+    headings or list items."""
+    return [
+        len(words(block))
+        for block in paragraphs(text)
+        if not block.lstrip().startswith("#") and not re.match(r"^\s*[-*+]\s+", block)
+    ]
+
+
+def bullet_item_lengths(text: str) -> list[int]:
+    return [len(words(line)) for line in text.splitlines() if re.match(r"^\s*[-*+]\s+", line)]
+
+
 def stats_for(text: str) -> dict[str, int | float]:
     token_list = words(text)
     sentence_list = sentences(text)
@@ -1520,6 +1534,9 @@ def stats_for(text: str) -> dict[str, int | float]:
         ) if sentence_lengths else 0,
         "max_uniform_run": max_uniform_run(sentence_lengths),
         "paragraphs": len(paragraphs(text)),
+        "prose_paragraphs": len(prose_paragraph_lengths(text)),
+        "paragraph_length_cv": round(coefficient_of_variation(prose_paragraph_lengths(text)), 2),
+        "bullet_length_cv": round(coefficient_of_variation(bullet_item_lengths(text)), 2),
         "type_token_ratio": round(len(unique_words) / word_count, 2) if word_count else 0,
         "mattr_50": moving_avg_type_token_ratio(token_list, 50),
         "em_dash_count": text.count("—"),
@@ -1580,6 +1597,11 @@ def ai_vocab_findings(text: str, starts: list[int]) -> list[dict[str, object]]:
     ]
 
 
+def prose_count_ok(stats: dict[str, int | float]) -> bool:
+    """The paragraph rule needs four prose paragraphs, not four blocks of any kind."""
+    return stats.get("prose_paragraphs", stats["paragraphs"]) >= 4
+
+
 def rhythm_findings(stats: dict[str, int | float]) -> list[dict[str, object]]:
     findings = []
     if stats["sentences"] >= 4 and stats["sentence_length_cv"] <= 0.2:
@@ -1605,6 +1627,37 @@ def rhythm_findings(stats: dict[str, int | float]) -> list[dict[str, object]]:
                 "column": 1,
                 "evidence": f"paragraphs={stats['paragraphs']}, avg_sentence_words={stats['avg_sentence_words']}",
                 "message": "Long regular paragraphs may need rhythm review",
+                "source_risk": False,
+            }
+        )
+    # Paragraphs of near-equal length are an assistant habit. Calibrated on the
+    # corpus cache (2026-10-09): paragraph_length_cv <= 0.2 over 4+ prose
+    # paragraphs fires on 1.1% of human documents and 33% of machine documents.
+    if stats["paragraphs"] >= 4 and 0 <= stats["paragraph_length_cv"] <= 0.2 and prose_count_ok(stats):
+        findings.append(
+            {
+                "id": "structure.uniform_paragraphs",
+                "family": 8,
+                "severity": "info",
+                "line": 1,
+                "column": 1,
+                "evidence": f"paragraphs={stats['paragraphs']}, paragraph_length_cv={stats['paragraph_length_cv']}",
+                "message": "Paragraphs are nearly the same length; vary them where the content allows",
+                "source_risk": False,
+            }
+        )
+    # List items of near-equal length read as a template. Not calibrated on
+    # human text: no human document in the corpus carries four or more items.
+    if stats["bullet_count"] >= 4 and stats["bullet_length_cv"] <= 0.15:
+        findings.append(
+            {
+                "id": "structure.uniform_list_items",
+                "family": 8,
+                "severity": "info",
+                "line": 1,
+                "column": 1,
+                "evidence": f"bullet_count={stats['bullet_count']}, bullet_length_cv={stats['bullet_length_cv']}",
+                "message": "List items are nearly the same length; let each item be as long as it needs",
                 "source_risk": False,
             }
         )

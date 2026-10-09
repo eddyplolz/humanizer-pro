@@ -75,6 +75,8 @@ always says more than the regex.
 | `structure.long_uniform_paragraphs` | §8.12, paragraph-level variant |
 | `structure.uniform_length_run` | §7.13/§8.12 — 4+ consecutive sentences within 5 words of each other (HH countable proxy) |
 | `structure.midband_dominance` | §8.12 — most sentences in the 10–20 word band with a narrow range (HH countable proxy) |
+| `structure.uniform_paragraphs` | §8.12 — four or more prose paragraphs of nearly the same length (word-count variation at or below 0.2) |
+| `structure.uniform_list_items` | §8.12 — four or more list items of nearly the same length (variation at or below 0.15; not yet calibrated on human text) |
 | `structure.anaphora` | §7.13 — 3+ consecutive sentences sharing an opening word |
 
 ### Compare mode (fidelity guards, not tells)
