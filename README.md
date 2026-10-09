@@ -212,7 +212,7 @@ The checker ends with an exit code that scripts can act on.
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v4.15.0
+    rev: v4.16.0
     hooks:
       - id: humanizer-audit
 ```
@@ -241,7 +241,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: eddyplolz/humanizer-pro@v4.15.0
+      - uses: eddyplolz/humanizer-pro@v4.16.0
         with:
           paths: docs README.md
           fail-on: block
@@ -402,4 +402,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.15.0**. It puts the package on PyPI, rebuilds the measurement corpus from public sources only, publishes error rates in both directions, adds four editing principles and several new checks to the audit, and tests on Windows and macOS. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.16.0**. It teaches the compare mode to read meaning (a hedge, a negation, a causal link, or a counter-claim that changed between the original and the rewrite) and adds two structure signals for paragraphs and list items that are all the same length. Every change is listed in the [changelog](CHANGELOG.md).
