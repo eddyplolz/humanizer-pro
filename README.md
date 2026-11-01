@@ -152,6 +152,21 @@ Paste your text after a request in plain words. You do not need to learn any com
 | Tighter sentences | "Style edit" or "tighten this" |
 | Neutral, encyclopedia-style writing | "Wiki mode," or mention wikitext or citations |
 
+Here is what the skill does with your draft:
+
+```mermaid
+flowchart TD
+    A[Your draft] --> B[Remove leftover chatbot text<br/>such as citation codes and placeholders]
+    B --> C{What did you ask for?}
+    C -->|AI check| D[Score and reasons<br/>no changes]
+    C -->|Rewrite or full audit| E[Rewrite the densest habits first]
+    E --> F[Count the remaining habits<br/>and sentence lengths]
+    F --> G[Check that facts, names, and numbers survived]
+    G --> H{Was the original<br/>already clean?}
+    H -->|Yes| I[Put the original back]
+    H -->|No| J[Final draft]
+```
+
 The full audit rates the draft on 6 qualities: directness, rhythm, trust, authenticity, density, and restraint. It shows its reasoning before the rewrite.
 
 Wiki mode removes promotional tone, keeps citations, and flags claims that have no source.
@@ -324,6 +339,20 @@ Rules are adjusted using the tuning group only. Every published rate uses the te
 This project also checks its own documentation with the same rules, using `scripts/self_scan.py`. It publishes 2 scores: one that counts every phrase this page quotes as a bad example, and one that leaves quotes and code out.
 
 ## How it decides
+
+The command-line checker works the same way on every file:
+
+```mermaid
+flowchart LR
+    A[File] --> B[Undo hidden-character tricks]
+    B --> C[Set code samples aside]
+    C --> D[Check for leftover chatbot text<br/>and the 9 families of habits]
+    D --> E[Risk score]
+    E --> F{Result}
+    F -->|Leftover chatbot text,<br/>placeholder, or hidden characters| G[Exit 2: block]
+    F -->|Score at or above 60| H[Exit 1: review]
+    F -->|Otherwise| I[Exit 0: pass]
+```
 
 The checker looks for 9 families of habits, learned from cleanup work on Wikipedia and elsewhere. For example:
 
