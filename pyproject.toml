@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "humanizer-pro"
 dynamic = ["version"]
-description = "Deterministic, zero-dependency audit for AI-writing tells, leaked chatbot artifacts, and rewrite fidelity."
+description = "Finds the habits that make text read as machine-written, flags leftover chatbot text, and checks that a rewrite kept every fact. Local, no API key."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Humanizer Pro contributors" }]
-keywords = ["ai-writing", "linter", "prose", "markdown", "sarif"]
+keywords = ["ai-writing", "humanizer", "ai-text", "writing-assistant", "copyediting", "style-guide", "linter", "prose", "markdown", "sarif"]
 classifiers = [
     "Environment :: Console",
     "License :: OSI Approved :: MIT License",
