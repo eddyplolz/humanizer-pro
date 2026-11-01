@@ -6,7 +6,7 @@ name: Release
 # successful CI run for a push to main, so a failing commit is never released,
 # and it cannot be started by hand from another branch.
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] -- runs only for pushes to main in this repository (job condition below)
     workflows: [CI]
     types: [completed]
     branches: [main]
@@ -21,11 +21,15 @@ concurrency:
 
 jobs:
   release:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           ref: ${{ github.event.workflow_run.head_sha }}
       - name: Read the version
         id: version

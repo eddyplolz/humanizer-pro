@@ -1,5 +1,28 @@
 # Changelog
 
+## 4.16.1 - 2026-11-01
+
+Hardening release. No new signals. Findings on ordinary text are unchanged; the edge cases that differ are listed below.
+
+- Slow inputs: the code-block, inline-code, citation, quote, percent, range, and name patterns now
+  run in linear time. A crafted file (long runs of backticks, `A.` or `1,` repeated, thousands of
+  quotes) could make the audit or compare run for minutes; each now finishes in about a second.
+  Randomized tests check the new scanners against the old patterns match for match.
+- Compare stays fast on large inputs. When two texts share too many repeated tokens for an exact
+  diff, protected tokens are matched by count and only the surplus is reported. Every dropped or
+  introduced token is still found; the reported positions are less precise in that case.
+- Reports escape control characters in file names and quoted evidence, and a report line can no
+  longer start with `::`, so a crafted file cannot inject GitHub Actions workflow commands. The
+  action also stops workflow-command processing while the audit runs.
+- Symlinks are skipped, both inside a walked folder and when named directly, and the skip is
+  reported.
+- Any unexpected crash exits 3 instead of printing a traceback with exit 1.
+- Bullet-length stats count only space or tab after the bullet marker. Markdown link text is
+  capped at 500 characters and URLs at 2000.
+- Workflows: every action is pinned to a commit, the build tool is pinned, publishing checks out
+  the full tag ref, a workflow security lint job runs in CI, Dependabot waits before proposing new
+  versions, and the release job checks it runs in this repository.
+
 ## 4.16.0 - 2026-10-09
 
 - Two structure signals in the audit CLI: `structure.uniform_paragraphs` (four or more prose
