@@ -10,14 +10,15 @@ import json
 import math
 import re
 import sys
-from collections import Counter
+from bisect import bisect_right
+from collections import Counter, deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 
-__version__ = "4.16.0"
+__version__ = "4.16.1"
 SCHEMA = "humanizer-audit.v1"
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
@@ -39,9 +40,8 @@ HOMOGLYPH_LATIN = {
     # Greek lookalikes
     "ο": "o", "Ο": "O", "α": "a", "Α": "A", "ρ": "p", "Ρ": "P",
 }
-WORD_WITH_HOMOGLYPH_RE = re.compile(
-    "[A-Za-z{h}]*[A-Za-z][A-Za-z{h}]*".format(h="".join(HOMOGLYPH_LATIN))
-)
+WORD_WITH_HOMOGLYPH_RE = re.compile("[A-Za-z{h}]+".format(h="".join(HOMOGLYPH_LATIN)))
+ASCII_LETTER_RE = re.compile("[A-Za-z]")
 
 # Invisible characters split into two policies. The always-strip set has no
 # legitimate use in the registers this skill meets (prose, wiki, chat), so a
@@ -225,7 +225,7 @@ ARTIFACT_RULES = [
     Rule(
         "artifact.attribution_json",
         9,
-        re.compile(r'attributableIndex|\(\{"attribution":\{"attributableIndex":"\d+-\d+"\}\}\)|\^\[[^\]]+\]\('),
+        re.compile(r'attributableIndex|\(\{"attribution":\{"attributableIndex":"\d+-\d+"\}\}\)|\^\[[^\]]{1,500}\]\('),
         "JSON attribution block leaked into prose",
         "error",
         True,
@@ -241,7 +241,7 @@ ARTIFACT_RULES = [
     Rule(
         "artifact.grok_card",
         9,
-        re.compile(r"grok[_-]card|<grok-card[^>]*>|grok_render_citation_card_json=\{[^}]*\}", re.I),
+        re.compile(r"grok[_-]card|<grok-card[^>]{0,500}>|grok_render_citation_card_json=\{[^}]{0,2000}\}", re.I),
         "Grok citation card leaked into text",
         "error",
         True,
@@ -249,7 +249,7 @@ ARTIFACT_RULES = [
     Rule(
         "artifact.lenticular_reference",
         9,
-        re.compile(r"【\d+†[^】]*】"),
+        re.compile(r"【\d+†[^】]{0,200}】"),
         "Line-reference citation marker leaked into prose",
         "error",
         True,
@@ -319,7 +319,7 @@ ARTIFACT_RULES = [
             # ("[Your account](url)", "[Company][1]", "[1]: url") and a wiki
             # link ("[[Date]]") are not placeholders, so an opening bracket
             # before, or a "(" ":" "[" after, cancels the match.
-            r"(?<!\[)\[(?:Your Name|Entertainer's Name|insert[^\]]*|describe[^\]]*|link to[^\]]*|"
+            r"(?<!\[)\[(?:Your Name|Entertainer's Name|insert[^\]]{0,200}|describe[^\]]{0,200}|link to[^\]]{0,200}|"
             r"(?:Your|Insert|Recipient|Client|Candidate|Author|Employer|Manager|Company|Product|"
             r"Organization|Organisation|Address|City|State|Country|Email|Phone|Date|Name|Title|"
             r"Position|Job Title|Signature|Website|URL|Number|Amount|Quantity|Reason|Topic|Subject)"
@@ -341,7 +341,7 @@ ARTIFACT_RULES = [
     Rule(
         "artifact.placeholder_comment",
         9,
-        re.compile(r"<!--\s*Add (?:if available|[^>]*)-->", re.I),
+        re.compile(r"<!--\s*Add (?:if available|[^>]{0,200})-->", re.I),
         "Unfilled HTML placeholder comment",
         "error",
         True,
@@ -465,7 +465,7 @@ FAMILY_RULES = [
     Rule(
         "family8.markdown_structure",
         8,
-        re.compile(r"^\s*(?:---\s*$|#{3,}\s+|\|\s*[^|\n]+\s*\||[-*+]\s+\*\*[^*\n]+:\*\*)", re.M),
+        re.compile(r"^[ \t]*(?:---[ \t]*$|#{3,}[ \t]+|\|[^|\n]+\||[-*+][ \t]+\*\*[^*\n]+:\*\*)", re.M),
         "Mechanical structure or Markdown formatting tell",
         once_per_doc=True,
         # once_per_doc calibrated against the human-control corpus: table-heavy
@@ -477,7 +477,7 @@ FAMILY_RULES = [
     Rule(
         "family8.list_label_period",
         8,
-        re.compile(r"^\s*[-*+]\s+\*\*[^*\n]{1,40}?\.\*\*\s+\S", re.M),
+        re.compile(r"^[ \t]*[-*+][ \t]+\*\*[^*\n]{1,40}?\.\*\*[ \t]+\S", re.M),
         "List label ends with a period instead of a colon",
     ),
     Rule(
@@ -603,7 +603,7 @@ SOURCE_RISK_RULES = [
     Rule(
         "source_risk.citation_markup",
         None,
-        re.compile(r"<ref\b|</ref>|{{\s*cite\b|\[\^[^\]]+\]|\[[^\]]+\]\(https?://[^)]+\)", re.I),
+        re.compile(r"<ref\b|</ref>|{{\s*cite\b|\[\^[^\]]{1,500}\]|\[[^\]]{1,500}\]\(https?://[^)]{1,2000}\)", re.I),
         "Citation markup or linked claim needs source verification",
         source_risk=True,
     ),
@@ -627,17 +627,205 @@ SOURCE_RISK_RULES = [
     ),
 ]
 
-# Backtick and tilde fences (CommonMark allows both). Opener and closer each
-# start a line and the closer matches the opener, so a sentence that mentions
-# ``` in passing cannot pair with a later fence and swallow the prose between.
-CODE_BLOCK_RE = re.compile(r"^[ \t]*(```|~~~)[^\n`~]*\n(?:.*?\n)?[ \t]*\1[ \t]*$", re.M | re.S)
+class _SpanMatch:
+    """The slice of re.Match that callers use: start(), end(), group(0)."""
+
+    __slots__ = ("_text", "_start", "_end")
+
+    def __init__(self, text: str, start: int, end: int) -> None:
+        self._text, self._start, self._end = text, start, end
+
+    def start(self) -> int:
+        return self._start
+
+    def end(self) -> int:
+        return self._end
+
+    def group(self, index: int = 0) -> str:
+        if index != 0:
+            raise IndexError("no such group")
+        return self._text[self._start : self._end]
+
+
+class _SpanPattern:
+    """A pattern backed by a linear-time scanner instead of a regex. Lazy
+    regexes like ``<ref>.*?</ref>`` rescan to the end of the text from every
+    unclosed opener, so a few kilobytes of openers took the audit minutes."""
+
+    def __init__(self, scan) -> None:
+        self._scan = scan
+
+    def finditer(self, text: str) -> Iterable[_SpanMatch]:
+        return (_SpanMatch(text, start, end) for start, end in self._scan(text))
+
+    def findall(self, text: str) -> list[str]:
+        return [text[start:end] for start, end in self._scan(text)]
+
+    def search(self, text: str) -> _SpanMatch | None:
+        return next(iter(self.finditer(text)), None)
+
+    def sub(self, repl, text: str) -> str:
+        pieces, last = [], 0
+        for match in self.finditer(text):
+            pieces.append(text[last : match.start()])
+            pieces.append(repl(match) if callable(repl) else repl)
+            last = match.end()
+        pieces.append(text[last:])
+        return "".join(pieces)
+
+
+class _RunSkipPattern:
+    """A regex that opens on a run of token characters ("1,2,3", "St.John")
+    and can only succeed or fail at the end of that run, since nothing inside
+    the run can satisfy what follows it. finditer retries from every candidate
+    start inside a failed run, rescanning the run each time, so "1," * 50000
+    took minutes. This tries the first candidate in a run and skips the rest
+    when it fails; the matches are the regex's own."""
+
+    def __init__(self, regex: re.Pattern[str], start: re.Pattern[str], run: re.Pattern[str]) -> None:
+        self._regex, self._start, self._run = regex, start, run
+
+    def finditer(self, text: str) -> Iterable[re.Match[str]]:
+        position = 0
+        while candidate := self._start.search(text, position):
+            begin = candidate.start()
+            match = self._regex.match(text, begin)
+            if match:
+                yield match
+                position = max(match.end(), begin + 1)
+            else:
+                position = max(self._run.match(text, begin).end(), begin + 1)
+
+
+def _positions(text: str, regex: re.Pattern[str]) -> list[int]:
+    return [match.start() for match in regex.finditer(text)]
+
+
+def _first_after(positions: list[int], index: int) -> int:
+    """First position >= index, or -1."""
+    found = bisect_right(positions, index - 1)
+    return positions[found] if found < len(positions) else -1
+
+
+FENCE_OPEN_RE = re.compile(r"[ \t]*(```|~~~)[^\n`~]*")
+FENCE_CLOSE_RE = re.compile(r"[ \t]*(```|~~~)[ \t]*")
+
+
+def _code_block_spans(text: str) -> list[tuple[int, int]]:
+    # Backtick and tilde fences (CommonMark allows both). Opener and closer each
+    # start a line and the closer matches the opener, so a sentence that mentions
+    # ``` in passing cannot pair with a later fence and swallow the prose between.
+    # An opener with no closer is not a block.
+    lines = text.split("\n")
+    line_starts, offset = [], 0
+    closers: dict[str, list[int]] = {"```": [], "~~~": []}
+    for number, line in enumerate(lines):
+        line_starts.append(offset)
+        offset += len(line) + 1
+        close = FENCE_CLOSE_RE.fullmatch(line)
+        if close:
+            closers[close.group(1)].append(number)
+    spans, number = [], 0
+    while number < len(lines) - 1:  # an opener ends with a newline
+        opener = FENCE_OPEN_RE.fullmatch(lines[number])
+        closer = -1
+        if opener:
+            # As in the regex this replaced: a block runs to the first matching
+            # closer two or more lines down, and closes on the very next line
+            # only when no later closer exists.
+            fences = closers[opener.group(1)]
+            closer = _first_after(fences, number + 2)
+            if closer < 0 and _first_after(fences, number + 1) == number + 1:
+                closer = number + 1
+        if closer < 0:
+            number += 1
+            continue
+        spans.append((line_starts[number], line_starts[closer] + len(lines[closer])))
+        number = closer + 1
+    return spans
+
+
+REF_OPEN_RE = re.compile(r"<ref\b", re.I)
+REF_CLOSE_RE = re.compile(r"</ref>", re.I)
+CITE_OPEN_RE = re.compile(r"{{\s*cite\b", re.I)
+CITE_CLOSE_RE = re.compile(r"(?=}})")
+GT_RE = re.compile(">")
+
+
+def _ref_tag_spans(text: str) -> list[tuple[int, int]]:
+    # Same matches as <ref\b[^>]*(?:/>|>.*?</ref>): the tag runs to the first
+    # ">", a later </ref> closes it, and failing that a "/>" self-closes it.
+    tag_ends, closers = _positions(text, GT_RE), _positions(text, REF_CLOSE_RE)
+    spans, position = [], 0
+    while True:
+        opener = REF_OPEN_RE.search(text, position)
+        if not opener:
+            return spans
+        tag_end = _first_after(tag_ends, opener.end())
+        if tag_end < 0:
+            return spans
+        closer = _first_after(closers, tag_end + 1)
+        if closer >= 0:
+            end = closer + len("</ref>")
+        elif tag_end > opener.end() and text[tag_end - 1] == "/":
+            end = tag_end + 1
+        else:
+            position = opener.start() + 1
+            continue
+        spans.append((opener.start(), end))
+        position = end
+
+
+def _cite_template_spans(text: str) -> list[tuple[int, int]]:
+    # Same matches as {{\s*cite\b.*?}}: each opener runs to the first "}}".
+    closers = _positions(text, CITE_CLOSE_RE)
+    spans, position = [], 0
+    while True:
+        opener = CITE_OPEN_RE.search(text, position)
+        if not opener:
+            return spans
+        closer = _first_after(closers, opener.end())
+        if closer < 0:
+            return spans
+        spans.append((opener.start(), closer + 2))
+        position = closer + 2
+
+
+CODE_BLOCK_RE = _SpanPattern(_code_block_spans)
 URL_RE = re.compile(r"https?://[^\s<>\]\)\"'|{}]+", re.I)
-MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[([^\]\n]+)\]\(([^)\s]+(?:\s+\"[^\"]*\")?)\)")
-FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]\n]+\]")
+MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[([^\]\n]{1,500})\]\(([^)\s]{1,2000}(?:\s+\"[^\"]*\")?)\)")
+FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]\n]{1,200}\]")
 FOOTNOTE_DEF_RE = re.compile(r"^\[\^[^\]\n]+\]:.*$", re.M)
-REF_TAG_RE = re.compile(r"<ref\b[^>]*(?:/>|>.*?</ref>)", re.I | re.S)
-CITE_TEMPLATE_RE = re.compile(r"{{\s*cite\b.*?}}", re.I | re.S)
-QUOTE_RE = re.compile(r'"[^"\n]{3,}"|“[^”\n]{3,}”')
+REF_TAG_RE = _SpanPattern(_ref_tag_spans)
+CITE_TEMPLATE_RE = _SpanPattern(_cite_template_spans)
+QUOTE_OPEN_RE = re.compile('["“]')
+QUOTE_CLOSERS = {'"': '"', "“": "”"}
+NEWLINE_RE = re.compile("\n")
+
+
+def _quote_spans(text: str) -> list[tuple[int, int]]:
+    # Same matches as "[^"\n]{3,}"|“[^”\n]{3,}”: an opener runs to its first
+    # closer on the same line, with at least three characters between. The
+    # curly class admits “ itself, so the regex rescanned the rest of a line
+    # from every unclosed opener.
+    closers = {close: _positions(text, re.compile(close)) for close in QUOTE_CLOSERS.values()}
+    newlines = _positions(text, NEWLINE_RE)
+    spans, position = [], 0
+    while True:
+        opener = QUOTE_OPEN_RE.search(text, position)
+        if not opener:
+            return spans
+        start = opener.start()
+        closer = _first_after(closers[QUOTE_CLOSERS[opener.group(0)]], start + 1)
+        newline = _first_after(newlines, start + 1)
+        if closer < 0 or 0 <= newline < closer or closer - start - 1 < 3:
+            position = start + 1
+            continue
+        spans.append((start, closer + 1))
+        position = closer + 1
+
+
+QUOTE_RE = _SpanPattern(_quote_spans)
 BLOCKQUOTE_RE = re.compile(r"^(?:>\s?.+(?:\n|$))+", re.M)
 DATE_RE = re.compile(
     r"\b(?:20XX|\d{4}-(?:\d{2}|XX)-(?:\d{2}|XX)|"
@@ -657,19 +845,29 @@ CURRENCY_RE = re.compile(
     r"(?:\s?(?:million|billion|trillion|thousand|m|bn|k))?",
     re.I,
 )
-PERCENT_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\s?%")
-RANGE_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\s*(?:-|–|—|to)\s*\d[\d,]*(?:\.\d+)?\b", re.I)
+PERCENT_RE = _RunSkipPattern(
+    re.compile(r"\b\d[\d,]*(?:\.\d+)?\s?%"), re.compile(r"\b\d"), re.compile(r"[\d,]*")
+)
+RANGE_RE = _RunSkipPattern(
+    re.compile(r"\b\d[\d,]*(?:\.\d+)?\s*(?:-|–|—|to)\s*\d[\d,]*(?:\.\d+)?\b", re.I),
+    re.compile(r"\b\d"),
+    re.compile(r"[\d,]*"),
+)
 NUMBER_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?\b")
-NAME_RE = re.compile(
-    r"\b[A-Z][A-Za-z0-9'.&-]+(?:\s+(?:of|the|and|for|de|del|la|le|du|van|von|&|"
-    r"[A-Z][A-Za-z0-9'.&-]+)){1,}",
+NAME_RE = _RunSkipPattern(
+    re.compile(
+        r"\b[A-Z][A-Za-z0-9'.&-]+(?:\s+(?:of|the|and|for|de|del|la|le|du|van|von|&|"
+        r"[A-Z][A-Za-z0-9'.&-]+)){1,}",
+    ),
+    re.compile(r"\b[A-Z]"),
+    re.compile(r"[A-Za-z0-9'.&-]*"),
 )
 ORG_HINT_RE = re.compile(
     r"\b(?:Agency|Association|Bureau|Committee|Commission|Company|Corporation|Council|Department|"
     r"Foundation|Group|Institute|LLC|Ltd|Ministry|Office|Organization|Research|University)\b"
 )
 SOURCE_MARKER_RE = re.compile(
-    r"https?://|<ref\b|{{\s*cite\b|\[\^[^\]]+\]|\[[^\]]+\]\(|"
+    r"https?://|<ref\b|{{\s*cite\b|\[\^[^\]]{1,500}\]|\[[^\]]{1,500}\]\(|"
     r"\b(?:according to|reported|reports|study|studies|survey|records|cited|evidence|data|"
     r"researchers|observers|experts|said|announced|published|filed)\b",
     re.I,
@@ -844,8 +1042,32 @@ def line_column(starts: list[int], offset: int) -> tuple[int, int]:
     return line_index + 1, offset - starts[line_index] + 1
 
 
+# C0 and C1 controls (ESC starts terminal escape sequences) plus the Unicode
+# line and paragraph separators, which some log viewers treat as newlines.
+CONTROL_CHAR_RE = re.compile("[\x00-\x1f\x7f-\x9f\u2028\u2029]")
+
+
+def display_safe(value: str) -> str:
+    """Escape control characters so a crafted file name or evidence string
+    cannot start a new log line (a GitHub Actions workflow command) or drive
+    the terminal."""
+    return CONTROL_CHAR_RE.sub(lambda match: ascii(match.group(0))[1:-1], value)
+
+
+def line_start_safe(value: str) -> str:
+    """display_safe for text that opens a report line: a line that starts with
+    "::" (after any indent the runner trims) would read as a workflow command,
+    so its first colon is escaped."""
+    value = display_safe(value)
+    stripped = value.lstrip()
+    if stripped.startswith("::"):
+        cut = len(value) - len(stripped)
+        value = value[:cut] + "\\x3a" + value[cut + 1 :]
+    return value
+
+
 def evidence(value: str) -> str:
-    collapsed = re.sub(r"\s+", " ", value).strip()
+    collapsed = display_safe(re.sub(r"\s+", " ", value).strip())
     if len(collapsed) <= 120:
         return collapsed
     return collapsed[:117] + "..."
@@ -906,7 +1128,7 @@ def normalize_bypass_text(text: str) -> tuple[str, dict[str, int], int]:
     def swap_word(match: re.Match[str]) -> str:
         nonlocal homoglyph_offset
         word = match.group(0)
-        if not any(char in HOMOGLYPH_LATIN for char in word):
+        if not ASCII_LETTER_RE.search(word) or not any(char in HOMOGLYPH_LATIN for char in word):
             return word
         counts["homoglyph"] += sum(1 for char in word if char in HOMOGLYPH_LATIN)
         if homoglyph_offset < 0:
@@ -1209,6 +1431,38 @@ def compare_markdown_targets(
     return findings
 
 
+# Equal (original, revised) token pairs the exact diff may weigh. Its time
+# grows about as this count to the power 1.5: 100,000 pairs is under a second
+# in the worst shapes measured, 1,000,000 was 24 seconds. 300 copies of one
+# quote on each side is 90,000.
+COMPARE_EXACT_DIFF_LIMIT = 100_000
+
+
+def _token_opcodes(a_values: list[str], b_values: list[str]) -> list[tuple[str, int, int, int, int]]:
+    # SequenceMatcher's work grows with the number of equal (a, b) pairs, so
+    # thousands of identical quotes or fences took minutes. Diff exactly while
+    # that count is bounded; past it, match tokens by count and report only
+    # the surplus on each side, which keeps every finding but loses position.
+    b_counts = Counter(b_values)
+    if sum(b_counts[value] for value in a_values) <= COMPARE_EXACT_DIFF_LIMIT:
+        matcher = difflib.SequenceMatcher(a=a_values, b=b_values, autojunk=False)
+        return matcher.get_opcodes()
+    opcodes = []
+    unmatched = Counter(b_counts)
+    for index, value in enumerate(a_values):
+        if unmatched[value]:
+            unmatched[value] -= 1
+        else:
+            opcodes.append(("delete", index, index + 1, 0, 0))
+    unmatched = Counter(a_values)
+    for index, value in enumerate(b_values):
+        if unmatched[value]:
+            unmatched[value] -= 1
+        else:
+            opcodes.append(("insert", 0, 0, index, index + 1))
+    return opcodes
+
+
 def compare_ordered_tokens(
     kind: str,
     original_tokens: list[ProtectedToken],
@@ -1229,13 +1483,10 @@ def compare_ordered_tokens(
     # Align the two sequences before comparing, so dropping the first quote
     # reports one dropped quote instead of shifting every later quote into a
     # false "changed" pair.
-    matcher = difflib.SequenceMatcher(
-        a=[token.value for token in original_tokens],
-        b=[token.value for token in revised_tokens],
-        autojunk=False,
-    )
+    a_values = [token.value for token in original_tokens]
+    b_values = [token.value for token in revised_tokens]
     findings = []
-    for tag, a_start, a_end, b_start, b_end in matcher.get_opcodes():
+    for tag, a_start, a_end, b_start, b_end in _token_opcodes(a_values, b_values):
         if tag == "equal":
             continue
         originals = original_tokens[a_start:a_end]
@@ -1664,11 +1915,21 @@ def title_case_heading_count(text: str) -> int:
 def max_uniform_run(sentence_lengths: list[int]) -> int:
     """Longest run of consecutive sentences whose lengths stay within 5 words."""
     best = run_start = 0
-    for index in range(len(sentence_lengths)):
-        window = sentence_lengths[run_start : index + 1]
-        while max(window) - min(window) > 5:
+    highs: deque[int] = deque()  # indexes of window values, decreasing
+    lows: deque[int] = deque()  # indexes of window values, increasing
+    for index, length in enumerate(sentence_lengths):
+        while highs and sentence_lengths[highs[-1]] <= length:
+            highs.pop()
+        highs.append(index)
+        while lows and sentence_lengths[lows[-1]] >= length:
+            lows.pop()
+        lows.append(index)
+        while sentence_lengths[highs[0]] - sentence_lengths[lows[0]] > 5:
             run_start += 1
-            window = sentence_lengths[run_start : index + 1]
+            if highs[0] < run_start:
+                highs.popleft()
+            if lows[0] < run_start:
+                lows.popleft()
         best = max(best, index - run_start + 1)
     return best
 
@@ -1684,7 +1945,7 @@ def prose_paragraph_lengths(text: str) -> list[int]:
 
 
 def bullet_item_lengths(text: str) -> list[int]:
-    return [len(words(line)) for line in text.splitlines() if re.match(r"^\s*[-*+]\s+", line)]
+    return [len(words(line)) for line in text.splitlines() if re.match(r"^[ \t]*[-*+][ \t]+", line)]
 
 
 def stats_for(text: str) -> dict[str, int | float]:
@@ -1713,8 +1974,8 @@ def stats_for(text: str) -> dict[str, int | float]:
         "heading_count": len(re.findall(r"^\s{0,3}#{1,6}\s+", text, re.M)),
         "title_case_heading_count": title_case_heading_count(text),
         "bold_marker_count": text.count("**"),
-        "table_line_count": len(re.findall(r"^\s*\|.+\|\s*$", text, re.M)),
-        "bullet_count": len(re.findall(r"^\s*[-*+]\s+", text, re.M)),
+        "table_line_count": len(re.findall(r"^[ \t]*\|.+\|[ \t]*$", text, re.M)),
+        "bullet_count": len(re.findall(r"^[ \t]*[-*+][ \t]+", text, re.M)),
         "code_block_count": len(CODE_BLOCK_RE.findall(text)),
     }
 
@@ -1941,8 +2202,35 @@ def bypass_findings(counts: dict[str, int], first_offset: int, starts: list[int]
     ]
 
 
-# Inline code: a run of N backticks closed by a run of exactly N, on one line.
-INLINE_CODE_RE = re.compile(r"(?<!`)(`+)(?!`)[^\n]+?(?<!`)\1(?!`)")
+BACKTICK_RUN_RE = re.compile(r"`+")
+
+
+def _inline_code_spans(text: str) -> list[tuple[int, int]]:
+    # Inline code: a run of N backticks closed by the next run of exactly N on
+    # the same line, the same matches as (?<!`)(`+)(?!`)[^\n]+?(?<!`)\1(?!`).
+    # The lazy regex rescanned the rest of the line from every run that found
+    # no partner, so one long line of mismatched runs took seconds.
+    runs = [(match.start(), match.end()) for match in BACKTICK_RUN_RE.finditer(text)]
+    starts_by_length: dict[int, list[int]] = {}
+    end_of_run: dict[int, int] = {}
+    for start, end in runs:
+        starts_by_length.setdefault(end - start, []).append(start)
+        end_of_run[start] = end
+    newlines = _positions(text, NEWLINE_RE)
+    spans, position = [], 0
+    for start, end in runs:
+        if start < position:
+            continue
+        closer = _first_after(starts_by_length[end - start], end + 1)
+        newline = _first_after(newlines, end)
+        if closer < 0 or 0 <= newline < closer:
+            continue
+        spans.append((start, end_of_run[closer]))
+        position = end_of_run[closer]
+    return spans
+
+
+INLINE_CODE_RE = _SpanPattern(_inline_code_spans)
 
 
 def mask_code(text: str) -> str:
@@ -2029,11 +2317,30 @@ def summarize_compare(compare: dict[str, object]) -> dict[str, object]:
     }
 
 
+def _is_linked(target: Path) -> bool:
+    # A relative target is checked down from the working directory, so
+    # "link/doc.md" counts; an absolute one only at its last part, since
+    # system paths (a home directory, a temp folder) are often links.
+    if target.is_absolute():
+        return target.is_symlink()
+    return any(part.is_symlink() for part in (target, *target.parents) if part != Path("."))
+
+
 def iter_input_files(target: Path) -> list[Path]:
+    # Named targets get the same rule as the walk below: a link could point
+    # outside the checkout the caller meant to audit.
+    if _is_linked(target):
+        return []
     if target.is_file():
         return [target]
     if target.is_dir():
-        return sorted(path for path in target.rglob("*") if path.is_file() and path.suffix.lower() in {".md", ".txt"})
+        # A symlink in an audited tree (say, one in a pull request) could point
+        # at a file outside it and leak that file's text into the report.
+        return sorted(
+            path
+            for path in target.rglob("*")
+            if path.is_file() and not path.is_symlink() and path.suffix.lower() in {".md", ".txt"}
+        )
     raise FileNotFoundError(f"No such file or directory: {target}")
 
 
@@ -2062,7 +2369,7 @@ def render_text_report(result: dict[str, object]) -> str:
     )
     for document in result["documents"]:
         lines.append("")
-        lines.append(f"{document['path']} — risk {document['risk_score']}")
+        lines.append(f"{line_start_safe(str(document['path']))} — risk {document['risk_score']}")
         for finding in document["findings"]:
             lines.append(
                 f"  {finding['severity'].upper()} L{finding['line']}:C{finding['column']} "
@@ -2075,7 +2382,7 @@ def render_compare_report(result: dict[str, object]) -> str:
     summary = result["summary"]
     compare = result["compare"]
     lines = [
-        f"Humanizer compare: {compare['original']} -> {compare['revised']}, "
+        f"Humanizer compare: {display_safe(str(compare['original']))} -> {display_safe(str(compare['revised']))}, "
         f"{summary['compare_finding_count']} finding(s), severity {summary['max_severity']}, "
         f"exit {summary['exit_code']}"
     ]
@@ -2102,7 +2409,9 @@ def sarif_uri(path: str) -> str:
         relative = candidate.resolve().relative_to(Path.cwd().resolve())
     except ValueError:
         return candidate.resolve().as_uri()
-    return quote(relative.as_posix())
+    # surrogateescape keeps a file name that is not valid UTF-8 from crashing
+    # the encoder; its raw bytes are percent-encoded instead.
+    return quote(relative.as_posix(), errors="surrogateescape")
 
 
 def render_sarif(result: dict[str, object]) -> dict[str, object]:
@@ -2207,6 +2516,16 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # An uncaught exception would exit 1, which reads as "review" and passes a
+    # CI gate set to fail only on "block". Any crash exits 3 instead.
+    try:
+        return run(argv)
+    except Exception as exc:  # noqa: BLE001 - every crash must map to exit 3
+        print(f"humanizer-audit: internal error: {type(exc).__name__}: {display_safe(str(exc))}", file=sys.stderr)
+        return 3
+
+
+def run(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     if sum(1 for active in (args.stdin, bool(args.targets), bool(args.compare)) if active) != 1:
@@ -2231,7 +2550,10 @@ def main(argv: list[str] | None = None) -> int:
             for target in args.targets:
                 found = iter_input_files(Path(target))
                 if not found:
-                    print(f"humanizer-audit: no .md or .txt files under {target}", file=sys.stderr)
+                    if _is_linked(Path(target)):
+                        print(f"humanizer-audit: skipped symlink {display_safe(target)}", file=sys.stderr)
+                    else:
+                        print(f"humanizer-audit: no .md or .txt files under {display_safe(target)}", file=sys.stderr)
                 for path in found:
                     if path not in seen:
                         seen.add(path)
@@ -2244,7 +2566,7 @@ def main(argv: list[str] | None = None) -> int:
                 json.dumps(render_sarif(result), indent=2) + "\n", encoding="utf-8"
             )
     except (OSError, UnicodeDecodeError) as exc:
-        print(f"humanizer-audit: {exc}", file=sys.stderr)
+        print(f"humanizer-audit: {display_safe(str(exc))}", file=sys.stderr)
         return 3
 
     # The text report quotes evidence verbatim, and a Windows pipe or redirect

@@ -73,10 +73,16 @@ runs:
         targets=($HA_PATHS)
         set +f
         if [ "${#targets[@]}" -eq 0 ]; then targets=(.); fi
+        # The report quotes file names and text from the audited files. Pause
+        # workflow-command parsing around it, so a crafted line in a pull
+        # request cannot set outputs, mask values, or add annotations.
+        stop_token="$("$python_bin" -c "import secrets; print(secrets.token_hex(16))")"
+        echo "::stop-commands::$stop_token"
         set +e
         "$python_bin" "$HA_SCRIPT" "${targets[@]}" "${args[@]}"
         code=$?
         set -e
+        echo "::$stop_token::"
         echo "exit-code=$code" >> "$GITHUB_OUTPUT"
         if [ -n "$HA_SARIF" ] && [ -f "$HA_SARIF" ]; then
           echo "sarif-file=$HA_SARIF" >> "$GITHUB_OUTPUT"
