@@ -19,7 +19,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
 metadata:
-  version: "4.16.1"
+  version: "4.16.2"
 ---
 
 # Humanizer Pro: Remove AI Writing Tells

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.16.2 - 2026-11-01
+
+Packaging release. The audit itself is unchanged; findings match 4.16.1.
+
+- The GitHub Action's display name is now `Humanizer Pro audit`. Workflows keep using
+  `eddyplolz/humanizer-pro@v4.16.2` with the same inputs and outputs.
+- The PyPI summary and keywords now match the repository description and topics.
+
 ## 4.16.1 - 2026-11-01
 
 Hardening release. No new signals. Findings on ordinary text are unchanged; the edge cases that differ are listed below.

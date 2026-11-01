@@ -1,4 +1,4 @@
-name: Humanizer audit
+name: Humanizer Pro audit
 description: Audit Markdown and text for AI-writing tells and leaked chatbot artifacts, with SARIF output for code scanning.
 author: Humanizer Pro contributors
 branding:
