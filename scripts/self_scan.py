@@ -21,7 +21,6 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -36,12 +35,6 @@ _audit = importlib.util.module_from_spec(_spec)
 # sys.modules, so the module must be registered before exec.
 sys.modules["humanizer_audit"] = _audit
 _spec.loader.exec_module(_audit)
-
-FENCE_RE = re.compile(r"```.*?```", re.S)
-INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
-TABLE_ROW_RE = re.compile(r"^\s*\|.*$", re.M)
-BLOCKQUOTE_RE = re.compile(r"^\s*>.*$", re.M)
-QUOTED_RE = re.compile(r'"[^"\n]+"|“[^”\n]+”')
 
 
 def scan_targets() -> list[Path]:
@@ -64,16 +57,6 @@ def scan_targets() -> list[Path]:
     return targets
 
 
-def blank(match: re.Match[str]) -> str:
-    return "".join(char if char == "\n" else " " for char in match.group(0))
-
-
-def apply_exemptions(text: str) -> str:
-    for regex in (FENCE_RE, INLINE_CODE_RE, TABLE_ROW_RE, BLOCKQUOTE_RE, QUOTED_RE):
-        text = regex.sub(blank, text)
-    return text
-
-
 def scan(budgets: dict[str, int]) -> dict[str, object]:
     rows = []
     failures = []
@@ -82,7 +65,10 @@ def scan(budgets: dict[str, int]) -> dict[str, object]:
         text = path.read_text(encoding="utf-8")
         # Raw means every match, quoted examples and code included.
         raw = _audit.audit_text(text, rel, include_code=True)
-        exempt = _audit.audit_text(apply_exemptions(text), rel)
+        # The exemptions blank the text before the audit sees it, so here (unlike
+        # --skip-quoted) artifact rules skip quoted examples too: the reference
+        # docs quote leaked tokens on purpose.
+        exempt = _audit.audit_text(_audit.apply_exemptions(text), rel)
         budget = budgets.get(rel)
         over = budget is not None and int(exempt["risk_score"]) > budget
         if budget is None:

@@ -79,6 +79,12 @@ always says more than the regex.
 | `structure.uniform_list_items` | §8.12 — four or more list items of nearly the same length (variation at or below 0.15; not yet calibrated on human text) |
 | `structure.anaphora` | §7.13 — 3+ consecutive sentences sharing an opening word |
 
+### Summary (roll-ups, not tells)
+
+| Rule id | What it reports |
+|---|---|
+| `summary.reuse` | One `info` line per rule hit whose matched text repeats 2+ times in a document, with the count and the lines. It adds no detection and never moves the risk score. Audit mode only. |
+
 ### Compare mode (fidelity guards, not tells)
 
 All ids under the `compare.` prefix (`compare.<kind>.dropped` / `.introduced` / `.changed` /

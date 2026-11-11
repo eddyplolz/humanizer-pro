@@ -84,7 +84,11 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 Installed with `pipx install git+https://github.com/eddyplolz/humanizer-pro`, the same tool is the
 `humanizer-audit` command. It takes several files or folders at once, writes SARIF 2.1.0 with
 `--sarif PATH`, and keeps its prose rules out of fenced and inline code unless you pass
-`--include-code`. Artifact rules always read the whole text. The repo also
+`--include-code`. `--skip-quoted` also keeps them out of tables, blockquotes, and double-quoted
+spans, for documents that quote tells on purpose; it cannot be combined with `--compare` or
+`--include-code`. Artifact rules always read the whole text. When one rule matches the same text
+two or more times in a document, an `info` finding `summary.reuse` lists the count and the lines;
+it never changes the risk score. The repo also
 ships a pre-commit hook (`.pre-commit-hooks.yaml`) and a GitHub Action (`action.yml`, input
 `fail-on: block|review|never`); README.md shows both configurations.
 
