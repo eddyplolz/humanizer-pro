@@ -901,6 +901,49 @@ CAUSAL_RE = re.compile(
     r"driven by|stems? from|stemmed from|in response to|which is why|that is why)\b",
     re.I,
 )
+# Rankings and scope, ported from declauding's declaude_diff.py (MIT, Oskar
+# Austegard). A superlative ranks over a set and a comparative does not, so
+# "the format that most invites staged reveals" rewritten as "invites staged
+# reveals more than most do" keeps the token "most" and loses the ranking.
+# Constructions are counted, not matched strings, so "the fastest" -> "the
+# quickest" is not a drop.
+SUPERLATIVE_RE = re.compile(
+    r"\bthe\s+(?:single\s+|very\s+)?(?:most|least|best|worst|first|last|only|"
+    r"largest|smallest|highest|lowest|fastest|slowest|[a-z]{3,}est)\b"
+    r"|\bmost\s+likely\s+to\b|\bby\s+far\b|\bof\s+(?:all|any)\b"
+    r"|\bthe\s+\w+(?:\s+(?:that|which|who))?\s+(?:most|least)\s+\w+",
+    re.I,
+)
+# Nouns and adjectives the broad "the ...est" arm would otherwise count.
+NOT_SUPERLATIVE = frozenset(
+    "arrest attest bequest behest conquest contest detest digest earnest everest forest harvest honest "
+    "inquest interest invest manifest midwest modest northwest palimpsest pretest protest request "
+    "retest southwest suggest tempest unrest".split()
+)
+COMPARATIVE_RE = re.compile(r"\b(?:more|less|fewer|better|worse|[a-z]{3,}er)\s+than\b", re.I)
+NOT_COMPARATIVE = frozenset({"other", "rather"})
+# Words that set a claim's scope. "no", "any", "per" and "across" are left out
+# of this first cut: they move in ordinary rewrites. "not only ... but also" is emphasis,
+# not scope, as in NEGATION_RE.
+SCOPE_RE = re.compile(
+    r"\b(?:all|every|each|none|both|either|neither|(?<!not\s)only|solely|exclusively|always|never|"
+    r"entirely|wholly|simultaneously|at\s+once)\b",
+    re.I,
+)
+
+
+def count_superlatives(sentence: str) -> int:
+    return sum(1 for match in SUPERLATIVE_RE.finditer(sentence) if match.group(0).split()[-1].lower() not in NOT_SUPERLATIVE)
+
+
+def count_comparatives(sentence: str) -> int:
+    return sum(1 for match in COMPARATIVE_RE.finditer(sentence) if match.group(0).split()[0].lower() not in NOT_COMPARATIVE)
+
+
+def count_scope(sentence: str) -> int:
+    return len(SCOPE_RE.findall(sentence))
+
+
 # "Despite challenges typical of..., X continues to thrive" is catalog 3.5, a
 # formula the skill removes, not a concession the rewrite must keep.
 CHALLENGES_FORMULA_RE = re.compile(r"\bdespite\b[^.;]{0,80}?\bchallenges\b", re.I)
@@ -1549,6 +1592,10 @@ def meaning_records(text: str) -> list[dict[str, object]]:
                 "negation": {match.lower() for match in NEGATION_RE.findall(sentence)},
                 "causal": {match.lower() for match in CAUSAL_RE.findall(sentence)},
                 "contrast": {match.lower() for match in CONTRAST_RE.findall(CHALLENGES_FORMULA_RE.sub(" ", sentence))},
+                "superlatives": count_superlatives(sentence),
+                "comparatives": count_comparatives(sentence),
+                "scope_count": count_scope(sentence),
+                "scope": {" ".join(match.lower().split()) for match in SCOPE_RE.findall(sentence)},
             }
         )
     return records
@@ -1762,6 +1809,22 @@ def compare_meaning(
             report(
                 "compare.meaning.counter_claim_dropped",
                 f"Concession or counter-claim marker ({listed(record['contrast'])}) is missing from the revised sentence",
+                record,
+                "original",
+            )
+        if record["superlatives"] > candidate["superlatives"]:
+            became = " and became a comparison" if candidate["comparatives"] > record["comparatives"] else ""
+            report(
+                "compare.meaning.superlative_dropped",
+                f"A ranking (superlative) in the original is missing from the revised sentence{became}",
+                record,
+                "original",
+            )
+        if record["scope_count"] > candidate["scope_count"]:
+            lost = record["scope"] - candidate["scope"] or record["scope"]
+            report(
+                "compare.meaning.scope_dropped",
+                f"Scope word ({listed(lost)}) is missing from the revised sentence; a universal may now read as an example",
                 record,
                 "original",
             )

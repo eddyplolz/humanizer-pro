@@ -1266,3 +1266,76 @@ def test_formulaic_challenges_sentence_is_not_a_protected_counter_claim() -> Non
         "Despite challenges typical of urban areas, the town continues to thrive thanks to ongoing initiatives."
     )
     assert _meaning_findings(original, "The town has a weekly market and two libraries.") == []
+
+
+def test_lost_ranking_is_reported_as_a_dropped_superlative() -> None:
+    # The token "most" survives the rewrite; the ranking does not.
+    findings = _meaning_findings(
+        "This is the format that most invites staged reveals.",
+        "This format invites staged reveals more than most do.",
+    )
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.superlative_dropped", "original")]
+    assert "comparison" in findings[0][2]
+
+
+def test_lost_scope_word_is_reported_as_dropped_scope() -> None:
+    findings = _meaning_findings("All three callers retry.", "The callers retry.")
+    assert [(f[0], f[1]) for f in findings] == [("compare.meaning.scope_dropped", "original")]
+    assert "all" in findings[0][2]
+
+
+def test_identical_text_has_no_meaning_findings() -> None:
+    text = "This is the format that most invites staged reveals. All three callers retry."
+    assert _meaning_findings(text, text) == []
+
+
+def test_superlative_synonym_swap_is_not_a_drop() -> None:
+    assert (
+        _meaning_findings(
+            "The fastest route crosses the river at the old mill.",
+            "The quickest route crosses the river at the old mill.",
+        )
+        == []
+    )
+
+
+def test_words_ending_in_est_after_the_are_not_superlatives() -> None:
+    module = _load_audit_module()
+    for phrase in ("the request", "the interest", "the contest", "the forest", "the protest"):
+        assert module.count_superlatives(f"We read {phrase} twice.") == 0, phrase
+    assert module.count_superlatives("We read the longest report twice.") == 1
+    assert (
+        _meaning_findings(
+            "The clerk filed the request with the county office.",
+            "The clerk filed a request with the county office.",
+        )
+        == []
+    )
+
+
+def test_other_than_and_rather_than_are_not_comparatives() -> None:
+    module = _load_audit_module()
+    assert module.count_comparatives("Nothing other than the cache changed.") == 0
+    assert module.count_comparatives("Use tabs rather than spaces.") == 0
+    assert module.count_comparatives("The new build is faster than the old one.") == 1
+    assert (
+        _meaning_findings(
+            "Every build other than the nightly one runs the slow tests.",
+            "Every build except the nightly one runs the slow tests.",
+        )
+        == []
+    )
+
+
+def test_ordinary_rewrite_words_are_not_scope_words() -> None:
+    # no, any, per and across move in ordinary rewrites; the first cut leaves them out.
+    module = _load_audit_module()
+    for sentence in ("Use any key.", "Charge per seat.", "Spread across teams.", "Send no reply."):
+        assert module.count_scope(sentence) == 0, sentence
+    assert (
+        _meaning_findings(
+            "Pick any key other than the default for the staging cluster.",
+            "Pick a key other than the default for the staging cluster.",
+        )
+        == []
+    )

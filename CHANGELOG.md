@@ -7,6 +7,15 @@
   style edits. They are reported under "Clarity and concrete language" and never move the risk
   score. No detector was added: a blind check of a noun-stack heuristic on the corpus found 12 true
   stacks in 100 flags, at the same rate in human and machine text.
+- `--compare` adds two meaning checks. `compare.meaning.superlative_dropped` fires when a matched
+  sentence loses a ranking: "the format that most invites staged reveals" rewritten as "invites
+  staged reveals more than most do" keeps the word "most" and loses the ranking. It counts
+  constructions, so "the fastest" to "the quickest" is not a drop, and it skips nouns such as
+  "the request" and "the interest". `compare.meaning.scope_dropped` fires when a scope word (all,
+  every, each, only, always, never and similar) goes missing; "no", "any", "per" and "across" are
+  left out because ordinary rewrites move them. Both are warnings, so compare exits 1 as it does
+  for the other meaning checks. A ranking or scope word added by a rewrite is not flagged yet. The construction patterns are
+  adapted from declauding's `declaude_diff.py` (MIT, Oskar Austegard).
 
 ## 4.16.2 - 2026-11-01
 

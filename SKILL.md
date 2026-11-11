@@ -260,7 +260,7 @@ When the installed repo is available, back this mechanically: run `humanizer-aud
 revised.md` after every pass, always against the text the user handed over, never the previous pass.
 Any `compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement the original
 never had) is an anti-swap failure to fix. A `compare.meaning.*` warning (hedge, negation, causal link, or
-counter-claim changed) means reread that pair: restore the original meaning, or keep the edit if it held.
+counter-claim changed, or a ranking or scope word lost) means reread that pair: restore the original meaning, or keep the edit if it held.
 
 ---
 
