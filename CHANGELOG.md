@@ -16,6 +16,18 @@
   left out because ordinary rewrites move them. Both are warnings, so compare exits 1 as it does
   for the other meaning checks. A ranking or scope word added by a rewrite is not flagged yet. The construction patterns are
   adapted from declauding's `declaude_diff.py` (MIT, Oskar Austegard).
+- `scripts/generate_machine.py` gains `--provider openrouter` for maintainers. It sends the
+  committed prompts through OpenRouter using only the standard library and `OPENROUTER_API_KEY`,
+  and labels each entry `openrouter:<model>` with the model the response names. Requests carry no
+  fallback models, rate limits and server errors are retried five times, and a missing key, a bad
+  key, or an account with no credits stops the run. `--dry-run` and every real run on this route
+  print an estimated cost and a ceiling from OpenRouter's public price list. `--effort` is not
+  supported there, and replies default to 4,096 tokens. The default provider is still `anthropic`
+  and behaves as before. The audit itself is unchanged and makes no network calls.
+- A full `scripts/generate_machine.py` run now writes each settled reply to a checkpoint file in
+  `corpus/cache` as it arrives. If a run stops on a fatal error such as a spending cap, the replies
+  already paid for are kept, and re-running the same command resumes with only the missing ones.
+  The checkpoint is removed once the pool is saved.
 
 ## 4.16.2 - 2026-11-01
 

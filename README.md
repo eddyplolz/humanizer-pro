@@ -399,7 +399,7 @@ On Windows, use `py -3` instead of `python3`.
 | `scripts/humanizer_audit.py` | The checker |
 | `scripts/self_scan.py` | Checks this project's own documentation |
 | `scripts/corpus.py`, `scripts/fp_measure.py` | Build the test collection and measure error rates |
-| `scripts/generate_machine.py` | Creates AI-written samples for the catch rate (maintainers only; needs an Anthropic API key) |
+| `scripts/generate_machine.py` | Creates AI-written samples for the catch rate (maintainers only; needs an Anthropic or OpenRouter API key) |
 | `corpus/` | Document fingerprints, the published prompts, and measured results |
 | `eval/` | Sample texts and the expected results for each |
 | `tests/` | Automated tests |

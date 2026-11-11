@@ -47,7 +47,8 @@ release. The full release history is in `CHANGELOG.md`.
   - `self_scan.py` and `self_scan_budgets.json` - audits this repo's docs against score budgets.
   - `corpus.py` - builds and verifies the hash-only corpus (human and machine pools).
   - `fp_measure.py` - false-positive rates, test-split catch rates, and the dev-split rule scorecard.
-  - `generate_machine.py` - maintainer-only current-model generation; needs the `anthropic` SDK.
+  - `generate_machine.py` - maintainer-only current-model generation; needs the `anthropic` SDK,
+    or only the standard library with `--provider openrouter`.
 - `corpus/`
   - `manifest.json` - hash-only manifest; every entry points at a public source (Gutenberg,
     Internet Archive, Wikipedia revision ids, Stack Exchange answer ids, dataset rows), so every
@@ -143,7 +144,8 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 - Use `reference/improvement-loop.md` before promoting a recurring failure.
 - Runtime scripts must stay deterministic and zero-dependency unless a later approved plan changes
   that constraint. `scripts/generate_machine.py` is the one exception: a maintainer tool that
-  imports the `anthropic` SDK lazily and is not shipped in the package.
+  imports the `anthropic` SDK lazily (or calls OpenRouter with the standard library) and is not
+  shipped in the package.
 - Tune rules against the dev split and the rule scorecard only. Both published rates use the
   test split, so they are not graded by the tuning they measure.
 - AI check mode is score-only. It reports blockers, family hits, source-risk notes, and evidence; it
