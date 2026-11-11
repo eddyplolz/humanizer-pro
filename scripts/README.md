@@ -36,7 +36,14 @@ lives in the gitignored `corpus/cache/` on the machine that built it.
 `scripts/generate_machine.py` can add a pool of current Claude models answering the prompts in
 `corpus/machine_prompts.json`. It needs `pip install anthropic` and an API key, and it is never
 run by default; the published numbers do not depend on it. `--dry-run` prints the request count,
-and `--limit N` is a trial run that saves nothing.
+and `--limit N` is a trial run that saves nothing. `--provider openrouter` sends the same prompts
+through OpenRouter with the standard library and `OPENROUTER_API_KEY` instead; its entries are
+labelled `openrouter:<served model>`, it sends no fallback models, and it does not take `--effort`.
+On that route `--dry-run` and every real run first print an estimated cost and a ceiling from
+OpenRouter's public price list, and a model with no listed price stops the run. A full run writes each
+settled reply to `corpus/cache/generate-<provider>.checkpoint.jsonl` as it arrives, so a run
+stopped by a fatal error (a spending cap, a bad key) resumes from that file when the same command
+is run again; the file is removed after the pool is saved.
 
 A builder that collects nothing keeps the existing pool. The news builds are OCR-quality-gated and
 retry rate limits. A Stack Exchange answer edited after the cutoff is dropped, like a post-cutoff

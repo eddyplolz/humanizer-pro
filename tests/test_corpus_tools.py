@@ -504,6 +504,168 @@ def test_generate_dry_run_calls_nothing(capsys) -> None:
     assert "2 prompts x 2 models = 4 requests" in capsys.readouterr().out
 
 
+class _FakeHTTP:
+    """Stands in for urllib.request.urlopen: replays scripted replies."""
+
+    def __init__(self, script):
+        self.script = list(script)
+        self.requests = []
+
+    def __call__(self, request, timeout=None):
+        import io
+        import urllib.error
+
+        self.requests.append(request)
+        step = self.script.pop(0)
+        if isinstance(step, int):
+            body = json.dumps({"error": {"message": f"status {step}"}}).encode()
+            raise urllib.error.HTTPError(
+                request.full_url, step, "err", None, io.BytesIO(body)
+            )
+        reply = io.BytesIO(json.dumps(step).encode())
+        return reply
+
+
+def _completion(
+    finish, text="word " * 200, served="anthropic/claude-opus-5.5-20261101", native=None
+):
+    return {
+        "model": served,
+        "choices": [
+            {
+                "finish_reason": finish,
+                "native_finish_reason": native,
+                "message": {"content": text},
+            }
+        ],
+    }
+
+
+def test_openrouter_request_shape_and_labels(monkeypatch) -> None:
+    http = _FakeHTTP(
+        [
+            _completion("stop"),
+            _completion("length"),
+            _completion("content_filter"),
+            _completion("stop", native="refusal"),
+        ]
+    )
+    monkeypatch.setattr(generate.urllib.request, "urlopen", http)
+    client = generate.OpenRouterClient("sk-test", sleep=lambda _s: None)
+    prompts = [{"id": "wiki-01", "register": "wiki", "prompt": "Write about X."}]
+    models = ["anthropic/claude-opus-5.5", "m2", "m3", "m4"]
+    pairs, counts = generate.generate_pairs(
+        client, generate.OpenRouterErrors, prompts, models, 4096, None, "openrouter"
+    )
+    assert counts == {"kept": 1, "truncated": 1, "refused": 2}
+    assert [meta["model"] for meta, _t, _s in pairs] == [
+        "openrouter:anthropic/claude-opus-5.5-20261101"
+    ]
+    assert pairs[0][1] == ("word " * 200).strip()
+    assert pairs[0][2] == {
+        "prompt_id": "wiki-01",
+        "requested_model": "anthropic/claude-opus-5.5",
+    }
+    request = http.requests[0]
+    assert request.full_url == "https://openrouter.ai/api/v1/chat/completions"
+    assert request.get_method() == "POST"
+    assert request.get_header("Authorization") == "Bearer sk-test"
+    body = json.loads(request.data)
+    assert body == {
+        "model": "anthropic/claude-opus-5.5",
+        "max_tokens": 4096,
+        "messages": [{"role": "user", "content": "Write about X."}],
+    }  # no models, fallbacks, or route: labels must stay exact
+
+
+def test_openrouter_errors_stop_or_retry(monkeypatch) -> None:
+    prompts = [{"id": "wiki-01", "register": "wiki", "prompt": "x"}]
+    for status, error in ((401, "AuthenticationError"), (402, "PermissionDeniedError")):
+        http = _FakeHTTP([status])
+        monkeypatch.setattr(generate.urllib.request, "urlopen", http)
+        client = generate.OpenRouterClient("sk-test", sleep=lambda _s: None)
+        with pytest.raises(getattr(generate.OpenRouterErrors, error)):
+            generate.generate_pairs(
+                client,
+                generate.OpenRouterErrors,
+                prompts,
+                ["m1"],
+                100,
+                None,
+                "openrouter",
+            )
+        assert len(http.requests) == 1  # configuration errors are not retried
+    sleeps = []
+    http = _FakeHTTP([429] * 6 + [{"error": {"message": "provider down"}}])
+    monkeypatch.setattr(generate.urllib.request, "urlopen", http)
+    client = generate.OpenRouterClient("sk-test", sleep=sleeps.append)
+    pairs, counts = generate.generate_pairs(
+        client,
+        generate.OpenRouterErrors,
+        prompts,
+        ["m1", "m2"],
+        100,
+        None,
+        "openrouter",
+    )
+    assert pairs == [] and counts == {"api-error": 2}
+    assert sleeps == [1, 2, 4, 8, 16]  # five retries, then the 429 is counted
+    assert len(http.requests) == 7  # an error object in a 200 body is not retried
+
+
+def _openrouter_dry_run_fixture(monkeypatch, prices):
+    prompts = [
+        {"id": f"wiki-0{n}", "register": "wiki", "prompt": "p" * 80} for n in (1, 2)
+    ]
+    monkeypatch.setattr(generate, "load_prompts", lambda: prompts)
+    monkeypatch.setattr(generate, "fetch_openrouter_prices", lambda: prices)
+
+    def no_network(*_args, **_kwargs):
+        raise AssertionError("dry run touched the network")
+
+    monkeypatch.setattr(generate.urllib.request, "urlopen", no_network)
+
+
+def test_openrouter_dry_run_prints_estimate_and_calls_nothing(
+    monkeypatch, capsys
+) -> None:
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    _openrouter_dry_run_fixture(monkeypatch, {"m1": (0.001, 0.002)})
+    assert (
+        generate.main(["--provider", "openrouter", "--dry-run", "--models", "m1"]) == 0
+    )
+    out = capsys.readouterr().out
+    # Per request: (80/4 + 20) * 0.001 + 1000 * 0.002 = 2.04; ceiling 0.04 + 4096 * 0.002 = 8.232.
+    assert "2 prompts x 1 models = 2 requests" in out
+    assert "estimated cost: $4.08" in out
+    assert "ceiling: $16.46 (every reply at max_tokens=4096)" in out
+
+
+def test_openrouter_unpriced_model_fails_loud(monkeypatch, capsys) -> None:
+    _openrouter_dry_run_fixture(monkeypatch, {"m1": (0.001, 0.002)})
+    assert (
+        generate.main(
+            ["--provider", "openrouter", "--dry-run", "--models", "m1", "nope/x"]
+        )
+        == 2
+    )
+    assert "'nope/x'" in capsys.readouterr().err
+
+
+def test_openrouter_needs_a_key_and_rejects_effort(monkeypatch, capsys) -> None:
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    _openrouter_dry_run_fixture(monkeypatch, {})
+    assert generate.main(["--provider", "openrouter", "--limit", "1"]) == 3
+    assert "OPENROUTER_API_KEY" in capsys.readouterr().err
+    with pytest.raises(SystemExit) as exit_info:
+        generate.main(["--provider", "openrouter", "--effort", "low", "--dry-run"])
+    assert exit_info.value.code == 2
+    assert (
+        "--effort is not supported with --provider openrouter"
+        in capsys.readouterr().err
+    )
+
+
 
 # ------------------------------------------------- two-way measurement
 
@@ -570,14 +732,25 @@ def test_measure_without_machine_rows_says_not_measured(tmp_path, monkeypatch) -
 
 
 
-def test_generate_trial_run_and_empty_run_never_touch_the_pool(monkeypatch, capsys) -> None:
+def test_generate_trial_run_and_empty_run_never_touch_the_pool(
+    tmp_path, monkeypatch, capsys
+) -> None:
     import types
 
+    monkeypatch.setattr(generate.corpus, "CACHE_DIR", tmp_path)
     saved = []
-    monkeypatch.setattr(generate.corpus, "save_pool", lambda kind, pairs: saved.append(pairs) or [])
+    monkeypatch.setattr(
+        generate.corpus, "save_pool", lambda kind, pairs: saved.append(pairs) or []
+    )
     fake = types.SimpleNamespace(
-        Anthropic=lambda **_kw: _FakeClient([("end_turn", "word " * 200)] * 10 + [("refusal", "")] * 10),
-        **{name: getattr(_FakeErrors, name) for name in dir(_FakeErrors) if not name.startswith("_")},
+        Anthropic=lambda **_kw: _FakeClient(
+            [("end_turn", "word " * 200)] * 10 + [("refusal", "")] * 10
+        ),
+        **{
+            name: getattr(_FakeErrors, name)
+            for name in dir(_FakeErrors)
+            if not name.startswith("_")
+        },
     )
     monkeypatch.setitem(sys.modules, "anthropic", fake)
     assert generate.main(["--limit", "1", "--models", "m1"]) == 0
@@ -585,6 +758,54 @@ def test_generate_trial_run_and_empty_run_never_touch_the_pool(monkeypatch, caps
     fake.Anthropic = lambda **_kw: _FakeClient([("refusal", "")] * 200)
     assert generate.main(["--models", "m1"]) == 1
     assert saved == []
+
+
+def test_generate_keeps_paid_results_across_a_fatal_error(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import types
+
+    # A budget cap (403) mid-run must not throw away the replies already paid for.
+    monkeypatch.setattr(generate.corpus, "CACHE_DIR", tmp_path)
+    prompts = [
+        {"id": f"wiki-0{n}", "register": "wiki", "prompt": "x"} for n in (1, 2, 3)
+    ]
+    monkeypatch.setattr(generate, "load_prompts", lambda: prompts)
+    saved = []
+    monkeypatch.setattr(
+        generate.corpus, "save_pool", lambda kind, pairs: saved.append(pairs) or pairs
+    )
+    long_text = "word " * 200
+    first = _FakeClient(
+        [
+            ("end_turn", long_text + "one"),
+            ("refusal", ""),
+            _FakeErrors.RateLimitError("slow down"),
+            _FakeErrors.PermissionDeniedError("budget limit exceeded"),
+        ]
+    )
+    fake = types.SimpleNamespace(
+        Anthropic=lambda **_kw: first,
+        **{
+            name: getattr(_FakeErrors, name)
+            for name in dir(_FakeErrors)
+            if not name.startswith("_")
+        },
+    )
+    monkeypatch.setitem(sys.modules, "anthropic", fake)
+    assert generate.main(["--models", "m1", "m2"]) == 1
+    err = capsys.readouterr().err
+    assert saved == [] and "2 results kept" in err and "re-run" in err
+    # The re-run asks only for what is still missing: the api-error and the
+    # two never-sent requests, not the kept reply or the refusal.
+    second = _FakeClient([("end_turn", long_text + "two")] * 4)
+    fake.Anthropic = lambda **_kw: second
+    assert generate.main(["--models", "m1", "m2"]) == 0
+    asked = [(r["messages"][0]["content"], r["model"]) for r in second.requests]
+    assert len(asked) == 4 and ("x", "m1") in asked
+    assert len(saved) == 1 and len(saved[0]) == 5  # 1 from the first run + 4 new
+    assert saved[0][0][2] == {"prompt_id": "wiki-01", "requested_model": "m1"}
+    assert list(tmp_path.glob("*.checkpoint.jsonl")) == []  # cleared after the save
 
 
 def test_wildchat_build_keeps_the_pool_when_nothing_arrives(monkeypatch) -> None:
