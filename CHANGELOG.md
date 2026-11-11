@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- `reference/style-principles.md` gains a "Characters, Actions, and Stacked Nouns" section: four
+  clarity checks (hidden actors and actions, noun stacks, abstract renamings, buried claims) for
+  style edits. They are reported under "Clarity and concrete language" and never move the risk
+  score. No detector was added: a blind check of a noun-stack heuristic on the corpus found 12 true
+  stacks in 100 flags, at the same rate in human and machine text.
+
 ## 4.16.2 - 2026-11-01
 
 Packaging release. The audit itself is unchanged; findings match 4.16.1.

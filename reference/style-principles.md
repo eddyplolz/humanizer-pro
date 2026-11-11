@@ -54,6 +54,37 @@ Treat early twentieth-century prescriptions as advisory, not absolute. In partic
   damage to clarity.
 - Do not impose old-fashioned diction. The goal is clear modern prose, not period pastiche.
 
+## Characters, Actions, and Stacked Nouns
+
+Drawn from Joseph M. Williams and Joseph Bizup, *Style: The Basics of Clarity and Grace*. These are
+clarity faults, not authorship evidence: human writers make all of them. Report them under "Clarity
+and concrete language," never as a tell family, and never let them move the risk score.
+
+1. **Name the character, then the action.** A sentence reads fastest when the subject is who acted
+   and the verb is what they did. Recast when both hide inside nouns.
+   > **Before:** A review of the change was performed prior to the merge.
+   >
+   > **After:** Dana reviewed the change before merging it.
+
+   If the actor is unknown, say so or keep the passive (Core Checklist item 3). Do not invent one.
+2. **Unpack noun stacks.** Three or more nouns used as one name ("session entry boundary readiness
+   check") make the reader rebuild the relations. Restore the prepositions and verbs.
+   > **Before:** The database readiness check sits at the user-session entry boundary.
+   >
+   > **After:** The check that the database is ready runs when a user session starts.
+
+   Established terms the reader already knows ("credit card debt," "file system") stay.
+3. **Use the word people actually use.** Watch for unusual pairings that rename an ordinary thing
+   in abstract terms ("payment instrument" for a card, "communication touchpoint" for an email).
+4. **Make the point findable.** If a reader must reread a sentence to find its claim, move the claim
+   to the subject and verb and cut the qualifier that buried it.
+   > **Before:** Nothing else depends on anything but the result, so I'll report once the poll returns.
+   >
+   > **After:** I'll report the result when the poll finishes.
+
+Restraint applies: a specialist register (law, medicine, engineering specs) uses noun compounds and
+passives by convention. Change them only where the target reader would stall.
+
 ## Style-Edit Output
 
 For a simple style request, return only the edited text unless a source or meaning risk appears. For a
