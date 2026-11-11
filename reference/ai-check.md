@@ -55,7 +55,9 @@ writing — academic integrity, hiring, publication, or attribution.
 
    The prose rules skip fenced and inline code, so API names in a README do not count as prose.
    Leaked tokens and bypass characters are still caught inside code. Add `--include-code` when
-   the code itself is under review.
+   the code itself is under review. Add `--skip-quoted` when the document quotes tells on purpose
+   (a style guide, a review of someone else's draft): prose rules then also skip tables,
+   blockquotes, and double-quoted spans, and artifact rules still read everything.
 
 3. If only pasted text is available, audit the text directly with the nine-family checklist and the
    same output categories.

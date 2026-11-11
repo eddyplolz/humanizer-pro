@@ -205,6 +205,7 @@ You can:
 - add `--json` to get results a program can read
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)
+- add `--skip-quoted` when a document quotes AI habits on purpose, such as a style guide. The habit checks then skip code, tables, blockquotes, and text in double quotes. Leaked chatbot text is still caught. It does not work with `--compare` or `--include-code`.
 - use `--compare original.md revised.md` to check that a rewrite kept the numbers, dates, names of 2 or more words, links, citations, quotes, and code samples in the original, and to get a review warning when a sentence lost a hedge such as "may," flipped between "did" and "did not," lost a "because," lost a ranking such as "the most" or a scope word such as "all," or dropped a "however" sentence (it does not catch every change: a one-word name or a changed fact, such as "delayed" becoming "canceled," can pass)
 
 ### Understand the result
@@ -422,7 +423,7 @@ It draws on these sources:
 - [Stop Slop](https://github.com/hardikpandya/stop-slop) by Hardik Pandya (MIT)
 - [avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) by Conor Bronsdon (MIT): the vocabulary tiers, strictness rules, self-check, and error-rate measurement design
 - [humanize](https://github.com/harshaneel/humanize) by Harshaneel Gokhale (MIT): rhythm counts and several patterns
-- [declauding](https://github.com/oaustegard/claude-skills) by Oskar Austegard (MIT): the ranking and scope patterns in compare mode
+- [declauding](https://github.com/oaustegard/claude-skills) by Oskar Austegard (MIT): the ranking and scope patterns in compare mode, and the idea of rolling repeated findings into one line
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) by WikiProject AI Cleanup ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
 - [Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134): the public-domain text of *The Elements of Style* by William Strunk Jr.
 - [US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers) by PleIAs: public-domain newspapers in the human test set

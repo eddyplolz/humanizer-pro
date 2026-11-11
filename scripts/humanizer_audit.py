@@ -2229,6 +2229,55 @@ def anaphora_findings(text: str) -> list[dict[str, object]]:
     return findings
 
 
+REUSE_KEY_CHARS = 40
+
+
+def reuse_findings(findings: list[dict[str, object]]) -> list[dict[str, object]]:
+    """One summary.reuse finding per (rule id, matched text) seen twice or more.
+
+    A phrase that repeats is a habit, and the roll-up names it once with every
+    line it sits on. It adds no detection: it only groups findings the other
+    rules already made. The summary. prefix keeps it out of risk_score, so the
+    score and the exit code cannot move. Idea from declauding's scan_reuse
+    (MIT, Oskar Austegard), written fresh here.
+    """
+    groups: dict[tuple[str, str], list[dict[str, object]]] = {}
+    for finding in findings:
+        rule_id = str(finding["id"])
+        if rule_id.startswith("summary."):
+            continue
+        text = normalize_space(str(finding["evidence"])).lower()[:REUSE_KEY_CHARS]
+        groups.setdefault((rule_id, text), []).append(finding)
+    rolled = []
+    for (rule_id, text), members in groups.items():
+        if len(members) < 2:
+            continue
+        members = sorted(members, key=lambda item: (int(item["line"]), int(item["column"])))
+        lines = sorted({int(member["line"]) for member in members})
+        rolled.append(
+            {
+                "id": "summary.reuse",
+                "family": None,
+                "severity": "info",
+                # SARIF needs startLine >= 1; every rule reports 1-based lines,
+                # and max() keeps that true if one ever reports 0.
+                "line": max(1, int(members[0]["line"])),
+                "column": max(1, int(members[0]["column"])),
+                "evidence": evidence(
+                    f"{rule_id} '{text}' x{len(members)} on lines {', '.join(str(line) for line in lines)}"
+                ),
+                "message": "The same flagged phrase repeats; fix the habit once",
+                # Never copied from the grouped findings: the roll-up is not a
+                # second source-risk hit.
+                "source_risk": False,
+                "rule": rule_id,
+                "count": len(members),
+                "lines": lines,
+            }
+        )
+    return rolled
+
+
 def risk_score(findings: list[dict[str, object]]) -> int:
     artifact_count = sum(1 for finding in findings if str(finding["id"]).startswith("artifact."))
     source_count = sum(1 for finding in findings if finding["source_risk"])
@@ -2308,7 +2357,41 @@ def mask_code(text: str) -> str:
     return blank_spans(fenced, regex_spans(fenced, INLINE_CODE_RE))
 
 
-def audit_text(text: str, path: str, include_code: bool = False) -> dict[str, object]:
+# The self-scan exemptions (SKILL.md's self-reference escape hatch), shared by
+# --skip-quoted and scripts/self_scan.py. These patterns are deliberately
+# cruder than CODE_BLOCK_RE and INLINE_CODE_RE above: the published self-scan
+# scores were measured with them, and swapping in the finer ones would move
+# those scores.
+EXEMPT_FENCE_RE = re.compile(r"```.*?```", re.S)
+EXEMPT_INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
+EXEMPT_TABLE_ROW_RE = re.compile(r"^\s*\|.*$", re.M)
+EXEMPT_BLOCKQUOTE_RE = re.compile(r"^\s*>.*$", re.M)
+EXEMPT_QUOTED_RE = re.compile(r'"[^"\n]+"|“[^”\n]+”')
+EXEMPTION_PATTERNS = (
+    EXEMPT_FENCE_RE,
+    EXEMPT_INLINE_CODE_RE,
+    EXEMPT_TABLE_ROW_RE,
+    EXEMPT_BLOCKQUOTE_RE,
+    EXEMPT_QUOTED_RE,
+)
+
+
+def _blank_match(match: re.Match[str]) -> str:
+    return "".join(char if char == "\n" else " " for char in match.group(0))
+
+
+def apply_exemptions(text: str) -> str:
+    """Blank fenced code, inline code, table rows, blockquotes, and quoted spans.
+
+    Each span becomes spaces with its newlines kept, so every later line and
+    column number is the same as in the original text.
+    """
+    for regex in EXEMPTION_PATTERNS:
+        text = regex.sub(_blank_match, text)
+    return text
+
+
+def audit_text(text: str, path: str, include_code: bool = False, skip_quoted: bool = False) -> dict[str, object]:
     original_starts = line_starts(text)
     text, bypass_counts, bypass_offset = normalize_bypass_text(text)
     # Bypass characters are judged on the whole text above; code is masked
@@ -2317,6 +2400,10 @@ def audit_text(text: str, path: str, include_code: bool = False) -> dict[str, ob
     full_text = text
     if not include_code:
         text = mask_code(text)
+    if skip_quoted:
+        # Prose rules only, like the code mask: a leaked tracking URL inside a
+        # blockquote is still a leak, so artifact rules keep the full text.
+        text = apply_exemptions(text)
     # Masking blanks characters in place, so line starts are the same for both.
     starts = line_starts(text)
     stats = stats_for(text)
@@ -2330,6 +2417,10 @@ def audit_text(text: str, path: str, include_code: bool = False) -> dict[str, ob
     findings.extend(regex_findings(text, CLARITY_RULES, starts))
     findings.extend(rhythm_findings(stats))
     findings.extend(anaphora_findings(text))
+    # Audit mode only: compare findings are never rolled up, because
+    # summarize_compare exits 1 on any finding, so an info roll-up there
+    # would turn a clean compare into a review.
+    findings.extend(reuse_findings(findings))
     findings.sort(key=lambda item: (int(item["line"]), int(item["column"]), str(item["id"])))
     return {
         "path": path,
@@ -2407,13 +2498,13 @@ def iter_input_files(target: Path) -> list[Path]:
     raise FileNotFoundError(f"No such file or directory: {target}")
 
 
-def audit_paths(paths: list[Path], include_code: bool = False) -> list[dict[str, object]]:
+def audit_paths(paths: list[Path], include_code: bool = False, skip_quoted: bool = False) -> list[dict[str, object]]:
     documents = []
     for path in paths:
         text = path.read_text(encoding="utf-8")
         # Forward slashes on every OS, so JSON and text output (and tests)
         # read the same on Windows as on Linux. SARIF already does this.
-        documents.append(audit_text(text, path.as_posix(), include_code))
+        documents.append(audit_text(text, path.as_posix(), include_code, skip_quoted))
     return documents
 
 
@@ -2573,6 +2664,14 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Also apply prose rules inside fenced and inline code (skipped by default).",
     )
+    parser.add_argument(
+        "--skip-quoted",
+        action="store_true",
+        help=(
+            "Skip prose rules inside fenced and inline code, table rows, blockquotes, and quoted spans, "
+            "for documents that quote AI tells on purpose. Artifact rules still read everything."
+        ),
+    )
     parser.add_argument("--sarif", metavar="PATH", help="Also write findings as SARIF 2.1.0 to PATH.")
     parser.add_argument("--version", action="version", version=f"humanizer-audit {__version__}")
     return parser
@@ -2593,6 +2692,10 @@ def run(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if sum(1 for active in (args.stdin, bool(args.targets), bool(args.compare)) if active) != 1:
         parser.error("provide exactly one input mode: <file-or-dir>..., --stdin, or --compare ORIGINAL REVISED")
+    if args.skip_quoted and args.compare:
+        parser.error("--skip-quoted applies to audits only; --compare checks every token, quoted or not")
+    if args.skip_quoted and args.include_code:
+        parser.error("--skip-quoted already skips code, so it cannot be combined with --include-code")
     try:
         if args.compare:
             compare = compare_paths(Path(args.compare[0]), Path(args.compare[1]))
@@ -2604,7 +2707,7 @@ def run(argv: list[str] | None = None) -> int:
             # newlines the way text-mode file reads do.
             raw = sys.stdin.buffer.read().decode("utf-8")
             text = raw.replace("\r\n", "\n").replace("\r", "\n")
-            documents = [audit_text(text, "<stdin>", args.include_code)]
+            documents = [audit_text(text, "<stdin>", args.include_code, args.skip_quoted)]
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
@@ -2621,7 +2724,7 @@ def run(argv: list[str] | None = None) -> int:
                     if path not in seen:
                         seen.add(path)
                         paths.append(path)
-            documents = audit_paths(paths, args.include_code)
+            documents = audit_paths(paths, args.include_code, args.skip_quoted)
             summary = summarize(documents, args.fail_score)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         if args.sarif:

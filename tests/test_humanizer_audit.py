@@ -247,6 +247,7 @@ def test_every_cli_rule_id_is_in_the_coverage_map() -> None:
             "artifact.bypass_characters",
             "structure.low_sentence_variance",
             "structure.long_uniform_paragraphs",
+            "summary.reuse",
         }
     )
     missing = {rule_id for rule_id in rule_ids if f"`{rule_id}`" not in coverage}
@@ -1339,3 +1340,183 @@ def test_ordinary_rewrite_words_are_not_scope_words() -> None:
         )
         == []
     )
+
+
+# ------------------------------------------- reuse roll-up and --skip-quoted
+
+REUSE_DOC = (
+    "The old mill stands as a landmark.\n\n"
+    "We met on Tuesday.\n\n"
+    "The church Stands as a landmark too.\n\n"
+    "The bridge stands as a landmark.\n"
+)
+
+
+def _reuse(document: dict) -> list[dict]:
+    return [finding for finding in document["findings"] if finding["id"] == "summary.reuse"]
+
+
+def test_reuse_rolls_up_a_repeated_phrase_in_json(tmp_path: Path) -> None:
+    doc = tmp_path / "reuse.md"
+    doc.write_text(REUSE_DOC, encoding="utf-8")
+    returncode, payload = audit_json(str(doc))
+    document = payload["documents"][0]
+    assert [f["line"] for f in document["findings"] if f["id"] == "family1.significance_inflation"] == [1, 5, 7]
+    (reuse,) = _reuse(document)
+    assert reuse == {
+        "id": "summary.reuse",
+        "family": None,
+        "severity": "info",
+        "line": 1,
+        "column": 14,
+        "evidence": "family1.significance_inflation 'stands as' x3 on lines 1, 5, 7",
+        "message": "The same flagged phrase repeats; fix the habit once",
+        "source_risk": False,
+        "rule": "family1.significance_inflation",
+        "count": 3,
+        "lines": [1, 5, 7],
+    }
+    # Unscored: three family hits (15) plus the two structure hits (10) only.
+    assert document["risk_score"] == 25
+    assert returncode == 0
+
+
+def test_reuse_in_the_text_report(tmp_path: Path) -> None:
+    doc = tmp_path / "reuse.md"
+    doc.write_text(REUSE_DOC, encoding="utf-8")
+    report = run_audit(str(doc)).stdout
+    assert (
+        "  INFO L1:C14 summary.reuse — The same flagged phrase repeats; fix the habit once "
+        "[family1.significance_inflation 'stands as' x3 on lines 1, 5, 7]"
+    ) in report.splitlines()
+    assert report.count("summary.reuse") == 1
+
+
+def test_reuse_in_sarif(tmp_path: Path) -> None:
+    doc = tmp_path / "reuse.md"
+    doc.write_text(REUSE_DOC, encoding="utf-8")
+    run = _sarif(tmp_path, str(doc))["runs"][0]
+    reuse = [result for result in run["results"] if result["ruleId"] == "summary.reuse"]
+    assert len(reuse) == 1
+    assert reuse[0]["level"] == "note"
+    assert reuse[0]["locations"][0]["physicalLocation"]["region"] == {"startLine": 1, "startColumn": 14}
+    assert reuse[0]["message"]["text"] == (
+        "The same flagged phrase repeats; fix the habit once: "
+        "family1.significance_inflation 'stands as' x3 on lines 1, 5, 7"
+    )
+
+
+def test_reuse_is_unscored_and_never_carries_source_risk() -> None:
+    module = _load_audit_module()
+    sourced = [
+        {"id": "source_risk.source_dependent_statement", "evidence": "Critics", "line": line,
+         "column": 1, "source_risk": True}
+        for line in (2, 4)
+    ]
+    (reuse,) = module.reuse_findings(sourced)
+    assert reuse["source_risk"] is False
+    assert reuse["lines"] == [2, 4]
+    assert module.risk_score([reuse]) == 0
+
+
+def test_reuse_needs_two_hits_and_keeps_line_at_least_one() -> None:
+    module = _load_audit_module()
+    one = [{"id": "family1.x", "evidence": "stands as", "line": 3, "column": 2, "source_risk": False}]
+    assert module.reuse_findings(one) == []
+    zero = [{"id": "structure.y", "evidence": "same", "line": 0, "column": 0, "source_risk": False}] * 2
+    (reuse,) = module.reuse_findings(zero)
+    assert (reuse["line"], reuse["column"]) == (1, 1)
+
+
+def test_reuse_groups_on_the_first_40_characters() -> None:
+    module = _load_audit_module()
+    base = "a" * 40
+    found = [
+        {"id": "family1.x", "evidence": base + "-one", "line": 1, "column": 1, "source_risk": False},
+        {"id": "family1.x", "evidence": base.upper() + "-two", "line": 2, "column": 1, "source_risk": False},
+        {"id": "family2.x", "evidence": base, "line": 3, "column": 1, "source_risk": False},
+    ]
+    (reuse,) = module.reuse_findings(found)
+    assert (reuse["rule"], reuse["count"], reuse["lines"]) == ("family1.x", 2, [1, 2])
+
+
+def test_compare_mode_has_no_reuse(tmp_path: Path) -> None:
+    doc = tmp_path / "reuse.md"
+    doc.write_text(REUSE_DOC, encoding="utf-8")
+    returncode, payload = audit_json("--compare", str(doc), str(doc))
+    assert payload["compare"]["findings"] == []
+    assert returncode == 0
+
+
+def test_clean_human_has_no_findings_at_all() -> None:
+    # The reuse roll-up and --skip-quoted must leave the clean fixture's
+    # report exactly as it was: no findings, risk 0.
+    returncode, payload = audit_json("eval/fixtures/clean-human.md")
+    assert payload["documents"][0]["findings"] == []
+    assert payload["documents"][0]["risk_score"] == 0
+    assert returncode == 0
+
+
+QUOTED_DOC = (
+    "Intro line here.\n\n"
+    "> Critics said the old mill stands as a landmark. "
+    "Read https://example.com/a?utm_source=chatgpt.com now.\n\n"
+    "The new bridge stands as a landmark.\n"
+)
+
+
+def _located(document: dict) -> list[tuple[str, int, int]]:
+    return [(f["id"], f["line"], f["column"]) for f in document["findings"]]
+
+
+def test_skip_quoted_drops_quoted_tells_and_keeps_artifacts(tmp_path: Path) -> None:
+    doc = tmp_path / "quoted.md"
+    doc.write_text(QUOTED_DOC, encoding="utf-8")
+    _code, plain = audit_json(str(doc))
+    assert _located(plain["documents"][0]) == [
+        ("source_risk.source_dependent_statement", 3, 3),
+        ("family1.significance_inflation", 3, 29),
+        ("summary.reuse", 3, 29),
+        ("source_risk.bare_url", 3, 56),
+        ("artifact.ai_tracking_url", 3, 77),
+        ("family1.significance_inflation", 5, 16),
+    ]
+    returncode, skipped = audit_json(str(doc), "--skip-quoted")
+    assert _located(skipped["documents"][0]) == [
+        ("artifact.ai_tracking_url", 3, 77),
+        ("family1.significance_inflation", 5, 16),
+    ]
+    assert returncode == 2
+
+
+def test_skip_quoted_is_rejected_with_compare_and_include_code(tmp_path: Path) -> None:
+    doc = tmp_path / "quoted.md"
+    doc.write_text(QUOTED_DOC, encoding="utf-8")
+    with_compare = run_audit("--compare", str(doc), str(doc), "--skip-quoted")
+    assert with_compare.returncode == 3
+    assert "--skip-quoted applies to audits only" in with_compare.stderr
+    with_code = run_audit(str(doc), "--skip-quoted", "--include-code")
+    assert with_code.returncode == 3
+    assert "cannot be combined with --include-code" in with_code.stderr
+
+
+def test_apply_exemptions_blanks_spans_and_keeps_lines() -> None:
+    module = _load_audit_module()
+    text = 'Say "stands as" here.\n> quoted line\n| a | b |\nUse `x` and\n```\ncode\n```\nend'
+    blanked = module.apply_exemptions(text)
+    assert blanked == (
+        "Say             here.\n"
+        "             \n"
+        "         \n"
+        "Use     and\n"
+        "   \n"
+        "    \n"
+        "   \n"
+        "end"
+    )
+
+
+def test_self_scan_uses_the_audit_modules_exemptions() -> None:
+    source = (ROOT / "scripts" / "self_scan.py").read_text(encoding="utf-8")
+    assert "_audit.apply_exemptions(" in source
+    assert "def apply_exemptions" not in source

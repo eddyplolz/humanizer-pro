@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- New `summary.reuse` finding. When one rule matches the same text two or more times in a document
+  (compared on the first 40 characters, ignoring case and spacing), the audit adds one `info`
+  line with the count and every line it sits on, so a repeated habit is fixed once. It adds no
+  detection, never carries source risk, and is not scored, so risk scores and exit codes do not
+  change. JSON output also gives it `rule`, `count`, and `lines` fields. Compare mode does not
+  roll up, because any compare finding sets exit 1. The idea comes from declauding's
+  `scan_reuse` (MIT, Oskar Austegard); the code is new.
+- New `--skip-quoted` flag. Prose rules skip fenced and inline code, table rows, blockquotes, and
+  double-quoted spans, the same exemptions `scripts/self_scan.py` uses for this repo's own docs.
+  Skipped text is blanked to spaces, so line and column numbers do not move. Artifact rules still
+  read the whole text, so a leaked tracking URL inside a blockquote still blocks. The flag is
+  rejected with exit 3 alongside `--compare` or `--include-code`. `apply_exemptions` moved from
+  `scripts/self_scan.py` into `humanizer_audit.py`; self-scan scores are unchanged.
 - `reference/style-principles.md` gains a "Characters, Actions, and Stacked Nouns" section: four
   clarity checks (hidden actors and actions, noun stacks, abstract renamings, buried claims) for
   style edits. They are reported under "Clarity and concrete language" and never move the risk
