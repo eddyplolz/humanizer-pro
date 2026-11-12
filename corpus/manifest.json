@@ -2,6 +2,4086 @@
   "cutoff": "2022-11-01",
   "entries": [
     {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-01499e655e54",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "01499e655e546594432e579c5022f8c06e4d4f21db082efd08f2d5a0f4ff8a70",
+      "source": {
+        "prompt_id": "news-01",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-025dbfde7dd0",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "025dbfde7dd0824ce8fc4e4dc3ac3c4a0a268ebe35501f7424d933f1ab28925d",
+      "source": {
+        "prompt_id": "news-09",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 452
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-032ab7bee1a9",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "032ab7bee1a9889f766af622669d3965f8af7bba85d15e1b0890efe65af1a1d0",
+      "source": {
+        "prompt_id": "news-02",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 458
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-03b4754e0827",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "03b4754e0827f583a04f022f942b2ff72e16474c16be6233f97e49dc5a3aa204",
+      "source": {
+        "prompt_id": "essay-11",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 514
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-08786b30e526",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "08786b30e526066ebc5d0de1d7451048972f6511b6ee6e016f41197cd3cf5072",
+      "source": {
+        "prompt_id": "wiki-03",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 456
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-08bbfdce1a22",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "08bbfdce1a220668ebc5cc40a8ba85f6f4c7c1b1460583a892c9911e0b6b5e26",
+      "source": {
+        "prompt_id": "docs-01",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 318
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-0998932b2e16",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "0998932b2e167190afc7bf2fe9bc6ad244758aa51204e3508425871c452f29b5",
+      "source": {
+        "prompt_id": "news-05",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 443
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-0c5f6b0697ac",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "0c5f6b0697accdae547fcc5cb36392c98dc0e623f9e20f4013ebf52107db2825",
+      "source": {
+        "prompt_id": "docs-07",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 442
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-0ca7576d5543",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "0ca7576d554372ac62a85e6f07cdc787a463496283d390789580f10febaf27e7",
+      "source": {
+        "prompt_id": "wiki-04",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 441
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-0e1f3d4a735a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "0e1f3d4a735ab5cf0ca5479a2d24a5e808295b891219d1f9c353751b0847682b",
+      "source": {
+        "prompt_id": "news-09",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-104d438cecec",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "104d438cecec9a5388e7521da93d080a54c071c352390f1fa4eeced302a54a4e",
+      "source": {
+        "prompt_id": "docs-08",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 402
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1238974ed0ab",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "1238974ed0ab75b1caff726b63808cbb66a2a15c9001bbd621cd57e9ca25ff2f",
+      "source": {
+        "prompt_id": "essay-06",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 538
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-13cb7d1c5291",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "13cb7d1c52910aade65bf88769366d6991acf4a978ebdcaa0aadd94efb7cfc4f",
+      "source": {
+        "prompt_id": "essay-01",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 547
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1402baa23167",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "1402baa23167b9a35166ae8d2382c40d50cb55ba574c0680ebf4207ac2461442",
+      "source": {
+        "prompt_id": "essay-12",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 511
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1415506556e5",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "1415506556e5c3289bbe50eced1a6014243c1ac696aecc7a36b718819f455027",
+      "source": {
+        "prompt_id": "wiki-14",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 426
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-148d0e075532",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "148d0e075532f91e2d05f2baa8fac2833bf19ca639ec2792d90c6a165cfa6020",
+      "source": {
+        "prompt_id": "wiki-12",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 451
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-16b7e8c5b8da",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "16b7e8c5b8da449c3e0a8a3332659f647d76c128f0508f3938aa455b4db0221c",
+      "source": {
+        "prompt_id": "wiki-14",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 433
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-183032380f19",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "183032380f199fd5814753b836818cb6b1ad08c0cf3db9b65c4af4f72a0bb96e",
+      "source": {
+        "prompt_id": "docs-13",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 351
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-194b46980d14",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "194b46980d146d93ee57ca45bc4998645d80f3083b6d57ab7660622f68cce841",
+      "source": {
+        "prompt_id": "docs-02",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 355
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1beba7e50146",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "1beba7e50146746d87b616b69fb6ff986984313dd8c5e21b7c14f20c2d229096",
+      "source": {
+        "prompt_id": "docs-08",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 451
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1c8451e922c0",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "1c8451e922c06319e69e1d1881da7a58508e97e50ad842f492c081031080ac32",
+      "source": {
+        "prompt_id": "wiki-14",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 444
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-1de24319980f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "1de24319980fca7ff1bcb88cda44c7ba3b283b8236fd947c284ab05ea78a6202",
+      "source": {
+        "prompt_id": "wiki-12",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 404
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2457fc3ff97c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "2457fc3ff97c34d6ed2d6f7984feb54366bd35bde62c19beb49523802c80451d",
+      "source": {
+        "prompt_id": "wiki-16",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-24cfdf7148e9",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "24cfdf7148e9b2dcc8446ac6ef066b88f3b7877a99be0ee0e4ef90f474a4e753",
+      "source": {
+        "prompt_id": "wiki-13",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 457
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2628c59dc6f8",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "2628c59dc6f86355107ed94901d8c89c5f1d2658c5a91eed06cf4ebea61b2813",
+      "source": {
+        "prompt_id": "docs-10",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 396
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2712097cac9d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "2712097cac9d662763a161ad1fa2deab4585a4c68f39eca6a4d08fdd5fd844ca",
+      "source": {
+        "prompt_id": "docs-09",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 358
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2721e28aa663",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "2721e28aa663867e40d7fc135fc157ecc769a7d51853810ef2d8eacc29ccc689",
+      "source": {
+        "prompt_id": "essay-10",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 538
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2845db63af03",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "2845db63af03b25bf2aa4dcaae6403252564f242e74a90bd200d4cb5d7d52e21",
+      "source": {
+        "prompt_id": "docs-12",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 383
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-29a0322c223d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "29a0322c223d60a0010398f050fa7d3aba80b6fa2d9500697feeb91c388e6df1",
+      "source": {
+        "prompt_id": "news-03",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 477
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2a19749e59f4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "2a19749e59f4b9dd6df56bc09f20842df724cee39cf7a58b28ed2f121fe82124",
+      "source": {
+        "prompt_id": "essay-09",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "dev",
+      "words": 533
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2b4ec55bd03e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "2b4ec55bd03e28bf602dd41858458050e0711a2e24812f0e3859b0303bbaefa5",
+      "source": {
+        "prompt_id": "news-05",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 420
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2b7587d00d5f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "2b7587d00d5f339d31c3f1dc5cee5e274cbd01ffe821f71082af54248dd77b3f",
+      "source": {
+        "prompt_id": "news-01",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 407
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2bbf747567ee",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "2bbf747567ee7cde0ce0a3b9811957db3aa4e12831cbef2abbff24589aecc3d8",
+      "source": {
+        "prompt_id": "news-07",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 428
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2bda32f01773",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "2bda32f01773f00ced30406f5c02895625a994754cfe5786573110ce3eea4c71",
+      "source": {
+        "prompt_id": "news-08",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 437
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2ca5f8ffd7e7",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "2ca5f8ffd7e7d82889aaa7e97b2805b6fadf7f5da03b4030116259af37466818",
+      "source": {
+        "prompt_id": "docs-04",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 434
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2dc526680359",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "2dc5266803590223ed1017b05e20e564ef7d91879e5fce9b50961f70f24598f5",
+      "source": {
+        "prompt_id": "wiki-05",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 394
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2e2c60fc0ccb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "2e2c60fc0ccb5928f706f4e9ec15ea87595ed52460caed222844a348677d9d28",
+      "source": {
+        "prompt_id": "wiki-12",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 434
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2ec8af976e9b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "2ec8af976e9b81260c675208343fd2a958293b8aa8ad0efee34b6a7713f9c84f",
+      "source": {
+        "prompt_id": "docs-13",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "dev",
+      "words": 400
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-2ed99df02b54",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "2ed99df02b541e706358737f18511b93e97ead4e9f90dea9a5ca7a5bcfc846c1",
+      "source": {
+        "prompt_id": "docs-12",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 403
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-30f42f56965e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "30f42f56965ec235aefb5b70e978349033e4616174603213b0829aafb1af9876",
+      "source": {
+        "prompt_id": "essay-13",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 494
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-31b478e6413c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "31b478e6413cb01add047d3426f87275f38ae61dfeb84d64a995c3bb9b3c8f7e",
+      "source": {
+        "prompt_id": "docs-14",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-39be5c60e95e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "39be5c60e95e163f4a0d83d94603bda1373dffcf7be8eddc806b86c812eaf77d",
+      "source": {
+        "prompt_id": "wiki-02",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 380
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-3a84f7ae9522",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "3a84f7ae952294d5b0c05aba65b68b49d9ac1456f52a67031faca67e05444ddc",
+      "source": {
+        "prompt_id": "essay-01",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "dev",
+      "words": 519
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-3aa470ee4d7b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "3aa470ee4d7b4e23eb6520ef758c4ac8676ead8b7cfaef35e4bb74d4adfbe936",
+      "source": {
+        "prompt_id": "news-05",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "dev",
+      "words": 439
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-40152070830d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "40152070830d47ddab11030cc007755e1074176c53c88b39f44e771addf15a16",
+      "source": {
+        "prompt_id": "wiki-03",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 470
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-40f4b32a0198",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "40f4b32a0198c326bbd0f0eb71a8fcdc550bc7f4237cd8de07cc0ae6a37b0df8",
+      "source": {
+        "prompt_id": "docs-02",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 352
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4122455aca7b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "4122455aca7b3b0076ce1139ea0446929dbe42da8b6d1bb858c9b71626b03d2c",
+      "source": {
+        "prompt_id": "docs-11",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 450
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4283b65e137f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "4283b65e137fdd59e25429ae1b9a8c85cdd4b75860b8700a1ba8b07f13ee22d7",
+      "source": {
+        "prompt_id": "essay-02",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 538
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-428809e5904f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "428809e5904f824d22b41d9c7d480f951c6eb430443b296c1875816303c6c438",
+      "source": {
+        "prompt_id": "docs-01",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 311
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-44090c2f47d5",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "44090c2f47d5cfd78d61858581dd0535324250954f004130fee4ec5b4b5f3606",
+      "source": {
+        "prompt_id": "docs-10",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 412
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-45b52fe5421d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "45b52fe5421d59ad3b0d646a9ae221469c61488bc3533c84ee954d016243134c",
+      "source": {
+        "prompt_id": "news-12",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 435
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-45cba028966d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "45cba028966d84357d883590c4d651d99c4583dd9654eaa752bedbb32ffc6ce7",
+      "source": {
+        "prompt_id": "docs-01",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 380
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-467cc8f55ac5",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "467cc8f55ac5ab96bcff2a9b6ef2a049c195dc81b36ba100d2ace88e0e4e3771",
+      "source": {
+        "prompt_id": "essay-01",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 501
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-46c0e0a5cbbd",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "46c0e0a5cbbd038bc89f80074eb44c4e8f6e773aa3db59254bf2bcea34f5cf61",
+      "source": {
+        "prompt_id": "wiki-17",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 422
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-479dddfc2a7a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "479dddfc2a7ad29d347c10cb6ed48da620fc26dcdae931f240a7f901e6710400",
+      "source": {
+        "prompt_id": "wiki-15",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4847e9bb43fd",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "4847e9bb43fd929fc6334454dec90561a1d17025a2c8ad2a81eecedb577abdf2",
+      "source": {
+        "prompt_id": "news-04",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 470
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4c12c1ac678e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "4c12c1ac678eb00e5465582b9560eeed07e8f7dac51970a23dbfdb42b6086834",
+      "source": {
+        "prompt_id": "docs-11",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 468
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4c1aa6e8358c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "4c1aa6e8358c62c69790d091c0062bda2f6e9bb8baef51e336616a50dd0859ed",
+      "source": {
+        "prompt_id": "news-11",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 438
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4d18694b9b5e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "4d18694b9b5e076efafb4040844cafe4239b66770b74734c4135bfb1d9ed1c2a",
+      "source": {
+        "prompt_id": "wiki-09",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 415
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4d6a8b5c0cf3",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "4d6a8b5c0cf3964d8347acd348c8f6294ad7efe335fd867b0d0005c1c695bb3c",
+      "source": {
+        "prompt_id": "docs-11",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 443
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4d9649506c40",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "4d9649506c4046eb2da719791cda13734c4fc0fde1e4a64738a27882e9a49d35",
+      "source": {
+        "prompt_id": "essay-12",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 537
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4dae2ef21d3b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "4dae2ef21d3b00153b71559d4443e105f4d38993e8a13127f6458e360990c142",
+      "source": {
+        "prompt_id": "essay-03",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 517
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4e481ac1d66d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "4e481ac1d66d8232aee9f7021df194795d4da4b888f8fe22aa36bf2d91b77958",
+      "source": {
+        "prompt_id": "news-08",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 442
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4e87f5af8a71",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "4e87f5af8a71349a78200a8738cc5f4e2667aba3f4c0c1040d1bd482b1f346be",
+      "source": {
+        "prompt_id": "news-14",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 447
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4f5c2635899f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "4f5c2635899f53248c2a5acd35ab50dfaf65d6b38e7d122f11a2d776c4ab8899",
+      "source": {
+        "prompt_id": "news-05",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 443
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-4f98111f8b7b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "4f98111f8b7b05fb900a6c06e1d5a0689923325272879bc244cd18445525629f",
+      "source": {
+        "prompt_id": "essay-14",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 572
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-50d354124141",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "50d35412414171ad4efdfe81e76f6eea1a4fe89316de708d49c8de4ba2dabf6a",
+      "source": {
+        "prompt_id": "news-04",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 491
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-51253c39e06a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "51253c39e06a1c14d5eb6fd7f458e13bf4d421e4ba81ad05907051d63dd79e01",
+      "source": {
+        "prompt_id": "wiki-01",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-51948db56118",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "51948db56118346e6b55043a2d0dc7a7166de741098986d8da19d3c13f7fe7ce",
+      "source": {
+        "prompt_id": "essay-12",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 524
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-522a1ab69de2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "522a1ab69de2f7e2a38db25437291ce7671708d02d9f1841b1235f53250e1e13",
+      "source": {
+        "prompt_id": "essay-07",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 546
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-53aaf08e48c0",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "53aaf08e48c0568e6991ef296ca740a056a400c63edfa1ffc3cdbdf0606af0d5",
+      "source": {
+        "prompt_id": "wiki-16",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 408
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-54bf0b8601aa",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "54bf0b8601aa1902f2c48bf3ea11941ccc70693fd1a256d3bf6ee868d9043d99",
+      "source": {
+        "prompt_id": "docs-06",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 442
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-54d49922322e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "54d49922322ea4ab462d12f93179cfbae2e1bf4a77e50afa20084f5f96e3850b",
+      "source": {
+        "prompt_id": "wiki-17",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 389
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-55d3fbe9920a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "55d3fbe9920a9ea9ac0e2c6055141703a896c2f91207365553ec887becabcb4a",
+      "source": {
+        "prompt_id": "docs-01",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 390
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-563ba521a34d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "563ba521a34d4d28c47095a1a886c031cfa51f87238be553747ac780e63bf0d3",
+      "source": {
+        "prompt_id": "wiki-01",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 463
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-5c46362fa8de",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "5c46362fa8de4a2f19c4c168ba623698be69ff75b367ec3a20d2cd8a71243b69",
+      "source": {
+        "prompt_id": "essay-05",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 523
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-5cc6af29d13a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "5cc6af29d13a21eda1d44e9a813c45a95360cefa6fdc7e297675872a67c36130",
+      "source": {
+        "prompt_id": "docs-04",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 471
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-5dd9e9fbd94b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "5dd9e9fbd94b6f31bae7f94465e1b3ac5aabb14cba2a9ce6422d0b1ceac6adc8",
+      "source": {
+        "prompt_id": "essay-10",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 538
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-5f0d2cce4418",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "5f0d2cce441801b4b045f404ac9a29e3fdbbaaeb2f95df34aa4095cfbdeab356",
+      "source": {
+        "prompt_id": "wiki-02",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 432
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-60e1fdfd97c6",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "60e1fdfd97c608f0eddf6ed14b3335489caea2965312ad7ead5478376aeed6b7",
+      "source": {
+        "prompt_id": "essay-04",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 526
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-61c6d934fa6f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "61c6d934fa6f0064653d51118150380a3c9d8200e1ed881acdd9388df933ddb8",
+      "source": {
+        "prompt_id": "essay-12",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 527
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-61dd6dfe7170",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "61dd6dfe717080f9ad4033402e6b84b3a9820dbd329377362742521230425908",
+      "source": {
+        "prompt_id": "docs-06",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 474
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-642a7f1edcf3",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "642a7f1edcf34918f83cf847ef80b880b7b48b97d4a1f582f96f3087e66cb9a4",
+      "source": {
+        "prompt_id": "wiki-08",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 447
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-656e884dd740",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "656e884dd740240ceaffe6b3081d31da4568e445913387ddf0282469fae97ece",
+      "source": {
+        "prompt_id": "news-08",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 419
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-65e8336dfe90",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "65e8336dfe905a8e1cc6fde137fdece1ecdf71abaf13280c33a6d96176ca8022",
+      "source": {
+        "prompt_id": "news-12",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 430
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6853559a5029",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "6853559a5029e944af56b76e683da534cc73ab6d3c4c0adcd4a7e99aeb14b13c",
+      "source": {
+        "prompt_id": "wiki-15",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 432
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6863091180bd",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "6863091180bd86a060a5cacf2e99dadc3f247d556d999f635e7855190bf45182",
+      "source": {
+        "prompt_id": "docs-14",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 436
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6889e124fcae",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "6889e124fcaec4f0c7d40f0f61aaa9b874fc4d76d6b0d979e3e90e7b259d09e5",
+      "source": {
+        "prompt_id": "wiki-18",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 430
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-69c6e6f526ec",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "69c6e6f526ecc42a7c3de713f9da10510952643f2fa8d1638f80aab2373a7857",
+      "source": {
+        "prompt_id": "wiki-06",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 465
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6b5f853bba3f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "6b5f853bba3fe383af176efc03727d8bac6f70b32fbfa436706c4c2ee9f7826c",
+      "source": {
+        "prompt_id": "wiki-07",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6c0b68095cb9",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "6c0b68095cb971e1f165b9a7207c1862c2f9f4d362076b7cc0bbd914afa52f62",
+      "source": {
+        "prompt_id": "essay-07",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 546
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6c99893b8dba",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "6c99893b8dba57839dae7d0f6fca6c5d157ca529a23abca4f5b4f14b1133b16c",
+      "source": {
+        "prompt_id": "wiki-15",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 410
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6d8934f60d0d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "6d8934f60d0da0ba820f0a9919ea71cb075496c80c4fc5c098e2a6d467c48a78",
+      "source": {
+        "prompt_id": "essay-10",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 518
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6dc56c009527",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "6dc56c009527fa2e101958cc7e864d4371e0a63ebf41d2b5cb456007341130aa",
+      "source": {
+        "prompt_id": "docs-05",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 418
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6e7f8c8dd47b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "6e7f8c8dd47b5df5beb3724f2f9145d527c15b2e162d19932b5ce38dc08fcd40",
+      "source": {
+        "prompt_id": "docs-02",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 368
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6e9866a90717",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "6e9866a907179edcafddd6b857fce0adeed671a5fc0678f9457da9db8a79867d",
+      "source": {
+        "prompt_id": "essay-04",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 528
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6f2d5abd42f4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "6f2d5abd42f4e9c263753bb30d634afbca679e8e786a50b41ac6792cc8a89e75",
+      "source": {
+        "prompt_id": "wiki-14",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 376
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6f6784b4ad74",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "6f6784b4ad741b5f0bb4413685e9132cd8c7d58b7609e38d6241a3132263c305",
+      "source": {
+        "prompt_id": "news-06",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 423
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-6f774db89231",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "6f774db89231fd992768ec2fdfe1b55a6dba7e24779e18844eb2e59073342b89",
+      "source": {
+        "prompt_id": "docs-07",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 405
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-70a0740640e3",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "70a0740640e3778b51d5af9cc55ec9223b3fa4645149420d8d72af77e6248ec2",
+      "source": {
+        "prompt_id": "wiki-06",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 440
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-71b1e4f51938",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "71b1e4f51938bd5105a1a1cf4de9ca23edad1069fe978f414c17bdf20272d4a6",
+      "source": {
+        "prompt_id": "essay-10",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 511
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-71bf4f3dd5f4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "71bf4f3dd5f4588fd7585f98bce8659b7ec429f3e4da094ce091cd2e4b408831",
+      "source": {
+        "prompt_id": "wiki-10",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 457
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-727b60484bcb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "727b60484bcbbe423419e79c799e941673b74266bc2221957b369d1e933ae47b",
+      "source": {
+        "prompt_id": "news-03",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 453
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-734b2e6f49fe",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "734b2e6f49fe0b2684c6b89bdd4a540b6dd5a9571473572663201a3a06f73960",
+      "source": {
+        "prompt_id": "wiki-02",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 442
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-7467f668647d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "7467f668647ddb18bca1b08d1823a5ae3a80323e9737f27bdf660c161a546a51",
+      "source": {
+        "prompt_id": "essay-08",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 498
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-75910bfaaeac",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "75910bfaaeaca01cd0b9964bbffb262828d34a57bff829ad5c0bdb5db2cc330d",
+      "source": {
+        "prompt_id": "docs-04",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 460
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-75d9d898ee64",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "75d9d898ee64b29bbda8cf7a44d4494e9d37c9f91a1cead7be0a4b8ce175fc1d",
+      "source": {
+        "prompt_id": "wiki-07",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 450
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-75e60e2d9a72",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "75e60e2d9a72044529239c9c3ff267c91c5f2f6aa97f636e44b7da0ee12493e1",
+      "source": {
+        "prompt_id": "news-09",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 432
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-781a2e29b2cb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "781a2e29b2cb39ce78e70e84eaab22ae0a2a18e23d296ff3f6bf8804cdab3245",
+      "source": {
+        "prompt_id": "news-13",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 444
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-783c359733f8",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "783c359733f8ace41c9c1f3f7692acb98460df4e30d20f606cbd1797bf468b36",
+      "source": {
+        "prompt_id": "wiki-03",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 391
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-78ac97e68a18",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "78ac97e68a182ec742ff8446a78bc900b9828696967bedf6995fcff4a1678619",
+      "source": {
+        "prompt_id": "docs-10",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 420
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-7b1ff79d04cb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "7b1ff79d04cbb089bfd9cb8b8927d74e26ce7aaaf7de0cef9922e6fc0512636a",
+      "source": {
+        "prompt_id": "wiki-06",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 456
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-7dd60f5a61c9",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "7dd60f5a61c96c6f9c6baf11365f9b6c91e08d9a55815e758739218238f68e13",
+      "source": {
+        "prompt_id": "essay-07",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 517
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-7e09f93945d4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "7e09f93945d4bc3289c38f8d2092e32ef9680a35e31648835219df23ae5522fe",
+      "source": {
+        "prompt_id": "wiki-09",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 460
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-7e5176c8e277",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "7e5176c8e27760fb4e8ef5b46d6294e0f659760d54865cf1656f9338b975a94d",
+      "source": {
+        "prompt_id": "docs-05",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 414
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-830043a9ec15",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "830043a9ec15f88688a72db6389ebd9e1555a2dfec25433d495e05ecb61a84b4",
+      "source": {
+        "prompt_id": "essay-08",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 503
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-833a8211ac45",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "833a8211ac45a82d61e6f6b9427481515e060cef7c839737eb47c7d744e885a7",
+      "source": {
+        "prompt_id": "wiki-04",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 404
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-83aa1f3c3124",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "83aa1f3c31241991f90669ac984617a366e174dfb4891bce9c300b1cb7444289",
+      "source": {
+        "prompt_id": "docs-03",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 434
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8522d9c87778",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "8522d9c87778ab2be92f9c2c9f75e0fdb0d4c1dd749784f3f5d795dc1f31cf78",
+      "source": {
+        "prompt_id": "wiki-08",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 431
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-85f01bc7ea68",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "85f01bc7ea68d8afd97240437e389af9eb665a0da7b735a8db2f49765a0c6e16",
+      "source": {
+        "prompt_id": "news-10",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 428
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8687f856b352",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "8687f856b3527ce671ba808bbd67a866bdeb979a69aa809771dc8c2119982b40",
+      "source": {
+        "prompt_id": "essay-13",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 531
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8ae275ff1c21",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "8ae275ff1c2186cdccd28106de8494ba13e0763e201b14b58195011c2d60e2fb",
+      "source": {
+        "prompt_id": "wiki-01",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 452
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8b07b9375886",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "8b07b9375886b7cdc927032661a9b33abe86bccd54312efa9aa507a44f3b660c",
+      "source": {
+        "prompt_id": "essay-02",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 513
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8b35d3c5409b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "8b35d3c5409bdd8d687f3f89d1614dc92aa21db7d85565fafb95f96f43f689a9",
+      "source": {
+        "prompt_id": "wiki-17",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 456
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8b6c4e9f56be",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "8b6c4e9f56be696a9f7e792d37d32ed6d7752707a53b0c4d59f21aa56ab9fd45",
+      "source": {
+        "prompt_id": "news-07",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 422
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8c62cf2e700b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "8c62cf2e700b9239f1a4cb065fd07abf0c1681ccbd917e38d7c2a0b2a0f92e78",
+      "source": {
+        "prompt_id": "docs-03",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 433
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8cbc71615a48",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "8cbc71615a487cffb2850a6f4739df27ba33d82fea53a1bf575fd1db63a47cab",
+      "source": {
+        "prompt_id": "wiki-01",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8d8515baaa58",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "8d8515baaa5835a4503686b55268f4d1fc3f5a0ab9bdb1e02946af0b573178a0",
+      "source": {
+        "prompt_id": "essay-04",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 540
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8dabeb388280",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "8dabeb388280ad32384ff273decb656d3ccf1bf46cf2fe1f72d5972ecd70ac1c",
+      "source": {
+        "prompt_id": "essay-06",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 513
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8e00627ae63e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "8e00627ae63e9260a8a069e53e2c2cf88006ad7dca65b979c36941137936b740",
+      "source": {
+        "prompt_id": "wiki-05",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8e2bd64733e2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "8e2bd64733e2abacaf84a2d03d114ca8b5d0501bacc765a0ca1eefcea127cfa2",
+      "source": {
+        "prompt_id": "essay-09",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 510
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8eb3a80b20ff",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "8eb3a80b20ff245c61e7af4e8c57fc650579aaecb8fe9be50f8c60fec80b09f8",
+      "source": {
+        "prompt_id": "wiki-05",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 438
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-8fd27d990604",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "8fd27d9906049021fc5b93341361096e8b7700c94794e5235f10788291c28a1b",
+      "source": {
+        "prompt_id": "essay-13",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 566
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-902fd5f4e2ad",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "902fd5f4e2ad019b210bfbac35dc955f2306016c93788b06ab5d3bfc30a4d128",
+      "source": {
+        "prompt_id": "essay-09",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 508
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-90cbc86be77f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "90cbc86be77fd4df95f458c8f41c330f660d68f548376e090613ef08a300c9ff",
+      "source": {
+        "prompt_id": "essay-14",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 534
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-91270a22a1fe",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "91270a22a1fe869fe5f87509b557145632835b7daca662bd83f4bd7ce63f0ad3",
+      "source": {
+        "prompt_id": "docs-14",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 456
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9157a5b6604d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "9157a5b6604db4cd32cc7248dfe4d72766c675d8288ac7a524be170d58ff9b49",
+      "source": {
+        "prompt_id": "essay-04",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 538
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-91e161d87cf1",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "91e161d87cf14bd846a237034e1786078bf0ee44e41cc1d4dc720a46c81979a6",
+      "source": {
+        "prompt_id": "wiki-10",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 426
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-920f8d85f6f7",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "920f8d85f6f79ea729a910b2178c41ffafe537959638546c89fdf58fa802cce9",
+      "source": {
+        "prompt_id": "wiki-16",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 436
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-946a78c00b53",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "946a78c00b53e47442c12ae67b1d6ded56d39cbaa0264fa137a8d1a461ab3f85",
+      "source": {
+        "prompt_id": "docs-03",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 437
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-95a9489cd3d7",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "95a9489cd3d7b01c9b357c8579f711a46998b4993631d2c60f6efabc5f6bbd2e",
+      "source": {
+        "prompt_id": "news-11",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 438
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-99125f643087",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "99125f64308789b1d1df109a50289cd3ac43d6694d56d213a6e7eb48ba5a3dec",
+      "source": {
+        "prompt_id": "news-13",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 467
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9c4c449d61ea",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "9c4c449d61eadb94572393c1afd12f3b63c6db1b909b593af3fc4d1faa05f56d",
+      "source": {
+        "prompt_id": "docs-05",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 431
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9ceefc22c691",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "9ceefc22c691a797cd3e27347088672222727732e3be3eb7498079f617944da4",
+      "source": {
+        "prompt_id": "docs-06",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 463
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9d360e59d6d2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "9d360e59d6d2ec8348da38b4dfbee5065be0385c153b3f536fe808917fb20a6c",
+      "source": {
+        "prompt_id": "docs-07",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 443
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9d5ca99adb11",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "9d5ca99adb11857749f50036a06e1d405498935aa397e8c7275a2d72637b9a9f",
+      "source": {
+        "prompt_id": "news-07",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9e5241dff14b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "9e5241dff14ba419aa56fe8881a3b3c595a43d8e39b815a306f42143513fcde7",
+      "source": {
+        "prompt_id": "essay-05",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 509
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9ebe986392a4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "9ebe986392a4513883e3301d005d8ab2a5fb6fdc12106962da2c8c7fe15e770a",
+      "source": {
+        "prompt_id": "docs-08",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 458
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-9f337e169dda",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "9f337e169dda0ebd752207ed4a5e3b02bd6097c1d91223eed4b3d00e09703db1",
+      "source": {
+        "prompt_id": "docs-04",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 461
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a0e18d6e7813",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "a0e18d6e78139a584e10c92f18d1ecab6b919ad6651e19a00455aa6a5e94d6bb",
+      "source": {
+        "prompt_id": "news-11",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 424
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a1685b99eabf",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "a1685b99eabf3fd3e8606e57b10e02b922f9fe4985a5bb3d24ef102887c0fa46",
+      "source": {
+        "prompt_id": "docs-09",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a198eba2fdd4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "a198eba2fdd44288285b7aa8bfdee82357412ae24f75779e70fcc75a9064e839",
+      "source": {
+        "prompt_id": "essay-07",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 511
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a21ee000259c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "a21ee000259cec53574693916cb36f28c4560134decb6381c4e0a2131c11f26b",
+      "source": {
+        "prompt_id": "wiki-03",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 439
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a3617edfcd1c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "a3617edfcd1ce334cec083921447a1f2a5b71296ef55fa63ff5cce63b25ad703",
+      "source": {
+        "prompt_id": "news-03",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 426
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a39db2ba7a31",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "a39db2ba7a3123ee56d47516e8849b39e5a910d1beca3e4b8d0b56451fdfdd21",
+      "source": {
+        "prompt_id": "essay-03",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 500
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a3ca1b60558a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "a3ca1b60558aa200de6e9307c1d9d99f49bcf7ee501d9b78d91daf95110339ce",
+      "source": {
+        "prompt_id": "docs-13",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 416
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a41c8be02441",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "a41c8be024417da0d6fcb24614645281df2f1bf612471aaaaba7cf2cdec899f5",
+      "source": {
+        "prompt_id": "wiki-11",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 425
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a435f0db76b6",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "a435f0db76b6f2889765457c29e9225afb0e078e668ea51cf8969ad65fde7ad9",
+      "source": {
+        "prompt_id": "docs-09",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 385
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a6c59bf3b8a1",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "a6c59bf3b8a12a7ed56798ff49606c3efee02cfaf9934ea4d8e269b2399495c1",
+      "source": {
+        "prompt_id": "wiki-17",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 450
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a6d1af990a35",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "a6d1af990a35592bba8c91e13dbb1a19fc6a266bc19fba7256667ec3570f5130",
+      "source": {
+        "prompt_id": "essay-02",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a7675e5a7509",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "a7675e5a75094e0983382423f0a150f19c25883c97c55403054f6a9bf76a76ee",
+      "source": {
+        "prompt_id": "wiki-07",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 422
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a81f63a3bd5d",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "a81f63a3bd5da6833ae0dcb28d6cacc580d9f67a108be2011aca5d8fee51ea8f",
+      "source": {
+        "prompt_id": "wiki-10",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 379
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a838494838b1",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "a838494838b1219096ad7b3714e15d3139bac47e15f3bdb1243de91ada37a939",
+      "source": {
+        "prompt_id": "essay-09",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 527
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a83a42ace2e7",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "a83a42ace2e7387551212d26531e57be4716b7cd173a56b1985830e640c2618e",
+      "source": {
+        "prompt_id": "wiki-10",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 439
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-a9a8ffb1f280",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "a9a8ffb1f280ad03ef08ac6f7d07933d9296ac601550e18133e8aca7fc7c23bf",
+      "source": {
+        "prompt_id": "news-08",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 487
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ad59a4e4372f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "ad59a4e4372f2e97a3aa76f71c44d09515b4315e32ea3f0311e181f50733c0f3",
+      "source": {
+        "prompt_id": "news-03",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 462
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ad72a842c047",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "ad72a842c04768254d7afa903165f5d6c2bcf1b6d3fc6a71acca1573e447f725",
+      "source": {
+        "prompt_id": "news-13",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 436
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-aefc91a224f4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "aefc91a224f4cd1d66165b3284d529962e687a7d711d53de601982ebd8b811cb",
+      "source": {
+        "prompt_id": "essay-11",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 553
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-af6425cf25c2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "af6425cf25c26b88b899e95034b1c7fb5bd36f8abe397040aad6fada2d5a9ebd",
+      "source": {
+        "prompt_id": "news-14",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 460
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b533bdb87b39",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "b533bdb87b39fbba17f75efcb785ac1a5dfa4bcc1acc47bfd3dff44d2a2b1cf7",
+      "source": {
+        "prompt_id": "news-10",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 447
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b59c34d29061",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "b59c34d29061c06b44461b442bc55935079b2a93683f1148b4804c0359ee3eed",
+      "source": {
+        "prompt_id": "news-07",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 507
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b5d0ae5b3405",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "b5d0ae5b3405850bd57d7f047270498d62b4056df37c7585e3f923ca316b6a40",
+      "source": {
+        "prompt_id": "wiki-11",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 426
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b695608ce949",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "b695608ce9497bc075dfd15aa9203458339bd4c9b353d91dab9cb68fc6a0d416",
+      "source": {
+        "prompt_id": "docs-14",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 466
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b6bf72fe39be",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "b6bf72fe39be0a99fec504103ee1e72325364c9cbe4a71c71c615c0d9e1f1e31",
+      "source": {
+        "prompt_id": "wiki-04",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 501
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-b70905445a3e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "b70905445a3eaa06fb8e5c382fe91722c46bd8aa0bbdfd8639b3415de9315289",
+      "source": {
+        "prompt_id": "wiki-08",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 447
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-bb8920a70cb3",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "bb8920a70cb352632cb9f61db7e6af908a0a691b1e1e2b33fc4a64b99b003860",
+      "source": {
+        "prompt_id": "wiki-09",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 410
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-bc3d53b47d0e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "bc3d53b47d0e6cde878cee560eeeb8f0c839a127bc7bf62885711a2a4d06ec46",
+      "source": {
+        "prompt_id": "docs-05",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 467
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-be84eda78740",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "be84eda78740762312f740b01d4e5f3977090b7e2d25d61205727381154125e9",
+      "source": {
+        "prompt_id": "news-10",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-bec563a44881",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "bec563a448816a87d1356cac0082eae22d17a1a5d4927b58c313afdb0c7e749d",
+      "source": {
+        "prompt_id": "docs-02",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 327
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-bff7df246d41",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "bff7df246d41ab72a7140fe77bd3487f87e7f96bfe6910a89591732cf20f0ce6",
+      "source": {
+        "prompt_id": "wiki-18",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 398
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c065f2c587d3",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "c065f2c587d337b97d37b117c159c2753a7c6383c9ca2d8ee4fbd55873f8ce02",
+      "source": {
+        "prompt_id": "essay-08",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 513
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c0d51a7c7fd2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "c0d51a7c7fd29d546afc1f0439b010ecd851ee9fbdb96177ddb986ecfcd1176d",
+      "source": {
+        "prompt_id": "news-04",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 427
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c0e3165953de",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "c0e3165953de561e9954749d919ad2ad1a86fbb296d7cfb16ec114ad70225217",
+      "source": {
+        "prompt_id": "news-06",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 505
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c2010096fcc9",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "c2010096fcc9062339fdca5e980d1d1ade98d44418f06202b7d40d92f9456274",
+      "source": {
+        "prompt_id": "news-01",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 449
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c2294ecaf441",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "c2294ecaf4415ad2503aade2b6cb0cbb6d1dd98b257a32beab381de15cec87fe",
+      "source": {
+        "prompt_id": "wiki-18",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 485
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c22e654a70dc",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "c22e654a70dcf687a474de2f22bb72eec41a2af7c7f5c51c1d1d728fe181afde",
+      "source": {
+        "prompt_id": "news-04",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c24ff625d3fc",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "c24ff625d3fcfdbaa0a0f4111945f11e30ec5679cc3465aa1e22fa788183cf2c",
+      "source": {
+        "prompt_id": "docs-07",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 473
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c5b0fc816925",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "c5b0fc8169256b6e741fa560123bb03c87bb409962e7af9e3df925375d3ac41a",
+      "source": {
+        "prompt_id": "news-09",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 448
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c5c98dfd53a4",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "c5c98dfd53a4b92560257c8178ba7e946594c44b0aaa376326cd3574d56987ef",
+      "source": {
+        "prompt_id": "wiki-08",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 466
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c93e6928343a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "c93e6928343a352583f33160db9cadc9250b8571948c17c6d11135601b2c9a94",
+      "source": {
+        "prompt_id": "essay-13",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 521
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-c98cf1db7e20",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "c98cf1db7e20b0bf754884cb5d9be5b8661f60ad02e6af3b36bab8714ce6b7b5",
+      "source": {
+        "prompt_id": "news-02",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 441
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-cacf2b2a90f1",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "cacf2b2a90f198dd4191456af9a684b3862df20bc4b22ac119013f9a0b7ec9c8",
+      "source": {
+        "prompt_id": "wiki-13",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ccb6740edeae",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "ccb6740edeae4b59eb16d321dbeb63c6a88741955b9715017176498f1f6a364a",
+      "source": {
+        "prompt_id": "essay-06",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 525
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-cfb880809a95",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "cfb880809a9531d674494cf76779077e157bbe8993b104156203f4de5d139098",
+      "source": {
+        "prompt_id": "docs-03",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 359
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d02e2b40538a",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "d02e2b40538a21278fe40f2766cfd3d45ff213418db33803c2bebb674e5e314c",
+      "source": {
+        "prompt_id": "essay-06",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 535
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d13dc504a640",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "d13dc504a6406fc68a9cd8bb55e5d2cde2deec949aca10c551f4b08e8218e7dd",
+      "source": {
+        "prompt_id": "wiki-09",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 411
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d366328acf17",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "d366328acf175b4e31c5567bddb3be9824cb0a2f562005f9fee80ba940b45e15",
+      "source": {
+        "prompt_id": "wiki-13",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 421
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d36fbf1ec3e2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "d36fbf1ec3e246bd8ed08c3c969c86d2fdbbd56edb284411018bb7f582f43cda",
+      "source": {
+        "prompt_id": "news-12",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 499
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d3c3fa250492",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "d3c3fa250492ac4294ac8b0f1d56558691ff7e4353eb4f4a2d6b9d771823323e",
+      "source": {
+        "prompt_id": "wiki-06",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 410
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d3c8f05b011e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "d3c8f05b011e4167e99b3951bebf263c0cb7a4c54f8ecd9b6f55e35c2966ea44",
+      "source": {
+        "prompt_id": "docs-11",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 467
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d3f519a03aa8",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "d3f519a03aa840588411ec457a290a5616f28fa1eacc25c467d32bd048f73634",
+      "source": {
+        "prompt_id": "news-06",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 428
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d5e2918cab9f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "d5e2918cab9fdaf917d437666b0ad04984944ef7c210b099d17a8c3d58aa6156",
+      "source": {
+        "prompt_id": "news-11",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 493
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d5fe66633c3b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "d5fe66633c3b9c2fef874529fe44a67f25cc9ccfb923bdafc9a4c1472dc62796",
+      "source": {
+        "prompt_id": "news-14",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 432
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d60903114cde",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "d60903114cdeb7541c32a9556e4759f5f42f8afe5e1b0962bbe57b9f5247b39a",
+      "source": {
+        "prompt_id": "essay-08",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 534
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d67b7ac2d0e2",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "d67b7ac2d0e2a3e3a875fed7f24bba89040d40791ac384b4a93220bc6fb17b9b",
+      "source": {
+        "prompt_id": "wiki-18",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 453
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d6a4b7194cf1",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "docs",
+      "sha256": "d6a4b7194cf1c9f5469b71f6ed3122b0d4b3be6a1ce511589cf8f99fca442d3c",
+      "source": {
+        "prompt_id": "docs-10",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 455
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-d9500c3e0471",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "d9500c3e04712d8186b4ff3f47b9fda68bea0f5840cc40316a252c06d4191253",
+      "source": {
+        "prompt_id": "essay-03",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 529
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-da1f63b75dc0",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "da1f63b75dc09b52faca84fdc3dde3b81b60eb45564946285a95a322353650d0",
+      "source": {
+        "prompt_id": "wiki-02",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 437
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-dd2be623b08e",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "dd2be623b08e2383fb985ffc497bbbb69384b833702d5a09c7a18553c3b6b12e",
+      "source": {
+        "prompt_id": "essay-05",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 558
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-dff1670760e8",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "wiki",
+      "sha256": "dff1670760e8eb13ed00007d276ff8936c7486ab2099c8f2a6b2b48a69750a67",
+      "source": {
+        "prompt_id": "wiki-05",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 445
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e07e823f3183",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "news",
+      "sha256": "e07e823f318374f462edc9e80e26b273bd67c040d7ce1b7049955a26ea08d483",
+      "source": {
+        "prompt_id": "news-02",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 458
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e42b151ab3bb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "e42b151ab3bbd9f56b10527b82a9748615406068971cdf4e5ef4ad0fa8ac233f",
+      "source": {
+        "prompt_id": "wiki-12",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 446
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e43c89697651",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "e43c89697651f688ea5e30dd00236c81ca42e9252891b45e7f63b5e87e08776f",
+      "source": {
+        "prompt_id": "essay-01",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 540
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e5f065dda9cc",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "e5f065dda9cc4fd6a5176c1397ca440573de798f816cffae849a0d56271f19b6",
+      "source": {
+        "prompt_id": "essay-14",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 569
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e6c84d250100",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "e6c84d250100bcb5c739cdf8f92c6e2761d236c6813e2e74dfd780e07e195af2",
+      "source": {
+        "prompt_id": "essay-11",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 531
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e6f4bc8ed14c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "docs",
+      "sha256": "e6f4bc8ed14cc650ca1d967819a0c17e86a65fda4762dba8eb971d86946c37a6",
+      "source": {
+        "prompt_id": "docs-12",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 395
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e7fa985e2239",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "e7fa985e22390170166c8538932015315883f7e1e0b12a1d3ad4a410a564e5ac",
+      "source": {
+        "prompt_id": "essay-14",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 519
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e9b1af250668",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "e9b1af2506687aa2355cb8ab4b815d92928d0035dec8f70bc6cab4c6d97dac86",
+      "source": {
+        "prompt_id": "docs-13",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 383
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e9c329d887ac",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "e9c329d887ac39dc78f24d3444bd72fd706ca2e4b3606f0fa5ccfb1f206c9d25",
+      "source": {
+        "prompt_id": "docs-12",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 438
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-e9ee61a73e12",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "e9ee61a73e120a5ad3958d6eedd523d5bc9242166298988d9d21be38593f694f",
+      "source": {
+        "prompt_id": "news-12",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 411
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-eab71bb4f979",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "docs",
+      "sha256": "eab71bb4f97968a0cbe0c4f1d2e91bce36c38276a82914932099ba17e5cd00ee",
+      "source": {
+        "prompt_id": "docs-06",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 453
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ebf21af93dcb",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "ebf21af93dcba746d8963b5f6e24eda9ce40f7295740f5000032661d61bf0eca",
+      "source": {
+        "prompt_id": "news-01",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 417
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ec23f5016f38",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "ec23f5016f384b6592f181b89d0f762d4eb225daa1aa6aa3157c409668af8542",
+      "source": {
+        "prompt_id": "wiki-07",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 398
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ec825db3409b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "ec825db3409be96acffa9a2f329e07a9a1731ea9837821ff8e3ddc82ee1f0490",
+      "source": {
+        "prompt_id": "wiki-13",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 439
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ecd7d7f27d2c",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "ecd7d7f27d2c06aeb801421745112f9a04d0bc1ffd111898a97e526796f56371",
+      "source": {
+        "prompt_id": "wiki-11",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 415
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-ee7541999317",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "essay",
+      "sha256": "ee75419993172c82f3665d14eb75e280ac5471ad6884181d033b0c179d32c6e6",
+      "source": {
+        "prompt_id": "essay-11",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 547
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-eef2a0a28d89",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "eef2a0a28d893966b8e17ceb6996c6fb5451c41f1ac040d0c64e027249e90bc3",
+      "source": {
+        "prompt_id": "docs-09",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 400
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f0a399f0f9be",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "essay",
+      "sha256": "f0a399f0f9bec2b416257a6dcb99954b9680ee44eba0bdbea743d01a2b5b98fa",
+      "source": {
+        "prompt_id": "essay-03",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 513
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f0b5f9f3f780",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "f0b5f9f3f780f8c1c6e5505c19a0d6e99d6e8f4c045f2bab594ae37b80132ae9",
+      "source": {
+        "prompt_id": "news-10",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 444
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f35a3d16964f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "news",
+      "sha256": "f35a3d16964fd6163813924fa6d6d4938c1a82d3a325b7d70d392f62901ce706",
+      "source": {
+        "prompt_id": "news-06",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 443
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f3de00e73655",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "essay",
+      "sha256": "f3de00e73655017a8f39c2a43a42bd11e0362a74d42c09eb787a4cc2ef036bdc",
+      "source": {
+        "prompt_id": "essay-02",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 529
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f51df03aa9d5",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "f51df03aa9d51919334290e755b7b25c02b110a1888852fc81987f0920da523c",
+      "source": {
+        "prompt_id": "wiki-04",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 452
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f6be47e65f64",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "f6be47e65f64a0126a284b1849d4cc504e524773841c83ac8e7ed7ab324ad078",
+      "source": {
+        "prompt_id": "news-02",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 466
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-f8d7b1a998c8",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-fable-5.2",
+      "register": "news",
+      "sha256": "f8d7b1a998c8be8f4e388f6cd779899398bb7cb5c807f2a28601e16ea77337a8",
+      "source": {
+        "prompt_id": "news-14",
+        "requested_model": "anthropic/claude-fable-5.2"
+      },
+      "split": "test",
+      "words": 440
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fa7ed209bc8f",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "essay",
+      "sha256": "fa7ed209bc8f017780321fd43f8c60fb203540a44c07b3208010d3fc5edb395b",
+      "source": {
+        "prompt_id": "essay-05",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 518
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fac68a04cd44",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "wiki",
+      "sha256": "fac68a04cd4411ba1d5175950417f68d10961d651b8a99c949efc52286ddcd2b",
+      "source": {
+        "prompt_id": "wiki-16",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 434
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fb0fdba8cf8b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "docs",
+      "sha256": "fb0fdba8cf8b700ebfef94c91640c979511d61ee36734a6334c3f2cfd95ffa0d",
+      "source": {
+        "prompt_id": "docs-08",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 483
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fb58cfe1189b",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-haiku-5.5",
+      "register": "wiki",
+      "sha256": "fb58cfe1189b28b6eb94eead3f18ed194532cb80bf8ab9531bb3876d95b98f93",
+      "source": {
+        "prompt_id": "wiki-15",
+        "requested_model": "anthropic/claude-haiku-5.5"
+      },
+      "split": "test",
+      "words": 402
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fbebacad2352",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-opus-5.5",
+      "register": "news",
+      "sha256": "fbebacad23527baea492595918a331f82e75d03918adf35a4ed71410308604c8",
+      "source": {
+        "prompt_id": "news-13",
+        "requested_model": "anthropic/claude-opus-5.5"
+      },
+      "split": "test",
+      "words": 436
+    },
+    {
+      "author": "machine",
+      "date": "2026-11",
+      "extraction": "generated.v1",
+      "id": "gen-fc43c6244bba",
+      "kind": "generated",
+      "label": "machine",
+      "model": "openrouter:anthropic/claude-sonnet-5.5",
+      "register": "wiki",
+      "sha256": "fc43c6244bbab63297aab2ac1edbbe5baa00a440a4560cf35913d74f694cf872",
+      "source": {
+        "prompt_id": "wiki-11",
+        "requested_model": "anthropic/claude-sonnet-5.5"
+      },
+      "split": "test",
+      "words": 437
+    },
+    {
       "author": "public-domain",
       "date": "pre-1923",
       "extraction": "chunk.v2",

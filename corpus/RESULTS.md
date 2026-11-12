@@ -7,7 +7,7 @@ labelled by source. Both rates use only the held-out test split (about three
 quarters of each pool, chosen by digest); the dev split is for rule tuning.
 
 - Human documents (test split): **1264**; 425 more form the dev split behind the rule scorecard
-- Machine documents: **825** (catch rate uses the test split)
+- Machine documents: **1065** (catch rate uses the test split)
 - Review threshold: **60** (the CLI default)
 - Flagged means any non-pass exit: risk at or above the threshold, or a
   block (exit 2) at any score.
@@ -39,10 +39,16 @@ quarters of each pool, chosen by digest); the dev split is for rule tuning.
 
 | Slice | n | Caught | Rate | 95% CI |
 |---|---|---|---|---|
-| overall | 638 | 20 | 3.1% | 2.0%–4.8% |
+| overall | 834 | 24 | 2.9% | 1.9%–4.2% |
 | register: chat | 365 | 20 | 5.5% | 3.6%–8.3% |
-| register: news | 140 | 0 | 0.0% | 0.0%–2.7% |
-| register: wiki | 133 | 0 | 0.0% | 0.0%–2.8% |
+| register: docs | 43 | 2 | 4.7% | 1.3%–15.5% |
+| register: essay | 48 | 2 | 4.2% | 1.1%–14.0% |
+| register: news | 185 | 0 | 0.0% | 0.0%–2.0% |
+| register: wiki | 193 | 0 | 0.0% | 0.0%–1.9% |
+| model: `openrouter:anthropic/claude-fable-5.2` | 49 | 2 | 4.1% | 1.1%–13.7% |
+| model: `openrouter:anthropic/claude-haiku-5.5` | 44 | 0 | 0.0% | 0.0%–8.0% |
+| model: `openrouter:anthropic/claude-opus-5.5` | 53 | 1 | 1.9% | 0.3%–9.9% |
+| model: `openrouter:anthropic/claude-sonnet-5.5` | 50 | 1 | 2.0% | 0.4%–10.5% |
 | model: `raid:chatgpt` | 58 | 0 | 0.0% | 0.0%–6.2% |
 | model: `raid:cohere-chat` | 56 | 0 | 0.0% | 0.0%–6.4% |
 | model: `raid:gpt3` | 56 | 0 | 0.0% | 0.0%–6.4% |
@@ -66,26 +72,36 @@ the test split, which this table never reads.
 
 | Rule | Human share | Machine share | Ratio |
 |---|---|---|---|
+| `register.dev_cliche` | 0.5% | 0.0% | 0.00 |
+| `register.verification_compound` | 0.2% | 0.0% | 0.00 |
 | `source_risk.bare_url` | 3.5% | 0.0% | 0.00 |
-| `family9.humanizer_spacing` | 3.3% | 0.5% | 0.16 |
-| `clarity.wordiness` | 7.5% | 3.2% | 0.43 |
-| `structure.uniform_length_run` | 15.8% | 8.6% | 0.54 |
-| `family5.syntactic_tell` | 0.9% | 0.5% | 0.57 |
-| `source_risk.source_dependent_statement` | 13.9% | 8.0% | 0.58 |
-| `family9.chatbot_residue` | 6.1% | 3.7% | 0.61 |
-| `structure.anaphora` | 3.5% | 2.1% | 0.61 |
-| `structure.long_uniform_paragraphs` | 24.0% | 42.2% | 1.76 |
-| `family3.filler_framing` | 4.9% | 9.6% | 1.95 |
-| `family7.rhetorical_formula` | 1.7% | 3.7% | 2.27 |
-| `family8.markdown_structure` | 0.7% | 1.6% | 2.27 |
-| `structure.midband_dominance` | 0.9% | 5.3% | 5.68 |
-| `structure.low_sentence_variance` | 0.2% | 4.3% | 18.18 |
-| `family1.significance_inflation` | 0.2% | 10.2% | 43.18 |
-| `artifact.assistant_self_disclosure` | 0.0% | 2.1% | only on machine |
-| `artifact.bracket_placeholder` | 0.0% | 1.1% | only on machine |
-| `family2.vague_attribution` | 0.0% | 1.1% | only on machine |
-| `family2.vague_validation` | 0.0% | 0.5% | only on machine |
-| `family4.ai_vocab_cluster` | 0.0% | 10.2% | only on machine |
+| `family9.humanizer_spacing` | 3.3% | 0.4% | 0.13 |
+| `clarity.wordiness` | 7.5% | 2.6% | 0.34 |
+| `family5.syntactic_tell` | 0.9% | 0.4% | 0.46 |
+| `register.time_inflation` | 0.9% | 0.4% | 0.46 |
+| `family9.chatbot_residue` | 6.1% | 3.0% | 0.50 |
+| `structure.uniform_length_run` | 15.8% | 10.0% | 0.63 |
+| `register.bare_auxiliary` | 1.2% | 0.9% | 0.74 |
+| `structure.anaphora` | 3.5% | 2.6% | 0.74 |
+| `source_risk.source_dependent_statement` | 13.9% | 13.9% | 1.00 |
+| `summary.reuse` | 6.1% | 9.1% | 1.49 |
+| `family3.filler_framing` | 4.9% | 7.8% | 1.58 |
+| `structure.long_uniform_paragraphs` | 24.0% | 39.8% | 1.66 |
+| `family7.rhetorical_formula` | 1.7% | 3.0% | 1.84 |
+| `register.performative_candour` | 0.5% | 0.9% | 1.84 |
+| `structure.midband_dominance` | 0.9% | 4.8% | 5.06 |
+| `structure.low_sentence_variance` | 0.2% | 3.5% | 14.72 |
+| `family8.markdown_structure` | 0.2% | 5.6% | 23.92 |
+| `family1.significance_inflation` | 0.2% | 8.7% | 36.80 |
+| `structure.uniform_paragraphs` | 0.2% | 22.9% | 97.51 |
+| `artifact.assistant_self_disclosure` | 0.0% | 1.7% | only on machine |
+| `artifact.bracket_placeholder` | 0.0% | 0.9% | only on machine |
+| `family2.speculative_gap_filling` | 0.0% | 0.4% | only on machine |
+| `family2.vague_attribution` | 0.0% | 0.9% | only on machine |
+| `family2.vague_validation` | 0.0% | 0.9% | only on machine |
+| `family4.ai_vocab_cluster` | 0.0% | 8.2% | only on machine |
+| `family8.list_label_period` | 0.0% | 1.7% | only on machine |
+| `register.subjectless_fragment` | 0.0% | 0.4% | only on machine |
 
 ## Rules firing most often on human text
 
@@ -97,12 +113,12 @@ the test split, which this table never reads.
 | 114 | `clarity.wordiness` |
 | 86 | `family3.filler_framing` |
 | 79 | `structure.anaphora` |
+| 77 | `summary.reuse` |
 | 69 | `family9.chatbot_residue` |
 | 44 | `family9.humanizer_spacing` |
 | 40 | `source_risk.bare_url` |
+| 22 | `register.time_inflation` |
 | 21 | `family7.rhetorical_formula` |
-| 12 | `structure.midband_dominance` |
-| 11 | `family5.syntactic_tell` |
 
 ## Honest limits
 

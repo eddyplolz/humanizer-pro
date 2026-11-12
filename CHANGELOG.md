@@ -41,6 +41,26 @@
   `corpus/cache` as it arrives. If a run stops on a fatal error such as a spending cap, the replies
   already paid for are kept, and re-running the same command resumes with only the missing ones.
   The checkpoint is removed once the pool is saved.
+- Family 10, "Staging and the flat-verdict register," joins the tell catalog (§10.1 to §10.12) with
+  new before/after examples. It covers the flatter voice of current models: flat-certainty adverbs
+  ("quietly drops"), legal verbs for program states ("the validator refuses"), unshown checks
+  ("byte-identical"), and staged reveals ("the real problem"). `SKILL.md` adds an overcorrection
+  note: a rewrite pass must not land in this register, and a sentence built for its shape is checked
+  for factual error before it is fixed.
+- 18 new CLI rules, all `register.*` info findings with zero risk weight, so risk scores and exit
+  codes do not change. None earned a scored `family10.*` id: a rule needs at most 2 of 425 human
+  dev documents and a higher machine rate than human rate. On the dev split,
+  `performative_candour` ("I'll be honest," sentence-initial "Honestly,") fired on 2 of 425 human
+  documents and 2 of 231 machine documents; `subjectless_fragment` fired on 0 human and 1 machine
+  document, too few to trust; `bare_auxiliary` (5 human documents), `time_inflation` (4),
+  `dev_cliche` (2), and `verification_compound` (1) fire on human text at least as often as on
+  machine text; the other 12 never fired. The human dev flagged count stays at 1 of 425, and the
+  test-split false-positive rate stays at 0.24% (3 of 1,264).
+- Measured and dropped: a per-document density check for "corpus" used as a lead noun fired on
+  4.24% of human dev documents and 0% of machine dev documents.
+- The Family 10 patterns are adapted from declauding v0.13.0 (MIT, Oskar Austegard). The candour,
+  reversal, grading, totalizing, and header patterns reach declauding from Simon Willison's
+  llm-cliche-highlighter (Apache-2.0).
 
 ## 4.16.2 - 2026-11-01
 

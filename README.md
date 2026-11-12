@@ -423,7 +423,8 @@ It draws on these sources:
 - [Stop Slop](https://github.com/hardikpandya/stop-slop) by Hardik Pandya (MIT)
 - [avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) by Conor Bronsdon (MIT): the vocabulary tiers, strictness rules, self-check, and error-rate measurement design
 - [humanize](https://github.com/harshaneel/humanize) by Harshaneel Gokhale (MIT): rhythm counts and several patterns
-- [declauding](https://github.com/oaustegard/claude-skills) by Oskar Austegard (MIT): the ranking and scope patterns in compare mode, and the idea of rolling repeated findings into one line
+- [declauding](https://github.com/oaustegard/claude-skills) by Oskar Austegard (MIT): the ranking and scope patterns in compare mode, the idea of rolling repeated findings into one line, and the Family 10 register patterns
+- [llm-cliche-highlighter](https://github.com/simonw/tools/blob/main/llm-cliche-highlighter.html) by Simon Willison ([Apache-2.0](https://github.com/simonw/tools/blob/main/LICENSE)): the candour, reversal, grading, totalizing, and header patterns that reach Family 10 through declauding
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) by WikiProject AI Cleanup ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
 - [Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134): the public-domain text of *The Elements of Style* by William Strunk Jr.
 - [US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers) by PleIAs: public-domain newspapers in the human test set

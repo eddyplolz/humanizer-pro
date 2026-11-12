@@ -238,7 +238,7 @@ def test_every_cli_rule_id_is_in_the_coverage_map() -> None:
     coverage = (ROOT / "reference" / "coverage-map.md").read_text(encoding="utf-8")
     rule_ids = {
         rule.id
-        for table in (module.ARTIFACT_RULES, module.FAMILY_RULES, module.SOURCE_RISK_RULES, module.CLARITY_RULES)
+        for table in (module.ARTIFACT_RULES, module.FAMILY_RULES, module.SOURCE_RISK_RULES, module.CLARITY_RULES, module.REGISTER_RULES)
         for rule in table
     }
     rule_ids.update(

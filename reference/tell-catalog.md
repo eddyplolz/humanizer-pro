@@ -1,6 +1,6 @@
 # Tell Catalog — full reference with before/after
 
-The complete pattern library behind `SKILL.md`. Nine families. Each sub-tell lists its **watch-words**,
+The complete pattern library behind `SKILL.md`. Ten families. Each sub-tell lists its **watch-words**,
 the **problem**, a **before → after**, and **source** (WP = Wikipedia "Signs of AI writing", PDF =
 the "Comprehensive Analysis of AI-Generated Writing Tells" survey, SS = Stop Slop).
 
@@ -457,6 +457,97 @@ disagreement ("While I understand the appeal of X, I would suggest…").
 machine-voice signal — survives even when every vocabulary tell is cleaned.
 > **Before:** While I understand the appeal of caching here, I would suggest considering invalidation complexity.  **After:** Caching doesn't work here: invalidation costs more than the reads save.
 **Fix:** say the thing; pick a side; state the asymmetry; trust the reader.
+
+---
+
+## Family 10 — Staging and the flat-verdict register
+
+Current assistant models moved off the older vocabulary ("delve", "vibrant") and into a flatter,
+verdict-shaped voice: short claims of certainty, program states described as legal acts, and
+claims that something was checked with nothing beside them to show the check. Each word in this
+family is one people write, and prose written before 2022 uses many of them. Treat a single hit as
+a prompt to re-read the sentence, never as evidence on its own. The CLI ids are listed in
+`coverage-map.md`; most ship as `register.*` at info, outside the risk score, until corpus
+measurement shows they separate machine text from human text. Adapted from declauding v0.13.0
+(MIT, Oskar Austegard); §10.7 to §10.10 reach declauding from Simon Willison's
+llm-cliche-highlighter (Apache-2.0). The examples below are new.
+
+### 10.1 Flat-certainty adverbs (declauding 43)
+**Watch:** "quietly drops", "silently skipped", "is plainly wrong", "provably correct".
+**Problem:** the adverb asserts the reader's verdict instead of giving the fact that earns it.
+> **Before:** The importer quietly drops rows with a blank date.
+> **After:** The importer skips rows with a blank date and logs nothing, so the count in the report comes out short.
+
+### 10.2 Juridical verbs for program states (declauding 44)
+**Watch:** a parser, gate, or hook that "refuses", "declines", "admits", "honors", or "forbids".
+**Problem:** a legal verb stands in for the mechanism; the reader learns a mood, not a condition.
+> **Before:** The validator refuses any file without a header row.
+> **After:** The validator exits with code 3 when the first line has no column names.
+
+### 10.3 Verification compounds (declauding 45)
+**Watch:** "byte-identical", "bit-exact", "mutation-tested", "live-verified", "re-derived", "root-caused".
+**Problem:** the compound claims a check happened and shows none of it.
+> **Before:** The output is byte-identical after the refactor.
+> **After:** `diff old.csv new.csv` prints nothing for the 40 sample files.
+
+### 10.4 Privative coinages (declauding 46)
+**Watch:** "ungated", "unwired", "uncapped", "unbuilt", "unmeasured" after a copula or a determiner.
+**Problem:** names a thing by what was not done to it, so the reader cannot tell what is missing.
+> **Before:** The retry path is uncapped.
+> **After:** The retry loop has no attempt limit; a dead server keeps it running until the job times out.
+
+### 10.5 Exhaustive negation (declauding 47)
+**Watch:** "nothing else touches it", "no caller reaches", "never fires".
+**Problem:** a universal over a search the reader never sees. Earned only when the set is named.
+> **Before:** Nothing else touches the cache file.
+> **After:** A search of the repository finds two readers of the cache file, both in `load.py`.
+
+### 10.6 Significance designation (declauding 3)
+**Watch:** "the real problem", "here's the catch", "that's the part that", "the one thing nobody".
+**Problem:** stages a reveal; the writer decides what matters instead of showing it.
+> **Before:** The real problem is the timezone.
+> **After:** The job runs at midnight UTC, which is 7 p.m. in Lima, so the "daily" totals stop at 7.
+
+### 10.7 Performative candour (declauding 48)
+**Watch:** "I'll be honest", "let's be blunt", sentence-initial "Honestly," or "Frankly,", "don't take my word for it".
+**Problem:** announces sincerity instead of being plain. Delete the announcement and keep the sentence.
+> **Before:** Honestly, the old scheduler was faster.
+> **After:** The old scheduler finished the nightly batch in 12 minutes; the new one takes 19.
+
+### 10.8 Bare-auxiliary reversal (declauding 49)
+**Watch:** a short sentence ending on a negated auxiliary: "The second one didn't."
+**Problem:** the verb is elided and the beat carries the claim. Common in dialogue and fiction, so
+it stays a note, not a tell.
+> **Before:** The first patch fixed the leak. The second one didn't.
+> **After:** The first patch fixed the leak; the second left the socket open on timeout.
+
+### 10.9 Retroactive grading and totalizing claims (declauding 50, 51)
+**Watch:** "that's why it matters", "the whole game", "the whole pitch", "the only number that counts".
+**Problem:** grades a passage the reader has already read, or claims a whole where a part was shown.
+> **Before:** Latency is the only number that matters.
+> **After:** Users abandon the form when a page takes longer than three seconds, so we track page latency first.
+
+### 10.10 Verdict and obituary headers (declauding 7, 52)
+**Watch:** Markdown headers of four or more words that state a verdict ("The cache is actually
+wrong") or announce a death ("Cron is dead", "Long live queues").
+**Problem:** a header labels a section; a verdict or an obituary overstates in a form built for it.
+> **Before:** ## Polling is dead
+> **After:** ## Moving from polling to webhooks
+
+### 10.11 Minor staging habits (declauding 14, 19, 22, 35, 36, 42)
+**Watch:** performed humility ("probably nobody cares"), stock developer phrases ("footgun",
+"batteries-included", "fits in your head"), vague durations ("a while ago", "these days"),
+subjectless fragments ("No setup needed."), hyphenated compounds after the noun ("the job is
+long-term"), and contents lists shaped as a sentence ("The release notes, plus the bits the
+changelog skips").
+**Fix:** give the size, the date, the actor, or the contents. These are weak signals on their own
+and are reported at info.
+
+### 10.12 Overcorrection
+A rewrite pass must not land in this register. Cutting "delve" and "vibrant" and replacing them with
+"quietly", "load-bearing", and "nothing else touches it" trades one template for another. And a
+sentence built for its shape is checked for factual error before it is fixed: "nothing else
+touches the cache" may be false, and polishing a false claim makes it harder to catch.
 
 ---
 

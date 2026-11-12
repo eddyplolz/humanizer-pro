@@ -599,6 +599,222 @@ CLARITY_RULES = [
     ),
 ]
 
+# Family 10: staging and the flat-verdict register (tell-catalog.md Family 10).
+# Ported narrow from declauding v0.13.0 (MIT, Oskar Austegard), entries 3, 7,
+# 14, 19, 22, 35, 36, 42-47; entries 48-52 reach declauding from Simon
+# Willison's llm-cliche-highlighter (Apache-2.0). Each rule starts under the
+# register.* prefix at info, which risk_score ignores. A rule moves to
+# family10.* (scored, warning) only after it passes the dev-split gate in
+# corpus/RESULTS.md: at most 2 of the 425 human dev documents, and a higher
+# rate on current-model machine text. The words here are words people write;
+# the regexes fire on a shape (a verb, a copula, a header), never a word alone.
+_APOS = "['’]"
+REGISTER_RULES = [
+    Rule(
+        "register.flat_certainty",
+        None,
+        re.compile(
+            r"\b(?:is|are|was|were|reads?|remains?|stays?)\s+(?:plainly|quietly|merely|outright|provably|demonstrably|vacuously)\s+"
+            r"(?:true|false|correct|wrong|safe|broken|identical|equivalent|impossible|right|fine|dead|redundant|unused)\b|"
+            r"\b(?:quietly|silently)\s+(?:drops?|dropped|swallows?|swallowed|discards?|discarded|degrades?|degraded|rewrites?|rewrote|skips?|skipped)\b|"
+            r"\b(?:provably|demonstrably|structurally|vacuously)\s+(?:true|false|correct|safe|sound|wrong|identical|equivalent|impossible)\b",
+            re.I,
+        ),
+        "Flat-certainty adverb; say what makes it true, or cut it",
+        "info",
+    ),
+    Rule(
+        "register.juridical_verb",
+        None,
+        re.compile(
+            r"\b(?:the|this|that|our|its)\s+(?:function|method|script|parser|checker|gate|hook|linter|server|loader|validator|"
+            r"compiler|endpoint|guard|runner|cli|schema|pipeline|daemon|harness)\s+"
+            r"(?:refuses|declines|admits|honou?rs|forbids|ratifies)\b",
+            re.I,
+        ),
+        "Juridical verb for a program state; name the mechanism and its exit condition",
+        "info",
+    ),
+    Rule(
+        "register.verification_compound",
+        None,
+        re.compile(
+            r"\b(?:byte|bit)-(?:identical|exact|for-byte)\b|"
+            r"\bmutation-(?:checked|verified|tested)\b|"
+            r"\b(?:live|independently|adversarially)-(?:verified|checked|tested|confirmed|audited)\b|"
+            r"\bre-(?:derived|verified|measured)\b|\broot-caused\b",
+            re.I,
+        ),
+        "Verification compound; put the diff, the run, or the number beside it",
+        "info",
+    ),
+    Rule(
+        "register.exhaustive_negation",
+        None,
+        re.compile(
+            r"\bnothing\s+else\s+(?:touches|reads|writes|calls|reaches|imports|references|depends\s+on)\b|"
+            r"\bno\s+(?:other\s+)?(?:caller|code\s+path|call\s+site|consumer)\s+(?:reaches|touches|calls|uses|hits|reads|depends)\b|"
+            r"\bnever\s+(?:fires|reaches\s+the)\b",
+            re.I,
+        ),
+        "Exhaustive negation over an unnamed search; state the scope that was checked",
+        "info",
+    ),
+    Rule(
+        "register.privative_coinage",
+        None,
+        re.compile(
+            r"\b(?:is|are|was|were|remains?|stays?|left|leaves?)\s+(?:ungated|unwired|uncapped|unbuilt|unparseable|unmeasured|unpinned)\b|"
+            r"\b(?:an?|the|two|three|several|every)\s+(?:ungated|unwired|uncapped|unbuilt)\s+\w+",
+            re.I,
+        ),
+        "Privative coinage; say what is missing, and where",
+        "info",
+    ),
+    Rule(
+        "register.significance_designation",
+        None,
+        re.compile(
+            r"\bthe\s+(?:real|actual)\s+(?:question|problem|story|lesson|insight|takeaway|culprit|trick|win|tell)\b|"
+            rf"\bhere(?:{_APOS}s|\s+is)\s+the\s+(?:twist|catch|kicker|rub)\b|"
+            rf"\b(?:that|this)(?:{_APOS}s|\s+is)\s+the\s+part\s+(?:that|where|nobody)\b|"
+            r"\bthe\s+(?:one|only)\s+thing\s+(?:nobody|no\s+one)\b|"
+            r"\bthe\s+(?:one|number|line|row)\s+that\s+(?:matters|does\s+the\s+work)\b",
+            re.I,
+        ),
+        "Significance designation; state the point and let the reader weigh it",
+        "info",
+    ),
+    Rule(
+        "register.performative_candour",
+        None,
+        re.compile(
+            rf"\bI\s+(?:will\s+not|won{_APOS}t)\s+pretend\b|"
+            rf"\b(?:I{_APOS}ll|[Ll]et{_APOS}s)\s+be\s+(?:honest|blunt|real)\b|"
+            r"(?:^|[.!?]\s+)(?:Honestly|Frankly|Truthfully),|"
+            rf"\b(?:do\s+not|don{_APOS}t)\s+(?:have\s+to\s+)?take\s+my\s+word\s+for\s+it\b",
+            re.M,
+        ),
+        "Announced sincerity; the sentence after it is the one to keep",
+        "info",
+    ),
+    Rule(
+        "register.bare_auxiliary",
+        None,
+        re.compile(
+            r"(?:^|[.!?]\s+)[A-Z][^.;:!?\n\"“”]{2,40}\s"
+            rf"(?:did|does|was|were|is|are|has|have|had|can|could|would|will)(?:n{_APOS}t|\s+not)\.(?![\"”'’])",
+            re.M,
+        ),
+        "Sentence lands on a bare auxiliary; say what the second half claims",
+        "info",
+    ),
+    Rule(
+        "register.retroactive_grading",
+        None,
+        re.compile(
+            rf"\b(?:that|this|which)(?:{_APOS}s|\s+(?:is|was))\s+why\b[^.!?\n]{{0,80}}?\b(?:matters|mattered|counts|counted)\b",
+            re.I,
+        ),
+        "Grades a passage the reader has already read",
+        "info",
+    ),
+    Rule(
+        "register.totalizing",
+        None,
+        re.compile(
+            rf"(?<!here)(?:\b(?:is|was)|{_APOS}s)\s+the\s+(?:whole|entire)\s+(?:game|trick|pitch|premise|business\s+model)\b|"
+            r"\bthe\s+(?:whole|entire)\s+(?:game|trick|pitch|premise)\s+(?:is|was)\b|"
+            r"\bthe\s+only\s+[\w'-]+\s+that\s+(?:matters|counts)\b",
+            re.I,
+        ),
+        "Totalizing claim; name the set, or show the whole",
+        "info",
+    ),
+    Rule(
+        "register.obituary_header",
+        None,
+        re.compile(r"^[ \t]{0,3}#{1,6}[ \t]+[^\n]*?(?:\b(?:is|are)\s+dead\b|\blong\s+live\b)", re.I | re.M),
+        "Obituary header; name what changed",
+        "info",
+    ),
+    Rule(
+        "register.verdict_header",
+        None,
+        re.compile(
+            # A Markdown header of four or more words, not a question, that
+            # states a verdict instead of a label.
+            r"^[ \t]{0,3}#{1,6}[ \t]+(?=(?:\S+[ \t]+){3}\S)(?![^\n]*\?[ \t#]*$)[^\n]*?"
+            rf"\b(?:isn{_APOS}t|aren{_APOS}t|wasn{_APOS}t|doesn{_APOS}t|actually|really|wrong|matters|counts)\b[^\n]*$",
+            re.I | re.M,
+        ),
+        "Verdict-shaped header; label the section instead",
+        "info",
+    ),
+    Rule(
+        "register.performed_humility",
+        None,
+        re.compile(
+            r"\b(?:better|sharper|cleaner)\s+than\s+mine\b|\bthis\s+might\s+be\s+a\s+small\s+thing\b|"
+            r"\bprobably\s+nobody\s+cares\b|\bnot\s+sure\s+this\s+is\s+worth\b|\bclassic\s+me\b",
+            re.I,
+        ),
+        "Performed humility; cut the apology",
+        "info",
+    ),
+    Rule(
+        "register.dev_cliche",
+        None,
+        re.compile(
+            r"\b(?:footguns?|yak[- ]shav\w*|belt[- ]and[- ]suspenders|first[- ]class\s+citizens?|batteries[- ]included|"
+            r"zero[- ]config(?:uration)?|sane\s+defaults|(?:hold|holds|held|fit|fits)\s+(?:it\s+)?in\s+your\s+head)\b",
+            re.I,
+        ),
+        "Stock developer phrase; say what it means here",
+        "info",
+    ),
+    Rule(
+        "register.time_inflation",
+        None,
+        re.compile(r"\b(?:a\s+(?:few\s+months|while)\s+ago|for\s+a\s+long\s+time|these\s+days)\b", re.I),
+        "Vague duration; give the date or drop it",
+        "info",
+    ),
+    Rule(
+        "register.subjectless_fragment",
+        None,
+        re.compile(
+            r"(?:^|[.!?]\s+)No\s+\w+(?:\s+\w+){0,2}\s+(?:needed|required)\s*[.!]|"
+            r"\b(?:is|are)\s+\w+ed\s+automatically\b",
+            re.M,
+        ),
+        "Subjectless claim; name the actor",
+        "info",
+    ),
+    Rule(
+        "register.predicate_hyphenation",
+        None,
+        re.compile(
+            r"\b(?:is|are|was|were|feels?|seems?)\s+(?:high-quality|cross-functional|data-driven|end-to-end|"
+            r"real-time|long-term|client-facing|decision-making|third-party|open-source)\b",
+            re.I,
+        ),
+        "Hyphenated compound after the noun; drop the hyphen",
+        "info",
+    ),
+    Rule(
+        "register.contents_list_standfirst",
+        None,
+        re.compile(
+            r"^[^.\n]{10,90},\s*plus\s+the\s+\w+|"
+            r",\s*(?:plus|and)\s+the\s+\w+\s+(?:the|that|which)\s+\w+\s+(?:leaves?|skips?|misses?|omits?)\b",
+            re.I | re.M,
+        ),
+        "Contents list shaped as a sentence; say what is in it",
+        "info",
+    ),
+]
+
 SOURCE_RISK_RULES = [
     Rule(
         "source_risk.citation_markup",
@@ -2415,6 +2631,7 @@ def audit_text(text: str, path: str, include_code: bool = False, skip_quoted: bo
     findings.extend(ai_vocab_findings(text, starts))
     findings.extend(regex_findings(text, SOURCE_RISK_RULES, starts))
     findings.extend(regex_findings(text, CLARITY_RULES, starts))
+    findings.extend(regex_findings(text, REGISTER_RULES, starts))
     findings.extend(rhythm_findings(stats))
     findings.extend(anaphora_findings(text))
     # Audit mode only: compare findings are never rolled up, because
