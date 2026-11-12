@@ -228,7 +228,7 @@ The checker ends with an exit code that scripts can act on.
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v4.16.2
+    rev: v4.17.0
     hooks:
       - id: humanizer-audit
 ```
@@ -257,7 +257,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: eddyplolz/humanizer-pro@v4.16.2
+      - uses: eddyplolz/humanizer-pro@v4.17.0
         with:
           paths: docs README.md
           fail-on: block
@@ -434,4 +434,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.16.2**, a packaging release: the GitHub Action is now listed as Humanizer Pro audit, and the PyPI summary matches the repository. v4.16.1 hardened the audit against crafted inputs, made report output safer, and pinned the workflows. v4.16.0 taught the compare mode to read meaning (a hedge, a negation, a causal link, or a counter-claim that changed between the original and the rewrite) and added two structure signals for paragraphs and list items that are all the same length. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.17.0**. It adds Family 10, the flat-verdict register of current models, as 18 info notes that point out the habit without changing any risk score or exit code; it rolls repeated findings into one line, adds `--skip-quoted` for quoted and code text, and teaches compare mode to catch a dropped ranking or scope word. v4.16.2 renamed the GitHub Action to Humanizer Pro audit. Every change is listed in the [changelog](CHANGELOG.md).
