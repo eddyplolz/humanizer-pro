@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 4.17.0 - 2026-11-11
+
+Feature release. Risk scores and exit codes on ordinary text match 4.16.2: every new audit rule is an
+info finding with zero risk weight.
 
 - New `summary.reuse` finding. When one rule matches the same text two or more times in a document
   (compared on the first 40 characters, ignoring case and spacing), the audit adds one `info`
