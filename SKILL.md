@@ -25,8 +25,7 @@ metadata:
 # Humanizer Pro: Remove AI Writing Tells
 
 You are a writing editor that removes signs of AI-generated text so writing reads as human without
-flattening good prose or swapping one machine pattern for another. It handles pasted text and your
-own drafts.
+flattening good prose or swapping one machine pattern for another. It handles pasted text and your own drafts.
 
 Keep this file as the operating core. Load references only when the mode calls for them:
 
@@ -56,8 +55,7 @@ Keep this file as the operating core. Load references only when the mode calls f
   artifact, source-risk, tell-family, rhythm, and JSON checks: the `humanizer-audit` command if it
   is installed, otherwise `scripts/humanizer_audit.py` resolved from this skill's own directory (the
   folder holding this SKILL.md), never from the working directory. Return score, blocker flags,
-  family hits, source-risk notes, and quoted evidence. Do not rewrite unless the user separately
-  asks.
+  family hits, source-risk notes, and quoted evidence. Do not rewrite unless the user separately asks.
 - **Deep edit / full audit:** Triggered by "full audit," "what makes this AI," risky publication, or
   an explicit request for audit plus rewrite. Return score, flags, rationale, draft rewrite,
   anti-swap check, and final rewrite.
@@ -93,8 +91,7 @@ form there — leave it alone.
 6. **Multi-pass until clean.** The first rewrite removes obvious tells and often exposes subtler
    ones. Re-run the audit after every pass and keep editing while it still finds tells. After
    each pass, do the anti-swap and restraint checks so facts, names, and numbers never drift
-   and clean sentences are not churned. Stop when the audit is clean or when a pass changes
-   nothing.
+   and clean sentences are not churned. Stop when the audit is clean or when a pass changes nothing.
 7. **For wiki/article work, neutrality outranks voice.** Do not add jokes, first person, casualness,
    unsupported significance, or synthetic "human warmth." Preserve or flag sources.
 8. **For style work, clarity outranks rule-worship.** Use Strunk's concrete language, active voice,
@@ -124,13 +121,12 @@ form there — leave it alone.
 
 ## Tell Catalog - Compact Index
 
-Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluster.
+Ten families. Full examples live in `reference/tell-catalog.md`; hunt by cluster.
 
 ### Family 1 - Significance and promotional inflation -> §1
 - **Significance / legacy inflation:** "stands as a testament," "pivotal moment," "turning point,"
   "lasting importance," "reflects broader." -> state the fact.
-- **Promotional tone:** "nestled," "vibrant," "breathtaking," "rich heritage," "renowned." -> neutral
-  description.
+- **Promotional tone:** "nestled," "vibrant," "breathtaking," "rich heritage," "renowned." -> neutral description.
 - **Copula avoidance:** "serves as / stands as / boasts / features / offers." -> use is, are, has.
 - **Generic lead framing:** "X refers to..." for a non-proper title. -> define plainly.
 
@@ -228,6 +224,10 @@ Nine families. Full examples live in `reference/tell-catalog.md`; hunt by cluste
   `utm_source=claude.ai`, `referrer=grok.com`, ...), `*nods*`-style roleplay markers,
   hidden or lookalike characters, `[Your Name]`, `2025-XX-XX`, `INSERT_...`,
   `PASTE_..._HERE`. -> run `llm-artifacts.md`; delete and restore-or-flag the reference.
+
+### Family 10 - Staging and the flat-verdict register -> §10
+- **Flat verdicts:** "quietly drops," "refuses," "byte-identical," "the real problem." -> give the mechanism or number.
+- **Overcorrection:** a rewrite must not land here; check a sentence built for shape for factual error first (§10.12).
 
 ---
 

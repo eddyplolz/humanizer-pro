@@ -59,6 +59,29 @@ always says more than the regex.
 |---|---|
 | `clarity.wordiness` | §4.3 academic register inflation + §3.2 multi-word filler wrappers — a clarity edit, never authorship evidence |
 
+### Register rules (Family 10; `register.*` info with zero risk weight; a rule moves to scored `family10.*` only after it passes the corpus gate)
+
+| CLI rule id | Section |
+|---|---|
+| `register.flat_certainty` | §10.1 flat-certainty adverbs |
+| `register.juridical_verb` | §10.2 juridical verbs for program states |
+| `register.verification_compound` | §10.3 verification compounds |
+| `register.exhaustive_negation` | §10.5 exhaustive negation |
+| `register.privative_coinage` | §10.4 privative coinages |
+| `register.significance_designation` | §10.6 significance designation |
+| `register.performative_candour` | §10.7 performative candour |
+| `register.bare_auxiliary` | §10.8 bare-auxiliary reversal |
+| `register.retroactive_grading` | §10.9 retroactive grading |
+| `register.totalizing` | §10.9 totalizing claims |
+| `register.obituary_header` | §10.10 obituary headers |
+| `register.verdict_header` | §10.10 verdict headers |
+| `register.performed_humility` | §10.11 performed humility |
+| `register.dev_cliche` | §10.11 stock developer phrases |
+| `register.time_inflation` | §10.11 vague durations |
+| `register.subjectless_fragment` | §10.11 subjectless fragments |
+| `register.predicate_hyphenation` | §10.11 predicate hyphenation |
+| `register.contents_list_standfirst` | §10.11 contents-list standfirst |
+
 ### Source-risk rules (`wiki-mode.md` source discipline; verification needs, not tells)
 
 | CLI rule id | Purpose |
