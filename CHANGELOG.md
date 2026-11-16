@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- One-command installs. Claude Code users can install the skill as a plugin with
+  `claude plugin marketplace add eddyplolz/humanizer-pro` and
+  `claude plugin install humanizer-pro@humanizer-pro`, then type `/humanizer-pro:humanizer-pro`.
+  Codex, Cursor, GitHub Copilot and other agents can use `npx skills add eddyplolz/humanizer-pro`.
+  The git install still works.
+- New `.claude-plugin/` and `.cursor-plugin/` manifests. Tests keep their versions in step with
+  `__version__` and fail if a root `plugin.json` or a `skills/` folder appears.
+- New `install-check.yml` workflow validates the plugin manifests and runs a test install with
+  `npx skills` on every pull request.
+
 ## 4.17.0 - 2026-11-11
 
 Feature release. Risk scores and exit codes on ordinary text match 4.16.2: every new audit rule is an

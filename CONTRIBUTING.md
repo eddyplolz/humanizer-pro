@@ -46,6 +46,8 @@ then a rule. One-off observations do not go into `SKILL.md`.
 ## Releases
 
 A release is a version bump: `__version__` in `scripts/humanizer_audit.py`, the `version` in
-`SKILL.md`, and a matching `## x.y.z` heading in `CHANGELOG.md`. When that lands on `main` and CI
+`SKILL.md`, the `version` in `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`, the
+version pins in the `README.md` install snippets, and a matching `## x.y.z` heading in
+`CHANGELOG.md`. The tests fail if any of these disagree. When that lands on `main` and CI
 passes, the Release workflow tags it and publishes the GitHub release, and the Publish workflow
 uploads the package to PyPI.

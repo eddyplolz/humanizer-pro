@@ -154,7 +154,9 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
   become a style scorer.
 - Do not add automatic memory accumulation or large dependencies for this audit-tooling slice.
 - If behavior changes, add a `CHANGELOG.md` entry, update the current-release line in `README.md`,
-  and bump `__version__` in `scripts/humanizer_audit.py` with `metadata.version` in `SKILL.md`.
+  and bump `__version__` in `scripts/humanizer_audit.py` with `metadata.version` in `SKILL.md`,
+  the `version` in `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`, and the version
+  pins in the `README.md` install snippets.
 
 ## Validation
 
