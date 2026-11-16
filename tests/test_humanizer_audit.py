@@ -1091,6 +1091,27 @@ def test_readme_pins_the_current_version_in_install_snippets() -> None:
     assert pins, "no version pins found in README"
     assert set(pins) == {version}, f"README pins {sorted(set(pins))}, code is {version}"
 
+
+def test_llms_txt_follows_the_format_and_links_only_to_real_files() -> None:
+    import re
+
+    path = ROOT / "llms.txt"
+    assert path.is_file(), "llms.txt is missing"
+    lines = path.read_text(encoding="utf-8").splitlines()
+    assert lines[0].startswith("# "), "llms.txt must open with an H1"
+    body = [line for line in lines[1:] if line.strip()]
+    assert body and body[0].startswith("> "), "a blockquote summary must follow the H1"
+    prefix = "https://github.com/eddyplolz/humanizer-pro/blob/main/"
+    text = "\n".join(lines)
+    urls = re.findall(r"\[[^\]]+\]\(([^)\s]+)\)", text)
+    assert urls, "llms.txt lists no files"
+    for url in urls:
+        assert url.startswith(prefix), f"link is not a main-branch file link: {url}"
+        assert (ROOT / url[len(prefix):]).is_file(), f"llms.txt links to a missing file: {url}"
+    # Pinned versions go stale; the file must stay correct across releases.
+    assert not re.search(r"\bv?\d+\.\d+\.\d+\b", text), "llms.txt names a version"
+
+
 def test_assistant_self_disclosure_blocks() -> None:
     # The most famous leak of all scored zero before 4.15.0.
     for text in (

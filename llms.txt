@@ -1,0 +1,27 @@
+# Humanizer Pro
+
+> An agent skill and a local command-line checker that find the habits that make text read as machine-written, remove them, and check that every fact survived the edit. It runs offline with no account or API key.
+
+Install it as a Claude Code plugin, with `npx skills add eddyplolz/humanizer-pro` for other agents, or with `pip install humanizer-pro` for the `humanizer-audit` checker.
+
+## Start here
+
+- [README](https://github.com/eddyplolz/humanizer-pro/blob/main/README.md): what it does, how to install it, and how to run the checker
+- [SKILL.md](https://github.com/eddyplolz/humanizer-pro/blob/main/SKILL.md): the skill an agent loads, with its modes and workflow
+- [Checker usage](https://github.com/eddyplolz/humanizer-pro/blob/main/scripts/README.md): `humanizer-audit` options, output and exit codes
+
+## Reference
+
+- [Tell catalog](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/tell-catalog.md): every writing habit the skill looks for, with examples
+- [Chatbot artifacts](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/llm-artifacts.md): citation markers, placeholders and other text a chatbot leaves behind
+- [Worked examples](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/worked-examples.md): before and after rewrites
+- [Registers](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/registers.md): how the rules change for different kinds of writing
+- [Wiki mode](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/wiki-mode.md): neutral, sourced encyclopedia writing
+- [AI check](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/ai-check.md): the audit-only mode that scores text without rewriting it
+
+## Optional
+
+- [Changelog](https://github.com/eddyplolz/humanizer-pro/blob/main/CHANGELOG.md): every release and what changed
+- [Contributing](https://github.com/eddyplolz/humanizer-pro/blob/main/CONTRIBUTING.md): how to propose a rule and run the checks
+- [Improvement guide](https://github.com/eddyplolz/humanizer-pro/blob/main/reference/improvement-loop.md): the review process for new rules
+- [GitHub Action](https://github.com/eddyplolz/humanizer-pro/blob/main/action.yml): run the checker in CI
