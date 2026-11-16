@@ -18,7 +18,7 @@ python -m pytest -q tests
 python scripts/self_scan.py
 ```
 
-The first command runs the test suite (about 130 tests, under a minute). The second audits this
+The first command runs the test suite (about 300 tests, under a minute). The second audits this
 project's own documentation against its budgets in `scripts/self_scan_budgets.json`. Both must
 pass before a pull request can merge; the same checks run in CI on Linux, macOS, and Windows.
 

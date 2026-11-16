@@ -31,7 +31,7 @@ Keep this file as the operating core. Load references only when the mode calls f
 
 - `reference/llm-artifacts.md` - deterministic token and placeholder sweep; run first.
 - `reference/ai-check.md` - score-only audit mode; use when the user asks not to rewrite.
-- `reference/tell-catalog.md` - full nine-family catalog with watch-words and examples.
+- `reference/tell-catalog.md` - full ten-family catalog with watch-words and examples.
 - `reference/worked-examples.md` - end-to-end audits, including the clean-control restraint case.
 - `reference/style-principles.md` - compact Elements of Style operating checklist for substantial prose.
 - `reference/elements-of-style-1918.md` - full public-domain Strunk text; load only on explicit

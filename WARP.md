@@ -17,7 +17,7 @@ release. The full release history is in `CHANGELOG.md`.
 ## Key Files
 
 - `SKILL.md`
-  - Source of truth for routing, operating principles, compact nine-family index, quick checklist,
+  - Source of truth for routing, operating principles, compact ten-family index, quick checklist,
     scoring, workflow, and output formats.
   - Keep under 350 lines for v4.x.
   - Do not paste long examples, full Strunk guidance, or one-off improvement notes here.
@@ -136,7 +136,7 @@ python3 scripts/humanizer_audit.py --compare original.md revised.md --json
 
 - Preserve valid YAML frontmatter in `SKILL.md`.
 - Keep `agents/openai.yaml` aligned with `SKILL.md` when trigger wording or primary usage changes.
-- Keep the family numbering (1-9) and `reference/tell-catalog.md` section numbers stable unless the
+- Keep the family numbering (1-10) and `reference/tell-catalog.md` section numbers stable unless the
   whole catalog is intentionally renumbered.
 - Add depth and examples to `reference/`, not `SKILL.md`.
 - Add regression examples to `eval/fixtures/`, automated expectations to `eval/contracts/*.json`,
