@@ -128,11 +128,10 @@ npx skills add eddyplolz/humanizer-pro
 
 It puts the skill in `.agents/skills/humanizer-pro`. To choose the agents yourself, add `-a codex`, `-a cursor`, `-a github-copilot` or `-a claude-code`.
 
-GitHub Copilot CLI can also install it as a plugin:
+For GitHub Copilot, use the tested route:
 
 ```bash
-copilot plugin marketplace add eddyplolz/humanizer-pro
-copilot plugin install humanizer-pro@humanizer-pro
+npx skills add eddyplolz/humanizer-pro -a github-copilot
 ```
 
 ### Install with git
