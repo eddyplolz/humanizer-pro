@@ -1,0 +1,14 @@
+{
+  "name": "humanizer-pro",
+  "description": "Finds the habits that make text read as machine-written, flags leftover chatbot text, and checks that a rewrite kept every fact. Local, no API key.",
+  "owner": {
+    "name": "Humanizer Pro contributors"
+  },
+  "plugins": [
+    {
+      "name": "humanizer-pro",
+      "source": "./",
+      "description": "Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read as human: \"humanize this,\" de-slop a draft, \"sounds too AI,\" \"check this,\" \"score this,\" \"audit only,\" \"AI check,\" \"do not rewrite,\" style edit, Elements of Style pass, wiki or Wikipedia-style article draft or rewrite, neutral tone, wikitext, citations, source-bound writing, or cleaning up chatbot residue."
+    }
+  ]
+}

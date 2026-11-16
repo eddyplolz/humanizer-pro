@@ -985,6 +985,79 @@ def test_version_is_consistent_across_the_repo() -> None:
     assert f"Current release: **v{version}**" in readme
 
 
+PLUGIN_MANIFESTS = (".claude-plugin/plugin.json", ".cursor-plugin/plugin.json")
+MARKETPLACE_MANIFEST = ".claude-plugin/marketplace.json"
+RESERVED_NAME_PREFIXES = ("claude-", "anthropic-", "anthropics-", "cc-plugin-", "claudeai-")
+MANIFEST_AUTHOR = "Humanizer Pro contributors"
+
+
+def _manifest(relative: str) -> dict:
+    path = ROOT / relative
+    assert path.is_file(), f"{relative} is missing"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert isinstance(data, dict), f"{relative} is not a JSON object"
+    return data
+
+
+def _skill_name() -> str:
+    match = re.search(r"^name: (\S+)$", (ROOT / "SKILL.md").read_text(encoding="utf-8"), re.M)
+    assert match, "SKILL.md has no name: field"
+    return match.group(1)
+
+
+def test_plugin_manifests_parse_and_carry_required_fields() -> None:
+    for relative in PLUGIN_MANIFESTS:
+        assert _manifest(relative).get("name"), f"{relative} has no name"
+    market = _manifest(MARKETPLACE_MANIFEST)
+    assert market.get("name"), "marketplace has no name"
+    assert market.get("owner", {}).get("name"), "marketplace has no owner.name"
+    plugins = market.get("plugins")
+    assert isinstance(plugins, list) and plugins, "marketplace lists no plugins"
+    assert plugins[0].get("name"), "marketplace plugin has no name"
+    assert plugins[0].get("source") == "./", "marketplace plugin source must be ./"
+
+
+def test_plugin_names_match_the_skill_and_avoid_reserved_prefixes() -> None:
+    skill_name = _skill_name()
+    market = _manifest(MARKETPLACE_MANIFEST)
+    names = [_manifest(relative)["name"] for relative in PLUGIN_MANIFESTS]
+    names.append(market["plugins"][0]["name"])
+    assert names == [skill_name] * len(names), f"plugin names {names}, skill is {skill_name}"
+    for name in [*names, market["name"]]:
+        assert not name.startswith(RESERVED_NAME_PREFIXES), f"{name} uses a reserved prefix"
+
+
+def test_no_root_plugin_manifest_or_skills_dir_shadows_the_root_skill() -> None:
+    # A root plugin.json makes Copilot load only skills/, dropping the root SKILL.md.
+    assert not (ROOT / "plugin.json").exists(), "root plugin.json would shadow SKILL.md"
+    assert not (ROOT / "skills").exists(), "a skills/ dir would replace the root SKILL.md"
+
+
+def test_plugin_manifest_versions_match_the_code() -> None:
+    version = _load_audit_module().__version__
+    for relative in PLUGIN_MANIFESTS:
+        data = _manifest(relative)
+        assert "version" in data, f"{relative} has no version"  # a missing key fails
+        assert data["version"] == version, f"{relative} is {data['version']}, code is {version}"
+    market = _manifest(MARKETPLACE_MANIFEST)
+    assert "version" not in market, "set the version only in plugin.json"
+    assert all("version" not in entry for entry in market["plugins"]), "plugin.json owns the version"
+
+
+def test_plugin_manifests_carry_no_personal_contact_details() -> None:
+    market = _manifest(MARKETPLACE_MANIFEST)
+    documents = {relative: _manifest(relative) for relative in PLUGIN_MANIFESTS}
+    documents[MARKETPLACE_MANIFEST] = market
+    assert market["owner"]["name"] == MANIFEST_AUTHOR
+    for relative in PLUGIN_MANIFESTS:
+        assert documents[relative].get("author", {}).get("name") == MANIFEST_AUTHOR, relative
+    for entry in market["plugins"]:
+        if "author" in entry:
+            assert entry["author"].get("name") == MANIFEST_AUTHOR
+    for relative, data in documents.items():
+        assert '"email"' not in json.dumps(data), f"{relative} carries an email key"
+
+
 def test_action_reads_multi_line_paths_and_drops_stale_sarif(tmp_path: Path) -> None:
     stale = tmp_path / "out.sarif"
     stale.write_text("stale", encoding="utf-8")

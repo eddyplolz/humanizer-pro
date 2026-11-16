@@ -1,0 +1,23 @@
+{
+  "name": "humanizer-pro",
+  "version": "4.17.0",
+  "description": "Use when editing, reviewing, or self-auditing text to remove signs of AI writing and make it read as human: \"humanize this,\" de-slop a draft, \"sounds too AI,\" \"check this,\" \"score this,\" \"audit only,\" \"AI check,\" \"do not rewrite,\" style edit, Elements of Style pass, wiki or Wikipedia-style article draft or rewrite, neutral tone, wikitext, citations, source-bound writing, or cleaning up chatbot residue.",
+  "author": {
+    "name": "Humanizer Pro contributors"
+  },
+  "homepage": "https://github.com/eddyplolz/humanizer-pro",
+  "repository": "https://github.com/eddyplolz/humanizer-pro",
+  "license": "MIT",
+  "keywords": [
+    "ai-writing",
+    "humanizer",
+    "ai-text",
+    "writing-assistant",
+    "copyediting",
+    "style-guide",
+    "linter",
+    "prose",
+    "markdown",
+    "sarif"
+  ]
+}
