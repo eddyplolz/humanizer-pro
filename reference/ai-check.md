@@ -59,7 +59,7 @@ writing — academic integrity, hiring, publication, or attribution.
    (a style guide, a review of someone else's draft): prose rules then also skip tables,
    blockquotes, and double-quoted spans, and artifact rules still read everything.
 
-3. If only pasted text is available, audit the text directly with the nine-family checklist and the
+3. If only pasted text is available, audit the text directly with the ten-family checklist and the
    same output categories.
 4. Quote short evidence. Do not quote more than needed to identify the issue.
 5. Stop at diagnosis. Offer a rewrite only if the user asks for one after seeing the check.

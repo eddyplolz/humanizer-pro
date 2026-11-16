@@ -375,7 +375,7 @@ The command-line checker works the same way on every file:
 flowchart LR
     A[File] --> B[Undo hidden-character tricks]
     B --> C[Set code samples aside]
-    C --> D[Check for leftover chatbot text<br/>and the 9 families of habits]
+    C --> D[Check for leftover chatbot text<br/>and the 10 families of habits]
     D --> E[Risk score]
     E --> F{Result}
     F -->|Leftover chatbot text,<br/>placeholder, or hidden characters| G[Exit 2: block]
@@ -383,7 +383,7 @@ flowchart LR
     F -->|Otherwise| I[Exit 0: pass]
 ```
 
-The checker looks for 9 families of habits, learned from cleanup work on Wikipedia and elsewhere. For example:
+The checker looks for 10 families of habits, learned from cleanup work on Wikipedia and elsewhere. For example:
 
 - inflated importance, such as "stands as a testament" or "pivotal moment"
 - stock rhetorical patterns, such as "not just X, but Y" or lists that always come in threes
