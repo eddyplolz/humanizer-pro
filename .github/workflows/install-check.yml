@@ -1,0 +1,57 @@
+name: Install check
+
+# Kept out of ci.yml on purpose: release.yml waits for the CI workflow, and a
+# network flake in npx here should never block a release.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Plugin manifests and npx skills install
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      DISABLE_TELEMETRY: "1"
+      DO_NOT_TRACK: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Validate the plugin manifests
+        # --strict would fail on the root CLAUDE.md warning, which the repo
+        # keeps on purpose. The gate allows that one warning and nothing else.
+        run: |
+          export HOME="$RUNNER_TEMP/claude-home"
+          mkdir -p "$HOME"
+          set +e
+          npx --yes @anthropic-ai/claude-code@2.1.311 plugin validate \
+            .claude-plugin/marketplace.json --json > "$RUNNER_TEMP/validate.json"
+          code=$?
+          set -e
+          if [ "$code" -gt 1 ]; then echo "validator failed to run (exit $code)"; exit 1; fi
+          python scripts/check_plugin_validate.py "$RUNNER_TEMP/validate.json"
+      - name: Install the skill with npx skills
+        run: |
+          proj="$RUNNER_TEMP/proj"
+          mkdir -p "$proj"
+          cd "$proj"
+          HOME="$RUNNER_TEMP/skills-home" npx --yes skills@1.9.0 add "$GITHUB_WORKSPACE" \
+            -a claude-code -a codex -a cursor -a github-copilot -y
+          found="$(ls .agents/skills)"
+          if [ "$found" != "humanizer-pro" ]; then
+            echo "expected exactly one skill named humanizer-pro, found: $found"
+            exit 1
+          fi
+          cmp .agents/skills/humanizer-pro/SKILL.md "$GITHUB_WORKSPACE/SKILL.md"
+          cmp .claude/skills/humanizer-pro/SKILL.md "$GITHUB_WORKSPACE/SKILL.md"
