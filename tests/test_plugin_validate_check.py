@@ -177,3 +177,75 @@ def test_main_fails_loud_on_output_that_is_not_json(tmp_path, capsys):
     path.write_text("", encoding="utf-8")
     assert gate.main([str(path)]) == 1
     assert "not valid JSON" in capsys.readouterr().err
+
+
+# Edge cases: report shapes the gate must reject without crashing, and the
+# allow-list boundary.
+
+
+def test_a_null_directory_section_passes_like_a_real_report():
+    # Real reports carry "directory": null when no directory scan ran.
+    assert gate.problems(_report(directory=None)) == []
+
+
+def test_a_non_blocking_warning_finding_does_not_fail_the_gate():
+    report = _report()
+    report["directory"]["findings"].append(
+        {
+            "code": "README_SHORT",
+            "severity": "warning",
+            "blocking": False,
+            "message": "M",
+        }
+    )
+    assert gate.problems(report) == []
+
+
+def test_the_allowed_text_as_an_error_still_fails_the_gate():
+    # The allow-list covers warnings only; the same text as an error is an error.
+    report = _report()
+    report["contents"][0]["errors"].append({"path": "root", "message": ALLOWED})
+    assert gate.problems(report) == [f"error in CLAUDE.md: {ALLOWED}"]
+
+
+def test_an_error_entry_that_is_not_an_object_fails_cleanly():
+    report = _report()
+    report["contents"][0]["errors"].append("name is required")
+    assert gate.problems(report) != []
+
+
+def test_a_warning_entry_that_is_not_an_object_fails_cleanly():
+    report = _report()
+    report["manifest"]["warnings"].append("Owner has no email")
+    assert gate.problems(report) != []
+
+
+def test_a_directory_finding_that_is_not_an_object_fails_cleanly():
+    report = _report()
+    report["directory"]["findings"].append("ICON_MISSING")
+    assert gate.problems(report) != []
+
+
+def test_a_directory_section_that_is_not_an_object_fails_cleanly():
+    assert gate.problems(_report(directory="scan")) == [
+        "unexpected report shape: directory is a str"
+    ]
+
+
+def test_main_exits_two_on_the_wrong_argument_count(capsys):
+    assert gate.main([]) == 2
+    assert gate.main(["a.json", "b.json"]) == 2
+    assert "usage:" in capsys.readouterr().err
+
+
+def test_main_fails_loud_on_a_missing_report_file(tmp_path, capsys):
+    assert gate.main([str(tmp_path / "absent.json")]) == 1
+    assert capsys.readouterr().err != ""
+
+
+def test_main_fails_loud_on_a_report_that_is_not_utf8(tmp_path, capsys):
+    # Windows PowerShell 5 redirection writes UTF-16 with a BOM.
+    path = tmp_path / "report.json"
+    path.write_bytes(b"\xff\xfe{\x00}\x00")
+    assert gate.main([str(path)]) == 1
+    assert capsys.readouterr().err != ""

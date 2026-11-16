@@ -53,8 +53,14 @@ def problems(report: object) -> list[str]:
             continue
         where = section.get("file") or section.get("type") or "manifest"
         for error in section.get("errors") or []:
+            if not isinstance(error, dict):
+                found.append(_shape(f"an error in {where}", error))
+                continue
             found.append(f"error in {where}: {error.get('message')}")
         for warning in section.get("warnings") or []:
+            if not isinstance(warning, dict):
+                found.append(_shape(f"a warning in {where}", warning))
+                continue
             message = warning.get("message")
             if message in ALLOWED_WARNINGS:
                 seen_allowed = True
@@ -65,7 +71,14 @@ def problems(report: object) -> list[str]:
             "the expected CLAUDE.md warning is missing; "
             "the report shape may have changed"
         )
-    for finding in (report.get("directory") or {}).get("findings") or []:
+    directory = report.get("directory") or {}
+    if not isinstance(directory, dict):
+        found.append(_shape("directory", directory))
+        directory = {}
+    for finding in directory.get("findings") or []:
+        if not isinstance(finding, dict):
+            found.append(_shape("a directory finding", finding))
+            continue
         if finding.get("blocking") or finding.get("severity") == "error":
             found.append(
                 f"blocking finding {finding.get('code')}: {finding.get('message')}"
@@ -77,7 +90,11 @@ def main(argv: list[str]) -> int:
     if len(argv) != 1:
         print("usage: check_plugin_validate.py REPORT.json", file=sys.stderr)
         return 2
-    text = Path(argv[0]).read_text(encoding="utf-8")
+    try:
+        text = Path(argv[0]).read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        print(f"cannot read validator output {argv[0]}: {exc}", file=sys.stderr)
+        return 1
     try:
         report = json.loads(text)
     except json.JSONDecodeError as exc:
