@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- New `llms.txt` at the repo root lists the main files for tools that read it. A test checks its
+  format and that every link points to a file that exists.
+- The README shows a skills.sh badge and asks readers who find the skill useful to star it.
 - One-command installs. Claude Code users can install the skill as a plugin with
   `claude plugin marketplace add eddyplolz/humanizer-pro` and
   `claude plugin install humanizer-pro@humanizer-pro`, then type `/humanizer-pro:humanizer-pro`.

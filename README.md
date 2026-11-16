@@ -1,6 +1,6 @@
 # Humanizer Pro
 
-[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg)
+[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg) [![skills.sh](https://skills.sh/b/eddyplolz/humanizer-pro)](https://skills.sh/eddyplolz/humanizer-pro)
 
 **Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,264 human-written documents: 0.2%.
 
@@ -399,6 +399,8 @@ The full list, with examples, is in the [catalog of habits](reference/tell-catal
 The checker is stricter for some kinds of writing than others. A chat message, an essay, a news story, and an encyclopedia article each have their own [rules for strictness](reference/registers.md).
 
 ## Help improve it
+
+If the skill is useful to you, a star on GitHub helps other writers find it.
 
 New rules go through a review process before they are added. A proposed rule is rejected if it:
 
