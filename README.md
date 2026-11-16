@@ -12,17 +12,18 @@
 Three ways to use it:
 
 ```bash
-# 1. As a skill in Claude Code (then type /humanizer-pro)
-git clone https://github.com/eddyplolz/humanizer-pro.git ~/.claude/skills/humanizer-pro
+# 1. As a Claude Code plugin (then type /humanizer-pro:humanizer-pro)
+claude plugin marketplace add eddyplolz/humanizer-pro
+claude plugin install humanizer-pro@humanizer-pro
 
-# 2. As a skill in Codex and other agents
-git clone https://github.com/eddyplolz/humanizer-pro.git ~/.agents/skills/humanizer-pro
+# 2. As a skill in Codex, Cursor, GitHub Copilot and other agents (Node.js)
+npx skills add eddyplolz/humanizer-pro
 
 # 3. As a command-line checker (Python 3.10+)
 pip install humanizer-pro && humanizer-audit draft.md
 ```
 
-Windows paths and the GitHub Action are in [Install the skill](#install-the-skill) and [Check files automatically](#check-files-automatically).
+If you installed it with `git clone` before, remove that folder first, so your agent does not load two copies. Git installs, Windows paths and the GitHub Action are in [Install the skill](#install-the-skill) and [Check files automatically](#check-files-automatically).
 
 **Who it is for:** anyone cleaning up an AI draft before it goes out; editors and docs teams who want a check in CI; Wikipedia and wiki editors, since it knows wikitext and neutral tone; and coding agents auditing their own prose.
 
@@ -102,11 +103,40 @@ Two features can put your text somewhere else, and only when you choose them:
 
 ### Before you start
 
-You need [git](https://git-scm.com/downloads). To use the command-line checker as well, you also need [Python](https://www.python.org/downloads/) 3.10 or newer.
+The Claude Code plugin needs only Claude Code. The `npx` install needs [Node.js](https://nodejs.org/), and the git install needs [git](https://git-scm.com/downloads). To use the command-line checker as well, you also need [Python](https://www.python.org/downloads/) 3.10 or newer.
+
+If you installed the skill with `git clone` before, remove that folder before you install the plugin or run `npx`. Otherwise your agent loads two copies.
 
 ### Install for Claude Code
 
-On a Mac or Linux computer, run these commands in Terminal:
+Run these commands in a terminal:
+
+```bash
+claude plugin marketplace add eddyplolz/humanizer-pro
+claude plugin install humanizer-pro@humanizer-pro
+```
+
+Inside a Claude Code session, you can type the same two steps as `/plugin marketplace add eddyplolz/humanizer-pro` and `/plugin install humanizer-pro@humanizer-pro`. Start a new session, then type `/humanizer-pro:humanizer-pro`.
+
+### Install for Codex, Cursor, GitHub Copilot and other agents
+
+Run this in your project folder:
+
+```bash
+npx skills add eddyplolz/humanizer-pro
+```
+
+It puts the skill in `.agents/skills/humanizer-pro`. To choose the agents yourself, add `-a codex`, `-a cursor`, `-a github-copilot` or `-a claude-code`.
+
+For GitHub Copilot, use the tested route:
+
+```bash
+npx skills add eddyplolz/humanizer-pro -a github-copilot
+```
+
+### Install with git
+
+For Claude Code on a Mac or Linux computer, run these commands in Terminal:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -122,16 +152,14 @@ git clone https://github.com/eddyplolz/humanizer-pro.git "%USERPROFILE%\.claude\
 
 To check it worked, open the new `humanizer-pro` folder and look for a file called `SKILL.md`. Claude Code loads the skill the next time you start it. You can then type `/humanizer-pro`.
 
-### Install for Codex and other agents
-
-On a Mac or Linux computer:
+For Codex and other agents on a Mac or Linux computer:
 
 ```bash
 mkdir -p ~/.agents/skills
 git clone https://github.com/eddyplolz/humanizer-pro.git ~/.agents/skills/humanizer-pro
 ```
 
-On Windows:
+For Codex and other agents on Windows:
 
 ```bat
 mkdir "%USERPROFILE%\.agents\skills"

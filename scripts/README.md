@@ -150,3 +150,10 @@ The default review threshold is `--fail-score 60`.
 - `compare.findings`: protected-content and meaning drift findings when `--compare` is used.
 
 The schema is intentionally compact so it can be used in CI, pre-publish checks, or agent workflows.
+
+## Plugin Manifest Gate
+
+`check_plugin_validate.py` reads the JSON that `claude plugin validate . --json` writes
+(run from the repo root, so it checks the marketplace manifest and the plugin) and exits 1 on any error, any blocking finding, or any warning except one. The validator warns
+that a plugin does not load the root `CLAUDE.md`; that file is kept for contributors, so the gate
+allows that warning, matched by its full text. Run it as `python scripts/check_plugin_validate.py report.json`.
