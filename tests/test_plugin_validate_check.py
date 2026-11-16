@@ -31,7 +31,7 @@ ALLOWED = (
     "with your plugin, use a skill (skills/<name>/SKILL.md) instead."
 )
 
-# Trimmed from a real `claude plugin validate .claude-plugin/marketplace.json --json`
+# Trimmed from a real `claude plugin validate . --json`
 # run on this repo (Claude Code 2.1.311).
 CLEAN_REPORT = {
     "success": True,
@@ -93,7 +93,10 @@ def test_a_different_warning_on_the_marketplace_manifest_fails_the_gate():
 def test_the_allowed_text_must_match_exactly():
     report = _report()
     report["contents"][0]["warnings"][0]["message"] = ALLOWED.replace("root", "top")
-    assert len(gate.problems(report)) == 1
+    found = gate.problems(report)
+    assert len(found) == 2
+    assert "at the plugin top" in found[0]
+    assert "expected CLAUDE.md warning is missing" in found[1]
 
 
 def test_any_error_fails_the_gate():
@@ -116,10 +119,46 @@ def test_a_blocking_directory_finding_fails_the_gate():
     assert len(gate.problems(report)) == 1
 
 
+def test_an_error_severity_directory_finding_fails_even_when_not_blocking():
+    report = _report()
+    report["directory"]["findings"][0]["severity"] = "error"
+    assert len(gate.problems(report)) == 1
+
+
+def test_a_report_with_only_success_fails_the_gate():
+    found = gate.problems({"success": True})
+    assert any("manifest" in line for line in found)
+    assert any("contents" in line for line in found)
+
+
+def test_warnings_moved_to_a_new_key_fail_the_gate():
+    report = _report(contents=[], warnings=[{"message": "X"}])
+    assert any("contents" in line for line in gate.problems(report))
+
+
+def test_a_missing_claude_md_warning_fails_the_gate():
+    report = _report()
+    report["contents"][0]["warnings"] = []
+    assert gate.problems(report) == [
+        "the expected CLAUDE.md warning is missing; the report shape may have changed"
+    ]
+
+
+def test_a_report_that_is_not_an_object_fails_cleanly():
+    assert gate.problems([]) == ["unexpected report shape: top level is a list"]
+
+
+def test_a_contents_entry_that_is_not_an_object_fails_cleanly():
+    report = _report()
+    report["contents"].append("CLAUDE.md")
+    assert "unexpected report shape: a contents entry is a str" in gate.problems(report)
+
+
 def test_main_exits_zero_on_a_clean_report(tmp_path, capsys):
     path = tmp_path / "report.json"
     path.write_text(json.dumps(CLEAN_REPORT), encoding="utf-8")
     assert gate.main([str(path)]) == 0
+    assert "clean apart from the allowed CLAUDE.md warning" in capsys.readouterr().out
 
 
 def test_main_exits_one_and_names_the_problem(tmp_path, capsys):

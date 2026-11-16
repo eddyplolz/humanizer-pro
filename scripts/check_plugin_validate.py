@@ -5,7 +5,7 @@ that file as a warning, because a plugin does not load it. This gate allows
 exactly that warning, matched by its full text, and fails on any other error,
 warning, blocking directory finding, or failed run.
 
-Usage: claude plugin validate .claude-plugin/marketplace.json --json > report.json
+Usage: claude plugin validate . --json > report.json
        python scripts/check_plugin_validate.py report.json
 """
 
@@ -23,22 +23,50 @@ ALLOWED_WARNINGS = frozenset(
 )
 
 
-def problems(report: dict) -> list[str]:
-    """Return one line per finding the gate does not allow; empty means pass."""
+def _shape(what: str, value: object) -> str:
+    return f"unexpected report shape: {what} is a {type(value).__name__}"
+
+
+def problems(report: object) -> list[str]:
+    """Return one line per finding the gate does not allow; empty means pass.
+
+    A report missing the sections the gate reads fails too: if the validator
+    renames or moves them, a silent pass would hide every new warning.
+    """
+    if not isinstance(report, dict):
+        return [_shape("top level", report)]
     found = []
     if report.get("success") is not True:
         found.append("validator reported success: false")
-    sections = [report.get("manifest") or {}, *(report.get("contents") or [])]
-    for section in sections:
+    manifest = report.get("manifest")
+    contents = report.get("contents")
+    if not isinstance(manifest, dict):
+        found.append(_shape("manifest", manifest))
+        manifest = {}
+    if not isinstance(contents, list) or not contents:
+        found.append("unexpected report shape: contents is missing or empty")
+        contents = []
+    seen_allowed = False
+    for section in [manifest, *contents]:
+        if not isinstance(section, dict):
+            found.append(_shape("a contents entry", section))
+            continue
         where = section.get("file") or section.get("type") or "manifest"
         for error in section.get("errors") or []:
             found.append(f"error in {where}: {error.get('message')}")
         for warning in section.get("warnings") or []:
             message = warning.get("message")
-            if message not in ALLOWED_WARNINGS:
+            if message in ALLOWED_WARNINGS:
+                seen_allowed = True
+            else:
                 found.append(f"warning in {where}: {message}")
+    if contents and not seen_allowed:
+        found.append(
+            "the expected CLAUDE.md warning is missing; "
+            "the report shape may have changed"
+        )
     for finding in (report.get("directory") or {}).get("findings") or []:
-        if finding.get("blocking"):
+        if finding.get("blocking") or finding.get("severity") == "error":
             found.append(
                 f"blocking finding {finding.get('code')}: {finding.get('message')}"
             )

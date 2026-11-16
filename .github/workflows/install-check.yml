@@ -31,12 +31,14 @@ jobs:
       - name: Validate the plugin manifests
         # --strict would fail on the root CLAUDE.md warning, which the repo
         # keeps on purpose. The gate allows that one warning and nothing else.
+        # Validate the repo root, not marketplace.json alone: the marketplace
+        # path reports the manifest only and skips the plugin itself.
         run: |
           export HOME="$RUNNER_TEMP/claude-home"
           mkdir -p "$HOME"
           set +e
           npx --yes @anthropic-ai/claude-code@2.1.311 plugin validate \
-            .claude-plugin/marketplace.json --json > "$RUNNER_TEMP/validate.json"
+            . --json > "$RUNNER_TEMP/validate.json"
           code=$?
           set -e
           if [ "$code" -gt 1 ]; then echo "validator failed to run (exit $code)"; exit 1; fi
