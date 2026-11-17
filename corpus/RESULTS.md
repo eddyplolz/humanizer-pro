@@ -34,9 +34,9 @@ text in that pool. The JSON output carries every threshold in steps of 5.
 
 | Threshold | chat | docs | essay | news | wiki |
 |---|---|---|---|---|---|
-| 10 | 12.4% / 38.9% | 24.1% / 60.5% | 12.0% / 8.3% | 17.9% / 57.3% | 50.0% / 51.3% |
-| 20 | 0.9% / 23.3% | 4.6% / 25.6% | 0.8% / 4.2% | 3.1% / 13.5% | 25.0% / 10.4% |
-| 30 | 0.4% / 12.0% | 1.3% / 16.3% | 0.4% / 4.2% | 0.4% / 3.2% | 0.0% / 2.6% |
+| 10 | 10.0% / 38.4% | 23.4% / 60.5% | 10.8% / 8.3% | 15.2% / 56.2% | 50.0% / 51.3% |
+| 20 | 0.4% / 23.3% | 4.6% / 25.6% | 0.8% / 4.2% | 2.7% / 12.4% | 25.0% / 10.4% |
+| 30 | 0.0% / 12.0% | 1.3% / 16.3% | 0.4% / 4.2% | 0.4% / 3.2% | 0.0% / 2.6% |
 | 40 | 0.0% / 6.9% | 0.7% / 7.0% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
 | 50 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
 | 60 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
@@ -54,10 +54,10 @@ human mean risk, in score points; it ignores blocks.
 
 | Register | Human n | Machine n | AUROC | Mean risk gap |
 |---|---|---|---|---|
-| chat | 450 | 365 | 0.64 | +5.7 |
-| docs | 303 | 43 | 0.76 | +8.8 |
-| essay | 250 | 48 | 0.40 | -1.5 |
-| news | 257 | 185 | 0.75 | +5.5 |
+| chat | 450 | 365 | 0.65 | +6.0 |
+| docs | 303 | 43 | 0.77 | +8.9 |
+| essay | 250 | 48 | 0.42 | -1.2 |
+| news | 257 | 185 | 0.76 | +5.7 |
 | wiki | 4 | 193 | 0.57 | +0.6 |
 
 ## Threshold under a 1.0% false-positive cap
@@ -68,7 +68,7 @@ split, so the numbers that picked the threshold do not grade it.
 
 | Register | Dev n | Threshold | Test FPR | Catch rate |
 |---|---|---|---|---|
-| chat | 150 | 20 | 0.9% | 23.3% |
+| chat | 150 | 20 | 0.4% | 23.3% |
 | docs | 97 | 30 | 1.3% | 16.3% |
 | essay | 83 | 20 | 0.8% | 4.2% |
 | news | 93 | 65 | 0.0% | 0.0% |
@@ -118,17 +118,17 @@ the test split, which this table never reads.
 | `clarity.wordiness` | 7.5% | 2.6% | 0.34 |
 | `family5.syntactic_tell` | 0.9% | 0.4% | 0.46 |
 | `register.time_inflation` | 0.9% | 0.4% | 0.46 |
-| `family9.chatbot_residue` | 6.1% | 3.0% | 0.50 |
 | `structure.uniform_length_run` | 15.8% | 10.0% | 0.63 |
 | `register.bare_auxiliary` | 1.2% | 0.9% | 0.74 |
 | `structure.anaphora` | 3.5% | 2.6% | 0.74 |
 | `source_risk.source_dependent_statement` | 13.9% | 13.9% | 1.00 |
-| `summary.reuse` | 6.1% | 9.1% | 1.49 |
 | `family3.filler_framing` | 4.9% | 7.8% | 1.58 |
 | `structure.long_uniform_paragraphs` | 24.0% | 39.8% | 1.66 |
+| `summary.reuse` | 5.2% | 8.7% | 1.67 |
 | `family7.rhetorical_formula` | 1.7% | 3.0% | 1.84 |
 | `register.performative_candour` | 0.5% | 0.9% | 1.84 |
 | `structure.midband_dominance` | 0.9% | 4.8% | 5.06 |
+| `family9.chatbot_residue` | 0.2% | 1.7% | 7.36 |
 | `structure.low_sentence_variance` | 0.2% | 3.5% | 14.72 |
 | `family8.markdown_structure` | 0.2% | 5.6% | 23.92 |
 | `family1.significance_inflation` | 0.2% | 8.7% | 36.80 |
@@ -152,12 +152,12 @@ the test split, which this table never reads.
 | 114 | `clarity.wordiness` |
 | 86 | `family3.filler_framing` |
 | 79 | `structure.anaphora` |
-| 77 | `summary.reuse` |
-| 69 | `family9.chatbot_residue` |
+| 70 | `summary.reuse` |
 | 44 | `family9.humanizer_spacing` |
 | 40 | `source_risk.bare_url` |
 | 22 | `register.time_inflation` |
 | 21 | `family7.rhetorical_formula` |
+| 12 | `structure.midband_dominance` |
 
 ## Honest limits
 

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `family9.chatbot_residue` no longer matches the bare word "certainly". It now matches
+  "Certainly!" or "Certainly," followed by a reply opener such as "here's" or "I can". The bare
+  adverb caused 29 of the rule's 30 hits on human text in the dev split. On the test split the
+  rule now fires on 0.2% of human documents, down from 6.1%. `corpus/RESULTS.md` is regenerated.
+
 - `scripts/fp_measure.py` now reports the false-positive rate and the catch rate at every
   threshold from 0 to 100, AUROC and the mean risk gap for each register, and a per-register
   threshold chosen under a false-positive cap (`--fpr-cap`, default 1%). The script picks that

@@ -519,8 +519,11 @@ FAMILY_RULES = [
         re.compile(
             # "of course!" sits outside the group: it ends in punctuation, so a
             # closing \b only matched when a letter followed with no space.
-            r"\bof course!|"
-            r"\b(?:great question|here's a polished|i hope this helps|certainly|best regards|"
+            r"\bof course!|\bcertainly!|"
+            # Bare "certainly" is an ordinary adverb ("he was certainly right"); it
+            # reads as residue only when it opens a reply to a request.
+            r"\b(?:great question|here's a polished|i hope this helps|best regards|"
+            r"certainly, (?:here(?:'s| is| are)|i can|i'd be happy|i would be happy|let me)|"
             r"let me know if|would you like me|let me walk you through|here's how i'd think about|"
             r"while i understand the appeal|"
             r"(?:as of|up to|based on) my (?:last |most recent |latest )?(?:knowledge |training )?(?:update|cutoff|data)|"

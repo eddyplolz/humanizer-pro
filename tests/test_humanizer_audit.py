@@ -645,6 +645,22 @@ def test_of_course_bang_is_detected_before_a_space() -> None:
     assert "family9.chatbot_residue" in _ids_for("Of course! Here is the plan.")
 
 
+def test_certainly_counts_only_as_a_reply_opener() -> None:
+    # The bare adverb caused 29 of 30 residue hits on human dev-split text.
+    for text in (
+        "Certainly! Here is the revised plan.",
+        "Certainly, here's the summary you asked for.",
+        "Certainly, I can help with that.",
+    ):
+        assert "family9.chatbot_residue" in _ids_for(text), text
+    for text in (
+        "He was certainly right about the bridge.",
+        "Certainly, the war changed the town for good.",
+        "It is certainly not the first time this has happened.",
+    ):
+        assert "family9.chatbot_residue" not in _ids_for(text), text
+
+
 def test_one_phrase_is_not_scored_twice() -> None:
     assert _ids_for("It is important to note the plan.") == ["family5.syntactic_tell"]
     assert _ids_for("The tool has the ability to parse files.") == ["family6.verbosity_padding"]
