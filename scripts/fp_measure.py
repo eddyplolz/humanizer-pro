@@ -32,9 +32,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "corpus" / "manifest.json"
 CACHE_DIR = ROOT / "corpus" / "cache"
-RESULT_SCHEMA = "humanizer-fp-measure.v2"
+RESULT_SCHEMA = "humanizer-fp-measure.v3"
 DEFAULT_THRESHOLD = 60  # the CLI's default review threshold
-SWEEP = (20, 40, 60, 80)
+# Every threshold from 0 to 100 in steps of 5 goes into the JSON; the
+# results page prints every second one to stay readable.
+SWEEP = tuple(range(0, 101, 5))
+PAGE_SWEEP = tuple(range(10, 100, 10))
+# A cap of 1% means one false positive per hundred human documents. A dev
+# slice smaller than this cannot show whether a threshold holds the cap.
+DEFAULT_FPR_CAP = 0.01
+MIN_CAP_N = 50
 # A human set frozen before the cutoff drifts: the further a document sits
 # from the present, the less its prose says about the writing the tool meets
 # today (Ren, Raghavan and Garg 2026 saw a 2010-trained estimator call 15% of
@@ -180,6 +187,122 @@ def catch_rates(machine_rows: list[dict], threshold: int) -> dict | None:
     }
 
 
+def share_flagged(rows: list[dict], threshold: int) -> float | None:
+    if not rows:
+        return None
+    return round(sum(1 for r in rows if is_flagged(r, threshold)) / len(rows), 4)
+
+
+def rank_score(row: dict) -> int:
+    """Risk for ranking; a block outranks every score, as it does at any threshold."""
+    return 101 if row["blocked"] else row["risk"]
+
+
+def auroc(human_rows: list[dict], machine_rows: list[dict]) -> float | None:
+    """Chance a random machine document outranks a random human one; ties count half.
+
+    0.5 means the score cannot tell the two apart; 1.0 means it always can.
+    It needs no threshold, so it shows separation the threshold choice hides.
+    """
+    if not human_rows or not machine_rows:
+        return None
+    human = [rank_score(r) for r in human_rows]
+    wins = 0.0
+    for m in (rank_score(r) for r in machine_rows):
+        wins += sum(1.0 if m > h else 0.5 if m == h else 0.0 for h in human)
+    return round(wins / (len(human) * len(machine_rows)), 4)
+
+
+def register_curves(
+    human_rows: list[dict], machine_rows: list[dict], thresholds: tuple[int, ...] = SWEEP
+) -> dict:
+    """Per register: FPR and catch rate at every threshold, AUROC, and the mean-risk gap.
+
+    Pass test-split rows only; the published curves never read the dev split.
+    """
+    curves = {}
+    for reg in sorted({r["register"] for r in human_rows} | {r["register"] for r in machine_rows}):
+        human = [r for r in human_rows if r["register"] == reg]
+        machine = [r for r in machine_rows if r["register"] == reg]
+        gap = None
+        if human and machine:
+            gap = round(
+                sum(r["risk"] for r in machine) / len(machine)
+                - sum(r["risk"] for r in human) / len(human),
+                1,
+            )
+        curves[reg] = {
+            "human_n": len(human),
+            "machine_n": len(machine),
+            "auroc": auroc(human, machine),
+            "mean_risk_gap": gap,
+            "points": [
+                {"threshold": t, "fpr": share_flagged(human, t), "catch": share_flagged(machine, t)}
+                for t in thresholds
+            ],
+        }
+    return curves
+
+
+def policy_caps(
+    human_dev: list[dict],
+    human_test: list[dict],
+    machine_test: list[dict],
+    cap: float = DEFAULT_FPR_CAP,
+    thresholds: tuple[int, ...] = SWEEP,
+    min_n: int = MIN_CAP_N,
+) -> dict:
+    """Per register: the lowest threshold whose dev-split FPR stays within the cap.
+
+    The threshold is chosen on the dev split and graded on the test split, so
+    the reported FPR and catch rate are not the numbers that picked it.
+    """
+    by_register = {}
+    for reg in sorted({r["register"] for r in human_dev} | {r["register"] for r in human_test}):
+        dev = [r for r in human_dev if r["register"] == reg]
+        test = [r for r in human_test if r["register"] == reg]
+        machine = [r for r in machine_test if r["register"] == reg]
+        entry = {
+            "dev_n": len(dev),
+            "test_n": len(test),
+            "machine_n": len(machine),
+            "threshold": None,
+            "reason": None,
+            "test_fpr": None,
+            "test_fpr_ci95": None,
+            "catch": None,
+            "catch_ci95": None,
+        }
+        blocked_share = sum(1 for r in dev if r["blocked"]) / len(dev) if dev else 0.0
+        # Compare unrounded shares: a rounded 1.0040% would pass a 1% cap.
+        chosen = next(
+            (t for t in thresholds if dev and sum(1 for r in dev if is_flagged(r, t)) / len(dev) <= cap),
+            None,
+        )
+        if len(dev) < min_n:
+            entry["reason"] = (
+                f"dev split has {len(dev)} human documents; the cap needs at least {min_n}"
+            )
+        elif blocked_share > cap:
+            entry["reason"] = (
+                f"blocks alone flag {pct(blocked_share)} of the dev split, above the {pct(cap)} cap"
+            )
+        elif chosen is None:
+            entry["reason"] = f"no threshold up to {thresholds[-1]} holds the {pct(cap)} cap"
+        else:
+            entry["threshold"] = chosen
+            if test:
+                flagged = sum(1 for r in test if is_flagged(r, chosen))
+                entry["test_fpr"] = share_flagged(test, chosen)
+                entry["test_fpr_ci95"] = [round(v, 4) for v in wilson_interval(flagged, len(test))]
+            if machine:
+                caught = sum(1 for r in machine if is_flagged(r, chosen))
+                entry["catch"] = share_flagged(machine, chosen)
+                entry["catch_ci95"] = [round(v, 4) for v in wilson_interval(caught, len(machine))]
+        by_register[reg] = entry
+    return {"cap": cap, "min_dev_n": min_n, "by_register": by_register}
+
+
 def rule_scorecard(human_rows: list[dict], machine_rows: list[dict]) -> list[dict]:
     """Per rule: share of human dev documents vs share of machine dev documents.
 
@@ -215,7 +338,7 @@ def rule_scorecard(human_rows: list[dict], machine_rows: list[dict]) -> list[dic
     return card
 
 
-def measure(threshold: int, include_fixture_tp: bool) -> dict:
+def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_FPR_CAP) -> dict:
     all_rows, missing = audit_corpus(threshold)
     # False-positive rates are about human text only; a machine row in these
     # tables would count a correct catch as a false alarm. They are published
@@ -238,13 +361,8 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         for period in [name for name, _lo, _hi in PERIODS] + ["undated"]
         if any(r["period"] == period for r in rows)
     }
-    sweep = {
-        str(t): {
-            reg: slice_stats([r for r in rows if r["register"] == reg], t)["fpr"]
-            for reg in registers
-        }
-        for t in SWEEP
-    }
+    machine_test = [r for r in machine_rows if r["split"] == "test"]
+    human_dev = [r for r in human_rows if r["split"] == "dev"]
     rule_hits: Counter[str] = Counter()
     for row in rows:
         rule_hits.update(row["rule_ids"])
@@ -259,7 +377,8 @@ def measure(threshold: int, include_fixture_tp: bool) -> dict:
         "by_register": by_register,
         "by_author": by_author,
         "by_period": by_period,
-        "threshold_sweep_fpr": sweep,
+        "register_curves": register_curves(rows, machine_test),
+        "policy_caps": policy_caps(human_dev, rows, machine_test, cap=fpr_cap),
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
         ],
@@ -299,6 +418,30 @@ def pct(value: float | None) -> str:
     return "-" if value is None else f"{100 * value:.1f}%"
 
 
+def sweep_cell(curve: dict, threshold: int) -> str:
+    point = next(p for p in curve["points"] if p["threshold"] == threshold)
+    fpr = "-" if point["fpr"] is None else pct(point["fpr"])
+    catch = "-" if point["catch"] is None else pct(point["catch"])
+    return f"{fpr} / {catch}"
+
+
+def separation_cells(curve: dict) -> str:
+    if curve["auroc"] is None:
+        return f"human n {curve['human_n']}, machine n {curve['machine_n']}: one pool is empty"
+    return (
+        f"human n {curve['human_n']}, machine n {curve['machine_n']}, "
+        f"AUROC {curve['auroc']:.2f}, mean risk gap {curve['mean_risk_gap']:+.1f}"
+    )
+
+
+def cap_summary(entry: dict) -> str:
+    if entry["threshold"] is None:
+        return f"dev n {entry['dev_n']}: no threshold ({entry['reason']})"
+    fpr = "-" if entry["test_fpr"] is None else pct(entry["test_fpr"])
+    catch = "-" if entry["catch"] is None else pct(entry["catch"])
+    return f"dev n {entry['dev_n']}: threshold {entry['threshold']}, test FPR {fpr}, catch {catch}"
+
+
 def render_text(result: dict) -> str:
     lines = [
         f"FP measurement over {result['corpus_documents']} human-control documents, test split "
@@ -322,13 +465,22 @@ def render_text(result: dict) -> str:
     for period, stats in result.get("by_period", {}).items():
         lines.append(row(f"period:{period}", stats))
     lines.append("")
-    lines.append("FPR by review threshold:")
-    header = "  threshold " + " ".join(f"{reg:>8}" for reg in result["by_register"])
-    lines.append(header)
-    for t, per_register in result["threshold_sweep_fpr"].items():
+    curves = result["register_curves"]
+    lines.append("FPR / catch rate by review threshold (test split):")
+    lines.append("  threshold " + " ".join(f"{reg:>15}" for reg in curves))
+    for t in PAGE_SWEEP:
         lines.append(
-            f"  {t:>9} " + " ".join(f"{pct(per_register[reg]):>8}" for reg in result["by_register"])
+            f"  {t:>9} " + " ".join(f"{sweep_cell(curves[reg], t):>15}" for reg in curves)
         )
+    lines.append("")
+    lines.append("Separation by register (test split):")
+    for reg, curve in curves.items():
+        lines.append(f"  {reg:10} {separation_cells(curve)}")
+    caps = result["policy_caps"]
+    lines.append("")
+    lines.append(f"Threshold under a {pct(caps['cap'])} FPR cap (chosen on dev, graded on test):")
+    for reg, entry in caps["by_register"].items():
+        lines.append(f"  {reg:10} {cap_summary(entry)}")
     lines.append("")
     lines.append("Rules firing most often on human text (documents touched):")
     for item in result["top_rules_on_human_text"]:
@@ -409,20 +561,66 @@ def render_results_md(result: dict) -> str:
         lines.append(row(f"period: {period}", stats))
     # With nothing cached there are no register columns, and an empty table
     # renders as broken Markdown.
-    if result["by_register"]:
+    curves = result["register_curves"]
+    if curves:
         lines.extend(
             [
                 "",
-                "## FPR by review threshold",
+                "## Error rates by review threshold",
                 "",
-                "| Threshold | " + " | ".join(result["by_register"]) + " |",
-                "|---|" + "|".join("---" for _ in result["by_register"]) + "|",
+                "Each cell is false-positive rate / catch rate at that threshold, test split.",
+                "Raising the threshold lowers both; a dash means the register has no",
+                "text in that pool. The JSON output carries every threshold in steps of 5.",
+                "",
+                "| Threshold | " + " | ".join(curves) + " |",
+                "|---|" + "|".join("---" for _ in curves) + "|",
             ]
         )
-        for t, per_register in result["threshold_sweep_fpr"].items():
+        for t in PAGE_SWEEP:
+            lines.append(f"| {t} | " + " | ".join(sweep_cell(curves[reg], t) for reg in curves) + " |")
+        lines.extend(
+            [
+                "",
+                "## Separation by register",
+                "",
+                "AUROC is the chance a random machine document ranks above a random human",
+                "one (0.5 = no better than a coin, 1.0 = always). It needs no threshold.",
+                "Ties count half, and a blocked document ranks above every score, as it is",
+                "flagged at every threshold. The mean risk gap is machine mean risk minus",
+                "human mean risk, in score points; it ignores blocks.",
+                "",
+                "| Register | Human n | Machine n | AUROC | Mean risk gap |",
+                "|---|---|---|---|---|",
+            ]
+        )
+        for reg, curve in curves.items():
+            auc = "-" if curve["auroc"] is None else f"{curve['auroc']:.2f}"
+            gap = "-" if curve["mean_risk_gap"] is None else f"{curve['mean_risk_gap']:+.1f}"
             lines.append(
-                f"| {t} | " + " | ".join(pct(per_register[reg]) for reg in result["by_register"]) + " |"
+                f"| {reg} | {curve['human_n']} | {curve['machine_n']} | {auc} | {gap} |"
             )
+    caps = result["policy_caps"]
+    if caps["by_register"]:
+        lines.extend(
+            [
+                "",
+                f"## Threshold under a {pct(caps['cap'])} false-positive cap",
+                "",
+                "For each register, the lowest threshold whose false-positive rate on the",
+                "dev split stays at or under the cap. The rates shown are from the test",
+                "split, so the numbers that picked the threshold do not grade it.",
+                "",
+                "| Register | Dev n | Threshold | Test FPR | Catch rate |",
+                "|---|---|---|---|---|",
+            ]
+        )
+        for reg, entry in caps["by_register"].items():
+            if entry["threshold"] is None:
+                lines.append(f"| {reg} | {entry['dev_n']} | none: {entry['reason']} | - | - |")
+                continue
+            fpr = "-" if entry["test_fpr"] is None else pct(entry["test_fpr"])
+            catch = "-" if entry["catch"] is None else pct(entry["catch"])
+            lines.append(f"| {reg} | {entry['dev_n']} | {entry['threshold']} | {fpr} | {catch} |")
     lines.extend(["", "## Catch rate on machine text (test split)", ""])
     catch = result["catch_rate"]
     if catch is None:
@@ -528,8 +726,16 @@ def main(argv: list[str] | None = None) -> int:
         metavar="PATH",
         help="Write a Markdown results page (e.g. corpus/RESULTS.md).",
     )
+    parser.add_argument(
+        "--fpr-cap",
+        type=float,
+        default=DEFAULT_FPR_CAP,
+        help="False-positive cap for the per-register threshold table (default 0.01).",
+    )
     args = parser.parse_args(argv)
-    result = measure(args.threshold, args.include_fixture_tp)
+    if not 0.0 <= args.fpr_cap <= 1.0:  # also rejects nan
+        parser.error(f"--fpr-cap must be between 0 and 1, got {args.fpr_cap}")
+    result = measure(args.threshold, args.include_fixture_tp, args.fpr_cap)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:

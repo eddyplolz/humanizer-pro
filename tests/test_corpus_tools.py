@@ -102,12 +102,145 @@ def test_results_page_handles_empty_cache_and_threshold_label() -> None:
     empty = {
         "threshold": 40, "corpus_documents": 0, "missing_cache": ["x"],
         "overall": fp_measure.slice_stats([], 40), "by_register": {}, "by_author": {},
-        "threshold_sweep_fpr": {"40": {}}, "top_rules_on_human_text": [],
+        "register_curves": {}, "policy_caps": {"cap": 0.01, "by_register": {}},
+        "top_rules_on_human_text": [],
         "machine_documents": 0, "human_dev_documents": 0, "catch_rate": None, "rule_scorecard": [],
     }
     page = fp_measure.render_results_md(empty)
     assert "(the CLI default)" not in page
     assert "| Threshold |  |" not in page
+    assert "## Separation by register" not in page
+
+
+# ------------------------------------------------------- threshold sweep
+
+
+def risk_rows(risks: list[int], blocked: bool = False, **fields) -> list[dict]:
+    return [{"risk": risk, "blocked": blocked, **fields} for risk in risks]
+
+
+def test_auroc_counts_ties_as_half() -> None:
+    # Machine 20 beats human 10, ties 20, loses to 30 (1.5 of 3); machine 40
+    # beats all three (3 of 3). 4.5 of 6 pairs = 0.75.
+    human = risk_rows([10, 20, 30])
+    machine = risk_rows([20, 40])
+    assert fp_measure.auroc(human, machine) == 0.75
+
+
+def test_auroc_ranks_a_block_above_every_score() -> None:
+    # A blocked document is flagged at every threshold, so it outranks a
+    # human document with a high score but no block.
+    human = risk_rows([90])
+    machine = risk_rows([5], blocked=True)
+    assert fp_measure.auroc(human, machine) == 1.0
+    assert fp_measure.auroc([], machine) is None
+    assert fp_measure.auroc(human, []) is None
+    # A blocked human document outranks a machine document at 90.
+    assert fp_measure.auroc(risk_rows([10], blocked=True), risk_rows([90])) == 0.0
+
+
+def test_policy_cap_rejects_a_share_that_rounds_down_to_the_cap() -> None:
+    # 10 of 996 is 1.004%: above a 1% cap, though it rounds to 1.00%.
+    dev = risk_rows([0] * 986 + [60] * 10, register="chat")
+    caps = fp_measure.policy_caps(dev, [], [], cap=0.01, thresholds=(50, 65))
+    assert caps["by_register"]["chat"]["threshold"] == 65
+
+
+def test_policy_cap_says_when_no_threshold_holds_it() -> None:
+    dev = risk_rows([100] * 60, register="chat")
+    entry = fp_measure.policy_caps(dev, [], [], cap=0.01)["by_register"]["chat"]
+    assert entry["threshold"] is None
+    assert entry["reason"] == "no threshold up to 100 holds the 1.0% cap"
+
+
+def test_register_curves_cover_a_register_with_only_machine_text() -> None:
+    curves = fp_measure.register_curves([], risk_rows([70], register="wiki"))
+    assert curves["wiki"]["human_n"] == 0
+    assert curves["wiki"]["auroc"] is None and curves["wiki"]["mean_risk_gap"] is None
+    assert curves["wiki"]["points"][0] == {"threshold": 0, "fpr": None, "catch": 1.0}
+
+
+def test_cli_rejects_an_fpr_cap_outside_zero_to_one() -> None:
+    with pytest.raises(SystemExit):
+        fp_measure.main(["--fpr-cap", "1.5"])
+
+
+def test_register_curves_literal() -> None:
+    human = risk_rows([0, 50, 70], register="chat")
+    machine = risk_rows([50, 80], register="chat")
+    curves = fp_measure.register_curves(human, machine)
+    chat = curves["chat"]
+    assert chat["human_n"] == 3 and chat["machine_n"] == 2
+    assert chat["auroc"] == 0.75
+    # Mean machine risk 65 minus mean human risk 40.
+    assert chat["mean_risk_gap"] == 25.0
+    points = {p["threshold"]: p for p in chat["points"]}
+    assert set(points) == set(range(0, 101, 5))
+    assert points[50] == {"threshold": 50, "fpr": 0.6667, "catch": 1.0}
+    assert points[75] == {"threshold": 75, "fpr": 0.0, "catch": 0.5}
+    assert points[0] == {"threshold": 0, "fpr": 1.0, "catch": 1.0}
+
+
+def test_register_curves_without_machine_text_reports_no_catch() -> None:
+    curves = fp_measure.register_curves(risk_rows([10], register="wiki"), [])
+    wiki = curves["wiki"]
+    assert wiki["machine_n"] == 0
+    assert wiki["auroc"] is None and wiki["mean_risk_gap"] is None
+    assert all(p["catch"] is None for p in wiki["points"])
+
+
+def test_policy_cap_picks_on_dev_and_reports_on_test() -> None:
+    # Dev: 100 human documents, one at 50 and one at 70. Threshold 50 flags
+    # two (2%), threshold 55 flags one (1%), so 55 is the lowest step that
+    # holds a 1% cap.
+    dev = risk_rows([10] * 98 + [50, 70], register="chat")
+    test_human = risk_rows([10, 60], register="chat")
+    test_machine = risk_rows([56, 40], register="chat")
+    caps = fp_measure.policy_caps(dev, test_human, test_machine, cap=0.01)
+    assert caps["cap"] == 0.01
+    chat = caps["by_register"]["chat"]
+    assert chat["threshold"] == 55
+    assert chat["dev_n"] == 100
+    assert chat["test_fpr"] == 0.5
+    assert chat["catch"] == 0.5
+    assert chat["machine_n"] == 2
+    assert chat["reason"] is None
+
+
+def test_policy_cap_refuses_a_slice_too_small_to_hold_it() -> None:
+    dev = risk_rows([10] * 10, register="wiki")
+    caps = fp_measure.policy_caps(dev, risk_rows([10], register="wiki"), [], cap=0.01)
+    wiki = caps["by_register"]["wiki"]
+    assert wiki["threshold"] is None
+    assert wiki["reason"] == "dev split has 10 human documents; the cap needs at least 50"
+
+
+def test_policy_cap_reports_when_blocks_alone_break_it() -> None:
+    # Two blocks in 100 documents are flagged at every threshold: 2% > 1%.
+    dev = risk_rows([0] * 98, register="docs") + risk_rows([0, 0], blocked=True, register="docs")
+    caps = fp_measure.policy_caps(dev, risk_rows([0], register="docs"), [], cap=0.01)
+    docs = caps["by_register"]["docs"]
+    assert docs["threshold"] is None
+    assert docs["reason"] == "blocks alone flag 2.0% of the dev split, above the 1.0% cap"
+
+
+def test_results_page_renders_sweep_separation_and_caps() -> None:
+    human = risk_rows([0, 50, 70], register="chat")
+    machine = risk_rows([50, 80], register="chat")
+    dev = risk_rows([10] * 98 + [50, 70], register="chat")
+    result = {
+        "threshold": 60, "corpus_documents": 3, "missing_cache": [],
+        "overall": fp_measure.slice_stats(human, 60),
+        "by_register": {"chat": fp_measure.slice_stats(human, 60)}, "by_author": {},
+        "register_curves": fp_measure.register_curves(human, machine),
+        "policy_caps": fp_measure.policy_caps(dev, human, machine, cap=0.01),
+        "top_rules_on_human_text": [], "machine_documents": 2, "human_dev_documents": 100,
+        "catch_rate": None, "rule_scorecard": [],
+    }
+    page = fp_measure.render_results_md(result)
+    assert "| 50 | 66.7% / 100.0% |" in page
+    assert "| chat | 3 | 2 | 0.75 | +25.0 |" in page
+    assert "| chat | 100 | 55 | 33.3% | 50.0% |" in page
 
 
 # --------------------------------------------------------------- manifest
@@ -221,8 +354,10 @@ def test_fp_measure_cli_runs() -> None:
     )
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
-    assert payload["schema"] == "humanizer-fp-measure.v2"
+    assert payload["schema"] == "humanizer-fp-measure.v3"
     assert "by_register" in payload and "overall" in payload
+    assert "register_curves" in payload and "policy_caps" in payload
+    assert "threshold_sweep_fpr" not in payload
 
 
 def test_public_domain_pool_rebuilds_offline_without_gutenberg_boilerplate() -> None:

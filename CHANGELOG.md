@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `scripts/fp_measure.py` now reports the false-positive rate and the catch rate at every
+  threshold from 0 to 100, AUROC and the mean risk gap for each register, and a per-register
+  threshold chosen under a false-positive cap (`--fpr-cap`, default 1%). The script picks that
+  threshold on the dev split and reports its rates on the test split. It refuses a register whose
+  dev split has fewer than 50 human documents. The JSON schema is now `humanizer-fp-measure.v3`;
+  `threshold_sweep_fpr` is replaced by `register_curves` and `policy_caps`. `corpus/RESULTS.md` is
+  regenerated. The CLI and its scores do not change.
 - New `llms.txt` at the repo root lists the main files for tools that read it. A test checks its
   format and that every link points to a file that exists.
 - The README shows a skills.sh badge and asks readers who find the skill useful to star it.

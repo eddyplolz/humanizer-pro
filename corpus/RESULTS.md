@@ -26,14 +26,53 @@ quarters of each pool, chosen by digest); the dev split is for rule tuning.
 | period: 1930-2017 | 567 | 2 | 0.4% | 0.1%–1.3% | 1 |
 | period: 2018-2022 | 190 | 0 | 0.0% | 0.0%–2.0% | 0 |
 
-## FPR by review threshold
+## Error rates by review threshold
+
+Each cell is false-positive rate / catch rate at that threshold, test split.
+Raising the threshold lowers both; a dash means the register has no
+text in that pool. The JSON output carries every threshold in steps of 5.
 
 | Threshold | chat | docs | essay | news | wiki |
 |---|---|---|---|---|---|
-| 20 | 0.9% | 4.6% | 0.8% | 3.1% | 25.0% |
-| 40 | 0.0% | 0.7% | 0.0% | 0.4% | 0.0% |
-| 60 | 0.0% | 0.7% | 0.0% | 0.4% | 0.0% |
-| 80 | 0.0% | 0.3% | 0.0% | 0.0% | 0.0% |
+| 10 | 12.4% / 38.9% | 24.1% / 60.5% | 12.0% / 8.3% | 17.9% / 57.3% | 50.0% / 51.3% |
+| 20 | 0.9% / 23.3% | 4.6% / 25.6% | 0.8% / 4.2% | 3.1% / 13.5% | 25.0% / 10.4% |
+| 30 | 0.4% / 12.0% | 1.3% / 16.3% | 0.4% / 4.2% | 0.4% / 3.2% | 0.0% / 2.6% |
+| 40 | 0.0% / 6.9% | 0.7% / 7.0% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 50 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 60 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 70 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+| 80 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+| 90 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+
+## Separation by register
+
+AUROC is the chance a random machine document ranks above a random human
+one (0.5 = no better than a coin, 1.0 = always). It needs no threshold.
+Ties count half, and a blocked document ranks above every score, as it is
+flagged at every threshold. The mean risk gap is machine mean risk minus
+human mean risk, in score points; it ignores blocks.
+
+| Register | Human n | Machine n | AUROC | Mean risk gap |
+|---|---|---|---|---|
+| chat | 450 | 365 | 0.64 | +5.7 |
+| docs | 303 | 43 | 0.76 | +8.8 |
+| essay | 250 | 48 | 0.40 | -1.5 |
+| news | 257 | 185 | 0.75 | +5.5 |
+| wiki | 4 | 193 | 0.57 | +0.6 |
+
+## Threshold under a 1.0% false-positive cap
+
+For each register, the lowest threshold whose false-positive rate on the
+dev split stays at or under the cap. The rates shown are from the test
+split, so the numbers that picked the threshold do not grade it.
+
+| Register | Dev n | Threshold | Test FPR | Catch rate |
+|---|---|---|---|---|
+| chat | 150 | 20 | 0.9% | 23.3% |
+| docs | 97 | 30 | 1.3% | 16.3% |
+| essay | 83 | 20 | 0.8% | 4.2% |
+| news | 93 | 65 | 0.0% | 0.0% |
+| wiki | 2 | none: dev split has 2 human documents; the cap needs at least 50 | - | - |
 
 ## Catch rate on machine text (test split)
 
