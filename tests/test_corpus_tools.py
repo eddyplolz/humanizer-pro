@@ -224,6 +224,36 @@ def test_policy_cap_reports_when_blocks_alone_break_it() -> None:
     assert docs["reason"] == "blocks alone flag 2.0% of the dev split, above the 1.0% cap"
 
 
+def test_length_bands_split_by_words_and_split() -> None:
+    human = (
+        risk_rows([10, 30], words=120, split="dev")
+        + risk_rows([20], words=150, split="dev")
+        + risk_rows([5], words=600, split="test")
+    )
+    machine = (
+        risk_rows([30, 40], words=99, split="dev")
+        + risk_rows([90], words=149, split="dev")
+        + risk_rows([70], words=249, split="dev")
+    )
+    bands = {b["band"]: b for b in fp_measure.length_bands(human, machine)}
+    assert list(bands) == ["0-49", "50-99", "100-149", "150-249", "250-499", "500+"]
+    # 100-149: human 10, 30 against machine 90 -> AUROC 1.0.
+    assert bands["100-149"]["dev"] == {"human_n": 2, "machine_n": 1, "auroc": 1.0}
+    # 150 words opens the next band: human 20 against machine 70.
+    assert bands["150-249"]["dev"] == {"human_n": 1, "machine_n": 1, "auroc": 1.0}
+    # 99 words stays in 50-99, which has no human text.
+    assert bands["50-99"]["dev"] == {"human_n": 0, "machine_n": 2, "auroc": None}
+    assert bands["500+"]["test"] == {"human_n": 1, "machine_n": 0, "auroc": None}
+    assert bands["500+"]["dev"]["human_n"] == 0
+
+
+def test_results_page_renders_length_bands() -> None:
+    cell = {"human_n": 38, "machine_n": 23, "auroc": 0.537}
+    empty = {"human_n": 0, "machine_n": 4, "auroc": None}
+    assert fp_measure.band_cell(cell) == "38 / 23 / 0.54"
+    assert fp_measure.band_cell(empty) == "0 / 4 / -"
+
+
 def test_results_page_renders_sweep_separation_and_caps() -> None:
     human = risk_rows([0, 50, 70], register="chat")
     machine = risk_rows([50, 80], register="chat")

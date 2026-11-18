@@ -60,6 +60,22 @@ human mean risk, in score points; it ignores blocks.
 | news | 257 | 185 | 0.76 | +5.7 |
 | wiki | 4 | 193 | 0.57 | +0.6 |
 
+## Separation by text length
+
+AUROC by word count, all registers together. Near 0.5 the score cannot
+tell human from machine text; the audit labels text under 150
+words as short for that reason. The dev split chose the cut-off and the
+test split checks it. Each cell is human n / machine n / AUROC.
+
+| Words | Dev split | Test split |
+|---|---|---|
+| 0-49 | 0 / 0 / - | 0 / 0 / - |
+| 50-99 | 38 / 23 / 0.54 | 94 / 73 / 0.59 |
+| 100-149 | 22 / 24 / 0.56 | 89 / 67 / 0.63 |
+| 150-249 | 53 / 44 / 0.62 | 124 / 134 / 0.68 |
+| 250-499 | 44 / 126 / 0.77 | 152 / 481 / 0.78 |
+| 500+ | 268 / 14 / 0.47 | 805 / 79 / 0.54 |
+
 ## Threshold under a 1.0% false-positive cap
 
 For each register, the lowest threshold whose false-positive rate on the

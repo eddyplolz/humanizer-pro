@@ -42,6 +42,8 @@ PAGE_SWEEP = tuple(range(10, 100, 10))
 # slice smaller than this cannot show whether a threshold holds the cap.
 DEFAULT_FPR_CAP = 0.01
 MIN_CAP_N = 50
+# Word-count bands for the separation-by-length table; None means no upper bound.
+LENGTH_BANDS = ((0, 50), (50, 100), (100, 150), (150, 250), (250, 500), (500, None))
 # A human set frozen before the cutoff drifts: the further a document sits
 # from the present, the less its prose says about the writing the tool meets
 # today (Ren, Raghavan and Garg 2026 saw a 2010-trained estimator call 15% of
@@ -244,6 +246,31 @@ def register_curves(
     return curves
 
 
+def band_label(low: int, high: int | None) -> str:
+    return f"{low}+" if high is None else f"{low}-{high - 1}"
+
+
+def length_bands(human_rows: list[dict], machine_rows: list[dict]) -> list[dict]:
+    """AUROC by word-count band, on the dev and the test split.
+
+    The audit labels text under SHORT_TEXT_WORDS as short; this table is the
+    evidence for that cut-off. The dev split chose it and the test split checks it.
+    """
+    bands = []
+    for low, high in LENGTH_BANDS:
+        entry: dict = {"band": band_label(low, high)}
+        for split in ("dev", "test"):
+
+            def in_band(row: dict) -> bool:
+                return row["split"] == split and low <= row["words"] and (high is None or row["words"] < high)
+
+            human = [r for r in human_rows if in_band(r)]
+            machine = [r for r in machine_rows if in_band(r)]
+            entry[split] = {"human_n": len(human), "machine_n": len(machine), "auroc": auroc(human, machine)}
+        bands.append(entry)
+    return bands
+
+
 def policy_caps(
     human_dev: list[dict],
     human_test: list[dict],
@@ -378,6 +405,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
         "by_author": by_author,
         "by_period": by_period,
         "register_curves": register_curves(rows, machine_test),
+        "length_bands": length_bands(human_rows, machine_rows),
         "policy_caps": policy_caps(human_dev, rows, machine_test, cap=fpr_cap),
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
@@ -434,6 +462,11 @@ def separation_cells(curve: dict) -> str:
     )
 
 
+def band_cell(cell: dict) -> str:
+    auc = "-" if cell["auroc"] is None else f"{cell['auroc']:.2f}"
+    return f"{cell['human_n']} / {cell['machine_n']} / {auc}"
+
+
 def cap_summary(entry: dict) -> str:
     if entry["threshold"] is None:
         return f"dev n {entry['dev_n']}: no threshold ({entry['reason']})"
@@ -476,6 +509,11 @@ def render_text(result: dict) -> str:
     lines.append("Separation by register (test split):")
     for reg, curve in curves.items():
         lines.append(f"  {reg:10} {separation_cells(curve)}")
+    lines.append("")
+    lines.append("Separation by text length (human n / machine n / AUROC):")
+    lines.append(f"  {'words':>9} {'dev':>18} {'test':>18}")
+    for entry in result.get("length_bands", []):
+        lines.append(f"  {entry['band']:>9} {band_cell(entry['dev']):>18} {band_cell(entry['test']):>18}")
     caps = result["policy_caps"]
     lines.append("")
     lines.append(f"Threshold under a {pct(caps['cap'])} FPR cap (chosen on dev, graded on test):")
@@ -599,6 +637,24 @@ def render_results_md(result: dict) -> str:
             lines.append(
                 f"| {reg} | {curve['human_n']} | {curve['machine_n']} | {auc} | {gap} |"
             )
+    bands = result.get("length_bands")
+    if bands:
+        lines.extend(
+            [
+                "",
+                "## Separation by text length",
+                "",
+                "AUROC by word count, all registers together. Near 0.5 the score cannot",
+                f"tell human from machine text; the audit labels text under {_audit.SHORT_TEXT_WORDS}",
+                "words as short for that reason. The dev split chose the cut-off and the",
+                "test split checks it. Each cell is human n / machine n / AUROC.",
+                "",
+                "| Words | Dev split | Test split |",
+                "|---|---|---|",
+            ]
+        )
+        for entry in bands:
+            lines.append(f"| {entry['band']} | {band_cell(entry['dev'])} | {band_cell(entry['test'])} |")
     caps = result["policy_caps"]
     if caps["by_register"]:
         lines.extend(
