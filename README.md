@@ -247,6 +247,8 @@ The checker ends with an exit code that scripts can act on.
 | 2 | Block: leaked chatbot text, a placeholder, or hidden characters | Fix before you publish. |
 | 3 | The checker could not run, for example a wrong option or a missing file | Check the command. |
 
+The score is weak on short text. When a document has fewer than 150 words, the report says so next to its risk score, and the JSON output sets `short_text` to true. The exit code does not change.
+
 ## Check files automatically
 
 ### Before each commit

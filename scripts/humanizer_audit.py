@@ -20,6 +20,10 @@ from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 __version__ = "4.17.0"
 SCHEMA = "humanizer-audit.v1"
+# Below this many words the risk score told human from machine text at about
+# chance on the corpus dev split (AUROC 0.54 to 0.56; see corpus/RESULTS.md).
+# The report labels such text; the score and exit code stay the same.
+SHORT_TEXT_WORDS = 150
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 
 AI_REFERRER_HOSTS = {
@@ -2645,6 +2649,7 @@ def audit_text(text: str, path: str, include_code: bool = False, skip_quoted: bo
     return {
         "path": path,
         "risk_score": risk_score(findings),
+        "short_text": stats["words"] < SHORT_TEXT_WORDS,
         "stats": stats,
         "findings": findings,
     }
@@ -2670,6 +2675,7 @@ def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, 
         "source_risk_count": sum(1 for finding in all_findings if finding["source_risk"]),
         "family_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("family")),
         "clarity_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("clarity.")),
+        "short_text_count": sum(1 for document in documents if document["short_text"]),
         "exit_code": exit_code,
     }
 
@@ -2743,7 +2749,13 @@ def render_text_report(result: dict[str, object]) -> str:
     )
     for document in result["documents"]:
         lines.append("")
-        lines.append(f"{line_start_safe(str(document['path']))} — risk {document['risk_score']}")
+        header = f"{line_start_safe(str(document['path']))} — risk {document['risk_score']}"
+        if document.get("short_text"):
+            header += (
+                f" (short text: {document['stats']['words']} words; "
+                f"scores under {SHORT_TEXT_WORDS} words are unreliable)"
+            )
+        lines.append(header)
         for finding in document["findings"]:
             lines.append(
                 f"  {finding['severity'].upper()} L{finding['line']}:C{finding['column']} "

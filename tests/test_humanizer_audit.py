@@ -1630,3 +1630,30 @@ def test_self_scan_uses_the_audit_modules_exemptions() -> None:
     source = (ROOT / "scripts" / "self_scan.py").read_text(encoding="utf-8")
     assert "_audit.apply_exemptions(" in source
     assert "def apply_exemptions" not in source
+
+
+def test_short_text_is_labeled_but_scored_as_before() -> None:
+    # Below 150 words the score separated human from machine text at about
+    # chance on the dev split (AUROC 0.54 to 0.56), so the report says so.
+    short = "The meeting moved to Thursday. Bring the budget sheet. " * 14  # 9 words x 14 = 126
+    long = "The meeting moved to Thursday. Bring the budget sheet. " * 17  # 9 words x 17 = 153
+    _, payload = audit_json("--stdin", input_text=short)
+    document = payload["documents"][0]
+    assert document["stats"]["words"] == 126
+    assert document["short_text"] is True
+    assert payload["summary"]["short_text_count"] == 1
+    _, payload = audit_json("--stdin", input_text=long)
+    assert payload["documents"][0]["short_text"] is False
+    assert payload["summary"]["short_text_count"] == 0
+
+
+def test_short_text_line_in_the_text_report() -> None:
+    result = run_audit("--stdin", input_text="Bring the budget sheet on Thursday.\n")
+    assert "<stdin> — risk 0 (short text: 6 words; scores under 150 words are unreliable)" in result.stdout
+
+
+def test_short_text_does_not_change_the_exit_code() -> None:
+    # A leaked artifact in a short text still blocks.
+    returncode, payload = audit_json("--stdin", input_text="Done. citeturn0search0\n")
+    assert payload["documents"][0]["short_text"] is True
+    assert returncode == 2

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- The audit now labels a document under 150 words as short text. On the corpus dev split, the
+  risk score told human from machine text at about chance below that length (AUROC 0.54 to
+  0.56). JSON output gains `short_text` on each document and `short_text_count` in the summary,
+  and the text report adds a note after the risk score. The score and the exit code do not
+  change, so a leaked artifact in a short text still blocks.
+
 - `family9.chatbot_residue` no longer matches the bare word "certainly". It now matches
   "Certainly!" or "Certainly," followed by a reply opener such as "here's" or "I can". The bare
   adverb caused 29 of the rule's 30 hits on human text in the dev split. On the test split the
