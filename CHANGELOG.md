@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The README and `corpus/RESULTS.md` no longer say the Claude pool is left out of the published
+  numbers. Its 196 test documents were already in the catch rate, and they are the only machine
+  essays. The README catch rate now reads 2.9% (24 of 834), the figure `corpus/RESULTS.md` has
+  reported since the pool was added.
+
 - The human test set adds 300 student essays from PERSUADE 2.0 (Crossley and others, 2024; CC BY
   4.0), 20 for each of its 15 writing prompts, written in US grades 6 to 12 between 2010 and 2020.
   Until now every human essay was about 100 years old. `scripts/corpus.py build-persuade` builds
