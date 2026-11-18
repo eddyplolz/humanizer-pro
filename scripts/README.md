@@ -26,7 +26,7 @@ lives in the gitignored `corpus/cache/` on the machine that built it.
 |---|---|---|---|
 | Strunk chunks | essay | the in-repo *Elements of Style* text | `build-pd` (offline) |
 | Gutenberg works | essay | Emerson, Thoreau, Twain (public domain) | `build-essays` |
-| Newspaper OCR | news | Internet Archive issues; OpenCulture US-PD-Newspapers pages | `build-news`, `build-hf-news` |
+| CC-News articles | news | pre-cutoff articles from CC-News through the Hugging Face rows API, at most three per outlet (no license stated; copyright stays with each publisher; pointer is the dataset row and article URL) | `build-cc-news` |
 | Wikipedia articles | wiki | random English Wikipedia articles at their last pre-cutoff revision (CC BY-SA 4.0; pointer is the revision id) | `build-wikipedia` |
 | Stack Exchange answers | chat | top-voted pre-cutoff answers from hobby, language, and workplace sites, code and quotes removed (CC BY-SA 4.0; pointer is the answer id) | `build-stackexchange` |
 | PEPs | docs | Python Enhancement Proposals at the python/peps commit current at the cutoff (public domain; set `GITHUB_TOKEN` to raise the API rate limit) | `build-peps` |

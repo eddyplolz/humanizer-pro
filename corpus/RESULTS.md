@@ -6,7 +6,7 @@ flag on one is a false positive by construction. Machine documents are
 labelled by source. Both rates use only the held-out test split (about three
 quarters of each pool, chosen by digest); the dev split is for rule tuning.
 
-- Human documents (test split): **1488**; 501 more form the dev split behind the rule scorecard
+- Human documents (test split): **1494**; 495 more form the dev split behind the rule scorecard
 - Machine documents: **1065** (catch rate uses the test split)
 - Review threshold: **60** (the CLI default)
 - Flagged means any non-pass exit: risk at or above the threshold, or a
@@ -14,17 +14,17 @@ quarters of each pool, chosen by digest); the dev split is for rule tuning.
 
 | Slice | n | Flagged | FPR | 95% CI | Blocked (exit 2) |
 |---|---|---|---|---|---|
-| overall | 1488 | 1 | 0.1% | 0.0%–0.4% | 1 |
+| overall | 1494 | 2 | 0.1% | 0.0%–0.5% | 2 |
 | register: chat | 450 | 0 | 0.0% | 0.0%–0.9% | 0 |
 | register: docs | 303 | 1 | 0.3% | 0.1%–1.8% | 1 |
 | register: essay | 474 | 0 | 0.0% | 0.0%–0.8% | 0 |
-| register: news | 257 | 0 | 0.0% | 0.0%–1.5% | 0 |
+| register: news | 263 | 1 | 0.4% | 0.1%–2.1% | 1 |
 | register: wiki | 4 | 0 | 0.0% | 0.0%–49.0% | 0 |
-| author: other | 981 | 1 | 0.1% | 0.0%–0.6% | 1 |
-| author: public-domain | 507 | 0 | 0.0% | 0.0%–0.8% | 0 |
-| period: pre-1930 | 507 | 0 | 0.0% | 0.0%–0.8% | 0 |
-| period: 1930-2017 | 791 | 1 | 0.1% | 0.0%–0.7% | 1 |
-| period: 2018-2022 | 190 | 0 | 0.0% | 0.0%–2.0% | 0 |
+| author: other | 1244 | 2 | 0.2% | 0.0%–0.6% | 2 |
+| author: public-domain | 250 | 0 | 0.0% | 0.0%–1.5% | 0 |
+| period: pre-1930 | 250 | 0 | 0.0% | 0.0%–1.5% | 0 |
+| period: 1930-2017 | 937 | 2 | 0.2% | 0.1%–0.8% | 2 |
+| period: 2018-2022 | 307 | 0 | 0.0% | 0.0%–1.2% | 0 |
 
 ## Error rates by review threshold
 
@@ -34,15 +34,15 @@ text in that pool. The JSON output carries every threshold in steps of 5.
 
 | Threshold | chat | docs | essay | news | wiki |
 |---|---|---|---|---|---|
-| 10 | 9.6% / 37.5% | 19.1% / 60.5% | 24.3% / 8.3% | 14.8% / 56.2% | 50.0% / 51.3% |
-| 20 | 0.4% / 23.0% | 0.7% / 25.6% | 5.1% / 4.2% | 1.6% / 12.4% | 25.0% / 10.4% |
-| 30 | 0.0% / 12.0% | 0.3% / 16.3% | 0.8% / 4.2% | 0.0% / 3.2% | 0.0% / 2.6% |
-| 40 | 0.0% / 6.9% | 0.3% / 7.0% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
-| 50 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
-| 60 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
-| 70 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
-| 80 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
-| 90 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+| 10 | 9.6% / 37.5% | 19.1% / 60.5% | 24.3% / 8.3% | 21.7% / 56.2% | 50.0% / 51.3% |
+| 20 | 0.4% / 23.0% | 0.7% / 25.6% | 5.1% / 4.2% | 6.5% / 12.4% | 25.0% / 10.4% |
+| 30 | 0.0% / 12.0% | 0.3% / 16.3% | 0.8% / 4.2% | 1.5% / 3.2% | 0.0% / 2.6% |
+| 40 | 0.0% / 6.9% | 0.3% / 7.0% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 50 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 60 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 70 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 80 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 90 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
 
 ## Separation by register
 
@@ -57,7 +57,7 @@ human mean risk, in score points; it ignores blocks.
 | chat | 450 | 365 | 0.65 | +6.1 |
 | docs | 303 | 43 | 0.80 | +10.1 |
 | essay | 474 | 48 | 0.34 | -3.3 |
-| news | 257 | 185 | 0.77 | +6.0 |
+| news | 263 | 185 | 0.75 | +5.5 |
 | wiki | 4 | 193 | 0.57 | +0.6 |
 
 ## Separation by text length
@@ -72,9 +72,9 @@ test split checks it. Each cell is human n / machine n / AUROC.
 | 0-49 | 0 / 0 / - | 0 / 0 / - |
 | 50-99 | 38 / 23 / 0.55 | 94 / 73 / 0.59 |
 | 100-149 | 22 / 24 / 0.55 | 89 / 67 / 0.63 |
-| 150-249 | 74 / 44 / 0.61 | 170 / 134 / 0.66 |
-| 250-499 | 77 / 126 / 0.70 | 263 / 481 / 0.73 |
-| 500+ | 290 / 14 / 0.47 | 872 / 79 / 0.54 |
+| 150-249 | 80 / 44 / 0.60 | 199 / 134 / 0.67 |
+| 250-499 | 117 / 126 / 0.73 | 360 / 481 / 0.75 |
+| 500+ | 238 / 14 / 0.45 | 752 / 79 / 0.53 |
 
 ## Threshold under a 1.0% false-positive cap
 
@@ -87,7 +87,7 @@ split, so the numbers that picked the threshold do not grade it.
 | chat | 150 | 20 | 0.4% | 23.0% |
 | docs | 97 | 20 | 0.7% | 25.6% |
 | essay | 159 | 35 | 0.4% | 4.2% |
-| news | 93 | 35 | 0.0% | 1.6% |
+| news | 87 | 30 | 1.5% | 3.2% |
 | wiki | 2 | none: dev split has 2 human documents; the cap needs at least 50 | - | - |
 
 ## Catch rate on machine text (test split)
@@ -130,33 +130,33 @@ the test split, which this table never reads.
 |---|---|---|---|
 | `register.dev_cliche` (no points) | 0.4% | 0.0% | 0.00 |
 | `register.verification_compound` (no points) | 0.2% | 0.0% | 0.00 |
-| `source_risk.bare_url` (no points) | 3.2% | 0.0% | 0.00 |
-| `family9.humanizer_spacing` | 2.8% | 0.4% | 0.15 |
-| `clarity.wordiness` (no points) | 6.8% | 2.6% | 0.38 |
+| `source_risk.bare_url` (no points) | 4.4% | 0.0% | 0.00 |
+| `family9.humanizer_spacing` | 3.2% | 0.4% | 0.13 |
 | `family5.syntactic_tell` | 1.0% | 0.4% | 0.43 |
 | `register.time_inflation` (no points) | 1.0% | 0.4% | 0.43 |
-| `structure.anaphora` | 4.2% | 2.6% | 0.62 |
-| `structure.uniform_length_run` | 14.0% | 10.0% | 0.71 |
-| `register.bare_auxiliary` (no points) | 1.2% | 0.9% | 0.72 |
-| `family3.filler_framing` | 8.2% | 7.8% | 0.95 |
-| `source_risk.source_dependent_statement` | 14.2% | 13.9% | 0.98 |
-| `structure.long_uniform_paragraphs` | 29.3% | 39.8% | 1.36 |
-| `summary.reuse` (no points) | 5.8% | 8.7% | 1.50 |
-| `family7.rhetorical_formula` | 2.0% | 3.0% | 1.52 |
-| `register.performative_candour` (no points) | 0.4% | 0.9% | 2.17 |
-| `structure.midband_dominance` | 1.2% | 4.8% | 3.98 |
-| `structure.low_sentence_variance` | 0.6% | 3.5% | 5.78 |
-| `family9.chatbot_residue` | 0.2% | 1.7% | 8.68 |
-| `structure.uniform_paragraphs` | 2.4% | 22.9% | 9.58 |
-| `family8.markdown_structure` | 0.2% | 5.6% | 28.19 |
-| `family1.significance_inflation` | 0.2% | 8.7% | 43.38 |
+| `clarity.wordiness` (no points) | 5.1% | 2.6% | 0.51 |
+| `structure.anaphora` | 4.0% | 2.6% | 0.64 |
+| `register.bare_auxiliary` (no points) | 1.2% | 0.9% | 0.71 |
+| `source_risk.source_dependent_statement` | 17.8% | 13.9% | 0.78 |
+| `family3.filler_framing` | 8.9% | 7.8% | 0.88 |
+| `summary.reuse` (no points) | 9.1% | 8.7% | 0.95 |
+| `family7.rhetorical_formula` | 2.4% | 3.0% | 1.25 |
+| `structure.long_uniform_paragraphs` | 29.7% | 39.8% | 1.34 |
+| `structure.uniform_length_run` | 5.2% | 10.0% | 1.90 |
+| `register.performative_candour` (no points) | 0.4% | 0.9% | 2.14 |
+| `structure.midband_dominance` | 1.2% | 4.8% | 3.93 |
+| `structure.low_sentence_variance` | 0.6% | 3.5% | 5.71 |
+| `family1.significance_inflation` | 1.0% | 8.7% | 8.57 |
+| `family9.chatbot_residue` | 0.2% | 1.7% | 8.57 |
+| `structure.uniform_paragraphs` | 2.4% | 22.9% | 9.46 |
+| `family4.ai_vocab_cluster` | 0.8% | 8.2% | 10.18 |
 | `artifact.assistant_self_disclosure` | 0.0% | 1.7% | only on machine |
 | `artifact.bracket_placeholder` | 0.0% | 0.9% | only on machine |
 | `family2.speculative_gap_filling` | 0.0% | 0.4% | only on machine |
 | `family2.vague_attribution` | 0.0% | 0.9% | only on machine |
 | `family2.vague_validation` | 0.0% | 0.9% | only on machine |
-| `family4.ai_vocab_cluster` | 0.0% | 8.2% | only on machine |
 | `family8.list_label_period` | 0.0% | 1.7% | only on machine |
+| `family8.markdown_structure` | 0.0% | 5.6% | only on machine |
 | `register.subjectless_fragment` (no points) | 0.0% | 0.4% | only on machine |
 
 ## Rules firing most often on human text
@@ -164,17 +164,17 @@ the test split, which this table never reads.
 | Documents touched | Rule |
 |---|---|
 | 419 | `structure.long_uniform_paragraphs` |
-| 218 | `source_risk.source_dependent_statement` |
-| 205 | `structure.uniform_length_run` |
-| 153 | `family3.filler_framing` |
-| 123 | `clarity.wordiness` |
-| 98 | `summary.reuse` |
-| 87 | `structure.anaphora` |
-| 45 | `family9.humanizer_spacing` |
-| 40 | `source_risk.bare_url` |
+| 266 | `source_risk.source_dependent_statement` |
+| 161 | `family3.filler_framing` |
+| 122 | `summary.reuse` |
+| 97 | `structure.uniform_length_run` |
+| 83 | `structure.anaphora` |
+| 70 | `clarity.wordiness` |
+| 55 | `source_risk.bare_url` |
+| 46 | `family7.rhetorical_formula` |
 | 35 | `structure.uniform_paragraphs` |
-| 34 | `family7.rhetorical_formula` |
-| 27 | `register.time_inflation` |
+| 34 | `family9.humanizer_spacing` |
+| 24 | `register.time_inflation` |
 
 ## Honest limits
 
@@ -182,13 +182,15 @@ the test split, which this table never reads.
   workplace sites) → chat, English Wikipedia articles at their last
   pre-cutoff revision → wiki, public-domain prose (Strunk 1918, Emerson,
   Thoreau, Twain) and PERSUADE 2.0 student essays (US grades 6–12,
-  written 2010–2020) → essay, Internet Archive newspaper issues and
-  OpenCulture US-PD-Newspapers pages → news, Python Enhancement
-  Proposals → docs. The news slice measures century-old prose, stated
-  rather than hidden.
-- The news pool is OCR of old newsprint: an alphabetic-ratio
-  quality gate bounds the OCR noise but does not eliminate it, so a news
-  flag can reflect the scan rather than the writing.
+  written 2010–2020) → essay, CC-News web articles (at most three
+  per outlet, dated before the cutoff) → news, Python Enhancement
+  Proposals → docs.
+- The news pool is crawled web text. The build drops articles with
+  consent banners, newsletter prompts, and similar page furniture, but
+  captions, datelines, and link lists can remain, and invisible
+  characters from the page stay in the text. A block on them counts as
+  a false positive, because the same characters reach the tool when a
+  person pastes from the page.
 - A Wikipedia entry is a whole article (bounded at 4,000 words), so
   it is many editors' text; a Stack Exchange entry is one answer, with
   code and quoted blocks removed. Answers are top-voted, so the chat
@@ -200,10 +202,10 @@ the test split, which this table never reads.
   rebuild generates new answers and its numbers can differ slightly.
   The catch rate describes those models only; tells change between
   model generations.
-- Era confound: human news is a century old, while machine news is
-  modern, so a gap between the two rates there is partly era, not
+- Era confound: about half the human essays are a century old, while
+  machine essays are modern, so a gap there is partly era, not
   authorship. The essay slice holds century-old prose and modern student
-  essays side by side. The wiki, chat, and docs slices compare
+  essays side by side. The news, wiki, chat, and docs slices compare
   contemporaries more closely.
 - Every pool is public and rebuildable from the manifest's pointers
   (`corpus.py fetch` or the named `build-*` command); every document

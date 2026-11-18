@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -339,6 +340,7 @@ def test_manifest_is_anonymous() -> None:
         "persuade-essay": {"dataset", "id"},
         "news-page": {"url", "ia_identifier", "chunk"},
         "hf-news": {"dataset", "id", "date", "file_name", "chunk"},
+        "cc-news": {"dataset", "row", "url", "domain"},
         "pep-chunk": {"repo", "commit", "path", "chunk"},
         "wikipedia-revision": {"site", "title", "revid", "url"},
         "stackexchange-answer": {"site", "answer_id", "url"},
@@ -598,6 +600,143 @@ def test_persuade_pairs_order_is_by_id_digest() -> None:
     expected = sorted((f"E{n}" for n in range(6)), key=corpus.sha256_text)[:3]
     assert [s["id"] for _m, _t, s in first] == expected
     assert [s["id"] for _m, _t, s in again] == expected
+
+
+def test_cc_news_pairs_gates_dates_length_boilerplate_and_repeats() -> None:
+    body = "The council met on Tuesday and the vote passed. " * 30
+
+    def row(**overrides):
+        base = {"date": "2018-03-04 00:00:00", "url": "https://example.com/a", "domain": "example.com", "text": body}
+        return {**base, **overrides}
+
+    rows = list(
+        enumerate(
+            [
+                row(),
+                row(url="https://example.com/a"),  # same URL again
+                row(url="https://example.com/b", date="2022-11-01"),  # on the cutoff
+                row(url="https://example.com/c", date=""),
+                row(url="https://example.com/c2", date="1970-01-01"),  # before the crawl
+                row(url="https://example.com/c3", date="2017-13-45"),
+                row(url="ftp://example.com/d"),
+                row(url="https://example.com/e", text="too short"),
+                row(url="https://example.com/f", text=body + "Sign up for our newsletter."),
+                row(url="https://example.com/f2", text=body + "Write to [email\xa0protected] today."),
+                row(url="https://example.com/f3", text=body + "\n\nAdvertisement\n\nMore text."),
+                row(url="https://example.com/g", text="le la les des une " * 60),
+                row(url="https://example.com/h", text="She baked cookies for the newsletter team.\r\n\r\n\r\n" + body),
+                row(url="https://wire.example.org/a", domain="wire.example.org"),  # same text, other URL
+                row(url="https://other.example.org/j", domain="other.example.org", date="2022-10-31", text=body + "j"),
+            ]
+        )
+    )
+    rows.append(("7", row(url="https://example.com/k")))  # no integer row index
+    pairs, dropped = corpus.cc_news_pairs(rows)
+    assert [source["url"][-1] for _meta, _text, source in pairs] == ["a", "h", "j"]
+    assert dropped == {
+        "duplicate-url": 1,
+        "undated-or-out-of-range": 4,
+        "no-pointer": 1,
+        "word-band": 1,
+        "boilerplate": 3,
+        "not-english": 1,
+        "duplicate-text": 1,
+        "no-row-index": 1,
+    }
+    meta, text, source = pairs[1]
+    assert meta == {"register": "news", "author": "other", "date": "2018-03-04", "extraction": "ccnews.v1"}
+    assert source == {"dataset": "vblagoje/cc_news", "row": 12, "url": "https://example.com/h", "domain": "example.com"}
+    assert "\r" not in text and "\n\n\n" not in text
+    assert pairs[2][0]["date"] == "2022-10-31"
+
+
+def test_cc_news_boilerplate_spares_articles_about_the_words() -> None:
+    match = corpus.CC_NEWS_BOILERPLATE_RE.search
+    for clean in ("Cookies and newsletters were on the agenda.", "Readers said they would subscribe later.",
+                  "The advertisement ran for a week.", "She asked us to read more slowly."):
+        assert not match(clean), clean
+    for dirty in ("Copyright \u00a9 2018", "Click here to see more.", "[email protected]", "[email&#160;protected]",
+                  "Body.\nRead more:\nNext", "Body.\nRelated\nNext", "Share on Facebook", "Continue reading the story"):
+        assert match(dirty), dirty
+
+
+def test_cc_news_select_is_independent_of_arrival_order_and_missing_windows() -> None:
+    def pair(n, domain):
+        return ({"date": "2018-01-01"}, f"text {n}", {"row": n, "url": f"https://{domain}/{n}", "domain": domain})
+
+    pairs = [pair(n, f"site{n % 4}.example") for n in range(40)]
+    chosen, dropped = corpus.cc_news_select(pairs, target=6, per_domain=3)
+    again, _ = corpus.cc_news_select(list(reversed(pairs)), target=6, per_domain=3)
+    assert chosen == again and len(chosen) == 6
+    assert dropped == {"outlet-quota": 28, "over-target": 6}
+    assert [p[2]["row"] for p in chosen] == sorted(p[2]["row"] for p in chosen)
+    assert max(Counter(p[2]["domain"] for p in chosen).values()) <= 3
+    # Losing one outlet's window only frees its own slots.
+    lost = {p[2]["url"] for p in chosen if p[2]["domain"] == "site0.example"}
+    survivors, _ = corpus.cc_news_select([p for p in pairs if p[2]["domain"] != "site0.example"], target=6, per_domain=3)
+    assert {p[2]["url"] for p in chosen} - lost <= {p[2]["url"] for p in survivors}
+    small, small_drops = corpus.cc_news_select(pairs[:2], target=6, per_domain=3)
+    assert len(small) == 2 and small_drops == {}
+
+
+def test_cc_news_date_bounds() -> None:
+    assert corpus.cc_news_date("2017-12-01 00:00:00") == "2017-12-01"
+    assert corpus.cc_news_date("2017-12-01T00:00:00Z") == "2017-12-01"
+    for bad in (None, "", "12/01/2017", "0000-00-00", "2015-12-31", "2022-11-01", "2017-02-30"):
+        assert corpus.cc_news_date(bad) is None, bad
+
+
+def test_cc_news_build_keeps_the_pool_when_nothing_arrives(monkeypatch) -> None:
+    saved = []
+    monkeypatch.setattr(corpus, "save_pool", lambda kind, pairs: saved.append(kind) or [])
+
+    def offline(*_args, **_kwargs):
+        raise OSError("offline")
+
+    monkeypatch.setattr(corpus, "fetch_text_with_retry", offline)
+    import argparse
+
+    assert corpus.build_cc_news(argparse.Namespace(target=10, per_domain=3, sleep=0)) == 1
+    assert saved == []
+
+
+def test_cc_news_build_reads_every_window_then_selects(monkeypatch, capsys) -> None:
+    body = "The council met on Tuesday and the vote passed. " * 30
+    rows = [
+        (n, {"date": "2018-01-01", "url": f"https://site{n}.example/a", "domain": f"site{n}.example", "text": body + str(n)})
+        for n in range(10)
+    ]
+
+    def fake_rows(offsets, sleep, dropped):
+        dropped["offset-fetch-failed"] += 1
+        return iter(rows)
+
+    monkeypatch.setattr(corpus, "cc_news_rows", fake_rows)
+    saved = []
+    monkeypatch.setattr(corpus, "save_pool", lambda kind, pairs: saved.extend(pairs) or pairs)
+    import argparse
+
+    assert corpus.build_cc_news(argparse.Namespace(target=4, per_domain=3, sleep=0)) == 0
+    expected, _ = corpus.cc_news_select(corpus.cc_news_pairs(rows)[0], 4, 3)
+    assert saved == expected and len(saved) == 4
+    out = capsys.readouterr().out
+    assert "1 windows failed to download" in out and "'over-target': 6" in out
+
+
+def test_cc_news_rows_reads_row_index_and_skips_failed_windows(monkeypatch) -> None:
+    urls = []
+
+    def fake_fetch(url, sleep, *args, **kwargs):
+        urls.append(url)
+        if "offset=10" in url:
+            raise OSError("502")
+        return json.dumps({"rows": [{"row_idx": 3, "row": {"url": "u"}}, {"row": None}]})
+
+    monkeypatch.setattr(corpus, "fetch_text_with_retry", fake_fetch)
+    dropped = Counter()
+    assert list(corpus.cc_news_rows((0, 10), 0, dropped)) == [(3, {"url": "u"}), (None, {})]
+    assert dropped == {"offset-fetch-failed": 1}
+    assert "config=plain_text" in urls[0] and "length=10" in urls[0] and "offset=0" in urls[0]
 
 
 def test_wildchat_pairs_takes_first_prose_reply() -> None:
@@ -1139,6 +1278,38 @@ def test_fetch_rebuilds_wikipedia_and_stackexchange_entries_by_id(tmp_path, monk
     assert corpus.fetch(argparse.Namespace(sleep=0)) == 0
     assert len(calls) == 2
     assert corpus.verify(argparse.Namespace()) == 0
+
+
+def test_fetch_rebuilds_cc_news_entries_by_row(tmp_path, monkeypatch) -> None:
+    import argparse
+
+    raw = "First paragraph of the story.  \r\n\r\n\r\n" + "Second paragraph. " * 40
+    text = corpus.cc_news_clean(raw)
+
+    def entry(row, url):
+        return {"id": f"ccnews-{corpus.sha256_text(text + url)[:12]}", "kind": "cc-news", "register": "news",
+                "author": "other", "words": 100, "sha256": corpus.sha256_text(text), "date": "2018-01-02",
+                "extraction": corpus.CC_NEWS_EXTRACTION,
+                "source": {"dataset": corpus.CC_NEWS_DATASET, "row": row, "url": url, "domain": "example.com"}}
+
+    kept, moved = entry(41, "https://example.com/a"), entry(42, "https://example.com/b")
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
+    corpus._write_json(tmp_path / "manifest.json", {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": [kept, moved]})
+    urls = []
+
+    def fake_fetch(url, sleep, *args, **kwargs):
+        urls.append(url)
+        # Row 42 now holds another article, so its entry must stay uncached.
+        row_url = "https://example.com/a" if "offset=41" in url else "https://example.com/other"
+        return json.dumps({"rows": [{"row_idx": 0, "row": {"url": row_url, "text": raw}}]})
+
+    monkeypatch.setattr(corpus, "fetch_text_with_retry", fake_fetch)
+    assert corpus.fetch(argparse.Namespace(sleep=0)) == 1
+    assert all("config=plain_text" in url and "length=1" in url for url in urls) and len(urls) == 2
+    assert corpus.cache_path(kept["id"]).exists() and not corpus.cache_path(moved["id"]).exists()
+    assert corpus.read_cache(kept["id"]) == text
 
 
 def test_period_bands_from_manifest_dates() -> None:

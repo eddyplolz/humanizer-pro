@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- The human news pool is now 350 articles from CC-News, published between January 2017 and July
+  2018 by 246 outlets, at most three per outlet. It replaces 350 OCR chunks of US newspapers from
+  1898 to 1909, so the news slice no longer compares century-old prose with modern machine text.
+  `scripts/corpus.py build-cc-news` builds the pool through the Hugging Face rows API, and
+  `corpus.py fetch` restores each article by its dataset row. The manifest keeps only the row, URL,
+  outlet, date, and digest. On the test split at threshold 60 the news false-positive rate is 0.4%
+  (1 of 263), up from 0.0% (0 of 257). The flagged article is blocked for a zero-width space left
+  in the page text. It counts as a false positive because the same character reaches the tool when
+  a person pastes from that page. News AUROC moves from 0.77 to 0.75. `corpus/RESULTS.md` and the
+  README numbers are regenerated.
+
 - The README and `corpus/RESULTS.md` no longer say the Claude pool is left out of the published
   numbers. Its 196 test documents were already in the catch rate, and they are the only machine
   essays. The README catch rate now reads 2.9% (24 of 834), the figure `corpus/RESULTS.md` has

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg) [![skills.sh](https://skills.sh/b/eddyplolz/humanizer-pro)](https://skills.sh/eddyplolz/humanizer-pro)
 
-**Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,488 human-written documents: 0.1%.
+**Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,494 human-written documents: 0.1%.
 
 | Before | After | What changed |
 |---|---|---|
@@ -320,7 +320,7 @@ This project measures its error rates instead of only describing them. It counts
 
 | What is measured | Writing used | Result |
 |---|---|---|
-| False positives | 1,488 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, newspapers, essays, student essays, and Python Enhancement Proposals | 0.1% overall; 0.0% to 0.3% by type of writing ([full results](corpus/RESULTS.md)) |
+| False positives | 1,494 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, news articles, essays, student essays, and Python Enhancement Proposals | 0.1% overall; 0.0% to 0.4% by type of writing ([full results](corpus/RESULTS.md)) |
 | Catch rate | 834 test documents from 2023 AI models (RAID), real ChatGPT replies (WildChat), and current Claude models | 2.9% overall; 0.0% to 5.5% by type of writing |
 
 ### False positives
@@ -332,18 +332,18 @@ Every document in the human set was written before ChatGPT was released, so any 
 | Stack Exchange answers | 450 | 0.0% |
 | Python Enhancement Proposals | 303 | 0.3%, 1 blocked |
 | Essays | 474 | 0.0% |
-| Newspapers | 257 | 0.0% |
+| News articles (2017 to 2018) | 263 | 0.4%, 1 blocked |
 | Wikipedia articles | 4 | 0.0% |
 
 By the period the text was written in:
 
 | Period | Documents | False-positive rate |
 |---|---|---|
-| Before 1930 | 507 | 0.0% |
-| 1930 to 2017 | 791 | 0.1% |
-| 2018 to 2022 | 190 | 0.0% |
+| Before 1930 | 250 | 0.0% |
+| 1930 to 2017 | 937 | 0.2% |
+| 2018 to 2022 | 307 | 0.0% |
 
-These rates come from the current rules, measured on the test group only (1,488 documents). A block counts as a false positive. The Wikipedia slice is small, so its rate says little yet.
+These rates come from the current rules, measured on the test group only (1,494 documents). A block counts as a false positive. The Wikipedia slice is small, so its rate says little yet.
 
 Every document comes from a public source. The project publishes a fingerprint of each one (a unique code), with its date, word count, and a public pointer such as a Wikipedia revision id or a Stack Exchange answer id, so anyone can rebuild the collection and check the numbers. It never publishes the text.
 
@@ -358,7 +358,7 @@ The AI text comes from 3 sources, labeled by model:
 The catch rate at the default threshold is 2.9% overall (24 of 834 test documents): 5.5% on chat replies, 0.0% on news and encyclopedia text. The full table by model is in the [results](corpus/RESULTS.md). 2 limits apply:
 
 - it describes those AI models only
-- the human newspapers and about half the human essays are about 100 years old, so part of any gap there reflects the era, not the author
+- about half the human essays are about 100 years old, so part of any gap there reflects the era, not the author
 
 ### How the results stay honest
 
@@ -458,7 +458,7 @@ It draws on these sources:
 - [llm-cliche-highlighter](https://github.com/simonw/tools/blob/main/llm-cliche-highlighter.html) by Simon Willison ([Apache-2.0](https://github.com/simonw/tools/blob/main/LICENSE)): the candour, reversal, grading, totalizing, and header patterns that reach Family 10 through declauding
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) by WikiProject AI Cleanup ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
 - [Project Gutenberg #37134](https://www.gutenberg.org/ebooks/37134): the public-domain text of *The Elements of Style* by William Strunk Jr.
-- [US-PD-Newspapers](https://huggingface.co/datasets/PleIAs/US-PD-Newspapers) by PleIAs: public-domain newspapers in the human test set
+- [CC-News](https://huggingface.co/datasets/vblagoje/cc_news): news articles in the human test set. The dataset states no license and each article's copyright stays with its publisher, so the project publishes only a fingerprint and a pointer for each
 - [RAID](https://github.com/liamdugan/raid) by Dugan and others (MIT): AI-written test set
 - [WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M) by Ai2 (ODC-BY): AI-written test set
 - [Python Enhancement Proposals](https://github.com/python/peps) (public domain): technical writing in the human test set

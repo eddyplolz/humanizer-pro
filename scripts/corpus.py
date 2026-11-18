@@ -20,6 +20,8 @@ Subcommands:
   build-essays        chunk public-domain Gutenberg essay works
   build-news          fetch public-domain newspaper OCR (Internet Archive)
   build-hf-news       grow the news pool from OpenCulture (HF rows API)
+  build-cc-news       news-register pool: pre-cutoff CC-News articles
+                      (HF rows API; text stays with each publisher)
   build-wikipedia     wiki-register pool: random English Wikipedia articles at
                       their last pre-cutoff revision (CC BY-SA)
   build-stackexchange chat-register pool: pre-cutoff Stack Exchange answers
@@ -30,7 +32,7 @@ Subcommands:
                       (scripts/generate_machine.py can add current Claude
                       models; it needs an API key and is never run by default)
   fetch               repopulate the cache from the manifest's public pointers
-                      (Strunk offline; Wikipedia and Stack Exchange by id;
+                      (Strunk offline; Wikipedia, Stack Exchange, and CC-News by id;
                       other kinds name their build-* subcommand)
   verify              check every cached file against its manifest sha256
 """
@@ -38,6 +40,7 @@ Subcommands:
 from __future__ import annotations
 
 import argparse
+import datetime
 import gzip
 import hashlib
 import html as html_lib
@@ -70,6 +73,7 @@ ID_PREFIX = {
     "gutenberg-work": "guten",
     "persuade-essay": "persuade",
     "hf-news": "hfnews",
+    "cc-news": "ccnews",
     "pep-chunk": "pep",
     "wikipedia-revision": "wp",
     "stackexchange-answer": "se",
@@ -85,6 +89,7 @@ PUBLIC_SOURCE_KINDS = (
     "gutenberg-work",
     "persuade-essay",
     "hf-news",
+    "cc-news",
     "pep-chunk",
     "wikipedia-revision",
     "stackexchange-answer",
@@ -597,15 +602,16 @@ FETCH_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException)
 def fetch_text_with_retry(url: str, sleep: float, attempts: int = 4, headers: dict | None = None) -> str:
     """fetch_text with linear backoff on rate limits and transient failures.
 
-    Archive endpoints answer bursts with 429/503, and a read timeout raises
-    TimeoutError (an OSError, not a URLError). Other HTTP errors (404 and the
-    like) are permanent and raise at once.
+    Archive endpoints answer bursts with 429/503, the Hugging Face rows API
+    answers load with 500/502/504, and a read timeout raises TimeoutError (an
+    OSError, not a URLError). Other HTTP errors (404 and the like) are
+    permanent and raise at once.
     """
     for attempt in range(1, attempts + 1):
         try:
             return fetch_text(url, sleep, headers)
         except urllib.error.HTTPError as error:
-            if error.code not in (429, 503) or attempt == attempts:
+            if error.code not in (429, 500, 502, 503, 504) or attempt == attempts:
                 raise
             wait = 30 * attempt
         except FETCH_ERRORS:
@@ -853,6 +859,187 @@ def build_hf_news(args: argparse.Namespace) -> int:
         f"hf-news: {len(entries)} chunks cached (target {args.target}); "
         f"drops: {dict(dropped)}"
     )
+    return 0
+
+
+# ------------------------------------------------- cc news (pre-cutoff)
+
+
+CC_NEWS_DATASET = "vblagoje/cc_news"
+CC_NEWS_ROWS = 708_241
+# Rows come grouped by outlet, so many small, evenly spread windows reach far
+# more outlets than a few large ones. Fixed offsets keep the build
+# deterministic.
+CC_NEWS_OFFSETS = tuple(range(0, CC_NEWS_ROWS, 1_000))
+CC_NEWS_WINDOW = 10
+CC_NEWS_EXTRACTION = "ccnews.v1"
+# The CC-News crawl began in 2016; an earlier date is a page-metadata error.
+CC_NEWS_MIN_DATE = "2016-01-01"
+CC_NEWS_MAX_WORDS = 1500
+CC_NEWS_PER_DOMAIN = 3
+# Crawl leftovers that are not the article: consent banners, newsletter and
+# paywall prompts, share bars. A hit drops the whole article.
+CC_NEWS_BOILERPLATE_RE = re.compile(
+    r"\b(?:cookie policy|use of cookies|accept cookies|subscribe (?:now|today|to our)"
+    r"|sign up for our|our newsletter|click here|all rights reserved|share this (?:article|story)"
+    r"|follow us on|like us on facebook|share on (?:facebook|twitter)|continue reading"
+    r"|this material may not be published)\b|©"
+    r"|^(?:advertisement|read more:?|related:?)$"
+    # Cloudflare's stand-in for an obfuscated address: the crawler saw it, a
+    # reader never does.
+    r"|\[email(?:\s|&#160;|&nbsp;)?protected\]",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def cc_news_clean(text: str) -> str:
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" *\n *", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def cc_news_date(raw) -> str | None:
+    """The row's publication date as YYYY-MM-DD, or None when it is missing,
+    malformed, earlier than the crawl, or not before the cutoff."""
+    text = str(raw or "")[:10]
+    try:
+        date = datetime.date.fromisoformat(text)
+    except ValueError:
+        return None
+    if len(text) != 10 or not (CC_NEWS_MIN_DATE <= date.isoformat() < CUTOFF):
+        return None
+    return date.isoformat()
+
+
+def cc_news_pairs(rows) -> tuple[list, Counter]:
+    """Every CC-News article that passes the gates: a real pre-cutoff date, a
+    public URL, length, a crude English check, and no crawl boilerplate.
+
+    ``rows`` are (row index, row) pairs from the rows API. Repeated URLs and
+    byte-identical texts (wire copy under another URL) are kept once.
+    """
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    seen_urls: set[str] = set()
+    seen_digests: set[str] = set()
+    for row_idx, row in rows:
+        if not isinstance(row_idx, int) or isinstance(row_idx, bool):
+            dropped["no-row-index"] += 1
+            continue
+        date = cc_news_date(row.get("date"))
+        if date is None:
+            dropped["undated-or-out-of-range"] += 1
+            continue
+        url = str(row.get("url") or "")
+        domain = str(row.get("domain") or "")
+        if not url.startswith(("http://", "https://")) or not domain:
+            dropped["no-pointer"] += 1
+            continue
+        if url in seen_urls:
+            dropped["duplicate-url"] += 1
+            continue
+        text = cc_news_clean(str(row.get("text") or ""))
+        if not (MIN_WORDS["news"] <= word_count(text) <= CC_NEWS_MAX_WORDS):
+            dropped["word-band"] += 1
+            continue
+        if english_ratio(text) < NEWS_MIN_THE_RATIO:
+            dropped["not-english"] += 1
+            continue
+        if CC_NEWS_BOILERPLATE_RE.search(text):
+            dropped["boilerplate"] += 1
+            continue
+        digest = sha256_text(text)
+        if digest in seen_digests:
+            dropped["duplicate-text"] += 1
+            continue
+        seen_urls.add(url)
+        seen_digests.add(digest)
+        pairs.append(
+            (
+                {"register": "news", "author": "other", "date": date, "extraction": CC_NEWS_EXTRACTION},
+                text,
+                {"dataset": CC_NEWS_DATASET, "row": row_idx, "url": url, "domain": domain},
+            )
+        )
+    return pairs, dropped
+
+
+def cc_news_select(pairs: list, target: int, per_domain: int) -> tuple[list, Counter]:
+    """Keep at most ``per_domain`` articles per outlet, then ``target`` overall.
+
+    Articles are ranked by the digest of their URL, so whether one is kept
+    depends only on the candidates, never on the order they arrived in. A
+    window that failed to download removes its own articles and moves nothing
+    else.
+    """
+    def rank(pair):
+        return sha256_text(pair[2]["url"])
+
+    dropped: Counter = Counter()
+    by_outlet: dict[str, list] = {}
+    for pair in pairs:
+        by_outlet.setdefault(pair[2]["domain"], []).append(pair)
+    kept = []
+    for outlet_pairs in by_outlet.values():
+        outlet_pairs.sort(key=rank)
+        kept.extend(outlet_pairs[:per_domain])
+        dropped["outlet-quota"] += max(0, len(outlet_pairs) - per_domain)
+    kept.sort(key=rank)
+    dropped["over-target"] += max(0, len(kept) - target)
+    selected = sorted(kept[:target], key=lambda pair: pair[2]["row"])
+    return selected, +dropped
+
+
+def cc_news_rows_url(offset: int, length: int) -> str:
+    query = urllib.parse.urlencode(
+        {"dataset": CC_NEWS_DATASET, "config": "plain_text", "split": "train", "offset": offset, "length": str(length)}
+    )
+    return f"{HF_ROWS_API}?{query}"
+
+
+def cc_news_rows(offsets, sleep: float, dropped: Counter):
+    """Yield (row index, row) from the rows API, a small window per offset."""
+    for offset in offsets:
+        try:
+            payload = json.loads(fetch_text_with_retry(cc_news_rows_url(offset, CC_NEWS_WINDOW), sleep))
+        except (*FETCH_ERRORS, ValueError) as error:
+            dropped["offset-fetch-failed"] += 1
+            print(f"offset {offset}: fetch failed ({error}); skipping", flush=True)
+            continue
+        for item in payload.get("rows", []):
+            yield item.get("row_idx"), item.get("row") or {}
+
+
+def build_cc_news(args: argparse.Namespace) -> int:
+    """News pool from CC-News: modern articles, each dated before the cutoff.
+
+    The manifest keeps the dataset row, the article URL, and the outlet;
+    the text stays in the gitignored cache, and copyright stays with each
+    publisher.
+    """
+    fetch_drops: Counter = Counter()
+    # Read every window before choosing: stopping at the target would keep
+    # only the outlets that happen to sit early in the dataset.
+    candidates, dropped = cc_news_pairs(cc_news_rows(CC_NEWS_OFFSETS, args.sleep, fetch_drops))
+    pairs, select_drops = cc_news_select(candidates, args.target, args.per_domain)
+    dropped.update(fetch_drops)
+    dropped.update(select_drops)
+    if fetch_drops:
+        print(f"NOTE: {fetch_drops['offset-fetch-failed']} windows failed to download; their articles are missing")
+    if not pairs:
+        print("FAIL: no CC-News articles collected; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("cc-news", pairs)
+    outlets = len({source["domain"] for _meta, _text, source in pairs})
+    dates = sorted(meta["date"] for meta, _text, _source in pairs)
+    print(
+        f"cc-news: {len(entries)} articles cached from {outlets} outlets, "
+        f"dated {dates[0]} to {dates[-1]} (target {args.target}); drops: {dict(dropped)}"
+    )
+    if len(entries) < args.target:
+        print(f"NOTE: {args.target - len(entries)} short of the target")
     return 0
 
 
@@ -1359,8 +1546,8 @@ REBUILD_HINT = {
 def fetch(args: argparse.Namespace) -> int:
     """Repopulate the cache from public pointers.
 
-    Strunk chunks come from the repo; Wikipedia revisions and Stack Exchange
-    answers are fetched by id. Other kinds are rebuilt by their own build-*
+    Strunk chunks come from the repo; Wikipedia revisions, Stack Exchange
+    answers, and CC-News rows are fetched by id. Other kinds are rebuilt by their own build-*
     subcommand; fetch names the missing ones and exits non-zero while any
     entry stays uncached.
     """
@@ -1398,6 +1585,24 @@ def fetch(args: argparse.Namespace) -> int:
                     print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
                     continue
                 write_cache(entry["id"], strip(rev.get("slots", {}).get("main", {}).get("*", "")))
+    # CC-News entries come back by their dataset row, so a rebuild does not
+    # depend on which windows a flaky build happened to reach.
+    cc_entries = [e for e in missing if e["kind"] == "cc-news"]
+    for entry in cc_entries:
+        if entry.get("extraction") != CC_NEWS_EXTRACTION:
+            print(f"NOTE: {entry['id']}: unknown extraction {entry.get('extraction')!r}")
+            continue
+        try:
+            payload = json.loads(fetch_text_with_retry(cc_news_rows_url(entry["source"]["row"], 1), args.sleep))
+        except (*FETCH_ERRORS, ValueError) as error:
+            print(f"NOTE: {entry['id']}: fetch failed ({error})")
+            continue
+        rows = payload.get("rows", [])
+        row = rows[0].get("row", {}) if rows else {}
+        if str(row.get("url") or "") != entry["source"]["url"]:
+            print(f"NOTE: {entry['id']}: row {entry['source']['row']} no longer holds this article")
+            continue
+        write_cache(entry["id"], cc_news_clean(str(row.get("text") or "")))
     se_entries = [e for e in missing if e["kind"] == "stackexchange-answer"]
     by_site: dict[str, list[dict]] = {}
     for entry in se_entries:
@@ -1416,8 +1621,8 @@ def fetch(args: argparse.Namespace) -> int:
         1 for entry in load_manifest()["entries"] if not cache_path(entry["id"]).exists()
     )
     print(
-        f"fetch: attempted {len(wiki_entries)} Wikipedia and {len(se_entries)} Stack Exchange "
-        f"entries; {still_missing} entries still uncached; run verify next"
+        f"fetch: attempted {len(wiki_entries)} Wikipedia, {len(cc_entries)} CC-News, and "
+        f"{len(se_entries)} Stack Exchange entries; {still_missing} entries still uncached; run verify next"
     )
     return 1 if still_missing else 0
 
@@ -1476,6 +1681,12 @@ def main(argv: list[str] | None = None) -> int:
     p_hf.add_argument("--target", type=int, default=350)
     p_hf.add_argument("--sleep", type=float, default=1.5)
     p_hf.set_defaults(func=build_hf_news)
+
+    p_cc = sub.add_parser("build-cc-news", help="news pool from pre-cutoff CC-News articles")
+    p_cc.add_argument("--target", type=int, default=350)
+    p_cc.add_argument("--per-domain", type=int, default=CC_NEWS_PER_DOMAIN, help="articles per outlet, at most")
+    p_cc.add_argument("--sleep", type=float, default=1.5)
+    p_cc.set_defaults(func=build_cc_news)
 
     p_wp = sub.add_parser("build-wikipedia", help="wiki-register pool from pre-cutoff Wikipedia revisions")
     p_wp.add_argument("--target", type=int, default=500)
