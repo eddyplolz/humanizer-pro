@@ -14,16 +14,16 @@ quarters of each pool, chosen by digest); the dev split is for rule tuning.
 
 | Slice | n | Flagged | FPR | 95% CI | Blocked (exit 2) |
 |---|---|---|---|---|---|
-| overall | 1264 | 3 | 0.2% | 0.1%–0.7% | 1 |
+| overall | 1264 | 1 | 0.1% | 0.0%–0.4% | 1 |
 | register: chat | 450 | 0 | 0.0% | 0.0%–0.9% | 0 |
-| register: docs | 303 | 2 | 0.7% | 0.2%–2.4% | 1 |
+| register: docs | 303 | 1 | 0.3% | 0.1%–1.8% | 1 |
 | register: essay | 250 | 0 | 0.0% | 0.0%–1.5% | 0 |
-| register: news | 257 | 1 | 0.4% | 0.1%–2.2% | 0 |
+| register: news | 257 | 0 | 0.0% | 0.0%–1.5% | 0 |
 | register: wiki | 4 | 0 | 0.0% | 0.0%–49.0% | 0 |
-| author: other | 757 | 2 | 0.3% | 0.1%–1.0% | 1 |
-| author: public-domain | 507 | 1 | 0.2% | 0.0%–1.1% | 0 |
-| period: pre-1930 | 507 | 1 | 0.2% | 0.0%–1.1% | 0 |
-| period: 1930-2017 | 567 | 2 | 0.4% | 0.1%–1.3% | 1 |
+| author: other | 757 | 1 | 0.1% | 0.0%–0.7% | 1 |
+| author: public-domain | 507 | 0 | 0.0% | 0.0%–0.8% | 0 |
+| period: pre-1930 | 507 | 0 | 0.0% | 0.0%–0.8% | 0 |
+| period: 1930-2017 | 567 | 1 | 0.2% | 0.0%–1.0% | 1 |
 | period: 2018-2022 | 190 | 0 | 0.0% | 0.0%–2.0% | 0 |
 
 ## Error rates by review threshold
@@ -34,12 +34,12 @@ text in that pool. The JSON output carries every threshold in steps of 5.
 
 | Threshold | chat | docs | essay | news | wiki |
 |---|---|---|---|---|---|
-| 10 | 10.0% / 38.4% | 23.4% / 60.5% | 10.8% / 8.3% | 15.2% / 56.2% | 50.0% / 51.3% |
-| 20 | 0.4% / 23.3% | 4.6% / 25.6% | 0.8% / 4.2% | 2.7% / 12.4% | 25.0% / 10.4% |
-| 30 | 0.0% / 12.0% | 1.3% / 16.3% | 0.4% / 4.2% | 0.4% / 3.2% | 0.0% / 2.6% |
-| 40 | 0.0% / 6.9% | 0.7% / 7.0% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
-| 50 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
-| 60 | 0.0% / 5.5% | 0.7% / 4.7% | 0.0% / 4.2% | 0.4% / 0.0% | 0.0% / 0.0% |
+| 10 | 9.6% / 37.5% | 19.1% / 60.5% | 10.8% / 8.3% | 14.8% / 56.2% | 50.0% / 51.3% |
+| 20 | 0.4% / 23.0% | 0.7% / 25.6% | 0.8% / 4.2% | 1.6% / 12.4% | 25.0% / 10.4% |
+| 30 | 0.0% / 12.0% | 0.3% / 16.3% | 0.4% / 4.2% | 0.0% / 3.2% | 0.0% / 2.6% |
+| 40 | 0.0% / 6.9% | 0.3% / 7.0% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+| 50 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
+| 60 | 0.0% / 5.5% | 0.3% / 4.7% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
 | 70 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
 | 80 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
 | 90 | 0.0% / 5.2% | 0.3% / 2.3% | 0.0% / 4.2% | 0.0% / 0.0% | 0.0% / 0.0% |
@@ -54,10 +54,10 @@ human mean risk, in score points; it ignores blocks.
 
 | Register | Human n | Machine n | AUROC | Mean risk gap |
 |---|---|---|---|---|
-| chat | 450 | 365 | 0.65 | +6.0 |
-| docs | 303 | 43 | 0.77 | +8.9 |
+| chat | 450 | 365 | 0.65 | +6.1 |
+| docs | 303 | 43 | 0.80 | +10.1 |
 | essay | 250 | 48 | 0.42 | -1.2 |
-| news | 257 | 185 | 0.76 | +5.7 |
+| news | 257 | 185 | 0.77 | +6.0 |
 | wiki | 4 | 193 | 0.57 | +0.6 |
 
 ## Separation by text length
@@ -70,11 +70,11 @@ test split checks it. Each cell is human n / machine n / AUROC.
 | Words | Dev split | Test split |
 |---|---|---|
 | 0-49 | 0 / 0 / - | 0 / 0 / - |
-| 50-99 | 38 / 23 / 0.54 | 94 / 73 / 0.59 |
-| 100-149 | 22 / 24 / 0.56 | 89 / 67 / 0.63 |
-| 150-249 | 53 / 44 / 0.62 | 124 / 134 / 0.68 |
-| 250-499 | 44 / 126 / 0.77 | 152 / 481 / 0.78 |
-| 500+ | 268 / 14 / 0.47 | 805 / 79 / 0.54 |
+| 50-99 | 38 / 23 / 0.55 | 94 / 73 / 0.59 |
+| 100-149 | 22 / 24 / 0.55 | 89 / 67 / 0.63 |
+| 150-249 | 53 / 44 / 0.65 | 124 / 134 / 0.68 |
+| 250-499 | 44 / 126 / 0.77 | 152 / 481 / 0.79 |
+| 500+ | 268 / 14 / 0.49 | 805 / 79 / 0.55 |
 
 ## Threshold under a 1.0% false-positive cap
 
@@ -84,10 +84,10 @@ split, so the numbers that picked the threshold do not grade it.
 
 | Register | Dev n | Threshold | Test FPR | Catch rate |
 |---|---|---|---|---|
-| chat | 150 | 20 | 0.4% | 23.3% |
-| docs | 97 | 30 | 1.3% | 16.3% |
+| chat | 150 | 20 | 0.4% | 23.0% |
+| docs | 97 | 20 | 0.7% | 25.6% |
 | essay | 83 | 20 | 0.8% | 4.2% |
-| news | 93 | 65 | 0.0% | 0.0% |
+| news | 93 | 35 | 0.0% | 1.6% |
 | wiki | 2 | none: dev split has 2 human documents; the cap needs at least 50 | - | - |
 
 ## Catch rate on machine text (test split)
@@ -120,29 +120,30 @@ split, so the numbers that picked the threshold do not grade it.
 
 ## Rule scorecard (dev split, machine vs human)
 
-Share of documents each rule fires on. A ratio near or below 1 means the rule
+Share of documents each rule fires on. Rules marked (no points) are reported
+but never raise the risk score. A ratio near or below 1 means the rule
 fires about as often on human text as on AI text: it costs false positives
 without evidence. Tune rules from this table only; both published rates use
 the test split, which this table never reads.
 
 | Rule | Human share | Machine share | Ratio |
 |---|---|---|---|
-| `register.dev_cliche` | 0.5% | 0.0% | 0.00 |
-| `register.verification_compound` | 0.2% | 0.0% | 0.00 |
-| `source_risk.bare_url` | 3.5% | 0.0% | 0.00 |
+| `register.dev_cliche` (no points) | 0.5% | 0.0% | 0.00 |
+| `register.verification_compound` (no points) | 0.2% | 0.0% | 0.00 |
+| `source_risk.bare_url` (no points) | 3.5% | 0.0% | 0.00 |
 | `family9.humanizer_spacing` | 3.3% | 0.4% | 0.13 |
-| `clarity.wordiness` | 7.5% | 2.6% | 0.34 |
+| `clarity.wordiness` (no points) | 7.5% | 2.6% | 0.34 |
 | `family5.syntactic_tell` | 0.9% | 0.4% | 0.46 |
-| `register.time_inflation` | 0.9% | 0.4% | 0.46 |
+| `register.time_inflation` (no points) | 0.9% | 0.4% | 0.46 |
 | `structure.uniform_length_run` | 15.8% | 10.0% | 0.63 |
-| `register.bare_auxiliary` | 1.2% | 0.9% | 0.74 |
+| `register.bare_auxiliary` (no points) | 1.2% | 0.9% | 0.74 |
 | `structure.anaphora` | 3.5% | 2.6% | 0.74 |
 | `source_risk.source_dependent_statement` | 13.9% | 13.9% | 1.00 |
 | `family3.filler_framing` | 4.9% | 7.8% | 1.58 |
 | `structure.long_uniform_paragraphs` | 24.0% | 39.8% | 1.66 |
-| `summary.reuse` | 5.2% | 8.7% | 1.67 |
+| `summary.reuse` (no points) | 5.2% | 8.7% | 1.67 |
 | `family7.rhetorical_formula` | 1.7% | 3.0% | 1.84 |
-| `register.performative_candour` | 0.5% | 0.9% | 1.84 |
+| `register.performative_candour` (no points) | 0.5% | 0.9% | 1.84 |
 | `structure.midband_dominance` | 0.9% | 4.8% | 5.06 |
 | `family9.chatbot_residue` | 0.2% | 1.7% | 7.36 |
 | `structure.low_sentence_variance` | 0.2% | 3.5% | 14.72 |
@@ -156,7 +157,7 @@ the test split, which this table never reads.
 | `family2.vague_validation` | 0.0% | 0.9% | only on machine |
 | `family4.ai_vocab_cluster` | 0.0% | 8.2% | only on machine |
 | `family8.list_label_period` | 0.0% | 1.7% | only on machine |
-| `register.subjectless_fragment` | 0.0% | 0.4% | only on machine |
+| `register.subjectless_fragment` (no points) | 0.0% | 0.4% | only on machine |
 
 ## Rules firing most often on human text
 

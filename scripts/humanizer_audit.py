@@ -2501,11 +2501,29 @@ def reuse_findings(findings: list[dict[str, object]]) -> list[dict[str, object]]
     return rolled
 
 
+SPACING_RULE = "family9.humanizer_spacing"
+SCORING_PREFIXES = ("artifact.", "family", "structure.", "source_risk.")
+
+
+def adds_points(rule_id: str) -> bool:
+    """True when a hit on this rule can raise the risk score (see risk_score)."""
+    return rule_id.startswith(SCORING_PREFIXES) and rule_id != "source_risk.bare_url"
+
+
 def risk_score(findings: list[dict[str, object]]) -> int:
     artifact_count = sum(1 for finding in findings if str(finding["id"]).startswith("artifact."))
-    source_count = sum(1 for finding in findings if finding["source_risk"])
-    family_count = sum(1 for finding in findings if str(finding["id"]).startswith("family"))
-    family_coverage = {finding["family"] for finding in findings if str(finding["id"]).startswith("family")}
+    # A link is a prompt to verify the source, not authorship evidence: people
+    # cite URLs as often as models do, so bare_url is reported but scores nothing.
+    source_count = sum(1 for finding in findings if finding["source_risk"] and finding["id"] != "source_risk.bare_url")
+    # Missing-space damage counts once per document and never toward family
+    # coverage: scanned text produces it in clusters.
+    family_ids = [str(finding["id"]) for finding in findings if str(finding["id"]).startswith("family")]
+    family_count = sum(1 for rule_id in family_ids if rule_id != SPACING_RULE) + (SPACING_RULE in family_ids)
+    family_coverage = {
+        finding["family"]
+        for finding in findings
+        if str(finding["id"]).startswith("family") and finding["id"] != SPACING_RULE
+    }
     formula_count = sum(1 for finding in findings if finding["id"] == "family7.rhetorical_formula")
     structure_count = sum(1 for finding in findings if str(finding["id"]).startswith("structure."))
     score = 0

@@ -702,7 +702,8 @@ def render_results_md(result: dict) -> str:
                 "",
                 "## Rule scorecard (dev split, machine vs human)",
                 "",
-                "Share of documents each rule fires on. A ratio near or below 1 means the rule",
+                "Share of documents each rule fires on. Rules marked (no points) are reported",
+                "but never raise the risk score. A ratio near or below 1 means the rule",
                 "fires about as often on human text as on AI text: it costs false positives",
                 "without evidence. Tune rules from this table only; both published rates use",
                 "the test split, which this table never reads.",
@@ -713,8 +714,9 @@ def render_results_md(result: dict) -> str:
         )
         for item in result["rule_scorecard"]:
             ratio = "only on machine" if item["ratio"] is None else f"{item['ratio']:.2f}"
+            note = "" if _audit.adds_points(item["rule"]) else " (no points)"
             lines.append(
-                f"| `{item['rule']}` | {pct(item['human_share'])} | {pct(item['machine_share'])} | {ratio} |"
+                f"| `{item['rule']}`{note} | {pct(item['human_share'])} | {pct(item['machine_share'])} | {ratio} |"
             )
     lines.extend(
         [

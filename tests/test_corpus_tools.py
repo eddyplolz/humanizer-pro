@@ -273,6 +273,25 @@ def test_results_page_renders_sweep_separation_and_caps() -> None:
     assert "| chat | 100 | 55 | 33.3% | 50.0% |" in page
 
 
+def test_scorecard_marks_rules_that_add_no_points() -> None:
+    result = {
+        "threshold": 60, "corpus_documents": 1, "missing_cache": [],
+        "overall": fp_measure.slice_stats(risk_rows([0], register="chat"), 60),
+        "by_register": {}, "by_author": {}, "register_curves": {}, "policy_caps": {"cap": 0.01, "by_register": {}},
+        "top_rules_on_human_text": [], "machine_documents": 1, "human_dev_documents": 1,
+        "catch_rate": None,
+        "rule_scorecard": [
+            {"rule": "source_risk.bare_url", "human_share": 0.1, "machine_share": 0.05, "ratio": 0.5},
+            {"rule": "clarity.wordiness", "human_share": 0.2, "machine_share": 0.2, "ratio": 1.0},
+            {"rule": "family9.humanizer_spacing", "human_share": 0.0, "machine_share": 0.1, "ratio": None},
+        ],
+    }
+    page = fp_measure.render_results_md(result)
+    assert "| `source_risk.bare_url` (no points) | 10.0% | 5.0% | 0.50 |" in page
+    assert "| `clarity.wordiness` (no points) |" in page
+    assert "| `family9.humanizer_spacing` | 0.0% | 10.0% | only on machine |" in page
+
+
 # --------------------------------------------------------------- manifest
 
 

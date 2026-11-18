@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Two rules still report but weigh less. `source_risk.bare_url` adds no points to the risk score:
+  people link sources as often as models do. `family9.humanizer_spacing` counts once per document
+  however often it fires and no longer counts toward family coverage, because scanned text
+  produces missing-space damage in clusters. On the test split at threshold 60 the false-positive
+  rate falls from 0.24% to 0.08% (3 to 1 of 1,264 human documents) and the catch rate stays at
+  2.9%. The rule scorecard in `corpus/RESULTS.md` now marks rules that add no points.
+
 - The audit now labels a document under 150 words as short text. On the corpus dev split, the
   risk score told human from machine text at about chance below that length (AUROC 0.54 to
   0.56). JSON output gains `short_text` on each document and `short_text_count` in the summary,
