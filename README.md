@@ -321,7 +321,7 @@ This project measures its error rates instead of only describing them. It counts
 | What is measured | Writing used | Result |
 |---|---|---|
 | False positives | 1,488 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, newspapers, essays, student essays, and Python Enhancement Proposals | 0.1% overall; 0.0% to 0.3% by type of writing ([full results](corpus/RESULTS.md)) |
-| Catch rate | 638 test documents from 2023 AI models (RAID) and real ChatGPT replies (WildChat) | 3.1% overall; 0.0% to 5.5% by type of writing |
+| Catch rate | 834 test documents from 2023 AI models (RAID), real ChatGPT replies (WildChat), and current Claude models | 2.9% overall; 0.0% to 5.5% by type of writing |
 
 ### False positives
 
@@ -349,14 +349,13 @@ Every document comes from a public source. The project publishes a fingerprint o
 
 ### Catch rate
 
-The AI text comes from 2 public sources, labeled by model:
+The AI text comes from 3 sources, labeled by model:
 
 - text from [RAID](https://github.com/liamdugan/raid), a research benchmark of 2023 AI models
 - first replies from [WildChat](https://huggingface.co/datasets/allenai/WildChat-1M), a public collection of real ChatGPT conversations
+- answers from current Claude models to [60 published prompts](corpus/machine_prompts.json), made with `scripts/generate_machine.py`. These are the only AI essays in the set. The project does not publish their text, so a rebuild makes new answers and its numbers can differ slightly.
 
-A pool of answers from current Claude models to [60 published prompts](corpus/machine_prompts.json) can be added with `scripts/generate_machine.py`; it is not part of the published numbers.
-
-The catch rate at the default threshold is 3.1% overall (20 of 638 test documents): 5.5% on chat replies, 0.0% on news and encyclopedia text. The full table by model is in the [results](corpus/RESULTS.md). 2 limits apply:
+The catch rate at the default threshold is 2.9% overall (24 of 834 test documents): 5.5% on chat replies, 0.0% on news and encyclopedia text. The full table by model is in the [results](corpus/RESULTS.md). 2 limits apply:
 
 - it describes those AI models only
 - the human newspapers and about half the human essays are about 100 years old, so part of any gap there reflects the era, not the author
