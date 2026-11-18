@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg) [![skills.sh](https://skills.sh/b/eddyplolz/humanizer-pro)](https://skills.sh/eddyplolz/humanizer-pro)
 
-**Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,264 human-written documents: 0.2%.
+**Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,488 human-written documents: 0.1%.
 
 | Before | After | What changed |
 |---|---|---|
@@ -320,7 +320,7 @@ This project measures its error rates instead of only describing them. It counts
 
 | What is measured | Writing used | Result |
 |---|---|---|
-| False positives | 1,264 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, newspapers, essays, and Python Enhancement Proposals | 0.2% overall; 0.0% to 0.7% by type of writing ([full results](corpus/RESULTS.md)) |
+| False positives | 1,488 test documents written before ChatGPT existed: Stack Exchange answers, Wikipedia articles, newspapers, essays, student essays, and Python Enhancement Proposals | 0.1% overall; 0.0% to 0.3% by type of writing ([full results](corpus/RESULTS.md)) |
 | Catch rate | 638 test documents from 2023 AI models (RAID) and real ChatGPT replies (WildChat) | 3.1% overall; 0.0% to 5.5% by type of writing |
 
 ### False positives
@@ -330,20 +330,20 @@ Every document in the human set was written before ChatGPT was released, so any 
 | Type of writing | Documents | False-positive rate |
 |---|---|---|
 | Stack Exchange answers | 450 | 0.0% |
-| Python Enhancement Proposals | 303 | 0.7%, including 1 blocked |
-| Essays | 250 | 0.0% |
-| Newspapers | 257 | 0.4% |
+| Python Enhancement Proposals | 303 | 0.3%, 1 blocked |
+| Essays | 474 | 0.0% |
+| Newspapers | 257 | 0.0% |
 | Wikipedia articles | 4 | 0.0% |
 
 By the period the text was written in:
 
 | Period | Documents | False-positive rate |
 |---|---|---|
-| Before 1930 | 507 | 0.2% |
-| 1930 to 2017 | 567 | 0.4% |
+| Before 1930 | 507 | 0.0% |
+| 1930 to 2017 | 791 | 0.1% |
 | 2018 to 2022 | 190 | 0.0% |
 
-These rates come from the current rules, measured on the test group only (1,264 documents). A block counts as a false positive. The Wikipedia slice is small, so its rate says little yet.
+These rates come from the current rules, measured on the test group only (1,488 documents). A block counts as a false positive. The Wikipedia slice is small, so its rate says little yet.
 
 Every document comes from a public source. The project publishes a fingerprint of each one (a unique code), with its date, word count, and a public pointer such as a Wikipedia revision id or a Stack Exchange answer id, so anyone can rebuild the collection and check the numbers. It never publishes the text.
 
@@ -359,7 +359,7 @@ A pool of answers from current Claude models to [60 published prompts](corpus/ma
 The catch rate at the default threshold is 3.1% overall (20 of 638 test documents): 5.5% on chat replies, 0.0% on news and encyclopedia text. The full table by model is in the [results](corpus/RESULTS.md). 2 limits apply:
 
 - it describes those AI models only
-- the human essays and newspapers are about 100 years old, so part of any gap there reflects the era, not the author
+- the human newspapers and about half the human essays are about 100 years old, so part of any gap there reflects the era, not the author
 
 ### How the results stay honest
 
@@ -463,6 +463,7 @@ It draws on these sources:
 - [RAID](https://github.com/liamdugan/raid) by Dugan and others (MIT): AI-written test set
 - [WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M) by Ai2 (ODC-BY): AI-written test set
 - [Python Enhancement Proposals](https://github.com/python/peps) (public domain): technical writing in the human test set
+- [PERSUADE 2.0](https://github.com/scrosseye/persuade_corpus_2.0) by Crossley and others (CC BY 4.0): student essays in the human test set
 
 ## Version history
 

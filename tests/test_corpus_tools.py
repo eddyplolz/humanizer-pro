@@ -336,6 +336,7 @@ def test_manifest_is_anonymous() -> None:
     source_keys = {
         "public-domain": {"work", "chunk", "chunk_words"},
         "gutenberg-work": {"work", "gutenberg_id", "url", "chunk", "chunk_words"},
+        "persuade-essay": {"dataset", "id"},
         "news-page": {"url", "ia_identifier", "chunk"},
         "hf-news": {"dataset", "id", "date", "file_name", "chunk"},
         "pep-chunk": {"repo", "commit", "path", "chunk"},
@@ -564,6 +565,39 @@ def test_raid_pairs_filters_and_fills_cells() -> None:
     assert pairs[0][0]["register"] == "wiki" and pairs[0][0]["model"] == "raid:gpt4"
     assert pairs[1][0]["register"] == "chat"
     assert dropped["decoding-or-attack"] == 2 and dropped["under-min-words"] == 1
+
+
+def test_persuade_pairs_dedupes_spans_and_fills_prompts() -> None:
+    long_text = "word " * 200
+    rows = [
+        # The CSV repeats an essay once per annotated span; demographic
+        # columns are present in the file but never copied.
+        {"essay_id": "E1", "prompt_name": "Venus", "full_text": long_text, "gender": "x"},
+        {"essay_id": "E1", "prompt_name": "Venus", "full_text": long_text, "gender": "x"},
+        {"essay_id": "E2", "prompt_name": "Venus", "full_text": "too short"},
+        {"essay_id": "E3", "prompt_name": "Venus", "full_text": "line\r\n" + long_text},
+        {"essay_id": "E4", "prompt_name": "Mars", "full_text": long_text + "x"},
+    ]
+    pairs, dropped = corpus.persuade_pairs(rows, per_prompt=3)
+    ids = [source["id"] for _meta, _text, source in pairs]
+    # Prompts in name order, essays in digest order. E2 is below the essay
+    # minimum, so both prompts fall short of a quota of three.
+    assert ids == ["E4", "E3", "E1"]
+    assert dropped == {"out-of-length-band": 1, "prompt-below-quota": 2}
+    meta, text, source = pairs[1]
+    assert meta == {"register": "essay", "author": "other", "date": "2010-2020", "extraction": "persuade.v1"}
+    assert source == {"dataset": "scrosseye/persuade_corpus_2.0", "id": "E3"}
+    assert "\r" not in text and text.startswith("line\nword")
+
+
+def test_persuade_pairs_order_is_by_id_digest() -> None:
+    text = "word " * 200
+    rows = [{"essay_id": f"E{n}", "prompt_name": "P", "full_text": text + str(n)} for n in range(6)]
+    first, _ = corpus.persuade_pairs(rows, per_prompt=3)
+    again, _ = corpus.persuade_pairs(list(reversed(rows)), per_prompt=3)
+    expected = sorted((f"E{n}" for n in range(6)), key=corpus.sha256_text)[:3]
+    assert [s["id"] for _m, _t, s in first] == expected
+    assert [s["id"] for _m, _t, s in again] == expected
 
 
 def test_wildchat_pairs_takes_first_prose_reply() -> None:

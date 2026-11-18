@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- The human test set adds 300 student essays from PERSUADE 2.0 (Crossley and others, 2024; CC BY
+  4.0), 20 for each of its 15 writing prompts, written in US grades 6 to 12 between 2010 and 2020.
+  Until now every human essay was about 100 years old. `scripts/corpus.py build-persuade` builds
+  the pool from a local copy of the corpus CSV and reads only the essay text. On the test split the
+  essay false-positive rate stays at 0.0% (474 documents). Essay AUROC falls from 0.42 to 0.34: the
+  student essays score a median of 5 and the machine essays a median of 0. `corpus/RESULTS.md` and
+  the README numbers are regenerated.
+
 - Two rules still report but weigh less. `source_risk.bare_url` adds no points to the risk score:
   people link sources as often as models do. `family9.humanizer_spacing` counts once per document
   however often it fires and no longer counts toward family coverage, because scanned text

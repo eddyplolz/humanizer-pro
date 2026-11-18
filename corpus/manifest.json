@@ -23122,6 +23122,4506 @@
       "words": 534
     },
     {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-00a51230709e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "00a51230709e4d9a347981d29a142afe530e6d0583c0b960faca08974bd71459",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091006745"
+      },
+      "words": 228
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-01dfbf460fff",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "01dfbf460fff3ad65ae7bf5939dd2574cc65fe8eb4c0438ecd95b413485ba70b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091003363"
+      },
+      "words": 177
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-01e3f5208bdb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "01e3f5208bdb61de7e89e7b0adb41263b583b8da66abacc0286c0f46389b8137",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000144736"
+      },
+      "words": 298
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-028d6be84f09",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "028d6be84f09b28fddc08fcb5dfa95693150214c956e91e205f4e937389901e3",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5161616"
+      },
+      "words": 522
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-04f41eebf81c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "04f41eebf81c1a330cf7cccf06bcac9f803bf4903bc23594e385ac80169e9477",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000752932850_OR"
+      },
+      "words": 177
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0529e4421961",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0529e4421961902e49c31feef011872f4f49684fa8ad3c2ca0c63aff0f631b4c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000002202"
+      },
+      "words": 386
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-053cdab5da2b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "053cdab5da2bef8938ad9be79cf05748ecc0a7504ee504508a4b824a7ab43f16",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001958012850_OR"
+      },
+      "words": 497
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-055f19eb1091",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "055f19eb10910fe2064397b0baabfa19f918aa90ee6eeb1ce9403196fa9a3765",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2141003244"
+      },
+      "words": 151
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-060211ba08d3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "060211ba08d35df5590a8bf04507d8c925154bbb71cf6e179a9feb8416fabd51",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251000998"
+      },
+      "words": 170
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-061bd88cf336",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "061bd88cf3369dc9718e0ed3f4a6104d48acb51ab020ae0675d1b84fdfda557d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000003766"
+      },
+      "words": 195
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-09cc933f74a3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "09cc933f74a364f4c433d6135c00fc762e26eecfc6350d91516989e66ce24942",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.7446E+12"
+      },
+      "words": 540
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0a559f9e1ee8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0a559f9e1ee85fa23d9b9f060fec0e4bcc8f5b5ae9da87e8cfb5ddda3e8051ad",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000071362"
+      },
+      "words": 255
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0b67f7988c12",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0b67f7988c1202998322a1ffa47911e266bb6263d7be58df02d49c03a5a5a3fb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000027004"
+      },
+      "words": 480
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0b9b59c4253c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0b9b59c4253ca0230c792636657b2e819106904c6c177fa6b0692e919795c26e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002146532850_OR"
+      },
+      "words": 203
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0d1362816ba3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0d1362816ba3784eec65460f924f634c584f034da59ad03b811534fcc22cad68",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001754402144_OR"
+      },
+      "words": 474
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0de1d4a168b0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0de1d4a168b024cb0961532474d520a06b2ba613ab5005916b0b9f46b268b1bf",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001096502144_OR"
+      },
+      "words": 624
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-0deb79834638",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "0deb79834638c3093f928331c793f11bc04fd7b2c923ff4f6e81ba0f2dbc4375",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001765472144_OR"
+      },
+      "words": 866
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-111769295bbb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "111769295bbb0327e8658fc3321924b9126909a2945d87ac9dc010c7f88ae438",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001331312810_OR"
+      },
+      "words": 308
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-11611d25f287",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "11611d25f287c2e8278e58c99a90e46c0c7ec515fe5dc54a4e887cd526d4a50a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001610472125_OR"
+      },
+      "words": 657
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-117447d5d632",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "117447d5d6323bca502ea6ea5ecad59c308116e3b7ad28e81ab331081f9251fc",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000374464"
+      },
+      "words": 464
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1192f4f7177c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1192f4f7177c9dd8f7ad012d15f5cb7840647e809956dd7479c9c2ec173d4504",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091001387"
+      },
+      "words": 572
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1541f03411a3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1541f03411a31b46e6a495116796b2714e7453d51a02718d2d1ea4d6bfb51bca",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000137028"
+      },
+      "words": 325
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-155125eaef1b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "155125eaef1bcad222da6630e300be73794c4bf6e88d7a8989a2aafc44a10e6a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001040232144_OR"
+      },
+      "words": 696
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-159b231439a0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "159b231439a00467326911b8a07ea2ea086f67988e4ea143473417f21f54e1d8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5266504"
+      },
+      "words": 601
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1670a67a3b0f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1670a67a3b0f77039ce51996dac3a3dcb32438d57713d2408c0384a3c116af7f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000022608"
+      },
+      "words": 206
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-17b83fdc5d77",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "17b83fdc5d77ba49b8b5fee3f17aad49df4abcdb23c443c44fd33c1c243de901",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002114982144_OR"
+      },
+      "words": 544
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-17d985f6fcf3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "17d985f6fcf3612e9a38e9995953ee011665bd8026b5a79fc010d34d87d2bde1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000077213"
+      },
+      "words": 265
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-19f00fc906ad",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "19f00fc906ad64e151d3fd614d793bb51285de3fe88d840fd40cbdf4aaa4755b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000037758"
+      },
+      "words": 326
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1a6abb23e27d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1a6abb23e27d04fc85d46330caa0185da8ef20c194aa2b139db4cf167c0ee9a9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000111281"
+      },
+      "words": 208
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1a9069f6a6da",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1a9069f6a6da5d6a520411f1eb2b5560d829ba52c71a40037375481fb00987ce",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000900041"
+      },
+      "words": 475
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1b1427e2b37b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1b1427e2b37b25d2c71d7637e5b6b06146048f0b619d99582b2d9fbcc9f01e27",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000041455"
+      },
+      "words": 584
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1e5ca03cfdc2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1e5ca03cfdc2027baf77c550ca9eb060c700a36f6042fa8fcce26f7f1e37ae27",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001998132810_OR"
+      },
+      "words": 553
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-1f5b834a5ad5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "1f5b834a5ad51343ba75b48310b708af4e1bb015638065b02edd82cc1afa4c1c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000004303"
+      },
+      "words": 225
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-215531f4de01",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "215531f4de017a82bd18c6cf5ab3aa1d4e1f2c5e95fe55ec2ac6a474fd30d137",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2271001698"
+      },
+      "words": 413
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2166bfb45877",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2166bfb458772b2734937b03b3de93135107ce637fa4d27bb06f172210525c11",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "4.83455E+12"
+      },
+      "words": 245
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2253fd83e72c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2253fd83e72c77a1fd6184a41cc7d5785c45c52a240ad657e516be313ecae6b7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5178601"
+      },
+      "words": 390
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-22844859af5e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "22844859af5e36082f247cc9484058095defbcaba5a1cba901c13308525914b9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000051635"
+      },
+      "words": 630
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-22cd5429a298",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "22cd5429a29827d5d3438b3ec7e6a7872a402d3ba331273c7036d72a6c2dfab6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2421003235"
+      },
+      "words": 229
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-230c22b2d32e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "230c22b2d32e7ae2f58104573016d65c8a7234a1177025f63f3c231a562e4da1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001341062810_OR"
+      },
+      "words": 733
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-235892b107a9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "235892b107a9b6669399f05d81a42409b7bfaf9d99d08e5719debb706c20b919",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001059362850_OR"
+      },
+      "words": 516
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2419dea0fe12",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2419dea0fe128b569c0ac8a0a8737a18002830dea6ad3581c74a4aef78ce2c31",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.08274E+12"
+      },
+      "words": 338
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-246d07ea1b88",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "246d07ea1b88708a453a4b55adc9bd49466fd9caec51931515a8cd9eeadaab43",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000108952"
+      },
+      "words": 413
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-249829c2a749",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "249829c2a749beb393e7795b1fe86948d7b0bcf9b4b0b93e1fc6a57b4f9658cd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2421000180"
+      },
+      "words": 196
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-262262872f6a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "262262872f6aeaab116103218a63b537db648f06c5aa5f36ab7e8617b490acc2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001975512144_OR"
+      },
+      "words": 315
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-26f1cf96f744",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "26f1cf96f744d5163cb2c63933475db51532fd09a13951f55e950cd9a205bdc1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000700921"
+      },
+      "words": 238
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-283e97541675",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "283e975416754e7765265a653e4932a1ad07237107afa9bb520b175c9a10eae7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAUUP138180000312862125_OR"
+      },
+      "words": 572
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-28da5c26d67f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "28da5c26d67f75f858e83eebfec4540bd5aa56b0e4baca699021ccd8b455ae7a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000124033"
+      },
+      "words": 665
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-291db2b8cc6a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "291db2b8cc6a0a5e58f74d26295cb09726fe9ad5e074babebe0111f330e96680",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000048787"
+      },
+      "words": 475
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-292b1a81e601",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "292b1a81e6011f5b09002d45ed43b887800f15a3a094aca64a1499f3d4e0627f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5030474"
+      },
+      "words": 293
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-29377a2d2a8e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "29377a2d2a8e5b6264983a6bb2c12fba59e575d5047c8a43b977fac16dd6c56c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2021000047"
+      },
+      "words": 373
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-29545e617369",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "29545e61736992f0e4537a2320af314bd218bdfed49498e0b86013a955608f44",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2421005637"
+      },
+      "words": 206
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2a72cc7d8002",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2a72cc7d80027c474ceab21d0be664cc6324105ee682f5bd49ec78732c681f2b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000072517"
+      },
+      "words": 451
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2b105eff5113",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2b105eff5113835709631634acfa27b107f6a84cf7056143b2465756649a42e8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2241005334"
+      },
+      "words": 207
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2ebe30aaad8b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2ebe30aaad8bfe08f922a216ae6a4099786d65487c685e4bf08d87e1866b82fc",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000026701"
+      },
+      "words": 453
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-2fa29565bb3d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "2fa29565bb3dc3dab1959a1fa48709dec5a1e937d2a835bf0f49e7118564972a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2081001007"
+      },
+      "words": 220
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-308226807002",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3082268070023e489f5d7a80e20c78303ff50fa0f71dc201950fe1027d202e59",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.25893E+12"
+      },
+      "words": 306
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-32204fc9ea27",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "32204fc9ea2719111c30e13aeb5bb7011417ca1584b8e0ad206cd3b5bdce39e9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251003431"
+      },
+      "words": 276
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-33b1d6fcaf8b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "33b1d6fcaf8be6f6f62ca5ef0692f22a9f922f72f2843bf92589b1fb4b111a78",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001049992850_OR"
+      },
+      "words": 507
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-33c46f31cc42",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "33c46f31cc42acc024d0d519fd504af7285b80b6751ffbc7b9f78ac4e4d7bc2e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000103506"
+      },
+      "words": 296
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-36c2a216fbdd",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "36c2a216fbdd938847448eed8f4d1cca942bde3378d4f7024b6e80f7abbda5a2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001818422144_OR"
+      },
+      "words": 450
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-375e9c1fe8ff",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "375e9c1fe8ff9ffd4b8445701f102d206855775a3e9a3d99adc75eb63446ade4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001909342125_OR"
+      },
+      "words": 708
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-37a322610371",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "37a322610371817901bc189a8823705ec76339bf3e9e9ed3e2c3f386a5983f87",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000959822125_OR"
+      },
+      "words": 546
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-38ec65bbc93b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "38ec65bbc93b5a53eb8884b5fff2db6aad541c3d700edd3446ea36728173ad11",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171006471"
+      },
+      "words": 156
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3b72a1965714",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3b72a1965714e2e49080a4b73d75d0345bd8dc674c25fb700d3e18e863c51d82",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5188415"
+      },
+      "words": 317
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3bc99a67eba2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3bc99a67eba2b2bb5a37c482df5a4d6e73b091d4a8e0cf34e9b7abf5b0abf334",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221001481"
+      },
+      "words": 347
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3c6c80e7e112",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3c6c80e7e112ef332803c885f446ef26e336f8e0ca3426d94e339d0e67f20c30",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAUUP138180000045962125_OR"
+      },
+      "words": 439
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3c930445a607",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3c930445a6075f2c12b1d6ba1fe7ecc1d531752904756adcaf61c9c9ef484167",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000782412125_OR"
+      },
+      "words": 575
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3ca34bb05d4e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3ca34bb05d4e51b3370d457d1eb4e5036dfcdb2fc7d26d8ce46dde876eb16d35",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5027997"
+      },
+      "words": 934
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3cb3d6563711",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3cb3d6563711ac567e7e2a329d55df24a74f0ace862015096fb6b6bf3f9bbaaa",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5185268"
+      },
+      "words": 235
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3d0a2f450983",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3d0a2f450983fe9ea70d6ad29819ad603bd17c8268606ced5eed41fbe3d9766d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.62811E+12"
+      },
+      "words": 536
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3d36519ffedb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3d36519ffedbb9edfc5518437786d301bc2c920b7902afec41a3cb338c06ac23",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000020925"
+      },
+      "words": 221
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3d6b7d438dc5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3d6b7d438dc52c2990e55dfaca6478460290bc2da1b3affa520bab22bda4fb80",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000021946"
+      },
+      "words": 391
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3d6d0959001b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3d6d0959001bb61df9d857d1d9bda1d07ef20e4d3d234b453a1d8fc80cf2f24d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000142967"
+      },
+      "words": 257
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3e439a0a384b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3e439a0a384b6d8e5acae83c0b7ef3091d81d85e4ab465e11a864333aec2fef0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2431002525"
+      },
+      "words": 222
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3ec41297d5f3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3ec41297d5f38564dc849f4ff56021a722862a7d466372b531738e98edc3c16f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002117782850_OR"
+      },
+      "words": 426
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-3ed1c676045a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "3ed1c676045a499fd786d7b54a98e88aed4e6b15dfca698fe6f751c5ed01637b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000538842810_OR"
+      },
+      "words": 496
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-40ed3ad66501",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "40ed3ad66501ea4ae2cb25e10a4876dba5f213ca3f800d448ed30b4e23a314bb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5344346"
+      },
+      "words": 840
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-416f3b5d53b8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "416f3b5d53b8f196b843be1f9c02dc37ba810e1e5331094fdf84b267f22e2c52",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000294573"
+      },
+      "words": 190
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4352dac317ec",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4352dac317eca51a41cd91c7779495ed3f05d35f4498391158e553c9bbb28a5b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000120613"
+      },
+      "words": 194
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-43701533c199",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "43701533c199fc0ac46164a5a7229a539ce6680a4415b8c8abad1450b19072ae",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000050311"
+      },
+      "words": 164
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-43c78909644b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "43c78909644bee6a1d5f093d7396776b18e02a99f77a613ba31a611e42c6d643",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002162302810_OR"
+      },
+      "words": 387
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-44d63e6d098c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "44d63e6d098c5eea5e18715fee4e6c23bf82017d904f74b05cacc509bf7efa49",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000137097"
+      },
+      "words": 452
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-45fca9102f37",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "45fca9102f3759149db1f1acfdb6990df4da2fd958ea5d632a755ece2ea8de22",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091001573"
+      },
+      "words": 415
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-46ba77b68e56",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "46ba77b68e56bc5e65d33514bfc2eeb43035347fe0b07ee4b52eb80aea45300b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001510302810_OR"
+      },
+      "words": 1219
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-471fdbc993c8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "471fdbc993c8d0e7b99d405b1a6429a66b43c49f5ef96bf9b25883c94558b3b6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000551152850_OR"
+      },
+      "words": 619
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-473f3e0b47fb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "473f3e0b47fb27a52dbed344d79f03f66974670af1de85314eb9f34d1780bb51",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2021000187"
+      },
+      "words": 191
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4884a9c5ed41",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4884a9c5ed41924e93da4e4679cc01f3f9155c1b70133d53db702e42493770aa",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000954352"
+      },
+      "words": 611
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4a0a97d7795b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4a0a97d7795b4ba6e203b197ebb42499b3640c68a973e31220f532a5ed08a6b0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251002567"
+      },
+      "words": 401
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4a1af24fc1dc",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4a1af24fc1dc608a08039d680ba558dbab3a926650d50fb06c373ed124b37763",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.38129E+12"
+      },
+      "words": 302
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4a7bb97cfb4b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4a7bb97cfb4b06ae93fb2f88d34deb0a5706ea2c358b725a99d344fb20a04fa0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5161038"
+      },
+      "words": 382
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4a7d210edccb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4a7d210edccb5a4cd11a3cf5bce995fb960af4525924227a5564f682b9d60a34",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000864916"
+      },
+      "words": 350
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4ae6b1548da3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4ae6b1548da3a17e83a57386c63998beeb947050d0959392f53444c53a2621b3",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001691662850_OR"
+      },
+      "words": 172
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4b2ba860c43c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4b2ba860c43c5691335ae4ce14aa100aa6959fb98aab48605e7c5833574c843b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001118942144_OR"
+      },
+      "words": 700
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4bece7b3f805",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4bece7b3f8052ed2c45f0968b3105dea05837b928310c7786288c94dbdc57a00",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "576552115212010thLitAB"
+      },
+      "words": 261
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4c23647f13cb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4c23647f13cb1da6fc39cb80f863f96cabc48f539b6263aa76b7b6523beaaed4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001558172144_OR"
+      },
+      "words": 286
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4c55d1f9ef39",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4c55d1f9ef3948fbecf6fa69086f4f8debd23350bfc7cf6e82691869deb80131",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000775582125_OR"
+      },
+      "words": 718
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4cf5b6c20f59",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4cf5b6c20f591e70709dda516d9c24890527869056b366f12af38f5a6d73db54",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001891732810_OR"
+      },
+      "words": 1150
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4da404db36c4",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4da404db36c402e45283971c32e74f84ea640afec3029262c8412747a800504e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000107120"
+      },
+      "words": 416
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4dec6e1de10c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4dec6e1de10ce0d6041cd2db335b4a70102243dbc1ceaae0a3490de61a8a0d73",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5181220"
+      },
+      "words": 453
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4e694f04278a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4e694f04278a6901b03ab8dc5ac18b6a1fb5d3a20323240b08cd136792bc4be1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5160375"
+      },
+      "words": 251
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-4eef90cae3c3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "4eef90cae3c3eeb9f19cc017a35114001f6e82d5428d9af94ded149c31f101a1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000157853"
+      },
+      "words": 444
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-500660a71663",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "500660a71663befff95d0a16369af5e966267e6f415916ffc1feedeefcbc3696",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002093822810_OR"
+      },
+      "words": 1108
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-501ffb6b3108",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "501ffb6b31080183f4c7dc199ca1194a0711ee6e0269420621ddbca6e40c4414",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5154186_cleaned"
+      },
+      "words": 409
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5041b9efd482",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5041b9efd482e61013b895ba164e1cfc89b55a54e7b61fa6fa44164155c5d989",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5212882"
+      },
+      "words": 290
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-50c21ee24cc5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "50c21ee24cc538a626b5357bd46dab1bfd9f4ca089580a2d9f6d1dd0e90b9608",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001760602125_OR"
+      },
+      "words": 679
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-51812011af45",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "51812011af4591e2a26ebc5eeb82b1c3beb59c11961f55fe5ee42aaea0fbaa2b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000043928"
+      },
+      "words": 780
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-519a29eb43cb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "519a29eb43cb40491b815c35cdbf8428bc80754a3f559c36b1e8830e21ea3d99",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001023962810_OR"
+      },
+      "words": 369
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5203e0f7c89b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5203e0f7c89b296f6921241069087b7e3345cb0c7f2bc482a1204338412d5c53",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000763332144_OR"
+      },
+      "words": 505
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5444b9468006",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5444b9468006ac092e8d01feba528f66558fe1eceb8cea472d451d7faedf0e6f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000757809"
+      },
+      "words": 323
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-545222a8f996",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "545222a8f9964c49f7a6aaf606c491356b14f05f559bce28692f78943e834549",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2431005842"
+      },
+      "words": 399
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5454fb2d0d31",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5454fb2d0d31e3043567d51924678e787e4cf2d31bf29781f1ee13758af889c2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2241003374"
+      },
+      "words": 274
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-553609759efa",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "553609759efa4eef01a9f8e343f705dc6b2ca9b3bf972e3cc8aaba72ba34d677",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251002389"
+      },
+      "words": 319
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-58873fbfc608",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "58873fbfc608407e7f8a6e1c0361209df3654e4ab90f65e4d2e4227088c0ca0e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5165375"
+      },
+      "words": 296
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5b0c97ce7c05",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5b0c97ce7c05cb242ce8ea4c8a15cd59d4795dea690040c0153ba5da35c3cb55",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000151740"
+      },
+      "words": 379
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5b4bfe352e89",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5b4bfe352e89149a0ffb685eb9e18fe40625d8c7cc38c34820427d3394f18995",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000587462850_OR"
+      },
+      "words": 551
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5b8b074a5dfd",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5b8b074a5dfd64ea1e012f29e6e3210ac0b4b0fd0aab8beab5fcebb2666a87f7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000757778"
+      },
+      "words": 558
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5d13c68172b1",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5d13c68172b130d47f6a9d71aed31fcbf517c7cd70820272de472eb50d72c1e6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000096948"
+      },
+      "words": 299
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5de01632e186",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5de01632e186ddbd7b77b289a7dba52f7153a8044798917696a31dc675dedaff",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000041230"
+      },
+      "words": 449
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5f527d34fb90",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5f527d34fb909f2e64b5b7796b9d8bdd904a48657826f6759e852f6834b91439",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.92557E+12"
+      },
+      "words": 1301
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5f587f9f5fd5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5f587f9f5fd5877bf8feb7d4d010e45955e86594141fbf34ebfc4d5d32f9e389",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001708972850_OR"
+      },
+      "words": 354
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-5fd8623ff7db",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "5fd8623ff7db1ed8a877d07b0b4b06f6b8abe46fdc08ea7cc96602e30543f896",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.51086E+12"
+      },
+      "words": 387
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6028c7e34767",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6028c7e347677931311004d6ff5eab8fc2680d7bb62cf463bf2d866202f26ce2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001992662850_OR"
+      },
+      "words": 412
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-61fdaff1bc58",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "61fdaff1bc58a8b4883a6e9ecb13f4f6913fc23c84e34fd07035593d0d174fb2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000105841"
+      },
+      "words": 427
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-63855b587251",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "63855b58725142a52e1feb254f41150e194c1b37b1251211746aa41080309a39",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5341935_cleaned"
+      },
+      "words": 472
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-63ab5702ff85",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "63ab5702ff85d12091ac5d612a8ae4d00b488bad21490a8fea39bf85eb291db9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.06423E+12"
+      },
+      "words": 154
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-641ee1a15be8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "641ee1a15be8bb37ef6b4a89c86c327547195ae36fa5b75c59f1862954dd438c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2021007157"
+      },
+      "words": 359
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-64bf8b2cf8b9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "64bf8b2cf8b9797adbbc261711b951234d7a844e3f461db7fcb7e4cfe5b57902",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000068779"
+      },
+      "words": 391
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-65694ff96c98",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "65694ff96c98c8348346e781cf4eec48a5ff1856996572c06153fff4395732eb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000020556"
+      },
+      "words": 280
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6602003f57eb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6602003f57eb43592c7b0ff268a6f7c12e84b5ea0c4785eb798a2a364756eda4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000111137"
+      },
+      "words": 378
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-688efe9b08da",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "688efe9b08da0058b5424a03d911ce6d1869bd87cfd2111e0628575a640a5546",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2241007299"
+      },
+      "words": 238
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-689bccf5029f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "689bccf5029f4e61b93e29c624aab087403ee52cff55a9e0a2cd157dfe2af841",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000633632810_OR"
+      },
+      "words": 865
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6c23a856d308",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6c23a856d3089c0297449b5c9d36e369a7570eccca8cfc5d5ea3df2facd51294",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000036905"
+      },
+      "words": 251
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6c6d1ea692b1",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6c6d1ea692b12601a79deca2b106958fc9d2655494f00a1478931f7bfe56ce44",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000119880"
+      },
+      "words": 419
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6d0e7df8969e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6d0e7df8969e84030e13d9e0e525d6aa4b8b3a1975b5aefbfd062cdc1b7a365d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000117249"
+      },
+      "words": 298
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6d12de69df7d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6d12de69df7dab925c9876a2d57e49ecd64d9f5195732fa61afceb6d36b93a7b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2081006688"
+      },
+      "words": 760
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6d92cedc27a7",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6d92cedc27a786d7494f8ee479f4073007883b9773d115c9853aa569a34a2615",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000498152850_OR"
+      },
+      "words": 491
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6e321d24f3e5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6e321d24f3e56a82a13eaacf68fc2bb387304368833be76602f3271d72866344",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5077079"
+      },
+      "words": 515
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6e6f431e4e49",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6e6f431e4e49f4a84a3117fa182017d97a95dd349c9b3d2af8a0192166b026fd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000985841"
+      },
+      "words": 494
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-6ed95fe97b6d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "6ed95fe97b6d96fa12c7c788fd3904e01a57ebe4a16f0b0f29e883e51e3c0910",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221007269"
+      },
+      "words": 215
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-705668d8b0f7",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "705668d8b0f75a24c9350ffcc7337f84614cd41790d68c44095cbd2856b2a2bd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001477052125_OR"
+      },
+      "words": 1030
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-70ad81995a7b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "70ad81995a7bc6b1cba88a1a6225eb4e337385319085fbf37f788a6103334c1e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000664916"
+      },
+      "words": 331
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-723b78a52098",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "723b78a5209832e63510a3a5d5837b6e6e5da660af4317f0f1715f0cdb029943",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000024066"
+      },
+      "words": 459
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-72452c242d7b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "72452c242d7b3a60e897519eaa93a45fa88e0b9b4f7794b8ba8f602e7b006b5a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000150861"
+      },
+      "words": 426
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-737ae871766e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "737ae871766e4e054bd5ac3d8e2ff961fce4a653b17ca8de7c35704ad83de8b5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000608912810_OR"
+      },
+      "words": 726
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-73a913673e7f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "73a913673e7fc31f64881cd637446b3e189de9dd007bb994f5c16c4d28dee6b8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000131060"
+      },
+      "words": 163
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-73ea6c25eb40",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "73ea6c25eb409d30337f155d60bd5a99b8440ee0ad1a6ccd4c159edc0f1752e1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5196803"
+      },
+      "words": 420
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-741f49ed4341",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "741f49ed4341acbe7d27afd40b914c3881d5e5f4a70e8bba1f71797405708b43",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000024337"
+      },
+      "words": 433
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-759a3fe10b04",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "759a3fe10b047e1ce87d2b3f0c9abd0b4d4c7a47a503714c840742a8042d27fc",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "4.74703E+12"
+      },
+      "words": 298
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-75dceecd9344",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "75dceecd93443b6dd402a875382406a39e8ed99e928c09546e81b27c7d4fe0e4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000081938"
+      },
+      "words": 379
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-76f814bb2f1b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "76f814bb2f1bd4153c6a20adb5209f873eb5bd8dbf222979cbd58bc81a49c9ce",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000147429"
+      },
+      "words": 687
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-785c251d0e8e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "785c251d0e8ee5ac6a31ab5ef325966c44d01b3ebf0892035eefbb7db8c10002",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001606232810_OR"
+      },
+      "words": 464
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-78677cab8366",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "78677cab8366fccedf550c66b9599935a6f96dbc29bda5f94d2915a55913d70a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000072437"
+      },
+      "words": 327
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7897ade9313d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7897ade9313d68877875c9f6367bc012267154186ef31aa4c7d7ecdd703ab70c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5080406"
+      },
+      "words": 334
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-78a7a6792b4e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "78a7a6792b4e6eb8c0e6daf84abd4673f3828fe8a4ebb8a20dd4fb26639c2857",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2271001663"
+      },
+      "words": 219
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-78b5d54a39c6",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "78b5d54a39c66fd6b3452e8a5bcdf9a793e3f9a3f00a607b03536b89b8f4d2dd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2241001568"
+      },
+      "words": 171
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7928289d1e54",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7928289d1e546cd42c569705441ea19bd75587c899ba6f8462df2db580d3a302",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001003002144_OR"
+      },
+      "words": 578
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7a2ab2b06779",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7a2ab2b06779fdf0d0098a00f59b5ee6b73d8a63922814935eb681ea077e6e07",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318001019250"
+      },
+      "words": 622
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7a5f01b3c115",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7a5f01b3c115d3cc18e86b37e80f24ec21ca3118b8596aff51c771acaaf85195",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.74864E+12"
+      },
+      "words": 274
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7a97429e5f5a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7a97429e5f5a37d27ed848d40e85c1065ac332eb2866cbe709c44a60cc31426a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000140480"
+      },
+      "words": 524
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7b4a9ba0be87",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7b4a9ba0be87c9b92cbf5ad3301737c632b8c30a9dcf2d0925aca398cddda5c8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000085035"
+      },
+      "words": 366
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7bc8d0d9c3b4",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7bc8d0d9c3b4b3285b6c0cf7871e320d4b31230cf9dce985ffe326e6d33d3573",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001964722850_OR"
+      },
+      "words": 160
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7ca5aaf96b1f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7ca5aaf96b1feb6587d8f193b0822e6fe241421cace8b9e29194fd688471c006",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAUUP138180000094172125_OR"
+      },
+      "words": 543
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-7cb200873b07",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "7cb200873b072cd8793ceb928d4e37782844264c3d45403d475cde7fa32b985c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.76154E+12"
+      },
+      "words": 233
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-800158e0e18f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "800158e0e18fba956e2e7b3f930bb36c2395dc881c4262f36f39c6542435c086",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171006993"
+      },
+      "words": 244
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-80a785d4265d",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "80a785d4265daf4bea0346d6d8d7eb5db58485834824471098fd0563c6b70720",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001597192810_OR"
+      },
+      "words": 336
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8126e2318af3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8126e2318af3240cdb3213541cf95de825950523423dcfc79005afd1ae1be62c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000099406"
+      },
+      "words": 305
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-81548fd48e82",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "81548fd48e8228782bc4b70016b70ad279fdcc11d9efb3ef36876a9fe2c15803",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000825763"
+      },
+      "words": 339
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-820ab86c75e0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "820ab86c75e0d57c245906a22ccb5ff25cc263d6d1a4eb717210cf5ad3f2647b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5076932"
+      },
+      "words": 659
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-823658e57116",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "823658e57116670c3650ec0096ef8817f7e81c2c3cf22c17df89fa906674a269",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2141005620"
+      },
+      "words": 267
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8412f90b2467",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8412f90b2467722d420769d169c28d85ccfff8479b58e391111fb6870c9c0cd2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000111023"
+      },
+      "words": 267
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-84316b7ae592",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "84316b7ae59229d0f5b2474f96f58c6c42c9b3da28b28e65a92cba14621ae001",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091007342"
+      },
+      "words": 175
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-844f07cffe17",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "844f07cffe1752e04b158d51aff640852722ab1e48f8eede4fb68de98fd87063",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000385596"
+      },
+      "words": 348
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-85309c97b1f3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "85309c97b1f3dcd6bda555fbd08148056776498090e8083e2a678346ff8630a2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.78837E+12"
+      },
+      "words": 249
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-85b28710ca7c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "85b28710ca7c1b587635e259a40468e67c8c8f5bb40a8797696e23fc9ce7ad8c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000139338"
+      },
+      "words": 188
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-862943d088d0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "862943d088d016e9acc712e10258a03622907126b896e8c799a142740b804350",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091002537"
+      },
+      "words": 363
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8667d2ef23a7",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8667d2ef23a7612804fafeea5eb6b7d37c6a92446a39b28332963a5cc5ec4ac6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318001051830"
+      },
+      "words": 225
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-87080d46bc7c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "87080d46bc7c4e85ada6db2153443fd48628ca0cef0222818c9c37da73ba82dc",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221002241"
+      },
+      "words": 193
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-87419f298535",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "87419f29853530a80fd07ec54cdc4338180d89c5e311ce2ce65e82612e878013",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171002653"
+      },
+      "words": 584
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-898231124c75",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "898231124c7594a62a068569edd3054b61438623fd6a4f885b2a4878987dfd4f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000049459"
+      },
+      "words": 362
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-89b53bfbebff",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "89b53bfbebffddcc339c9be6f426adbc872e4acbe6618308e3eb059dc60bf064",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221000698"
+      },
+      "words": 180
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8ac292ed3206",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8ac292ed3206df2704473ab3ebaf038c0249b5d7939af3c7313560c875a77b0b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001414392810_OR"
+      },
+      "words": 426
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8afd30b484e2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8afd30b484e2cb6237ddae00b4640d919e11045f8a048424856776aea419f968",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000041711"
+      },
+      "words": 333
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8b6534b38cfd",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8b6534b38cfd90173d64f3d6967d3b32c6b2d2b2cbf47e7dfa3a608b1a2192cf",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001779822144_OR"
+      },
+      "words": 993
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8d1227e80207",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8d1227e80207c6ac09a3bae9b8702c9c527672b4cdecd77be1d571f39b8f93b4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001681892810_OR"
+      },
+      "words": 512
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8e469f0f664b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8e469f0f664bb51def7ccfc30ff3694c799a5e5cc7a3e7919c3069caf5d1004e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000807388"
+      },
+      "words": 169
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8f3ff4376ffe",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8f3ff4376ffe9dabcf01df11a3ff440dcbd3f2a6152bd39449a7b1fcbf800c9a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5307716"
+      },
+      "words": 298
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-8ff1504ecd56",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "8ff1504ecd5636e8f30179a926b80697eed31c901ac7fe4f6cb215ab72f801b5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001435772850_OR"
+      },
+      "words": 253
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-90b0f7c7169c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "90b0f7c7169cac0c80ef58d9f0c41cb5f70cf992a20aad15247706c5654cdb2b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001476432850_OR"
+      },
+      "words": 594
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-910756a055b2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "910756a055b2d3046f41f676656c9fb05fca1611f55c4bb51dc4a21bb71b2b6c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000455104"
+      },
+      "words": 186
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9340bfac1f04",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9340bfac1f04c2a37911ad5cd1ec7ee419a77ae84a011090ff1c34c80b8d76af",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221002828"
+      },
+      "words": 393
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9348646895c2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9348646895c2f5606c59a9627e750615b40d8b6ca138dba7e293bc34b988eeba",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000050467"
+      },
+      "words": 634
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-936fad579e93",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "936fad579e9338731281bed0937c56283a572d7153b5e4c77861780a5c3567b9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000045465"
+      },
+      "words": 272
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9643012f3268",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9643012f3268d0f4f01fafc61435c81b8edc801f9203fb0579eb4e41b1396555",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000107234"
+      },
+      "words": 187
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-96d144976b36",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "96d144976b3617fbcede0ebbece61dfbfdf074d698db2eb0a6fde7f54efd4c1d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2311001096"
+      },
+      "words": 522
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-979d568e8fe8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "979d568e8fe8ad753adedd009467e20f067d762bf6a03210ff96337c7de55d59",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5299298"
+      },
+      "words": 580
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9a0b894916c8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9a0b894916c8f42da927de3aa1053f0ab4281cc94d7cf739733456abc76635e4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251006520"
+      },
+      "words": 249
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9b3be4fd9dac",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9b3be4fd9dac60d225563df91f5a7552b19c3e3332402ca20915a74e6a636f6b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5303441"
+      },
+      "words": 704
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9c67781b250f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9c67781b250fc950bb4dbe524e4dd8eb86b177e4c66398b79cec95a07bfbe375",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5344331"
+      },
+      "words": 393
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9d7778598ef8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9d7778598ef8b3fc1d0068d2588ed5fec5c77f3c03894c50edf77cdb7c9bd342",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5074653"
+      },
+      "words": 227
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9d7f8a4b1142",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9d7f8a4b11423f1bb6d76451937707ad65c16862c469916c0477cf3805a066c7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000021365"
+      },
+      "words": 194
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9e20204bc08e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9e20204bc08eb4eca6cb360f2130260916cbe25ce4a792710f5640aa4a359fb7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5026389"
+      },
+      "words": 214
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9e31d0ef2642",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9e31d0ef2642b510e2bafa5f8189095d92e582423253e6ea1e28fb5bafb09f4d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002066912850_OR"
+      },
+      "words": 444
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9e952f182578",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9e952f1825782b0fd248e5af9c96d5260478d473aeb269f1df4e9f3aee573f65",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000109565"
+      },
+      "words": 161
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9ed500612e9f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9ed500612e9fd901b290e1318a96a647eb8a1b9dc2b954637f412666d6ba7e2e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001974452144_OR"
+      },
+      "words": 517
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9fd1e0141783",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9fd1e0141783f9d1d8d4fa0f56d79cfe21648ca512a3fa024bf08ded2d2b0de6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000918362144_OR"
+      },
+      "words": 724
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-9ff0b9756330",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "9ff0b975633070afacea7ba26a0d7407af02b07ba23014646f04a2b61024c504",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5212683"
+      },
+      "words": 644
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a0ae32d0a27c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a0ae32d0a27c668c73b74a3d94bf81093af3b25a062eab6da8a244d3a685ee85",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2311002688"
+      },
+      "words": 395
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a2a1bc41b2c4",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a2a1bc41b2c4d15b11a5e8d1cbc7e3210778f21f00b5c4974f9560650a8ab3a8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000978802125_OR"
+      },
+      "words": 529
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a2b9186506eb",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a2b9186506ebdd9c2174d954a6b0905c020d13de1963f02822b539877c9a313b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2081001406"
+      },
+      "words": 332
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a2c156e2290f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a2c156e2290ffbea2396630a46288b7a27776da3d728f11efe6643ced7262efd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "508606115212610thLitB"
+      },
+      "words": 432
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a474010284b3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a474010284b3994d8f422230190fc8938961f54fb81e065bd333d7194213dd09",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000114507"
+      },
+      "words": 628
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a49b9b6be1ae",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a49b9b6be1ae36d355a8f276db86175726cfb4d8d93a8ba5f914460a3c28047d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221004774"
+      },
+      "words": 155
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a526109f88a6",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a526109f88a6ab7f5db944d2f99b6ad6fed7cef95d22b046cf65d33eaec00430",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002074722810_OR"
+      },
+      "words": 609
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a5a2a2317fd9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a5a2a2317fd99aa87bb2f0780de9e95916c1c55b551fdc1344c6b0e1d919e8c5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000215457"
+      },
+      "words": 266
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a626e027fbed",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a626e027fbeda54472b3bf24df39241cfe523ec4e24c272f3e179987d1362397",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5307498"
+      },
+      "words": 547
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a68ad7392f86",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a68ad7392f861746ad1d920579fa9dc21c9fa2b14146b6be50577283dc121259",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001273182125_OR"
+      },
+      "words": 442
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a8032a44d2a8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a8032a44d2a8edda8b744d0491fe58500f2de0892e7c3c0fb756b2aced109f87",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318001020606"
+      },
+      "words": 223
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a8a1878ad9ff",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a8a1878ad9ff741d01be0d7484051800ff0cb4eb5c7ad4218cbb391457b98a88",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000129066"
+      },
+      "words": 382
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a94da62078b6",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a94da62078b6f12706490af8935b358c58282006fd415bf9dab55eb0c8a497bb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000193044"
+      },
+      "words": 444
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a9adeaeb2e59",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a9adeaeb2e59ef7ed7bcd7f154b01508bf8136e9602decd8354d19be81febe15",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5173882"
+      },
+      "words": 952
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-a9fc4d50c850",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "a9fc4d50c850673c350ad16703027656a28de79d7384895218d88b87f541b7c9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000105255"
+      },
+      "words": 383
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ab03a39b3180",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ab03a39b3180d74866f30be153c86b887d17330db184a9e1e6733cdc68b4c983",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221003492"
+      },
+      "words": 192
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-abbcd36902e0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "abbcd36902e043b241910acd707c03a6e0018b558ae8b9beaa4368b82a301a02",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2081003573"
+      },
+      "words": 343
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ade2dde1be22",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ade2dde1be22d56706e09819f8bb5bf65f9b526c57ccba98a1fa694cfa8b1ce0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171005083"
+      },
+      "words": 186
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ae4efebb6195",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ae4efebb6195dbc3b0de535d6fe79e896ef8af5576af21012a2850f5e7f35163",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5217153"
+      },
+      "words": 264
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-aea7f5de77d1",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "aea7f5de77d17921efe68767e58d29068064e5be7c8caed2a2a8c52fc6df9ad2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000169081"
+      },
+      "words": 313
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-af4f31ee0101",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "af4f31ee0101118b6b534d963e56f36ea45f0fb6d38f4d90b521150c3bf0cbd8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000822102144_OR"
+      },
+      "words": 496
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-afa075a9131c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "afa075a9131c8cc20489778481faba516a12cf39ff9848e24344dbc6236ead0d",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000095950"
+      },
+      "words": 231
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b080d9acff75",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b080d9acff75065df409227d9d6278a19bb6d7359faebcf20597aae6242b4e24",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002070092125_OR"
+      },
+      "words": 599
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b081f5aadd40",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b081f5aadd4079d496968f4626d149d0a56be08c57b73e881ac8a83960717121",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000138626"
+      },
+      "words": 442
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b2181d39e2a5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b2181d39e2a50ec43896b31d1b8426dc50cd8b97443133d8892517660e8e7de8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002133382850_OR"
+      },
+      "words": 602
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b278fd9ca7c9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b278fd9ca7c987d9b252f3a4aef1f35101557ab35a563f8d88c8f23e8c532d9c",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5184446"
+      },
+      "words": 443
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b2f4ddb4f0fa",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b2f4ddb4f0fafd086265dacbdf40d46a91ed8bf69234ecc4757c89ca125a8b15",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000076983"
+      },
+      "words": 383
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b319969ff102",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b319969ff102fcda3ac008c97f497bc105a1bae2c09ce81c77128770c570294e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000020137"
+      },
+      "words": 187
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b47b1d2cef93",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b47b1d2cef939e867ea20e15f505f0d3a60e815f2aecfc8f7839fea7775b2e33",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001481342810_OR"
+      },
+      "words": 1067
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b47ce99ff786",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b47ce99ff7863cc1de85c046fede937171b8b512dceb2137d7d18ad27ab578f0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2141002426"
+      },
+      "words": 167
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b4e142fb3b07",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b4e142fb3b073f5bdcf43d12b5a261bfcfa32b48476a36435be3d74881d90b49",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000030191"
+      },
+      "words": 416
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b525ffaf1368",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b525ffaf1368b538495625d7136bb5fe401b1f564c4eb06d8485f1f68b6fbe88",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000147313"
+      },
+      "words": 387
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b5a20bbc4e48",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b5a20bbc4e48709e4de5a6dada047193b86d2f0811fc4202ddd3c4d168c31aed",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000079578"
+      },
+      "words": 477
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b703b06eff78",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b703b06eff7823b822cdb73e3bc9123553ccd2c2bcf57087f72a99d605411b6b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2251005639"
+      },
+      "words": 344
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-b9b727769ad8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "b9b727769ad895d6b0d25e0c60271cc35d880c5a1d2134158174fcdee97ae1a9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.42915E+12"
+      },
+      "words": 517
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bad83e3b84ff",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bad83e3b84ffa00be2d2ee9834a44b38f674dc6daa6427f96a5cfb56c243af9f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5205866"
+      },
+      "words": 282
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bb0362bcb7b3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bb0362bcb7b318c705e13ac88451340a3fb41af7a1f016542c9476c11d683d15",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2431005095"
+      },
+      "words": 340
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bb4b65cae7b9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bb4b65cae7b9c0cabfc4de384523a3ee51247cf42e20b11f33067c219ac53922",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000808032144_OR"
+      },
+      "words": 791
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bb560dbeaee4",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bb560dbeaee4117d6817115d5bf057f3996179b6114ed67e7049e9d60b48641a",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2311006551"
+      },
+      "words": 753
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-be0d91664580",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "be0d916645804709322b2e72ade49377f8025aa152085f1ffa0e9c24a78dd443",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "4.69393E+12"
+      },
+      "words": 484
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bef10d70f90a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bef10d70f90aa9946d6e865a4d7602f0831d97aa4816348ea595d4105d39badf",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5213130"
+      },
+      "words": 747
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-bff6c1e01118",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "bff6c1e01118af02d62d48732cf797f0954afea04341d3f312189e9e0d8fb053",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2221005126"
+      },
+      "words": 529
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c0453e670357",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c0453e670357c3b1de9fbf2c87d3dc3edb0787b021c8c7a490d20e8df6596b1e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001119812144_OR"
+      },
+      "words": 796
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c16598ae3e5e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c16598ae3e5ed1b656cdbabefe788584c27a113ca2b305e0560b1c51d3c534b0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2241002149"
+      },
+      "words": 310
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c25caa89060e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c25caa89060e81fc1d18c7ed0286cd24efa510e86eef7ae8c09c22e574865bec",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5062801_cleaned"
+      },
+      "words": 214
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c580ee6641fa",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c580ee6641faa49b8a0775967f948d427c6818466593e9481f6ad1d10821bc02",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5022721"
+      },
+      "words": 639
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c6353ce5b571",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c6353ce5b571dfe71189e08b484c39c4949d9dcc2af85957c8f3d936f864ce74",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001618802810_OR"
+      },
+      "words": 604
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c70c23f7dfe0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c70c23f7dfe050defa21b91fa7efb5920c6737261d0c8e505c4b88239036bb9e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000082349"
+      },
+      "words": 560
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-c93badb95667",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "c93badb9566731bd213c50f17f491ada4dd674cdb7f22eee831cebae77fb32e8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000108867"
+      },
+      "words": 251
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ca51aaad35b5",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ca51aaad35b5cd1dc99082f7779906c39e30b9256e9d85f3faf949228239d4e0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000005814"
+      },
+      "words": 279
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-cac8d0ac4969",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "cac8d0ac49690677fd068ded3bd6ef1a7d6241186ee42934d5ee92f77ab912c8",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001670082810_OR"
+      },
+      "words": 599
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-cc8ca2340ca8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "cc8ca2340ca8b18b771464e13f752952472de10aa0dc79eb3fd15e438f4859d5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200000797452850_OR"
+      },
+      "words": 471
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-cdcdb2d341e2",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "cdcdb2d341e2359a6578bb7c52bc2fe0313f5e840be2c3e013b4985104ecc614",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5354232"
+      },
+      "words": 574
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ce8fcc155e85",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ce8fcc155e85d833c8aa806867a607b432cf9d61d17c5aa17cdd694fc1db6fc6",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2431002479"
+      },
+      "words": 317
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-cfb111c5fd48",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "cfb111c5fd4889952845acb1cc82e86609d3f2ac9c38cd2f0e6cd24e0abf19db",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000004692"
+      },
+      "words": 658
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-d04d398408ac",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d04d398408ac819c4d6606b9fcebb2d83960a9250346e2b46e27a3d33e446578",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000023564"
+      },
+      "words": 248
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-d095b96d6d0c",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d095b96d6d0c1941ac23800dbc4dc6a7f0ac6e265aaeebbbde960815fe4207cc",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001038422125_OR"
+      },
+      "words": 679
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-d2194408613a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d2194408613a704c7a813b446287e820a18f34bcbcfe175d97248046367d3fcd",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5185175"
+      },
+      "words": 657
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-d3023eed4bc9",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d3023eed4bc9fb5ecedc0c5b3e5aee8f733afc29a002b93b7a58d00273e71eed",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "4.57401E+12"
+      },
+      "words": 368
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-d90f5e30eca3",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "d90f5e30eca3b6228448c79d1e45bcdfcdc1dfe66e6bcbf784043a58364915c0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5172149"
+      },
+      "words": 415
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-da5d26d228dc",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "da5d26d228dc9e68c3c6212c119521e0462492b8fe02f0a2d6ee6f459083d264",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5031306"
+      },
+      "words": 449
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-db9581c4f902",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "db9581c4f9024efba75fe4e6d9f75d5ecb61f429f2141a789e358a7cf5ac6699",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318001001918"
+      },
+      "words": 184
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-dbac33cc7310",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "dbac33cc731036b3bc3e0b3e4d33591547267816ea82595c99e873fe22a431fb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171002483"
+      },
+      "words": 540
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-dd9f52cdda18",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "dd9f52cdda18f69995aa7778979be7f4e584ff2d5a726498097d904fffe318e9",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000107812"
+      },
+      "words": 377
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-dda03e93248a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "dda03e93248ac1844357e2bef4a0eb66fb6e8dc4342522f63331a43eb7308c76",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2081000337"
+      },
+      "words": 290
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-df02c26ce815",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "df02c26ce815a7d5cd171134d6ac9a5e9726d4549e3fd65f246cef67eff62673",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2271003020"
+      },
+      "words": 254
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e07db433903b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e07db433903bb7095c1cf2f410db49d5a0b5d0bf210fae3462b1465c85e87fc5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5027989"
+      },
+      "words": 298
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e117c4828b7b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e117c4828b7b2224e23bed8453884e5674461ec04c357d3602ddee63ae2a6d7f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001828082144_OR"
+      },
+      "words": 612
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e1b8ab1efd6b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e1b8ab1efd6b2b2ef751de73d592fad438ee68dd127be0a78e1871a8a7f8e2b0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000107153"
+      },
+      "words": 204
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e212d4cf6b79",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e212d4cf6b7920c0f35d1003dc464851bcbd486664a34924077569ee849de620",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2421003227"
+      },
+      "words": 310
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e37ea0f6c09a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e37ea0f6c09ab7ac7e8f330f4402a1db342d6f83ad63e4187cea66f9fb40510e",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001224302810_OR"
+      },
+      "words": 518
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e5804925dbe4",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e5804925dbe4eb1a170958b4733c4e5b8fc34d173e092127fb1013988335557f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2021003739"
+      },
+      "words": 179
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e5c662bca010",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e5c662bca010a3dc8d675f24db4983a486f29f506b85551218ab45e59bd77ac2",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001163852125_OR"
+      },
+      "words": 378
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e69d0e65d6ac",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e69d0e65d6ac2ca003b705f006104295e640c164e8dd5b12be026f6afe575352",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001909712125_OR"
+      },
+      "words": 577
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e6eb69546488",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e6eb695464880e3801702407fa9296eb63e628b8a7080c7d63466aa19e14fdd7",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001732942125_OR"
+      },
+      "words": 834
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-e857e42ac204",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "e857e42ac204dbc2d603cc5f603fb08ac78facac08bf9b8ef5db39b3f68c4639",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001076032125_OR"
+      },
+      "words": 438
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ea427f5f7342",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ea427f5f73421b668d6dc8d260d13d7bc883b83fb354fbe4912ccd4cb29b7129",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001841622850_OR"
+      },
+      "words": 216
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-ea84ac5d93f1",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "ea84ac5d93f1e652bf91b97958c28d79ff2154f43c8c73c7fc8168785126c7f1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.94683E+12"
+      },
+      "words": 232
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-edffc2bcd714",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "edffc2bcd714bee421a16fd87df90786311618d63b4a54d0389015ed51a775e4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAVUP14319000128188"
+      },
+      "words": 492
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f221dac7c3a0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f221dac7c3a075835e1ec9ee5c687600236864440c8022a222d149d59024938b",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000040998"
+      },
+      "words": 557
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f3947ae4cfb6",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f3947ae4cfb66891fd62793e30d628a260c5e23a1b307e1f56c67eea736316e1",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001118412125_OR"
+      },
+      "words": 1016
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f5d85d827b5a",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f5d85d827b5aa097ce33d2402f163eb7b320e065ec5018d1a2e7464c906b8beb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000248050"
+      },
+      "words": 412
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f5e2046c9388",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f5e2046c93885a2c67cf6db1f92ba9effe9be0a1add6ce4d714fd677604aa238",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAATRP14318000771963"
+      },
+      "words": 281
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f62866b50590",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f62866b50590adaa5deea8d1e7994108a954a2291f755db28e47d5704bac3af0",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2171002408"
+      },
+      "words": 220
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f660b450cc07",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f660b450cc074880cbbd01c2c0d4132a5d1e9c6bc84141ea2c54560c58de0b65",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2141007703"
+      },
+      "words": 280
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f71d09afafe8",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f71d09afafe823aa4a09c099fafcc7e109df70d0926e076fab3c130f00a172cf",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001750622144_OR"
+      },
+      "words": 852
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-f994e3a4353f",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "f994e3a4353f4a5ae189284d68eeef56efc16b26f355580dde99759af683beef",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2091005242"
+      },
+      "words": 428
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-faabee79b68b",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "faabee79b68bc391c52a2c2a29dceb586f059c3687818cef726a9ff607fc6fd5",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001502232850_OR"
+      },
+      "words": 278
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fb177bfd5fc0",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fb177bfd5fc04e9ae64201f067ce7d15a8ec160ab7b28eb144cf31c0d612cdd4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5353281"
+      },
+      "words": 160
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fb471492e701",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fb471492e70128f5a8ad9f1464b4a8beea17a879a00d657d87cce3691f77d314",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAOPP13416000042086"
+      },
+      "words": 236
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fb8735e629be",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fb8735e629be206f8eddc7493c89ea262b6e430ce0beb618b135b863cc630205",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "2431003602"
+      },
+      "words": 210
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fe09a1085927",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fe09a10859273bbdfb258fd9b678ff4e9271eca1cb7eb3226bc29f8cf7a7e51f",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200001871282144_OR"
+      },
+      "words": 431
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fe829e659239",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fe829e6592392850a9c5adc205c3f2c8f36bba67a285bcfae978f0d8ccefd3b4",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "5.82813E+12"
+      },
+      "words": 638
+    },
+    {
+      "author": "other",
+      "date": "2010-2020",
+      "extraction": "persuade.v1",
+      "id": "persuade-fe857a363a8e",
+      "kind": "persuade-essay",
+      "label": "human",
+      "register": "essay",
+      "sha256": "fe857a363a8e0d2364e1a36045717110d49cd12e70ec18970eb7ddf43d0415fb",
+      "source": {
+        "dataset": "scrosseye/persuade_corpus_2.0",
+        "id": "AAAXMP138200002154892125_OR"
+      },
+      "words": 458
+    },
+    {
       "author": "machine",
       "date": "2023",
       "extraction": "raid.v1",

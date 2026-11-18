@@ -68,6 +68,7 @@ ID_PREFIX = {
     "public-domain": "pd",
     "news-page": "news",
     "gutenberg-work": "guten",
+    "persuade-essay": "persuade",
     "hf-news": "hfnews",
     "pep-chunk": "pep",
     "wikipedia-revision": "wp",
@@ -82,6 +83,7 @@ PUBLIC_SOURCE_KINDS = (
     "public-domain",
     "news-page",
     "gutenberg-work",
+    "persuade-essay",
     "hf-news",
     "pep-chunk",
     "wikipedia-revision",
@@ -931,6 +933,90 @@ def build_essays(args: argparse.Namespace) -> int:
     return 0
 
 
+# ------------------------------------------------- PERSUADE 2.0 (essays)
+
+
+# Student essays (US grades 6-12) written in state and national writing
+# tests from 2010 to 2020 (per The Learning Agency Lab's Feedback Prize
+# overview), on 15 argumentative prompts; CC BY 4.0. Crossley et al.
+# (2024), Assessing Writing 61. The
+# corpus repo links the CSV from Google Drive, so the build reads a local
+# copy; only essay ids and hashes reach the manifest. Demographic columns
+# are never read.
+PERSUADE_DATASET = "scrosseye/persuade_corpus_2.0"
+PERSUADE_EXTRACTION = "persuade.v1"
+PERSUADE_DATE = "2010-2020"
+PERSUADE_MAX_WORDS = 1500
+
+
+def persuade_pairs(rows, per_prompt: int) -> tuple[list, Counter]:
+    """One entry per essay, ``per_prompt`` per prompt, in a fixed order.
+
+    The CSV has one row per annotated span, so rows repeat each essay;
+    the first row for an id wins. Within a prompt, essays are taken in
+    the order of the sha256 of their id, which is stable and needs no seed.
+    """
+    essays: dict[str, tuple[str, str]] = {}
+    for row in rows:
+        essay_id = row.get("essay_id") or ""
+        if essay_id and essay_id not in essays:
+            essays[essay_id] = (row.get("prompt_name") or "", row.get("full_text") or "")
+    by_prompt: dict[str, list[str]] = {}
+    for essay_id, (prompt, _text) in essays.items():
+        by_prompt.setdefault(prompt, []).append(essay_id)
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    for prompt in sorted(by_prompt):
+        taken = 0
+        for essay_id in sorted(by_prompt[prompt], key=sha256_text):
+            if taken >= per_prompt:
+                break
+            text = essays[essay_id][1].replace("\r\n", "\n").replace("\r", "\n").strip()
+            if not (MIN_WORDS["essay"] <= word_count(text) <= PERSUADE_MAX_WORDS):
+                dropped["out-of-length-band"] += 1
+                continue
+            taken += 1
+            pairs.append(
+                (
+                    {
+                        "register": "essay",
+                        "author": "other",
+                        "date": PERSUADE_DATE,
+                        "extraction": PERSUADE_EXTRACTION,
+                    },
+                    text,
+                    {"dataset": PERSUADE_DATASET, "id": essay_id},
+                )
+            )
+        if taken < per_prompt:
+            dropped["prompt-below-quota"] += 1
+    return pairs, dropped
+
+
+def build_persuade(args: argparse.Namespace) -> int:
+    """Essay pool from a local copy of the PERSUADE 2.0 training CSV."""
+    import csv
+
+    path = Path(args.csv)
+    if not path.is_file():
+        print(f"FAIL: {path} not found; download the CSV linked from {PERSUADE_DATASET}", file=sys.stderr)
+        return 1
+    csv.field_size_limit(min(sys.maxsize, 2**31 - 1))
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        missing = {"essay_id", "prompt_name", "full_text"} - set(reader.fieldnames or ())
+        if missing:
+            print(f"FAIL: {path} lacks columns {sorted(missing)}; nothing saved", file=sys.stderr)
+            return 1
+        pairs, dropped = persuade_pairs(reader, args.per_prompt)
+    if not pairs:
+        print("FAIL: no PERSUADE essays matched; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("persuade-essay", pairs)
+    print(f"persuade: {len(entries)} essays cached ({args.per_prompt} per prompt); drops: {dict(dropped)}")
+    return 0
+
+
 # ------------------------------------------------------------- PEPs (docs)
 
 
@@ -1260,6 +1346,7 @@ def build_wildchat(args: argparse.Namespace) -> int:
 
 REBUILD_HINT = {
     "gutenberg-work": "build-essays",
+    "persuade-essay": "build-persuade --csv <PERSUADE 2.0 train CSV>",
     "news-page": "build-news",
     "hf-news": "build-hf-news",
     "pep-chunk": "build-peps",
@@ -1375,6 +1462,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_essays.add_argument("--sleep", type=float, default=1.0)
     p_essays.set_defaults(func=build_essays)
+
+    p_persuade = sub.add_parser(
+        "build-persuade", help="essay pool from a local PERSUADE 2.0 CSV (student essays)"
+    )
+    p_persuade.add_argument("--csv", required=True, help="path to the PERSUADE 2.0 train CSV")
+    p_persuade.add_argument("--per-prompt", type=int, default=20)
+    p_persuade.set_defaults(func=build_persuade)
 
     p_hf = sub.add_parser(
         "build-hf-news", help="grow the news pool from OpenCulture (HF rows API)"
