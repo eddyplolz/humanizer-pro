@@ -185,6 +185,24 @@ def test_clarity_wordiness_is_reported_but_never_risky() -> None:
     assert payload["summary"]["family_hit_count"] == 0
 
 
+def test_links_are_reported_but_score_nothing() -> None:
+    text = "See https://example.org/a and https://example.org/b for the release notes."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    assert finding_ids(document) == {"source_risk.bare_url"}
+    assert document["risk_score"] == 0
+
+
+def test_missing_space_damage_scores_once_per_document() -> None:
+    text = "The shop opened late.Customers waited outside.Nobody minded the delay.Then rain came."
+    _returncode, payload = audit_json("--stdin", input_text=text)
+    document = payload["documents"][0]
+    # summary.reuse notes the repeated pattern and scores nothing itself.
+    assert finding_ids(document) == {"family9.humanizer_spacing", "summary.reuse"}
+    assert payload["summary"]["family_hit_count"] == 3
+    assert document["risk_score"] == 5
+
+
 def test_two_tier1_words_fire_vocab_cluster_across_paragraphs() -> None:
     text = "A pivotal step for the region.\n\nIts opening was a testament, colleagues said."
     _returncode, payload = audit_json("--stdin", input_text=text)
