@@ -267,6 +267,29 @@ def test_value_auroc_below_half_means_machine_reads_lower() -> None:
     assert fp_measure.value_auroc([], [1.0]) is None
 
 
+def test_attack_catch_rates_compare_each_attack_with_its_originals() -> None:
+    machine = [
+        {"risk": 70, "blocked": False, "split": "test", "raid_ref": "s1"},
+        {"risk": 10, "blocked": False, "split": "test", "raid_ref": "s2"},
+        {"risk": 10, "blocked": False, "split": "test", "raid_ref": None},
+    ]
+    attacked = [
+        {"risk": 10, "blocked": False, "split": "test", "attack": "paraphrase", "raid_ref": "s1"},
+        {"risk": 10, "blocked": False, "split": "test", "attack": "paraphrase", "raid_ref": "s2"},
+        {"risk": 0, "blocked": True, "split": "test", "attack": "homoglyph", "raid_ref": "s2"},
+        {"risk": 90, "blocked": False, "split": "dev", "attack": "homoglyph", "raid_ref": "s1"},  # dev: left out
+    ]
+    result = fp_measure.attack_catch_rates(attacked, machine, 60)
+    para = result["by_attack"]["paraphrase"]
+    assert (para["n"], para["caught"]) == (2, 0)
+    assert (para["unattacked"]["n"], para["unattacked"]["caught"]) == (2, 1)
+    homo = result["by_attack"]["homoglyph"]
+    assert (homo["n"], homo["caught"], homo["unattacked"]["caught"]) == (1, 1, 0)
+    assert (result["overall"]["n"], result["overall"]["caught"]) == (3, 1)
+    assert (result["overall"]["unattacked"]["n"], result["overall"]["unattacked"]["caught"]) == (2, 1)
+    assert fp_measure.attack_catch_rates([], machine, 60) is None
+
+
 def test_results_page_renders_length_bands() -> None:
     cell = {"human_n": 38, "machine_n": 23, "auroc": 0.537}
     empty = {"human_n": 0, "machine_n": 4, "auroc": None}
@@ -294,6 +317,17 @@ def test_results_page_renders_sweep_separation_and_caps() -> None:
     result["readability"] = {"chat": {"human_n": 3, "machine_n": 2, "human_median": 9.5, "machine_median": 12.0, "auroc": 0.8}}
     assert "| chat | 3 | 2 | 9.5 | 12.0 | 0.80 |" in fp_measure.render_results_md(result)
     assert "chat         9.5 / 12.0  AUROC 0.80" in fp_measure.render_text(result)
+    assert "## Catch rate on attacked machine text" not in fp_measure.render_results_md(result)
+    result["attack_catch_rate"] = fp_measure.attack_catch_rates(
+        [{"risk": 0, "blocked": True, "split": "test", "attack": "homoglyph", "raid_ref": "s1"}],
+        [{"risk": 10, "blocked": False, "split": "test", "raid_ref": "s1"}],
+        60,
+    )
+    page = fp_measure.render_results_md(result)
+    row = next(line for line in page.splitlines() if line.startswith("| homoglyph |"))
+    assert row.startswith("| homoglyph | 1 | 1 | 100.0% |") and row.endswith("| 0 of 1 (0.0%) |")
+    assert "all attacks" not in page
+    assert "homoglyph" in fp_measure.render_text(result)
     assert "| chat | 100 | 55 | 33.3% | 50.0% |" in page
 
 
@@ -331,21 +365,37 @@ def test_manifest_is_structurally_sound() -> None:
         assert entry["kind"] in corpus.ID_PREFIX
         assert entry["register"] in corpus.MIN_WORDS
         machine = entry["kind"] in corpus.MACHINE_KINDS
-        assert entry["label"] == ("machine" if machine else "human")
+        attacked = entry["kind"] in corpus.ATTACKED_KINDS
+        assert entry["label"] == ("machine" if machine else "attacked" if attacked else "human")
         if machine:
             assert entry["author"] == "machine"
             assert entry["model"]
             assert entry["split"] == corpus.digest_split(entry["sha256"])
+        elif attacked:
+            # An attacked document keeps the split of the generation it came from.
+            assert entry["author"] == "machine"
+            assert entry["model"] and entry["attack"] != "none"
+            assert entry["split"] in ("dev", "test")
         else:
             # Every document comes from a public source.
             assert entry["author"] in ("other", "public-domain")
             assert "model" not in entry and "split" not in entry
+        if not attacked:
+            assert "attack" not in entry
         assert re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
         prefix = corpus.ID_PREFIX[entry["kind"]]
         assert re.fullmatch(rf"{prefix}-[0-9a-f]{{12}}", entry["id"])
         assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
     assert "private_pools" not in manifest
+    # Every attacked document points at a RAID generation still in the
+    # manifest, with the same split; a rebuilt RAID pool must not orphan them.
+    raid = {str(e["source"]["id"]): e for e in entries if e["kind"] == "raid-generation"}
+    for entry in entries:
+        if entry["kind"] in corpus.ATTACKED_KINDS:
+            original = raid.get(entry["source"]["adv_source_id"])
+            assert original is not None, entry["id"]
+            assert original["split"] == entry["split"], entry["id"]
 
 
 def test_manifest_is_anonymous() -> None:
@@ -355,7 +405,7 @@ def test_manifest_is_anonymous() -> None:
     entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     public_keys = {
         "id", "kind", "label", "register", "author", "date", "words",
-        "sha256", "extraction", "source", "model", "split",
+        "sha256", "extraction", "source", "model", "split", "attack",
     }
     source_keys = {
         "public-domain": {"work", "chunk", "chunk_words"},
@@ -368,6 +418,7 @@ def test_manifest_is_anonymous() -> None:
         "wikipedia-revision": {"site", "title", "revid", "url"},
         "stackexchange-answer": {"site", "answer_id", "url"},
         "raid-generation": {"dataset", "file", "id"},
+        "raid-attack": {"dataset", "file", "id", "adv_source_id"},
         "wildchat-turn": {"dataset", "conversation_hash"},
         "generated": {"prompt_id", "requested_model"},
     }
@@ -590,6 +641,48 @@ def test_raid_pairs_filters_and_fills_cells() -> None:
     assert pairs[0][0]["register"] == "wiki" and pairs[0][0]["model"] == "raid:gpt4"
     assert pairs[1][0]["register"] == "chat"
     assert dropped["decoding-or-attack"] == 2 and dropped["under-min-words"] == 1
+
+
+def test_raid_attack_pairs_keep_one_attacked_row_per_source_and_attack() -> None:
+    sources = {
+        "s1": {"register": "news", "model": "raid:gpt4", "split": "test", "date": "2023"},
+        "s2": {"register": "chat", "model": "raid:chatgpt", "split": "dev", "date": "2023"},
+    }
+    long_text = "word " * 250
+    rows = [
+        {"id": "a", "adv_source_id": "s1", "attack": "paraphrase", "generation": long_text},
+        {"id": "b", "adv_source_id": "s1", "attack": "paraphrase", "generation": long_text},  # repeat
+        {"id": "c", "adv_source_id": "s1", "attack": "homoglyph", "generation": long_text},
+        {"id": "d", "adv_source_id": "s1", "attack": "none", "generation": long_text},  # not attacked
+        {"id": "e", "adv_source_id": "other", "attack": "synonym", "generation": long_text},  # not ours
+        {"id": "f", "adv_source_id": "s2", "attack": "synonym", "generation": "too short"},
+        {"id": "g", "adv_source_id": "s2", "attack": "zero_width_space", "generation": "word " * 60},
+    ]
+    pairs, dropped = corpus.raid_attack_pairs(rows, sources)
+    assert [source["id"] for _meta, _text, source in pairs] == ["a", "c", "g"]
+    meta, _text, source = pairs[0]
+    assert meta["attack"] == "paraphrase" and meta["split"] == "test" and meta["model"] == "raid:gpt4"
+    assert source == {"dataset": "liamdugan/raid", "file": "train.csv", "id": "a", "adv_source_id": "s1"}
+    assert pairs[2][0]["register"] == "chat" and pairs[2][0]["split"] == "dev"
+    assert dropped == {"duplicate-attack": 1, "under-min-words": 1}
+
+
+def test_attack_sample_draws_test_generations_across_the_id_range() -> None:
+    digests = [corpus.sha256_text(str(index)) for index in range(200)]
+    entries = [
+        {"id": f"raid-{digest[:12]}", "kind": "raid-generation", "split": corpus.digest_split(digest)}
+        for digest in digests
+    ]
+    entries.append({"id": "wildchat-000000000000", "kind": "wildchat-turn", "split": "test"})
+    sample = corpus.attack_sample(entries, 10)
+    assert len(sample) == 10
+    assert all(entry["kind"] == "raid-generation" and entry["split"] == "test" for entry in sample)
+    # Not just the lowest ids: the id's first character also sets the split.
+    assert sample != sorted(sample, key=lambda entry: entry["id"])
+    assert corpus.attack_sample(entries, 10) == sample
+    assert len(corpus.attack_sample(entries, 0)) == sum(
+        1 for entry in entries if entry["kind"] == "raid-generation" and entry["split"] == "test"
+    )
 
 
 def test_persuade_pairs_dedupes_spans_and_fills_prompts() -> None:

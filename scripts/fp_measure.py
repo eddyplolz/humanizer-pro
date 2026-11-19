@@ -118,6 +118,10 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
                 "blocked": any(f["severity"] == "error" for f in result["findings"]),
                 "rule_ids": sorted({f["id"] for f in result["findings"]}),
                 "fk_grade": result["stats"]["fk_grade"],
+                "attack": entry.get("attack"),
+                # Links an attacked RAID document to the generation it disguises.
+                "raid_ref": (entry.get("source") or {}).get("adv_source_id")
+                or ((entry.get("source") or {}).get("id") if entry.get("kind") == "raid-generation" else None),
             }
         )
     return rows, missing
@@ -188,6 +192,28 @@ def catch_rates(machine_rows: list[dict], threshold: int) -> dict | None:
             for model in sorted({str(r["model"]) for r in test})
         },
     }
+
+
+def attack_catch_rates(attacked_rows: list[dict], machine_rows: list[dict], threshold: int) -> dict | None:
+    """Catch rate on adversarially attacked machine text, per attack, test split.
+
+    Kept apart from the catch rate: easy character attacks would inflate it.
+    Each attack row is set beside the catch rate of the same documents before
+    the attack, so the table shows what the attack changed.
+    """
+    test = [r for r in attacked_rows if r["split"] == "test"]
+    if not test:
+        return None
+    originals = {r["raid_ref"]: r for r in machine_rows if r.get("raid_ref")}
+    table = {}
+    for attack in sorted({r["attack"] for r in test}):
+        rows = [r for r in test if r["attack"] == attack]
+        before = [originals[r["raid_ref"]] for r in rows if r["raid_ref"] in originals]
+        table[attack] = {**catch_stats(rows, threshold), "unattacked": catch_stats(before, threshold)}
+    sources = {r["raid_ref"] for r in test if r["raid_ref"] in originals}
+    overall = {**catch_stats(test, threshold), "unattacked": catch_stats([originals[ref] for ref in sorted(sources)], threshold)}
+    # "overall" is kept for the JSON only; the page never prints a pooled row.
+    return {"split": "test", "overall": overall, "by_attack": table}
 
 
 def share_flagged(rows: list[dict], threshold: int) -> float | None:
@@ -400,6 +426,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
     human_rows = [r for r in all_rows if r["label"] == "human"]
     rows = [r for r in human_rows if r["split"] == "test"]
     machine_rows = [r for r in all_rows if r["label"] == "machine"]
+    attacked_rows = [r for r in all_rows if r["label"] == "attacked"]
     registers = sorted({r["register"] for r in rows})
     by_register = {
         reg: slice_stats([r for r in rows if r["register"] == reg], threshold)
@@ -438,6 +465,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
         ],
         "catch_rate": catch_rates(machine_rows, threshold),
+        "attack_catch_rate": attack_catch_rates(attacked_rows, machine_rows, threshold),
         "rule_scorecard": rule_scorecard(human_rows, machine_rows),
     }
     if include_fixture_tp:
@@ -581,6 +609,16 @@ def render_text(result: dict) -> str:
             lines.append(
                 f"  {name:30} {stats['n']:>5} {stats['caught']:>6} {pct(stats['rate']):>7} "
                 f"{pct(low):>7}-{pct(high):<8}"
+            )
+    attacks = result.get("attack_catch_rate")
+    if attacks:
+        lines.append("")
+        lines.append("Catch rate on attacked machine text (test split; not in the catch rate above):")
+        for name, stats in attacks["by_attack"].items():
+            before = stats["unattacked"]
+            lines.append(
+                f"  {name:30} {stats['n']:>5} {stats['caught']:>6} {pct(stats['rate']):>7}"
+                f"  before the attack {before['caught']}/{before['n']}"
             )
     if "fixture_tp_anecdotal" in result:
         tp = result["fixture_tp_anecdotal"]
@@ -758,6 +796,32 @@ def render_results_md(result: dict) -> str:
             lines.append(
                 f"| {name} | {stats['n']} | {stats['caught']} | {pct(stats['rate'])} | "
                 f"{pct(low)}–{pct(high)} |"
+            )
+    attacks = result.get("attack_catch_rate")
+    if attacks:
+        lines.extend(
+            [
+                "",
+                "## Catch rate on attacked machine text (test split)",
+                "",
+                "RAID's adversarial rewrites of a fixed sample of test-split RAID",
+                "generations from the catch rate above: each attack disguises the",
+                "same generations a different way. These documents are not in the",
+                "catch rate, and no row pools the attacks, because a pooled rate",
+                "would depend on which attacks are in the mix. The last column is",
+                "the catch rate on the same documents before the attack.",
+                "",
+                "| Attack | n | Caught | Rate | 95% CI | Before the attack |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
+        for name, stats in attacks["by_attack"].items():
+            low, high = stats["rate_ci95"]
+            before = stats.get("unattacked")
+            before_cell = "-" if before is None else f"{before['caught']} of {before['n']} ({pct(before['rate'])})"
+            lines.append(
+                f"| {name} | {stats['n']} | {stats['caught']} | {pct(stats['rate'])} | "
+                f"{pct(low)}–{pct(high)} | {before_cell} |"
             )
     if result["rule_scorecard"]:
         lines.extend(

@@ -28,6 +28,7 @@ Subcommands:
                       from hobby and language sites (CC BY-SA)
   build-peps          docs-register pool: PEPs at the last pre-cutoff commit
   build-raid          machine pool: RAID generations (non-adversarial, MIT)
+  build-raid-attacks  attacked versions of that pool (RAID adversarial rows, MIT)
   build-wildchat      machine pool: WildChat-1M first replies (ODC-BY)
                       (scripts/generate_machine.py can add current Claude
                       models; it needs an API key and is never run by default)
@@ -78,6 +79,7 @@ ID_PREFIX = {
     "wikipedia-revision": "wp",
     "stackexchange-answer": "se",
     "raid-generation": "raid",
+    "raid-attack": "raidatk",
     "wildchat-turn": "wildchat",
     "generated": "gen",
 }
@@ -94,12 +96,17 @@ PUBLIC_SOURCE_KINDS = (
     "wikipedia-revision",
     "stackexchange-answer",
     "raid-generation",
+    "raid-attack",
     "wildchat-turn",
     "generated",
 )
 # Machine-written kinds. Their entries carry label "machine" and the
 # generating model; every other kind is human by provenance.
 MACHINE_KINDS = ("raid-generation", "wildchat-turn", "generated")
+# Machine text that an adversarial rewrite then disguised. Entries carry label
+# "attacked", so no human or machine rate reads them; fp_measure reports them
+# in a table of their own. Each keeps the split of the document it came from.
+ATTACKED_KINDS = ("raid-attack",)
 # About a quarter of all documents, human and machine, form the dev split, the
 # only part rule tuning may look at. Published rates use the test split.
 DEV_SPLIT_HEX = "0123"
@@ -194,7 +201,7 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
         entry = {
             "id": entry_id,
             "kind": kind,
-            "label": "machine" if kind in MACHINE_KINDS else "human",
+            "label": "machine" if kind in MACHINE_KINDS else "attacked" if kind in ATTACKED_KINDS else "human",
             "words": word_count(text),
             "sha256": digest,
             **public_fields,
@@ -1427,6 +1434,112 @@ def raid_pairs(rows, per_cell: int) -> tuple[list, Counter]:
     return pairs, dropped
 
 
+RAID_ATTACKS_URL = "https://dataset.raid-bench.xyz/train.csv"  # MIT; every attack, about 12 GB
+RAID_ATTACK_EXTRACTION = "raid-attack.v1"
+
+
+def raid_attack_pairs(rows, sources: dict[str, dict]) -> tuple[list, Counter]:
+    """Attacked versions of the RAID generations already in the manifest.
+
+    train_none.csv (the build-raid source) is the attack-free subset of
+    train.csv, so a generation keeps its row id in both files.
+
+    ``sources`` maps a RAID row id (the ``source.id`` of a raid-generation
+    entry) to that entry. A row is kept when its ``adv_source_id`` is one of
+    them and its attack is not "none": one row per (source, attack). Each
+    kept document takes the register, model, and split of its source, so
+    the attacked table compares like with like.
+    """
+    pairs: list[tuple[dict, str, dict]] = []
+    dropped: Counter = Counter()
+    seen: set[tuple[str, str]] = set()
+    for row in rows:
+        source_id, attack = row.get("adv_source_id") or "", row.get("attack") or "none"
+        if attack == "none" or source_id not in sources:
+            continue
+        if (source_id, attack) in seen:
+            dropped["duplicate-attack"] += 1
+            continue
+        entry = sources[source_id]
+        text = (row.get("generation") or "").strip()
+        if word_count(text) < MIN_WORDS[entry["register"]]:
+            dropped["under-min-words"] += 1
+            continue
+        seen.add((source_id, attack))
+        pairs.append(
+            (
+                {
+                    "register": entry["register"],
+                    "author": "machine",
+                    "model": entry["model"],
+                    "attack": attack,
+                    "split": entry["split"],
+                    "date": entry.get("date", "2023"),
+                    "extraction": RAID_ATTACK_EXTRACTION,
+                },
+                text,
+                {"dataset": "liamdugan/raid", "file": "train.csv", "id": str(row.get("id", "")), "adv_source_id": source_id},
+            )
+        )
+    return pairs, dropped
+
+
+def _progress(rows, every: int):
+    """Pass rows through, printing a count to stderr every ``every`` rows."""
+    for count, row in enumerate(rows, 1):
+        if count % every == 0:
+            print(f"... {count:,} rows read", file=sys.stderr, flush=True)
+        yield row
+
+
+def attack_sample(entries: list[dict], size: int) -> list[dict]:
+    """The RAID generations whose attacked versions are kept.
+
+    Test split only: the attack table reads the test split, and the dev split
+    stays free for rule tuning. The order is a hash of the entry id, not the
+    id itself, because the id's first character also decides the split.
+    Hashing gives a fixed sample that no choice of ours steers, and every
+    attack uses the same sample, so the rows compare the same documents.
+    ``size`` 0 keeps every test generation.
+    """
+    test = [entry for entry in entries if entry["kind"] == "raid-generation" and entry.get("split") == "test"]
+    test.sort(key=lambda entry: sha256_text(entry["id"]))
+    return test[:size] if size else test
+
+
+def build_raid_attacks(args: argparse.Namespace) -> int:
+    """Attacked RAID text for the raid-generation entries, streamed, not stored whole.
+
+    Reads RAID's full training file once and keeps only the attacked
+    versions of documents already in the manifest. Run build-raid first.
+    """
+    import csv
+    import io
+
+    generations = attack_sample(load_manifest()["entries"], args.sources)
+    sources = {str(entry["source"]["id"]): entry for entry in generations}
+    if not sources:
+        print("FAIL: no raid-generation entries in the manifest; run build-raid first", file=sys.stderr)
+        return 1
+    csv.field_size_limit(min(sys.maxsize, 2**31 - 1))
+    request = urllib.request.Request(RAID_ATTACKS_URL, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=300) as response:
+            reader = csv.DictReader(io.TextIOWrapper(response, encoding="utf-8", newline=""))
+            pairs, dropped = raid_attack_pairs(_progress(reader, every=250_000), sources)
+    except FETCH_ERRORS as error:
+        print(f"FAIL: RAID download failed ({error}); nothing saved", file=sys.stderr)
+        return 1
+    if not pairs:
+        print("FAIL: no attacked versions matched; the existing pool was kept", file=sys.stderr)
+        return 1
+    entries = save_pool("raid-attack", pairs)
+    attacks = Counter(entry["attack"] for entry in entries)
+    print(f"raid-attack: {len(entries)} documents cached from {len(sources)} sources; drops: {dict(dropped)}")
+    print(f"per attack: {dict(sorted(attacks.items()))}")
+    return 0
+
+
 def build_raid(args: argparse.Namespace) -> int:
     """Machine pool from RAID (Dugan et al., ACL 2024), streamed, not stored whole."""
     import csv
@@ -1448,6 +1561,8 @@ def build_raid(args: argparse.Namespace) -> int:
     short = {f"{model}/{register}": n for (model, register), n in sorted(cells.items()) if n < args.per_cell}
     entries = save_pool("raid-generation", pairs)
     print(f"raid: {len(entries)} generations cached; drops: {dict(dropped)}")
+    if any(entry["kind"] == "raid-attack" for entry in load_manifest()["entries"]):
+        print("NOTE: rerun build-raid-attacks; the attacked pool still points at the old generations")
     if short or len(cells) < len(RAID_DOMAINS) * len(RAID_MODELS):
         print(f"NOTE: cells below quota or empty: {short or 'some cells empty'}")
     return 0
@@ -1538,6 +1653,7 @@ REBUILD_HINT = {
     "hf-news": "build-hf-news",
     "pep-chunk": "build-peps",
     "raid-generation": "build-raid",
+    "raid-attack": "build-raid-attacks",
     "wildchat-turn": "build-wildchat",
     "generated": "scripts/generate_machine.py",
 }
@@ -1712,6 +1828,15 @@ def main(argv: list[str] | None = None) -> int:
     p_wildchat.add_argument("--target", type=int, default=300)
     p_wildchat.add_argument("--sleep", type=float, default=1.5)
     p_wildchat.set_defaults(func=build_wildchat)
+
+    p_raid_attacks = sub.add_parser(
+        "build-raid-attacks", help="attacked versions of the RAID pool (reported apart from the catch rate)"
+    )
+    p_raid_attacks.add_argument(
+        "--sources", type=int, default=100,
+        help="test-split RAID generations to take attacks for (0 = all; default 100)",
+    )
+    p_raid_attacks.set_defaults(func=build_raid_attacks)
 
     p_fetch = sub.add_parser("fetch", help="repopulate cache from the manifest")
     p_fetch.add_argument("--sleep", type=float, default=1.0)

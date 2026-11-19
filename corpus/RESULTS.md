@@ -136,6 +136,29 @@ split, so the numbers that picked the threshold do not grade it.
 | model: `wildchat:gpt-4-0314` | 37 | 1 | 2.7% | 0.5%–13.8% |
 | model: `wildchat:gpt-4-1106-preview` | 36 | 2 | 5.6% | 1.5%–18.1% |
 
+## Catch rate on attacked machine text (test split)
+
+RAID's adversarial rewrites of a fixed sample of test-split RAID
+generations from the catch rate above: each attack disguises the
+same generations a different way. These documents are not in the
+catch rate, and no row pools the attacks, because a pooled rate
+would depend on which attacks are in the mix. The last column is
+the catch rate on the same documents before the attack.
+
+| Attack | n | Caught | Rate | 95% CI | Before the attack |
+|---|---|---|---|---|---|
+| alternative_spelling | 78 | 0 | 0.0% | 0.0%–4.7% | 0 of 78 (0.0%) |
+| article_deletion | 95 | 0 | 0.0% | 0.0%–3.9% | 0 of 95 (0.0%) |
+| homoglyph | 100 | 100 | 100.0% | 96.3%–100.0% | 0 of 100 (0.0%) |
+| insert_paragraphs | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
+| number | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
+| paraphrase | 93 | 0 | 0.0% | 0.0%–4.0% | 0 of 93 (0.0%) |
+| perplexity_misspelling | 91 | 0 | 0.0% | 0.0%–4.0% | 0 of 91 (0.0%) |
+| synonym | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
+| upper_lower | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
+| whitespace | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
+| zero_width_space | 100 | 100 | 100.0% | 96.3%–100.0% | 0 of 100 (0.0%) |
+
 ## Rule scorecard (dev split, machine vs human)
 
 Share of documents each rule fires on. Rules marked (no points) are reported

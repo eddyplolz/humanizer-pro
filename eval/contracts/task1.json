@@ -41,6 +41,23 @@
       "required_ids": ["family7.rhetorical_formula"]
     },
     {
+      "path": "eval/fixtures/humanizer-character-residue.md",
+      "expected_exit": 2,
+      "required_ids": [
+        "artifact.bypass_characters",
+        "family9.humanizer_spacing"
+      ]
+    },
+    {
+      "path": "eval/fixtures/humanizer-paraphrase-residue.md",
+      "expected_exit": 0,
+      "required_ids": [
+        "family1.significance_inflation",
+        "family4.ai_vocab_cluster"
+      ],
+      "forbidden_prefixes": ["artifact."]
+    },
+    {
       "path": "eval/fixtures/style-elements.md",
       "expected_exit": 1,
       "required_families": [3, 5, 6],
