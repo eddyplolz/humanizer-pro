@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- `corpus/RESULTS.md` adds a table of flag rates on human text that an AI edited for grammar only.
+  `scripts/generate_machine.py --task polish --provider openrouter` sends 75 PERSUADE essays and 75 Stack Exchange
+  answers from the human test split to four models through OpenRouter, with a request to fix
+  grammar, spelling, and punctuation and change nothing else. 595 of the 600 replies are kept: 4
+  were left out as wrapped replies by an earlier check, and 1 was too short. The edited documents are labeled
+  `polished` and stay out of the false-positive and catch rates. At threshold 60 none of them is
+  flagged, and none of the originals is. The edits change a median of 2.8% to 6.3% of words per
+  model. The median score change from the original is 0; 4.0% to 10.8% of edits score higher and
+  0.7% to 1.4% lower, and the highest score on either side is 35. No rule changed, and the
+  published false-positive and catch rates are unchanged.
+
 - `corpus/RESULTS.md` adds a table of catch rates on attacked machine text. `scripts/corpus.py
   build-raid-attacks` streams the RAID training file (about 12 GB; MIT) once and keeps the
   adversarial rewrites of 100 test-split RAID pool documents, up to one per attack: 1,057 documents

@@ -82,6 +82,7 @@ ID_PREFIX = {
     "raid-attack": "raidatk",
     "wildchat-turn": "wildchat",
     "generated": "gen",
+    "polished": "pol",
 }
 # Every kind publishes its pointer in the manifest; the tuple is kept as the
 # contract the anonymity test checks, kind by kind.
@@ -99,14 +100,26 @@ PUBLIC_SOURCE_KINDS = (
     "raid-attack",
     "wildchat-turn",
     "generated",
+    "polished",
 )
 # Machine-written kinds. Their entries carry label "machine" and the
-# generating model; every other kind is human by provenance.
+# generating model. Attacked and polished kinds (below) carry labels of their
+# own; every other kind is human by provenance.
 MACHINE_KINDS = ("raid-generation", "wildchat-turn", "generated")
 # Machine text that an adversarial rewrite then disguised. Entries carry label
 # "attacked", so no human or machine rate reads them; fp_measure reports them
 # in a table of their own. Each keeps the split of the document it came from.
 ATTACKED_KINDS = ("raid-attack",)
+# Human text that a model then edited for grammar and spelling only. Entries
+# carry label "polished", so no human or machine rate reads them either; each
+# keeps the split of the human document it came from.
+POLISHED_KINDS = ("polished",)
+# The edit request scripts/generate_machine.py --task polish sends with each
+# document; fp_measure prints it beside the results it produced.
+POLISH_PROMPT = (
+    "Correct the grammar, spelling, and punctuation of the text below. Change nothing else: "
+    "keep the wording, tone, structure, and formatting. Reply with the corrected text only."
+)
 # About a quarter of all documents, human and machine, form the dev split, the
 # only part rule tuning may look at. Published rates use the test split.
 DEV_SPLIT_HEX = "0123"
@@ -172,11 +185,22 @@ def read_cache(entry_id: str) -> str:
     return cache_path(entry_id).read_bytes().decode("utf-8")
 
 
+def entry_label(kind: str) -> str:
+    if kind in MACHINE_KINDS:
+        return "machine"
+    if kind in ATTACKED_KINDS:
+        return "attacked"
+    if kind in POLISHED_KINDS:
+        return "polished"
+    return "human"
+
+
 def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
     """Persist one pool: manifest entries with public pointers, cache text.
 
     `pairs` items are (public_fields, text, source). The entry id is the kind
-    prefix plus the first 12 hex chars of the content digest. Existing entries
+    prefix plus the first 12 hex chars of the content digest; for a polished
+    entry the digest also covers its original and model. Existing entries
     and cache files for the same kind are replaced (idempotent rebuild).
     """
     prefix = ID_PREFIX[kind]
@@ -191,17 +215,24 @@ def save_pool(kind: str, pairs: list[tuple[dict, str, dict]]) -> list[dict]:
     duplicates = 0
     for public_fields, text, source in pairs:
         digest = sha256_text(text)
-        if digest in seen_digests:
+        # A polished document is one model's edit of one original: two models
+        # may return the same text, and each reply still counts for its model.
+        key = (
+            sha256_text(f"{source['original_id']}\0{source['requested_model']}\0{text}")
+            if kind in POLISHED_KINDS
+            else digest
+        )
+        if key in seen_digests:
             # Byte-identical documents (reposts) would double-count one text
             # in the measurement and collide on the content-derived id.
             duplicates += 1
             continue
-        seen_digests.add(digest)
-        entry_id = f"{prefix}-{digest[:12]}"
+        seen_digests.add(key)
+        entry_id = f"{prefix}-{key[:12]}"
         entry = {
             "id": entry_id,
             "kind": kind,
-            "label": "machine" if kind in MACHINE_KINDS else "attacked" if kind in ATTACKED_KINDS else "human",
+            "label": entry_label(kind),
             "words": word_count(text),
             "sha256": digest,
             **public_fields,
@@ -1656,6 +1687,7 @@ REBUILD_HINT = {
     "raid-attack": "build-raid-attacks",
     "wildchat-turn": "build-wildchat",
     "generated": "scripts/generate_machine.py",
+    "polished": "scripts/generate_machine.py --task polish",
 }
 
 

@@ -46,6 +46,16 @@ settled reply to `corpus/cache/generate-<provider>.checkpoint.jsonl` as it arriv
 stopped by a fatal error (a spending cap, a bad key) resumes from that file when the same command
 is run again; the file is removed after the pool is saved.
 
+`--task polish --provider openrouter` sends human text instead: a fixed sample of 75 PERSUADE
+essays and 75 Stack Exchange answers from the test split, each with a request to fix grammar,
+spelling, and punctuation and change nothing else. By default four models each edit every
+document. The replies form the polished pool; a reply that wraps the text in a lead-in line, a
+closing note, or a code fence is counted and left out. `fp_measure.py` reports the pool's flag rate per model in a
+table of its own, next to the flag rate of the same documents before the edit, the median share
+of words each edit replaced, removed, or added, and how each edit's score moved from its
+original's; the polished pool is in no other rate. Run it after
+the essay and Stack Exchange pools are built or fetched.
+
 A builder that collects nothing keeps the existing pool. The news builds are OCR-quality-gated and
 retry rate limits. A Stack Exchange answer edited after the cutoff is dropped, like a post-cutoff
 one, because the edited text is what the API returns. `fetch` restores the Strunk pool offline and
