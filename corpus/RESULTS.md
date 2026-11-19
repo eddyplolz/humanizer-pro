@@ -159,6 +159,32 @@ the catch rate on the same documents before the attack.
 | whitespace | 100 | 0 | 0.0% | 0.0%–3.7% | 0 of 100 (0.0%) |
 | zero_width_space | 100 | 100 | 100.0% | 96.3%–100.0% | 0 of 100 (0.0%) |
 
+## Flag rate on grammar-edited human text (test split)
+
+A fixed sample of human test-split documents (PERSUADE essays and
+Stack Exchange answers), each edited by the models below with this
+prompt: "Correct the grammar, spelling, and punctuation of the text below. Change nothing else: keep the wording, tone, structure, and formatting. Reply with the corrected text only."
+
+These documents are in no rate above, and this page states no rate
+they should have. "Before the edit" is the flag rate on the same
+human documents. "Words changed" is the median share of each
+original's words the edit replaced or removed, and "Words added"
+the median count of words in the edit not matched to the original
+(inserted or replacing), as a share of the original's length.
+"Score change" is the median of each edit's risk score minus its
+original's (scores run 0-100, and a blocked document counts as 101).
+"Rose" and "Fell" are the shares of edits that scored higher or lower
+than their original. Replies that wrapped the text in a lead-in line,
+a closing note, or a code fence are left out, as are refused, cut-off,
+and too-short replies, so n can be below the sample size.
+
+| Model | n | Flagged | Rate | 95% CI | Before the edit | Words changed | Words added | Score change | Rose | Fell |
+|---|---|---|---|---|---|---|---|---|---|---|
+| openrouter:anthropic/claude-haiku-5.5 | 149 | 0 | 0.0% | 0.0%–2.5% | 0 of 149 (0.0%) | 4.0% | 3.9% | 0 | 7.4% | 1.3% |
+| openrouter:google/gemini-3.8-flash | 148 | 0 | 0.0% | 0.0%–2.5% | 0 of 148 (0.0%) | 5.8% | 5.1% | 0 | 10.8% | 0.7% |
+| openrouter:mistralai/mistral-small-2603 | 148 | 0 | 0.0% | 0.0%–2.5% | 0 of 148 (0.0%) | 6.3% | 6.0% | 0 | 6.8% | 1.4% |
+| openrouter:openai/gpt-5.4-mini | 150 | 0 | 0.0% | 0.0%–2.5% | 0 of 150 (0.0%) | 2.8% | 2.9% | 0 | 4.0% | 0.7% |
+
 ## Rule scorecard (dev split, machine vs human)
 
 Share of documents each rule fires on. Rules marked (no points) are reported
