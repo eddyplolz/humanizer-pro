@@ -22,6 +22,7 @@ readout is anecdotal and labelled as such.
 from __future__ import annotations
 
 import argparse
+import difflib
 import importlib.util
 import json
 import math
@@ -93,6 +94,19 @@ def wilson_interval(hits: int, total: int, z: float = 1.96) -> tuple[float, floa
     return (max(0.0, center - half), min(1.0, center + half))
 
 
+def edit_shares(original: str, edited: str) -> tuple[float, float]:
+    """(changed, added): the share of the original's words an edit replaced
+    or removed, and the words it added, as a share of the original's length.
+
+    Word-level, so a fixed comma counts as one changed word, not as nothing."""
+    before, after = original.split(), edited.split()
+    if not before:
+        return 0.0, 0.0
+    matcher = difflib.SequenceMatcher(None, before, after, autojunk=False)
+    kept = sum(block.size for block in matcher.get_matching_blocks())
+    return round(1 - kept / len(before), 4), round((len(after) - kept) / len(before), 4)
+
+
 def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
     entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["entries"]
     rows, missing = [], []
@@ -104,6 +118,13 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
         # Bytes, not read_text(): audit exactly the text the digest covers.
         text = path.read_bytes().decode("utf-8")
         result = _audit.audit_text(text, entry["id"])
+        source = entry.get("source") or {}
+        # A polished document is measured against the human text it edits.
+        original_ref = source.get("original_id") if entry.get("label") == "polished" else None
+        original_path = CACHE_DIR / f"{original_ref}.txt" if original_ref else None
+        edited = added = None
+        if original_path is not None and original_path.exists():
+            edited, added = edit_shares(original_path.read_bytes().decode("utf-8"), text)
         rows.append(
             {
                 "id": entry["id"],
@@ -122,6 +143,9 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
                 # Links an attacked RAID document to the generation it disguises.
                 "raid_ref": (entry.get("source") or {}).get("adv_source_id")
                 or ((entry.get("source") or {}).get("id") if entry.get("kind") == "raid-generation" else None),
+                "original_ref": original_ref,
+                "edit_share": edited,
+                "added_share": added,
             }
         )
     return rows, missing
@@ -135,6 +159,13 @@ def is_flagged(row: dict, threshold: int) -> bool:
     blocks as detections; leaving them out here hid human blocks.
     """
     return row["risk"] >= threshold or row["blocked"]
+
+
+def signed(value: float | None) -> str:
+    """A score change with its sign, or "-" when there is none."""
+    if value is None:
+        return "-"
+    return f"{value:+g}" if value else "0"
 
 
 def median(values: list[float]) -> float | None:
@@ -214,6 +245,41 @@ def attack_catch_rates(attacked_rows: list[dict], machine_rows: list[dict], thre
     overall = {**catch_stats(test, threshold), "unattacked": catch_stats([originals[ref] for ref in sorted(sources)], threshold)}
     # "overall" is kept for the JSON only; the page never prints a pooled row.
     return {"split": "test", "overall": overall, "by_attack": table}
+
+
+def polish_flag_rates(polished_rows: list[dict], human_rows: list[dict], threshold: int) -> dict | None:
+    """Flag rate on human text a model edited for grammar only, per model.
+
+    Kept apart from every published rate: the text is neither purely human
+    nor machine-written, and the repo states no rate it should have. Each row
+    is set beside the flag rate of the same human documents before the edit,
+    with the median share of words the edit changed. Because few documents
+    cross the threshold either way, each edit's score is also compared with
+    its original's: the median change and the shares of edits that scored
+    higher and lower."""
+    test = [r for r in polished_rows if r["split"] == "test"]
+    if not test:
+        return None
+    originals = {r["id"]: r for r in human_rows}
+    table = {}
+    for model in sorted({str(r["model"]) for r in test}):
+        rows = [r for r in test if str(r["model"]) == model]
+        before = [originals[r["original_ref"]] for r in rows if r["original_ref"] in originals]
+        shares = [r["edit_share"] for r in rows if r["edit_share"] is not None]
+        added = [r["added_share"] for r in rows if r.get("added_share") is not None]
+        shifts = [
+            rank_score(r) - rank_score(originals[r["original_ref"]]) for r in rows if r["original_ref"] in originals
+        ]
+        table[model] = {
+            **catch_stats(rows, threshold),
+            "before": catch_stats(before, threshold),
+            "median_edit_share": median(shares),
+            "median_added_share": median(added),
+            "median_risk_change": median(shifts),
+            "share_risk_rose": round(sum(1 for d in shifts if d > 0) / len(shifts), 4) if shifts else None,
+            "share_risk_fell": round(sum(1 for d in shifts if d < 0) / len(shifts), 4) if shifts else None,
+        }
+    return {"split": "test", "by_model": table}
 
 
 def share_flagged(rows: list[dict], threshold: int) -> float | None:
@@ -427,6 +493,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
     rows = [r for r in human_rows if r["split"] == "test"]
     machine_rows = [r for r in all_rows if r["label"] == "machine"]
     attacked_rows = [r for r in all_rows if r["label"] == "attacked"]
+    polished_rows = [r for r in all_rows if r["label"] == "polished"]
     registers = sorted({r["register"] for r in rows})
     by_register = {
         reg: slice_stats([r for r in rows if r["register"] == reg], threshold)
@@ -466,6 +533,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
         ],
         "catch_rate": catch_rates(machine_rows, threshold),
         "attack_catch_rate": attack_catch_rates(attacked_rows, machine_rows, threshold),
+        "polish_flag_rate": polish_flag_rates(polished_rows, human_rows, threshold),
         "rule_scorecard": rule_scorecard(human_rows, machine_rows),
     }
     if include_fixture_tp:
@@ -619,6 +687,19 @@ def render_text(result: dict) -> str:
             lines.append(
                 f"  {name:30} {stats['n']:>5} {stats['caught']:>6} {pct(stats['rate']):>7}"
                 f"  before the attack {before['caught']}/{before['n']}"
+            )
+    polish = result.get("polish_flag_rate")
+    if polish:
+        lines.append("")
+        lines.append("Flag rate on human text after a grammar-only AI edit (test split; in no rate above):")
+        for name, stats in polish["by_model"].items():
+            before = stats["before"]
+            lines.append(
+                f"  {name:40} {stats['n']:>5} {stats['caught']:>6} {pct(stats['rate']):>7}"
+                f"  before the edit {before['caught']}/{before['n']}"
+                f"  median words changed {pct(stats['median_edit_share'])}, added {pct(stats['median_added_share'])}"
+                f"  median score change {signed(stats['median_risk_change'])}, rose {pct(stats['share_risk_rose'])},"
+                f" fell {pct(stats['share_risk_fell'])}"
             )
     if "fixture_tp_anecdotal" in result:
         tp = result["fixture_tp_anecdotal"]
@@ -822,6 +903,44 @@ def render_results_md(result: dict) -> str:
             lines.append(
                 f"| {name} | {stats['n']} | {stats['caught']} | {pct(stats['rate'])} | "
                 f"{pct(low)}–{pct(high)} | {before_cell} |"
+            )
+    polish = result.get("polish_flag_rate")
+    if polish:
+        lines.extend(
+            [
+                "",
+                "## Flag rate on grammar-edited human text (test split)",
+                "",
+                "A fixed sample of human test-split documents (PERSUADE essays and",
+                "Stack Exchange answers), each edited by the models below with this",
+                "prompt: \"" + _corpus.POLISH_PROMPT + "\"",
+                "",
+                "These documents are in no rate above, and this page states no rate",
+                "they should have. \"Before the edit\" is the flag rate on the same",
+                "human documents. \"Words changed\" is the median share of each",
+                "original's words the edit replaced or removed, and \"Words added\"",
+                "the median count of words in the edit not matched to the original",
+                "(inserted or replacing), as a share of the original's length.",
+                "\"Score change\" is the median of each edit's risk score minus its",
+                "original's (scores run 0-100, and a blocked document counts as 101).",
+                "\"Rose\" and \"Fell\" are the shares of edits that scored higher or lower",
+                "than their original. Replies that wrapped the text in a lead-in line,",
+                "a closing note, or a code fence are left out, as are refused, cut-off,",
+                "and too-short replies, so n can be below the sample size.",
+                "",
+                "| Model | n | Flagged | Rate | 95% CI | Before the edit | Words changed | Words added | Score change | Rose | Fell |",
+                "|---|---|---|---|---|---|---|---|---|---|---|",
+            ]
+        )
+        for name, stats in polish["by_model"].items():
+            low, high = stats["rate_ci95"]
+            before = stats["before"]
+            lines.append(
+                f"| {name} | {stats['n']} | {stats['caught']} | {pct(stats['rate'])} | "
+                f"{pct(low)}–{pct(high)} | {before['caught']} of {before['n']} ({pct(before['rate'])}) | "
+                f"{pct(stats['median_edit_share'])} | {pct(stats.get('median_added_share'))} | "
+                f"{signed(stats.get('median_risk_change'))} | {pct(stats.get('share_risk_rose'))} | "
+                f"{pct(stats.get('share_risk_fell'))} |"
             )
     if result["rule_scorecard"]:
         lines.extend(

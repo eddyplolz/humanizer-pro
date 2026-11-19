@@ -23,6 +23,12 @@ Labels must be exact, so two things differ from a typical app:
 - The entry's model is the one that served the reply, as the response names
   it.
 
+`--task polish` sends human test-split documents instead: a fixed sample of
+PERSUADE essays and Stack Exchange answers, each sent with
+corpus.POLISH_PROMPT, which asks for grammar, spelling, and punctuation fixes
+only. The replies form the "polished" pool, which fp_measure reports in its
+own table, never in a published rate.
+
 Generations are not reproducible byte for byte; rerunning samples afresh. The
 prompts and this script are what make the measurement repeatable.
 """
@@ -30,6 +36,7 @@ prompts and this script are what make the measurement repeatable.
 from __future__ import annotations
 
 import argparse
+import difflib
 import http.client
 import importlib.util
 import json
@@ -71,6 +78,20 @@ CHARS_PER_TOKEN = 4
 PROMPT_OVERHEAD_TOKENS = 20
 TYPICAL_REPLY_TOKENS = 1000
 
+POLISH_EXTRACTION = "polished.v1"
+# Human test-split documents per kind; both are modern, pre-cutoff writing.
+POLISH_SAMPLE = {"persuade-essay": 75, "stackexchange-answer": 75}
+POLISH_MODELS = (
+    "openai/gpt-5.4-mini",
+    "google/gemini-3.8-flash",
+    "anthropic/claude-haiku-5.5",
+    "mistralai/mistral-small-2603",
+)
+# Room for the longest sampled document (about 1,500 tokens) plus hidden
+# reasoning tokens. A truncated reply is dropped, so the limit is generous:
+# at 6,000, one model cut off 27 of its 150 replies.
+POLISH_MAX_TOKENS = 16000
+
 _spec = importlib.util.spec_from_file_location("corpus", Path(__file__).resolve().parent / "corpus.py")
 corpus = importlib.util.module_from_spec(_spec)
 sys.modules["corpus"] = corpus
@@ -89,6 +110,100 @@ def load_prompts(path: Path = PROMPTS_PATH) -> list[dict]:
         if item["register"] not in corpus.MIN_WORDS:
             raise ValueError(f"{item['id']}: unknown register {item['register']!r}")
     return prompts
+
+
+def polish_sample(entries: list[dict], sizes: dict[str, int] = POLISH_SAMPLE) -> list[dict]:
+    """The human test-split documents the polish task edits.
+
+    Ordered by a hash of the entry id, so the sample is fixed before any
+    document is scored."""
+    sample = []
+    for kind, size in sizes.items():
+        pool = [
+            entry for entry in entries
+            if entry["kind"] == kind and entry.get("label", "human") == "human"
+            and (entry.get("split") or corpus.digest_split(entry["sha256"])) == "test"
+        ]
+        pool.sort(key=lambda entry: corpus.sha256_text(entry["id"]))
+        sample.extend(pool[:size])
+    return sample
+
+
+def polish_prompts(sample: list[dict]) -> list[dict]:
+    """Prompt items for generate_pairs, one per sampled document. Raises
+    FileNotFoundError naming a document missing from the cache."""
+    prompts = []
+    for entry in sample:
+        path = corpus.cache_path(entry["id"])
+        if not path.exists():
+            raise FileNotFoundError(entry["id"])
+        text = path.read_bytes().decode("utf-8")
+        prompts.append(
+            {
+                "id": entry["id"],
+                "register": entry["register"],
+                "prompt": f"{corpus.POLISH_PROMPT}\n\n{text}",
+                # The reply should be about as long as the document.
+                "reply_tokens": len(text) // CHARS_PER_TOKEN,
+                "original": text,
+            }
+        )
+    return prompts
+
+
+def polished_pairs(pairs: list, sample: list[dict]) -> list:
+    """Relabel generated pairs as polished human text: the author field is
+    "polished", and the split is the original's. A pair whose original is no
+    longer in the sample (its pool was rebuilt since the run began) is left
+    out and counted on stderr."""
+    originals = {entry["id"]: entry for entry in sample}
+    out = []
+    missing = 0
+    for public, text, source in pairs:
+        original = originals.get(source["prompt_id"])
+        if original is None:
+            missing += 1
+            continue
+        out.append(
+            (
+                {
+                    **public,
+                    "author": "polished",
+                    "split": original.get("split") or corpus.digest_split(original["sha256"]),
+                    "extraction": POLISH_EXTRACTION,
+                },
+                text,
+                {"original_id": original["id"], "requested_model": source["requested_model"]},
+            )
+        )
+    if missing:
+        print(f"polished: left out {missing} repl(ies) whose original is no longer sampled", file=sys.stderr)
+    return out
+
+
+def _alike(a: str, b: str) -> bool:
+    """Two lines match when a grammar edit could turn one into the other."""
+    return difflib.SequenceMatcher(None, a.lower(), b.lower(), autojunk=False).ratio() >= 0.8
+
+
+def wrapped_reply(original: str, reply: str) -> bool:
+    """True when a polish reply wraps the text instead of returning it: a
+    code fence the original lacks, a lead-in line ("Here is the corrected
+    text:") before the original's first line, or a note after its last line.
+
+    A wrapper line is one that matches no line of the original while the
+    next line in (or out) matches the original's first (or last) line, so a
+    first line the edit corrected still counts as the person's."""
+    stripped = reply.strip()
+    if stripped.startswith("```") and not original.lstrip().startswith("```"):
+        return True
+    lines = [line.strip() for line in stripped.splitlines() if line.strip()]
+    source = [line.strip() for line in original.splitlines() if line.strip()]
+    if len(lines) < 2 or not source:
+        return False
+    if not _alike(lines[0], source[0]) and _alike(lines[1], source[0]):
+        return True
+    return not _alike(lines[-1], source[-1]) and _alike(lines[-2], source[-1])
 
 
 def reply_text(response) -> str:
@@ -149,7 +264,14 @@ def generate_pairs(
             else:
                 text = reply_text(response)
                 too_short = corpus.word_count(text) < corpus.MIN_WORDS[item["register"]]
-                outcome = "under-min-words" if too_short else "kept"
+                if too_short:
+                    outcome = "under-min-words"
+                elif "original" in item and wrapped_reply(item["original"], text):
+                    # Counted, not stripped: a reworded wrapper is not text
+                    # the person wrote, and guessing its bounds would be.
+                    outcome = "wrapped"
+                else:
+                    outcome = "kept"
             counts[outcome] += 1
             if outcome != "kept":
                 if record:
@@ -172,9 +294,10 @@ def generate_pairs(
     return pairs, counts
 
 
-def checkpoint_path(provider: str) -> Path:
+def checkpoint_path(provider: str, task: str = "generate") -> Path:
     """Where a full run settles each paid reply as it arrives (gitignored)."""
-    return corpus.CACHE_DIR / f"generate-{provider}.checkpoint.jsonl"
+    suffix = "" if task == "generate" else f"-{task}"
+    return corpus.CACHE_DIR / f"generate-{provider}{suffix}.checkpoint.jsonl"
 
 
 def load_checkpoint(path: Path) -> tuple[list, Counter, frozenset]:
@@ -369,7 +492,8 @@ def estimate_cost(prompts: list[dict], models: list[str], max_tokens: int, price
             raise KeyError(model)
         for item in prompts:
             prompt_cost = (len(item["prompt"]) / CHARS_PER_TOKEN + PROMPT_OVERHEAD_TOKENS) * prompt_price
-            estimate += prompt_cost + min(TYPICAL_REPLY_TOKENS, max_tokens) * completion_price
+            reply = item.get("reply_tokens", TYPICAL_REPLY_TOKENS)
+            estimate += prompt_cost + min(reply, max_tokens) * completion_price
             ceiling += prompt_cost + max_tokens * completion_price
     return estimate, ceiling
 
@@ -387,7 +511,7 @@ def print_openrouter_estimate(prompts: list[dict], models: list[str], max_tokens
         print(f"FAIL: OpenRouter lists no fixed price for model {error.args[0]!r}", file=sys.stderr)
         return 2
     print(
-        f"estimated cost: ${estimate:.2f} (about {TYPICAL_REPLY_TOKENS} reply tokens each); "
+        f"estimated cost: ${estimate:.2f} (typical reply length; hidden reasoning tokens not counted); "
         f"ceiling: ${ceiling:.2f} (every reply at max_tokens={max_tokens})"
     )
     return 0
@@ -399,6 +523,12 @@ def print_openrouter_estimate(prompts: list[dict], models: list[str], max_tokens
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--provider", choices=["anthropic", "openrouter"], default="anthropic")
+    parser.add_argument(
+        "--task",
+        choices=["generate", "polish"],
+        default="generate",
+        help="generate: replies to corpus/machine_prompts.json; polish: grammar-only edits of human test documents",
+    )
     parser.add_argument(
         "--models",
         nargs="+",
@@ -420,9 +550,22 @@ def main(argv: list[str] | None = None) -> int:
     openrouter = args.provider == "openrouter"
     if openrouter and args.effort:
         parser.error("--effort is not supported with --provider openrouter")
-    models = args.models or list(OPENROUTER_DEFAULT_MODELS if openrouter else DEFAULT_MODELS)
-    max_tokens = args.max_tokens or (OPENROUTER_MAX_TOKENS if openrouter else DEFAULT_MAX_TOKENS)
-    prompts = load_prompts()[: args.limit]
+    polish = args.task == "polish"
+    if polish and not openrouter:
+        parser.error("--task polish needs --provider openrouter (its default models are OpenRouter ids)")
+    if polish:
+        models = args.models or list(POLISH_MODELS)
+        max_tokens = args.max_tokens or POLISH_MAX_TOKENS
+        sample = polish_sample(corpus.load_manifest()["entries"])
+        try:
+            prompts = polish_prompts(sample)[: args.limit]
+        except FileNotFoundError as error:
+            print(f"FAIL: {error.args[0]} is not in the cache; run corpus.py fetch first", file=sys.stderr)
+            return 3
+    else:
+        models = args.models or list(OPENROUTER_DEFAULT_MODELS if openrouter else DEFAULT_MODELS)
+        max_tokens = args.max_tokens or (OPENROUTER_MAX_TOKENS if openrouter else DEFAULT_MAX_TOKENS)
+        prompts = load_prompts()[: args.limit]
     print(f"{len(prompts)} prompts x {len(models)} models = {len(prompts) * len(models)} requests")
     if openrouter:
         api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -451,11 +594,11 @@ def main(argv: list[str] | None = None) -> int:
         except errors.APIStatusError as error:
             print(f"FAIL: {type(error).__name__}: {getattr(error, 'message', error)}", file=sys.stderr)
             return 1
-        print(f"trial run: {dict(counts)}; the generated pool was not changed")
+        print(f"trial run: {dict(counts)}; no pool was changed")
         return 0
     # A full run settles each paid reply in a checkpoint as it arrives, so a
     # budget cap or crash mid-run loses nothing: the same command resumes.
-    checkpoint = checkpoint_path(args.provider)
+    checkpoint = checkpoint_path(args.provider, args.task)
     pairs, counts, done = load_checkpoint(checkpoint)
     if done:
         print(f"resuming: {len(done)} requests already settled in {checkpoint.name}")
@@ -477,9 +620,12 @@ def main(argv: list[str] | None = None) -> int:
     if not pairs:
         print(f"FAIL: no documents generated ({dict(counts)}); the existing pool was kept", file=sys.stderr)
         return 1
-    entries = corpus.save_pool("generated", pairs)
+    if polish:
+        entries = corpus.save_pool("polished", polished_pairs(pairs, sample))
+    else:
+        entries = corpus.save_pool("generated", pairs)
     checkpoint.unlink(missing_ok=True)
-    print(f"generated: {len(entries)} documents cached; {dict(counts)}")
+    print(f"{'polished' if polish else 'generated'}: {len(entries)} documents cached; {dict(counts)}")
     return 0
 
 

@@ -329,6 +329,55 @@ def test_results_page_renders_sweep_separation_and_caps() -> None:
     assert "all attacks" not in page
     assert "homoglyph" in fp_measure.render_text(result)
     assert "| chat | 100 | 55 | 33.3% | 50.0% |" in page
+    assert "## Flag rate on grammar-edited human text" not in page
+    result["polish_flag_rate"] = fp_measure.polish_flag_rates(
+        [{"risk": 70, "blocked": False, "split": "test", "model": "openrouter:m1", "original_ref": "h1", "edit_share": 0.05}],
+        [{"id": "h1", "risk": 10, "blocked": False, "split": "test"}],
+        60,
+    )
+    page = fp_measure.render_results_md(result)
+    assert corpus.POLISH_PROMPT in page
+    row = next(line for line in page.splitlines() if line.startswith("| openrouter:m1 |"))
+    assert row.startswith("| openrouter:m1 | 1 | 1 | 100.0% |") and row.endswith("| 0 of 1 (0.0%) | 5.0% | - | +60 | 100.0% | 0.0% |")
+    assert "openrouter:m1" in fp_measure.render_text(result)
+
+
+def test_signed_score_change() -> None:
+    assert (fp_measure.signed(None), fp_measure.signed(0), fp_measure.signed(-2.5), fp_measure.signed(3)) == (
+        "-", "0", "-2.5", "+3"
+    )
+
+
+def test_edit_shares_count_changed_and_added_words() -> None:
+    assert fp_measure.edit_shares("the cat sat", "the cat sat") == (0.0, 0.0)
+    assert fp_measure.edit_shares("teh cat sat down", "the cat sat down") == (0.25, 0.25)
+    assert fp_measure.edit_shares("one two", "") == (1.0, 0.0)
+    assert fp_measure.edit_shares("", "anything") == (0.0, 0.0)
+    # An added lead-in changes nothing the person wrote but adds words.
+    assert fp_measure.edit_shares("a b c d", "Here it is: a b c d") == (0.0, 0.75)
+
+
+def test_polish_flag_rates_compare_each_model_with_the_originals() -> None:
+    human = [
+        {"id": "h1", "risk": 70, "blocked": False, "split": "test"},
+        {"id": "h2", "risk": 10, "blocked": False, "split": "test"},
+    ]
+    polished = [
+        {"risk": 70, "blocked": False, "split": "test", "model": "a", "original_ref": "h1", "edit_share": 0.1},
+        {"risk": 0, "blocked": True, "split": "test", "model": "a", "original_ref": "h2", "edit_share": 0.3},
+        {"risk": 10, "blocked": False, "split": "test", "model": "b", "original_ref": "h2", "edit_share": None},
+        {"risk": 90, "blocked": False, "split": "dev", "model": "b", "original_ref": "h1", "edit_share": 0.0},  # dev
+    ]
+    result = fp_measure.polish_flag_rates(polished, human, 60)
+    a = result["by_model"]["a"]
+    assert (a["n"], a["caught"], a["before"]["n"], a["before"]["caught"]) == (2, 2, 2, 1)
+    assert a["median_edit_share"] == 0.2 and a["median_added_share"] is None
+    # h1 70 -> 70 is no change; h2 10 -> blocked ranks as 101, a rise of 91.
+    assert (a["median_risk_change"], a["share_risk_rose"], a["share_risk_fell"]) == (45.5, 0.5, 0.0)
+    b = result["by_model"]["b"]
+    assert (b["n"], b["caught"], b["before"]["caught"], b["median_edit_share"]) == (1, 0, 0, None)
+    assert (b["median_risk_change"], b["share_risk_rose"], b["share_risk_fell"]) == (0, 0.0, 0.0)
+    assert fp_measure.polish_flag_rates([], human, 60) is None
 
 
 def test_scorecard_marks_rules_that_add_no_points() -> None:
@@ -366,7 +415,8 @@ def test_manifest_is_structurally_sound() -> None:
         assert entry["register"] in corpus.MIN_WORDS
         machine = entry["kind"] in corpus.MACHINE_KINDS
         attacked = entry["kind"] in corpus.ATTACKED_KINDS
-        assert entry["label"] == ("machine" if machine else "attacked" if attacked else "human")
+        polished = entry["kind"] in corpus.POLISHED_KINDS
+        assert entry["label"] == corpus.entry_label(entry["kind"])
         if machine:
             assert entry["author"] == "machine"
             assert entry["model"]
@@ -376,6 +426,11 @@ def test_manifest_is_structurally_sound() -> None:
             assert entry["author"] == "machine"
             assert entry["model"] and entry["attack"] != "none"
             assert entry["split"] in ("dev", "test")
+        elif polished:
+            # Human text a model edited: the model is named, the split is the
+            # original's, and the pointer names the original.
+            assert entry["author"] == "polished"
+            assert entry["model"] and entry["split"] == "test"
         else:
             # Every document comes from a public source.
             assert entry["author"] in ("other", "public-domain")
@@ -385,7 +440,9 @@ def test_manifest_is_structurally_sound() -> None:
         assert re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
         prefix = corpus.ID_PREFIX[entry["kind"]]
         assert re.fullmatch(rf"{prefix}-[0-9a-f]{{12}}", entry["id"])
-        assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
+        if not polished:
+            # A polished id also hashes its original and model; see save_pool.
+            assert entry["id"].split("-", 1)[1] == entry["sha256"][:12]
         assert entry["words"] >= 50
     assert "private_pools" not in manifest
     # Every attacked document points at a RAID generation still in the
@@ -396,6 +453,11 @@ def test_manifest_is_structurally_sound() -> None:
             original = raid.get(entry["source"]["adv_source_id"])
             assert original is not None, entry["id"]
             assert original["split"] == entry["split"], entry["id"]
+    by_id = {e["id"]: e for e in entries}
+    for entry in entries:
+        if entry["kind"] in corpus.POLISHED_KINDS:
+            original = by_id.get(entry["source"]["original_id"])
+            assert original is not None and original["label"] == "human", entry["id"]
 
 
 def test_manifest_is_anonymous() -> None:
@@ -421,6 +483,7 @@ def test_manifest_is_anonymous() -> None:
         "raid-attack": {"dataset", "file", "id", "adv_source_id"},
         "wildchat-turn": {"dataset", "conversation_hash"},
         "generated": {"prompt_id", "requested_model"},
+        "polished": {"original_id", "requested_model"},
     }
     assert set(source_keys) == set(corpus.PUBLIC_SOURCE_KINDS)
     for entry in entries:
@@ -538,6 +601,24 @@ def test_save_pool_labels_machine_entries(tmp_path, monkeypatch) -> None:
         assert entry["source"] == {"id": entry["source"]["id"]}
     human = corpus.save_pool("pep-chunk", [({"register": "docs", "author": "other", "date": "2001", "extraction": "x"}, "words " * 200, {"path": "p"})])
     assert human[0]["label"] == "human" and "split" not in human[0]
+
+
+def test_save_pool_keeps_each_models_polished_reply(tmp_path, monkeypatch) -> None:
+    """Two models may return the same edit; each still counts for its model."""
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
+    text = "the same corrected words " * 30
+    fields = {"register": "essay", "author": "polished", "date": "2026-11", "extraction": "x", "split": "test"}
+    pairs = [
+        ({**fields, "model": "openrouter:a"}, text, {"original_id": "essay-1", "requested_model": "a"}),
+        ({**fields, "model": "openrouter:b"}, text, {"original_id": "essay-1", "requested_model": "b"}),
+        ({**fields, "model": "openrouter:b"}, text, {"original_id": "essay-1", "requested_model": "b"}),  # repeat
+    ]
+    entries = corpus.save_pool("polished", pairs)
+    assert [e["model"] for e in entries] == ["openrouter:a", "openrouter:b"]
+    assert len({e["id"] for e in entries}) == 2 and all(e["sha256"] == corpus.sha256_text(text) for e in entries)
+    assert all(e["label"] == "polished" and e["split"] == "test" for e in entries)
 
 
 PEP_RST = """PEP: 9999
@@ -888,6 +969,69 @@ def test_wildchat_pairs_takes_first_prose_reply() -> None:
 
 
 generate = load_module("generate_machine")
+
+
+def test_polish_sample_takes_human_test_documents_per_kind() -> None:
+    entries = []
+    for index in range(40):
+        digest = corpus.sha256_text(f"doc{index}")
+        kind = "persuade-essay" if index % 2 else "stackexchange-answer"
+        entries.append({"id": f"x-{digest[:12]}", "kind": kind, "label": "human", "sha256": digest})
+    entries.append({"id": "gen-000000000000", "kind": "generated", "label": "machine", "sha256": "f" * 64, "split": "test"})
+    # A non-human entry of a sampled kind is never picked.
+    entries.append({"id": "pol-000000000000", "kind": "persuade-essay", "label": "polished", "sha256": "e" * 64, "split": "test"})
+    sample = generate.polish_sample(entries, {"persuade-essay": 3, "stackexchange-answer": 2})
+    assert [e["kind"] for e in sample] == ["persuade-essay"] * 3 + ["stackexchange-answer"] * 2
+    assert all(corpus.digest_split(e["sha256"]) == "test" for e in sample)
+    assert generate.polish_sample(entries, {"persuade-essay": 3, "stackexchange-answer": 2}) == sample
+
+
+def test_polished_pairs_point_at_the_original() -> None:
+    sample = [{"id": "essay-abc", "kind": "persuade-essay", "sha256": "f" * 64}]
+    pairs = [(
+        {"register": "essay", "author": "machine", "model": "openrouter:m", "date": "2026-11", "extraction": "generated.v1"},
+        "Fixed text.",
+        {"prompt_id": "essay-abc", "requested_model": "m"},
+    )]
+    (public, _text, source), = generate.polished_pairs(pairs, sample)
+    assert public["author"] == "polished" and public["split"] == "test"
+    assert public["extraction"] == generate.POLISH_EXTRACTION and public["model"] == "openrouter:m"
+    assert source == {"original_id": "essay-abc", "requested_model": "m"}
+    assert corpus.entry_label("polished") == "polished"
+
+
+def test_wrapped_polish_replies_are_caught() -> None:
+    original = "I think school should start later.\nStudents are tired."
+    assert not generate.wrapped_reply(original, "I think school should start later.\nStudents are tired.")
+    assert generate.wrapped_reply(original, "Here is the corrected text:\n\nI think school should start later.")
+    assert generate.wrapped_reply(original, "```\nI think school should start later.\n```")
+    # A colon line the person wrote is theirs, not a wrapper.
+    listing = "My reasons are these:\nfirst, sleep."
+    assert not generate.wrapped_reply(listing, "My reasons are these:\nFirst, sleep.")
+    assert not generate.wrapped_reply("```\ncode\n```", "```\ncode\n```")
+    # A first line the edit corrected is still the person's.
+    tip = "you can do it like this:\nrun the script twice."
+    assert not generate.wrapped_reply(tip, "You can do it like this:\nRun the script twice.")
+    reasons = "Their are three reason's:\nsleep, food, and time."
+    assert not generate.wrapped_reply(reasons, "There are three reasons:\nSleep, food, and time.")
+    # A lead-in without a colon, and a closing note, are wrappers.
+    assert generate.wrapped_reply(original, "Sure! Here is the corrected text.\nI think school should start later.\nStudents are tired.")
+    assert generate.wrapped_reply(original, "I think school should start later.\nStudents are tired.\nChanges made: none needed.")
+    # A one-line document has nothing to compare a wrapper with.
+    assert not generate.wrapped_reply("Short.", "Short.")
+
+
+def test_polish_task_needs_openrouter() -> None:
+    with pytest.raises(SystemExit):
+        generate.main(["--task", "polish", "--dry-run"])
+
+
+def test_estimate_uses_each_prompt_reply_length() -> None:
+    prices = {"m": (0.0, 1.0)}
+    prompts = [{"prompt": "", "reply_tokens": 100}, {"prompt": ""}]
+    estimate, ceiling = generate.estimate_cost(prompts, ["m"], 500, prices)
+    assert estimate == 100 + 500  # 100 for the first, min(1000, 500) for the second
+    assert ceiling == 1000
 
 
 class _FakeErrors:
