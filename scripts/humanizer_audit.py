@@ -2186,6 +2186,46 @@ def moving_avg_type_token_ratio(token_list: list[str], window: int = 50) -> floa
     return round(total_types / (windows * window), 2)
 
 
+VOWEL_GROUP_RE = re.compile(r"[aeiouyàáâäãåæèéêëìíîïòóôöõøœùúûüýÿ]+")
+
+
+def syllable_count(word: str) -> int:
+    """Rough English syllable count: vowel groups, minus a silent final "e".
+
+    A heuristic, not a dictionary lookup, so it misses some words ("idea" is
+    two groups, three syllables). It is good enough for a document mean.
+    Every word counts at least one syllable, including numbers. English
+    only: words in other scripts count one syllable each.
+    """
+    lowered = word.lower()
+    groups = len(VOWEL_GROUP_RE.findall(lowered))
+    # A final "e" is silent ("make", "while") except after a consonant plus
+    # "l" ("table") and in "ee" ("free").
+    consonant_le = re.search(r"[^aeiouy]le$", lowered) is not None
+    if lowered.endswith("e") and not consonant_le and not lowered.endswith("ee") and groups > 1:
+        groups -= 1
+    return max(1, groups)
+
+
+def flesch_kincaid_grade(token_list: list[str], sentence_count: int) -> float | None:
+    """Flesch-Kincaid grade level, rounded to 1 dp.
+
+    0.39 x words per sentence + 11.8 x syllables per word - 15.59. Pass the
+    words of the sentences only, so heading words do not count against a
+    sentence total that leaves headings out. Text with few full stops
+    (lists, old books, code) reads as one long sentence and inflates the
+    grade. Very plain text can score below zero. English only.
+
+    Reported as a diagnostic stat only, never as a finding or a score input.
+    See reference/readability-calibration.md for why.
+    """
+    if not token_list or sentence_count < 1:
+        return None
+    syllables = sum(syllable_count(token) for token in token_list)
+    grade = 0.39 * len(token_list) / sentence_count + 11.8 * syllables / len(token_list) - 15.59
+    return round(grade, 1)
+
+
 def title_case_heading_count(text: str) -> int:
     count = 0
     for line in text.splitlines():
@@ -2240,6 +2280,9 @@ def stats_for(text: str) -> dict[str, int | float]:
     sentence_lengths = [len(words(sentence)) for sentence in sentence_list]
     word_count = len(token_list)
     unique_words = {word.lower() for word in token_list}
+    # Readability counts the words inside sentences only; `sentences` drops
+    # Markdown headings, so heading words would otherwise inflate the grade.
+    sentence_tokens = [token for sentence in sentence_list for token in words(sentence)]
     return {
         "words": word_count,
         "sentences": len(sentence_list),
@@ -2256,6 +2299,12 @@ def stats_for(text: str) -> dict[str, int | float]:
         "bullet_length_cv": round(coefficient_of_variation(bullet_item_lengths(text)), 2),
         "type_token_ratio": round(len(unique_words) / word_count, 2) if word_count else 0,
         "mattr_50": moving_avg_type_token_ratio(token_list, 50),
+        "syllables_per_word": (
+            round(sum(syllable_count(token) for token in sentence_tokens) / len(sentence_tokens), 2)
+            if sentence_tokens
+            else 0
+        ),
+        "fk_grade": flesch_kincaid_grade(sentence_tokens, len(sentence_list)),
         "em_dash_count": text.count("—"),
         "heading_count": len(re.findall(r"^\s{0,3}#{1,6}\s+", text, re.M)),
         "title_case_heading_count": title_case_heading_count(text),

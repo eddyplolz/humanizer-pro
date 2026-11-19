@@ -624,6 +624,54 @@ def test_mattr_50_is_a_stat_not_a_finding_or_score() -> None:
         module.moving_avg_type_token_ratio = original
 
 
+def test_syllable_count_heuristic() -> None:
+    count = _load_audit_module().syllable_count
+    assert [count(w) for w in ("cat", "table", "make", "free", "beautiful", "the", "2017")] == [1, 2, 1, 1, 3, 1, 1]
+    # A final "e" after a vowel plus "l" is silent; after a consonant plus "l" it is not.
+    assert [count(w) for w in ("while", "whole", "rule", "style", "simple", "café")] == [1, 1, 1, 1, 2, 2]
+
+
+def test_fk_grade_ignores_heading_words() -> None:
+    stats_for = _load_audit_module().stats_for
+    body = "We met. We ate.\n\nWe left."
+    with_headings = "# Quarterly Planning Notes For The Whole Team\n\n" + body.replace(
+        "\n\nWe left.", "\n\n## Another Long Heading With Many Words Here\n\nWe left."
+    )
+    assert stats_for(with_headings)["fk_grade"] == stats_for(body)["fk_grade"]
+    assert stats_for(with_headings)["syllables_per_word"] == stats_for(body)["syllables_per_word"]
+    # Headings alone hold no sentence, so there is no grade.
+    assert stats_for("# Only A Heading\n\n## And Another")["fk_grade"] is None
+
+
+def test_fk_grade_matches_the_formula() -> None:
+    module = _load_audit_module()
+    # 9 words, 2 sentences, 10 syllables ("happy" has two).
+    stats = module.stats_for("The cat sat on the mat. It was happy.")
+    assert stats["syllables_per_word"] == round(10 / 9, 2)
+    assert stats["fk_grade"] == round(0.39 * 9 / 2 + 11.8 * 10 / 9 - 15.59, 1)
+    assert module.flesch_kincaid_grade([], 0) is None
+
+
+def test_fk_grade_is_a_stat_not_a_finding_or_score() -> None:
+    module = _load_audit_module()
+    text = (ROOT / "eval" / "fixtures" / "ai-slop-general.md").read_text(encoding="utf-8")
+    baseline = module.audit_text(text, "x")
+    assert not any("readab" in f["id"] or "grade" in f["id"] for f in baseline["findings"])
+    original = module.flesch_kincaid_grade
+    original_count = module.syllable_count
+    try:
+        for forced in (0.0, 30.0, None):
+            module.flesch_kincaid_grade = lambda *_args, value=forced: value
+            module.syllable_count = lambda *_args, value=forced: 7
+            forced_result = module.audit_text(text, "x")
+            assert forced_result["stats"]["fk_grade"] == forced
+            assert forced_result["findings"] == baseline["findings"]
+            assert forced_result["risk_score"] == baseline["risk_score"]
+    finally:
+        module.flesch_kincaid_grade = original
+        module.syllable_count = original_count
+
+
 # ------------------------------------------------- full-repo review fixes
 
 
