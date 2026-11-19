@@ -144,7 +144,9 @@ The default review threshold is `--fail-score 60`.
 
 - `summary`: document count, max risk score, max severity, finding counts, and exit code.
 - `documents[].stats`: rhythm and structure metrics, plus `type_token_ratio` and `mattr_50`
-  (diagnostic only; `null` below 50 tokens; see `reference/mattr-calibration.md`).
+  (diagnostic only; `null` below 50 tokens; see `reference/mattr-calibration.md`), and
+  `fk_grade` and `syllables_per_word` (diagnostic only; `fk_grade` is `null` when the text has no
+  sentence; see `reference/readability-calibration.md`).
 - `documents[].findings`: family hits, source-risk flags, artifacts, severity, line/column, and
   quoted evidence.
 - `compare.findings`: protected-content and meaning drift findings when `--compare` is used.

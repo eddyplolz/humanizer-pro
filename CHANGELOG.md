@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- The audit's `stats` block reports `fk_grade` (Flesch-Kincaid grade) and `syllables_per_word`.
+  They are reported only: neither is a finding or moves the risk score. `scripts/fp_measure.py`
+  adds a "Reading grade by register" table to `corpus/RESULTS.md` with the median grade of human
+  and machine text and its AUROC. Machine docs and essays read at a lower grade than human ones
+  (AUROC 0.08 and 0.14), machine chat replies at a slightly higher one (0.60), and news is close
+  (0.42). Wiki (0.69) rests on 4 human articles. Because the direction changes by register, no rule uses the grade.
+  `reference/readability-calibration.md` gives the method and numbers. False-positive and catch
+  rates are unchanged.
+
 - The human news pool is now 350 articles from CC-News, published between January 2017 and July
   2018 by 246 outlets, at most three per outlet. It replaces 350 OCR chunks of US newspapers from
   1898 to 1909, so the news slice no longer compares century-old prose with modern machine text.
