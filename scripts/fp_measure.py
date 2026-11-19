@@ -117,6 +117,7 @@ def audit_corpus(threshold: int) -> tuple[list[dict], list[str]]:
                 "risk": int(result["risk_score"]),
                 "blocked": any(f["severity"] == "error" for f in result["findings"]),
                 "rule_ids": sorted({f["id"] for f in result["findings"]}),
+                "fk_grade": result["stats"]["fk_grade"],
             }
         )
     return rows, missing
@@ -132,7 +133,7 @@ def is_flagged(row: dict, threshold: int) -> bool:
     return row["risk"] >= threshold or row["blocked"]
 
 
-def median(values: list[int]) -> float | None:
+def median(values: list[float]) -> float | None:
     if not values:
         return None
     ordered = sorted(values)
@@ -206,13 +207,17 @@ def auroc(human_rows: list[dict], machine_rows: list[dict]) -> float | None:
     0.5 means the score cannot tell the two apart; 1.0 means it always can.
     It needs no threshold, so it shows separation the threshold choice hides.
     """
-    if not human_rows or not machine_rows:
+    return value_auroc([rank_score(r) for r in human_rows], [rank_score(r) for r in machine_rows])
+
+
+def value_auroc(human: list[float], machine: list[float]) -> float | None:
+    """Chance a random machine value is above a random human value; ties count half."""
+    if not human or not machine:
         return None
-    human = [rank_score(r) for r in human_rows]
     wins = 0.0
-    for m in (rank_score(r) for r in machine_rows):
+    for m in machine:
         wins += sum(1.0 if m > h else 0.5 if m == h else 0.0 for h in human)
-    return round(wins / (len(human) * len(machine_rows)), 4)
+    return round(wins / (len(human) * len(machine)), 4)
 
 
 def register_curves(
@@ -269,6 +274,27 @@ def length_bands(human_rows: list[dict], machine_rows: list[dict]) -> list[dict]
             entry[split] = {"human_n": len(human), "machine_n": len(machine), "auroc": auroc(human, machine)}
         bands.append(entry)
     return bands
+
+
+def readability_by_register(human_rows: list[dict], machine_rows: list[dict]) -> dict:
+    """Per register: median Flesch-Kincaid grade of human and machine text, and its AUROC.
+
+    The grade is a stat, never a score input. AUROC above 0.5 means machine
+    text reads at a higher grade; below 0.5, a lower one. A document with no
+    sentence has no grade and is left out. Pass test-split rows only.
+    """
+    table = {}
+    for reg in sorted({r["register"] for r in human_rows} | {r["register"] for r in machine_rows}):
+        human = [r["fk_grade"] for r in human_rows if r["register"] == reg and r.get("fk_grade") is not None]
+        machine = [r["fk_grade"] for r in machine_rows if r["register"] == reg and r.get("fk_grade") is not None]
+        table[reg] = {
+            "human_n": len(human),
+            "machine_n": len(machine),
+            "human_median": None if not human else round(median(human), 2),
+            "machine_median": None if not machine else round(median(machine), 2),
+            "auroc": value_auroc(human, machine),
+        }
+    return table
 
 
 def policy_caps(
@@ -406,6 +432,7 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
         "by_period": by_period,
         "register_curves": register_curves(rows, machine_test),
         "length_bands": length_bands(human_rows, machine_rows),
+        "readability": readability_by_register(rows, machine_test),
         "policy_caps": policy_caps(human_dev, rows, machine_test, cap=fpr_cap),
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
@@ -467,6 +494,10 @@ def band_cell(cell: dict) -> str:
     return f"{cell['human_n']} / {cell['machine_n']} / {auc}"
 
 
+def grade_cell(value: float | None, places: int = 1) -> str:
+    return "-" if value is None else f"{value:.{places}f}"
+
+
 def cap_summary(entry: dict) -> str:
     if entry["threshold"] is None:
         return f"dev n {entry['dev_n']}: no threshold ({entry['reason']})"
@@ -514,6 +545,14 @@ def render_text(result: dict) -> str:
     lines.append(f"  {'words':>9} {'dev':>18} {'test':>18}")
     for entry in result.get("length_bands", []):
         lines.append(f"  {entry['band']:>9} {band_cell(entry['dev']):>18} {band_cell(entry['test']):>18}")
+    if result.get("readability"):
+        lines.append("")
+        lines.append("Reading grade by register (test split, reported only; human / machine median, AUROC):")
+        for reg, entry in result["readability"].items():
+            lines.append(
+                f"  {reg:10} {grade_cell(entry['human_median']):>5} / {grade_cell(entry['machine_median']):<5} "
+                f"AUROC {grade_cell(entry['auroc'], 2)}"
+            )
     caps = result["policy_caps"]
     lines.append("")
     lines.append(f"Threshold under a {pct(caps['cap'])} FPR cap (chosen on dev, graded on test):")
@@ -655,6 +694,30 @@ def render_results_md(result: dict) -> str:
         )
         for entry in bands:
             lines.append(f"| {entry['band']} | {band_cell(entry['dev'])} | {band_cell(entry['test'])} |")
+    readability = result.get("readability")
+    if readability:
+        lines.extend(
+            [
+                "",
+                "## Reading grade by register",
+                "",
+                "Flesch-Kincaid grade of each document, test split. It approximates a",
+                "US school grade and can fall below zero for very plain text. It is",
+                "reported only and never adds points to the risk score. AUROC above",
+                "0.5 means machine text reads at a higher grade than human text in",
+                "that register; below 0.5, a lower one. The grade is rough on text",
+                "with few full stops, such as lists, code, and old books, and it is",
+                "meant for English only.",
+                "",
+                "| Register | Human n | Machine n | Human median | Machine median | AUROC |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
+        for reg, entry in readability.items():
+            lines.append(
+                f"| {reg} | {entry['human_n']} | {entry['machine_n']} | {grade_cell(entry['human_median'])} | "
+                f"{grade_cell(entry['machine_median'])} | {grade_cell(entry['auroc'], 2)} |"
+            )
     caps = result["policy_caps"]
     if caps["by_register"]:
         lines.extend(

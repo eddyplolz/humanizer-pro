@@ -248,6 +248,25 @@ def test_length_bands_split_by_words_and_split() -> None:
     assert bands["500+"]["dev"]["human_n"] == 0
 
 
+def test_readability_by_register_reports_medians_and_auroc() -> None:
+    human = [
+        {"register": "news", "fk_grade": g} for g in (8.0, 10.0, 12.0)
+    ] + [{"register": "news", "fk_grade": None}]
+    machine = [{"register": "news", "fk_grade": g} for g in (12.0, 14.0)] + [{"register": "chat", "fk_grade": 6.0}]
+    table = fp_measure.readability_by_register(human, machine)
+    # Machine 12 beats 8 and 10, ties 12 (2.5 of 3); 14 beats all three. 5.5 of 6.
+    assert table["news"] == {
+        "human_n": 3, "machine_n": 2, "human_median": 10.0, "machine_median": 13.0, "auroc": round(5.5 / 6, 4),
+    }
+    # A document without a grade is left out, and an empty side has no AUROC.
+    assert table["chat"] == {"human_n": 0, "machine_n": 1, "human_median": None, "machine_median": 6.0, "auroc": None}
+
+
+def test_value_auroc_below_half_means_machine_reads_lower() -> None:
+    assert fp_measure.value_auroc([10.0, 12.0], [6.0, 8.0]) == 0.0
+    assert fp_measure.value_auroc([], [1.0]) is None
+
+
 def test_results_page_renders_length_bands() -> None:
     cell = {"human_n": 38, "machine_n": 23, "auroc": 0.537}
     empty = {"human_n": 0, "machine_n": 4, "auroc": None}
@@ -271,6 +290,10 @@ def test_results_page_renders_sweep_separation_and_caps() -> None:
     page = fp_measure.render_results_md(result)
     assert "| 50 | 66.7% / 100.0% |" in page
     assert "| chat | 3 | 2 | 0.75 | +25.0 |" in page
+    assert "## Reading grade by register" not in page
+    result["readability"] = {"chat": {"human_n": 3, "machine_n": 2, "human_median": 9.5, "machine_median": 12.0, "auroc": 0.8}}
+    assert "| chat | 3 | 2 | 9.5 | 12.0 | 0.80 |" in fp_measure.render_results_md(result)
+    assert "chat         9.5 / 12.0  AUROC 0.80" in fp_measure.render_text(result)
     assert "| chat | 100 | 55 | 33.3% | 50.0% |" in page
 
 

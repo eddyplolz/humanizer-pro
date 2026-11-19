@@ -76,6 +76,24 @@ test split checks it. Each cell is human n / machine n / AUROC.
 | 250-499 | 117 / 126 / 0.73 | 360 / 481 / 0.75 |
 | 500+ | 238 / 14 / 0.45 | 752 / 79 / 0.53 |
 
+## Reading grade by register
+
+Flesch-Kincaid grade of each document, test split. It approximates a
+US school grade and can fall below zero for very plain text. It is
+reported only and never adds points to the risk score. AUROC above
+0.5 means machine text reads at a higher grade than human text in
+that register; below 0.5, a lower one. The grade is rough on text
+with few full stops, such as lists, code, and old books, and it is
+meant for English only.
+
+| Register | Human n | Machine n | Human median | Machine median | AUROC |
+|---|---|---|---|---|---|
+| chat | 450 | 365 | 8.8 | 9.8 | 0.60 |
+| docs | 303 | 43 | 10.6 | 7.4 | 0.08 |
+| essay | 474 | 48 | 10.1 | 7.0 | 0.14 |
+| news | 263 | 185 | 11.7 | 11.2 | 0.42 |
+| wiki | 4 | 193 | 10.1 | 12.4 | 0.69 |
+
 ## Threshold under a 1.0% false-positive cap
 
 For each register, the lowest threshold whose false-positive rate on the
