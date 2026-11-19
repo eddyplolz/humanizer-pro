@@ -31,6 +31,7 @@ lives in the gitignored `corpus/cache/` on the machine that built it.
 | Stack Exchange answers | chat | top-voted pre-cutoff answers from hobby, language, and workplace sites, code and quotes removed (CC BY-SA 4.0; pointer is the answer id) | `build-stackexchange` |
 | PEPs | docs | Python Enhancement Proposals at the python/peps commit current at the cutoff (public domain; set `GITHUB_TOKEN` to raise the API rate limit) | `build-peps` |
 | RAID | wiki, news, chat (machine) | RAID's non-adversarial training file, streamed (MIT; test labels are hidden) | `build-raid` |
+| RAID attacks | wiki, news, chat (attacked machine text) | RAID's adversarial rewrites of a fixed sample of 100 test-split RAID pool documents, up to one per attack, from the full training file (about 12 GB, streamed once; MIT). Reported in their own table, never in the catch rate. Run after `build-raid` | `build-raid-attacks` |
 | WildChat | chat (machine) | WildChat-1M first replies through the Hugging Face rows API (ODC-BY; set `HF_TOKEN` if the dataset asks you to accept its terms) | `build-wildchat` |
 
 `scripts/generate_machine.py` can add a pool of current Claude models answering the prompts in

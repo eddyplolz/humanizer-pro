@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- `corpus/RESULTS.md` adds a table of catch rates on attacked machine text. `scripts/corpus.py
+  build-raid-attacks` streams the RAID training file (about 12 GB; MIT) once and keeps the
+  adversarial rewrites of 100 test-split RAID pool documents, up to one per attack: 1,057 documents
+  after the minimum-length filter and duplicate removal. The attacked documents are labeled
+  `attacked` and stay out of the false-positive and catch rates. Homoglyph and zero-width-space
+  attacks are caught on 100 of 100 documents. The other nine attacks, including paraphrase and
+  synonym swaps, are caught on none, the same as the documents before the attack. No rule changed,
+  and the published false-positive and catch rates are unchanged.
+
+- Two eval fixtures cover text that went through a humanizer. `humanizer-character-residue.md`
+  has zero-width and lookalike characters and missing spaces between sentences; the audit blocks
+  it. `humanizer-paraphrase-residue.md` is a paraphrase that kept the AI vocabulary and inflated
+  framing. The audit reports those tells but scores it 25 and exits 0, so `eval/cases.md` lists it
+  as a known gap.
+
 - The audit's `stats` block reports `fk_grade` (Flesch-Kincaid grade) and `syllables_per_word`.
   They are reported only: neither is a finding or moves the risk score. `scripts/fp_measure.py`
   adds a "Reading grade by register" table to `corpus/RESULTS.md` with the median grade of human
