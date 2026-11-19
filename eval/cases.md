@@ -13,6 +13,8 @@ behavior and automated contracts for the deterministic audit CLI.
 | `fixtures/over-humanized.md` | Remove performed casualness, meta-commentary, ellipses, and decorative profanity without making the piece stiff. |
 | `fixtures/artifact-leakage.md` | Flag artifact tokens and placeholders; remove chat wrapper; note unsupported citation-dependent claims. |
 | `fixtures/style-elements.md` | Improve clarity, concrete language, paragraph unity, and emphasis without flattening the writer's legitimate voice. |
+| `fixtures/humanizer-character-residue.md` | Leftovers from a rule-based humanizer: zero-width and lookalike characters (blocked as `artifact.bypass_characters`) and missing spaces between sentences. Strip the characters and restore the spaces. |
+| `fixtures/humanizer-paraphrase-residue.md` | A paraphrase that kept the AI vocabulary and inflation. The audit reports the tells but scores it below the review threshold (exit 0): a known gap, not a pass. Remove the inflated framing and stock vocabulary. |
 | `fixtures/fidelity/original.md` + `revised-good.md` | `--compare` exits clean when protected facts and source targets are preserved, including normalized tracking parameters. |
 | `fixtures/fidelity/original.md` + `revised-drift.md` | `--compare` blocks protected-content drift in numbers, dates, URLs, citations, quotes, code, and evidence markers. |
 | `fixtures/fidelity/meaning-original.md` + `meaning-revised.md` | `--compare` exits 1 (review) with four `compare.meaning.*` warnings: hedge dropped, negation flipped, causal link dropped, concession dropped. |
