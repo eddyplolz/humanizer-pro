@@ -259,7 +259,7 @@ The score is weak on short text. When a document has fewer than 150 words, the r
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v4.17.0
+    rev: v4.18.0
     hooks:
       - id: humanizer-audit
 ```
@@ -288,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: eddyplolz/humanizer-pro@v4.17.0
+      - uses: eddyplolz/humanizer-pro@v4.18.0
         with:
           paths: docs README.md
           fail-on: block
@@ -479,4 +479,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v4.17.0**. It adds Family 10, the flat-verdict register of current models, as 18 info notes that point out the habit without changing any risk score or exit code; it rolls repeated findings into one line, adds `--skip-quoted` for quoted and code text, and teaches compare mode to catch a dropped ranking or scope word. v4.16.2 renamed the GitHub Action to Humanizer Pro audit. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v4.18.0**. It adds one-command installs for Claude Code and for other agents through `npx skills`, labels documents under 150 words as short text, and reports reading grade in the audit stats. Two rules weigh less and one no longer matches the bare word "certainly", which lowers scores on some human text; no change raises a risk score. The skill now fixes compare-mode findings in the rewrite's own wording instead of pasting the original sentence back. v4.17.0 added Family 10, the flat-verdict register of current models, as info notes. Every change is listed in the [changelog](CHANGELOG.md).
