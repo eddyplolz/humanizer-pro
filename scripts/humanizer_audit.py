@@ -20,6 +20,13 @@ from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 __version__ = "4.17.0"
 SCHEMA = "humanizer-audit.v1"
+DEFAULT_FAIL_SCORE = 60
+# Review threshold per register for --register. Chat replies and docs review
+# at 20: on the held-out test split that keeps false positives under 1% while
+# catching far more machine text than 60 does (corpus/RESULTS.md, "Rates at
+# the register defaults"). The other registers gain nothing below 60, so they
+# keep it; commit messages are not measured and keep it too.
+REGISTER_FAIL_SCORES = {"chat": 20, "commit": 60, "docs": 20, "essay": 60, "news": 60, "wiki": 60}
 # Below this many words the risk score told human from machine text at about
 # chance on the corpus dev split (AUROC 0.54 to 0.56; see corpus/RESULTS.md).
 # The report labels such text; the score and exit code stay the same.
@@ -2728,7 +2735,16 @@ def severity_for(findings: list[dict[str, object]]) -> str:
     return max((str(finding["severity"]) for finding in findings), key=lambda value: SEVERITY_ORDER[value])
 
 
-def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, object]:
+def fail_score_for(register: str | None, fail_score: int | None = None) -> int:
+    """The review threshold: an explicit --fail-score wins, then the register's, then the default."""
+    if fail_score is not None:
+        return fail_score
+    return REGISTER_FAIL_SCORES.get(register or "", DEFAULT_FAIL_SCORE)
+
+
+def summarize(
+    documents: list[dict[str, object]], fail_score: int, register: str | None = None
+) -> dict[str, object]:
     all_findings = [finding for document in documents for finding in document["findings"]]
     max_risk = max((int(document["risk_score"]) for document in documents), default=0)
     max_severity = severity_for(all_findings)
@@ -2743,6 +2759,8 @@ def summarize(documents: list[dict[str, object]], fail_score: int) -> dict[str, 
         "family_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("family")),
         "clarity_hit_count": sum(1 for finding in all_findings if str(finding["id"]).startswith("clarity.")),
         "short_text_count": sum(1 for document in documents if document["short_text"]),
+        "register": register,
+        "fail_score": fail_score,
         "exit_code": exit_code,
     }
 
@@ -2814,6 +2832,8 @@ def render_text_report(result: dict[str, object]) -> str:
         f"Humanizer audit: {summary['documents']} document(s), max risk {summary['max_risk_score']}, "
         f"severity {summary['max_severity']}, exit {summary['exit_code']}"
     )
+    if summary.get("register"):
+        lines.append(f"Register: {summary['register']} (review at risk {summary['fail_score']})")
     for document in result["documents"]:
         lines.append("")
         header = f"{line_start_safe(str(document['path']))} — risk {document['risk_score']}"
@@ -2957,7 +2977,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Compare an original and revised file for protected-content drift.",
     )
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of a text report.")
-    parser.add_argument("--fail-score", type=int, default=60, help="Risk score that exits with review status 1.")
+    parser.add_argument(
+        "--fail-score",
+        type=int,
+        default=None,
+        help=f"Risk score that exits with review status 1 (default {DEFAULT_FAIL_SCORE}, or the --register value).",
+    )
+    parser.add_argument(
+        "--register",
+        choices=sorted(REGISTER_FAIL_SCORES),
+        help=(
+            "Kind of writing, which sets the review threshold: "
+            + ", ".join(f"{name} {score}" for name, score in sorted(REGISTER_FAIL_SCORES.items()))
+            + ". --fail-score overrides it."
+        ),
+    )
     parser.add_argument(
         "--include-code",
         action="store_true",
@@ -2995,6 +3029,9 @@ def run(argv: list[str] | None = None) -> int:
         parser.error("--skip-quoted applies to audits only; --compare checks every token, quoted or not")
     if args.skip_quoted and args.include_code:
         parser.error("--skip-quoted already skips code, so it cannot be combined with --include-code")
+    if args.compare and args.register:
+        parser.error("--register applies to audits only; --compare has no risk score")
+    fail_score = fail_score_for(args.register, args.fail_score)
     try:
         if args.compare:
             compare = compare_paths(Path(args.compare[0]), Path(args.compare[1]))
@@ -3007,7 +3044,7 @@ def run(argv: list[str] | None = None) -> int:
             raw = sys.stdin.buffer.read().decode("utf-8")
             text = raw.replace("\r\n", "\n").replace("\r", "\n")
             documents = [audit_text(text, "<stdin>", args.include_code, args.skip_quoted)]
-            summary = summarize(documents, args.fail_score)
+            summary = summarize(documents, fail_score, args.register)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         else:
             paths: list[Path] = []
@@ -3024,7 +3061,7 @@ def run(argv: list[str] | None = None) -> int:
                         seen.add(path)
                         paths.append(path)
             documents = audit_paths(paths, args.include_code, args.skip_quoted)
-            summary = summarize(documents, args.fail_score)
+            summary = summarize(documents, fail_score, args.register)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         if args.sarif:
             Path(args.sarif).write_text(

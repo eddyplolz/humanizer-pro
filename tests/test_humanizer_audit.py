@@ -685,6 +685,38 @@ def test_usage_errors_exit_3_not_block() -> None:
     assert run_audit("--fail-score", "abc", "x").returncode == 3
 
 
+REGISTER_FIXTURE = "eval/fixtures/humanizer-paraphrase-residue.md"  # risk 25, no block
+
+
+def test_register_sets_the_review_threshold() -> None:
+    module = _load_audit_module()
+    assert module.fail_score_for(None) == 60
+    assert module.fail_score_for("chat") == 20 and module.fail_score_for("docs") == 20
+    assert {module.fail_score_for(reg) for reg in ("commit", "essay", "news", "wiki")} == {60}
+    assert module.fail_score_for("chat", 90) == 90
+    assert module.fail_score_for(None, 0) == 0  # an explicit 0 is a value, not "unset"
+
+    plain = json.loads(run_audit(REGISTER_FIXTURE, "--json").stdout)["summary"]
+    assert plain["max_risk_score"] == 25 and plain["exit_code"] == 0
+    assert plain["register"] is None and plain["fail_score"] == 60
+    chat = run_audit(REGISTER_FIXTURE, "--register", "chat", "--json")
+    assert chat.returncode == 1
+    summary = json.loads(chat.stdout)["summary"]
+    assert (summary["register"], summary["fail_score"], summary["exit_code"]) == ("chat", 20, 1)
+    assert run_audit(REGISTER_FIXTURE, "--register", "essay").returncode == 0
+    # --fail-score wins over the register's threshold.
+    assert run_audit(REGISTER_FIXTURE, "--register", "chat", "--fail-score", "60").returncode == 0
+    assert "Register: docs (review at risk 20)" in run_audit(REGISTER_FIXTURE, "--register", "docs").stdout
+
+
+def test_register_usage_errors_exit_3() -> None:
+    assert run_audit(REGISTER_FIXTURE, "--register", "poem").returncode == 3
+    clean = "eval/fixtures/clean-human.md"
+    assert run_audit("--compare", clean, clean, "--register", "chat").returncode == 3
+    # --fail-score with --compare stays accepted and ignored, as before.
+    assert run_audit("--compare", clean, clean, "--fail-score", "20").returncode == 0
+
+
 def test_stdin_is_strict_utf8_and_newline_normalized() -> None:
     bad = subprocess.run(
         [sys.executable, str(CLI), "--stdin"], input=b"caf\xc3\xa9 \xff",
@@ -958,6 +990,7 @@ def _run_action(tmp_path: Path, **inputs: str) -> tuple[int, dict[str, str]]:
         "HA_PATHS": inputs.get("paths", "."),
         "HA_FAIL_ON": inputs.get("fail_on", "block"),
         "HA_FAIL_SCORE": inputs.get("fail_score", "60"),
+        "HA_REGISTER": inputs.get("register", ""),
         "HA_SARIF": inputs.get("sarif", str(tmp_path / "out.sarif")),
         "HA_INCLUDE_CODE": inputs.get("include_code", "false"),
     }
@@ -981,6 +1014,16 @@ def test_action_fail_on_policies(tmp_path: Path) -> None:
     assert _run_action(tmp_path, paths="eval/fixtures/artifact-leakage.md", fail_on="never")[0] == 0
     assert _run_action(tmp_path, paths="no/such/file.md", fail_on="never")[0] == 3
     assert _run_action(tmp_path, paths=slop, fail_on="sometimes")[0] == 3
+
+
+def test_action_register_and_blank_fail_score(tmp_path: Path) -> None:
+    fixture = REGISTER_FIXTURE  # risk 25
+    assert _run_action(tmp_path, paths=fixture, fail_on="review", fail_score="")[0] == 0
+    assert _run_action(tmp_path, paths=fixture, fail_on="review", fail_score="", register="chat")[0] == 1
+    assert _run_action(tmp_path, paths=fixture, fail_on="review", fail_score="60", register="chat")[0] == 0
+    # No SARIF and no threshold leaves the argument list empty; set -u must not trip on it.
+    assert _run_action(tmp_path, paths=fixture, fail_on="review", fail_score="", sarif="")[0] == 0
+    assert _run_action(tmp_path, paths=fixture, fail_on="review", register="poem")[0] == 3
 
 
 def test_action_inputs_are_not_shell_interpolated(tmp_path: Path) -> None:

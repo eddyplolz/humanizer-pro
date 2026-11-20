@@ -59,6 +59,11 @@ writing — academic integrity, hiring, publication, or attribution.
    (a style guide, a review of someone else's draft): prose rules then also skip tables,
    blockquotes, and double-quoted spans, and artifact rules still read everything.
 
+   Pass `--register` with the register you chose (`chat`, `docs`, `essay`, `news`, `wiki`, or
+   `commit`). Chat and docs then go to review at risk 20 instead of 60, which catches far more
+   machine text in those registers while keeping false positives under 1% on the test corpus.
+   The other registers stay at 60. An explicit `--fail-score` overrides it.
+
 3. If only pasted text is available, audit the text directly with the ten-family checklist and the
    same output categories.
 4. Quote short evidence. Do not quote more than needed to identify the issue.

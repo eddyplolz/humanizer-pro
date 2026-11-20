@@ -1,6 +1,6 @@
 # Humanizer Pro
 
-[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.2%](https://img.shields.io/badge/false_positives-0.2%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg) [![skills.sh](https://skills.sh/b/eddyplolz/humanizer-pro)](https://skills.sh/eddyplolz/humanizer-pro)
+[![CI](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/eddyplolz/humanizer-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![False positives: 0.1%](https://img.shields.io/badge/false_positives-0.1%25_measured-green.svg) ![Runs locally](https://img.shields.io/badge/runs-locally-lightgrey.svg) [![skills.sh](https://skills.sh/b/eddyplolz/humanizer-pro)](https://skills.sh/eddyplolz/humanizer-pro)
 
 **Finds the habits that make text read as machine-written, removes them, and checks that every fact survived.** Runs on your computer with no account, no API key, and no network connection. Measured false-positive rate on 1,494 human-written documents: 0.1%.
 
@@ -232,6 +232,7 @@ You can:
 - check several files or folders at once (a folder means every `.md` and `.txt` file inside it)
 - add `--json` to get results a program can read
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
+- add `--register chat` (or `docs`, `essay`, `news`, `wiki`, `commit`) to say what kind of writing it is. Chat replies and docs then go to review at a risk score of 20 instead of 60. See [Stricter review for chat and docs](#stricter-review-for-chat-and-docs)
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)
 - add `--skip-quoted` when a document quotes AI habits on purpose, such as a style guide. The habit checks then skip code, tables, blockquotes, and text in double quotes. Leaked chatbot text is still caught. It does not work with `--compare` or `--include-code`.
 - use `--compare original.md revised.md` to check that a rewrite kept the numbers, dates, names of 2 or more words, links, citations, quotes, and code samples in the original, and to get a review warning when a sentence lost a hedge such as "may," flipped between "did" and "did not," lost a "because," lost a ranking such as "the most" or a scope word such as "all," or dropped a "however" sentence (it does not catch every change: a one-word name or a changed fact, such as "delayed" becoming "canceled," can pass)
@@ -243,7 +244,7 @@ The checker ends with an exit code that scripts can act on.
 | Code | Meaning | What to do |
 |---|---|---|
 | 0 | Pass | Nothing. |
-| 1 | Review: the risk score reached the threshold (60 unless you set `--fail-score`), or in compare mode a sentence's meaning may have shifted | Read the findings and decide. |
+| 1 | Review: the risk score reached the threshold (60 unless you set `--fail-score`, or 20 with `--register chat` or `--register docs`), or in compare mode a sentence's meaning may have shifted | Read the findings and decide. |
 | 2 | Block: leaked chatbot text, a placeholder, or hidden characters | Fix before you publish. |
 | 3 | The checker could not run, for example a wrong option or a missing file | Check the command. |
 
@@ -305,7 +306,8 @@ You can set these options:
 |---|---|---|
 | `paths` | Files or folders to check, separated by spaces or new lines | `.` (everything) |
 | `fail-on` | When the step fails: `block`, `review`, or `never` | `block` |
-| `fail-score` | Risk score that counts as a review | `60` |
+| `fail-score` | Risk score that counts as a review | empty (60, or the register's threshold) |
+| `register` | Kind of writing: `chat`, `docs`, `essay`, `news`, `wiki`, or `commit`. Chat and docs review at 20 | empty (60) |
 | `sarif-file` | Where to save the SARIF results (leave empty to skip) | `humanizer-audit.sarif` |
 | `include-code` | Set to `true` to check code samples too | `false` |
 
@@ -359,6 +361,17 @@ The catch rate at the default threshold is 2.9% overall (24 of 834 test document
 
 - it describes those AI models only
 - about half the human essays are about 100 years old, so part of any gap there reflects the era, not the author
+
+### Stricter review for chat and docs
+
+The numbers above use one threshold, 60, for every kind of writing. With `--register`, chat replies and docs go to review at 20 instead. The other kinds stay at 60, because a lower threshold there adds false positives and catches almost nothing more. Without `--register`, nothing changes.
+
+| Type of writing | Threshold | False positives | AI text caught | AI text caught at 60 |
+|---|---|---|---|---|
+| Stack Exchange answers (chat) | 20 | 0.4% (2 of 450) | 23.0% (84 of 365) | 5.5% |
+| Python Enhancement Proposals (docs) | 20 | 0.7% (2 of 303) | 25.6% (11 of 43) | 4.7% |
+
+Most of the extra catches are older ChatGPT replies from WildChat. On answers from current Claude models, the catch rate rises less, from 0% to 4% at 60 to between 2% and 10% at the register thresholds. None of the 297 grammar-edited Stack Exchange answers is flagged at 20. The full tables, with ranges, are in the [results](corpus/RESULTS.md#rates-at-the-register-defaults).
 
 ### How the results stay honest
 

@@ -448,6 +448,65 @@ def policy_caps(
     return {"cap": cap, "min_dev_n": min_n, "by_register": by_register}
 
 
+def flagged_at_default(row: dict) -> bool:
+    """Flagged at the threshold the CLI uses for the row's register under --register."""
+    return is_flagged(row, _audit.fail_score_for(row["register"]))
+
+
+def default_stats(rows: list[dict], threshold: int) -> dict:
+    """Flag counts at the register defaults, beside the same rows at one fixed threshold."""
+    n = len(rows)
+    hits = sum(1 for r in rows if flagged_at_default(r))
+    low, high = wilson_interval(hits, n)
+    return {
+        "n": n,
+        "flagged": hits,
+        "rate": round(hits / n, 4) if n else None,
+        "rate_ci95": [round(low, 4), round(high, 4)],
+        "flagged_at_fixed": sum(1 for r in rows if is_flagged(r, threshold)),
+    }
+
+
+def register_default_rates(
+    human_test: list[dict], machine_test: list[dict], polished_test: list[dict], threshold: int
+) -> dict:
+    """Test-split rates when each document is reviewed at its register's --register threshold.
+
+    Human rows give the false-positive rate, machine rows the catch rate, and
+    grammar-edited human rows their own flag rate; each comes with the count
+    at the fixed threshold for comparison. Overall rows describe this corpus's
+    register mix only; the per-register rows are the ones to quote.
+    """
+    registers = sorted({r["register"] for r in human_test} | {r["register"] for r in machine_test})
+    return {
+        "split": "test",
+        "fixed_threshold": threshold,
+        "thresholds": {reg: _audit.fail_score_for(reg) for reg in registers},
+        "by_register": {
+            reg: {
+                "threshold": _audit.fail_score_for(reg),
+                "human": default_stats([r for r in human_test if r["register"] == reg], threshold),
+                "machine": default_stats([r for r in machine_test if r["register"] == reg], threshold),
+                "polished": default_stats([r for r in polished_test if r["register"] == reg], threshold),
+            }
+            for reg in registers
+        },
+        "overall": {
+            "human": default_stats(human_test, threshold),
+            "machine": default_stats(machine_test, threshold),
+        },
+        "by_period": {
+            period: default_stats([r for r in human_test if r["period"] == period], threshold)
+            for period in [name for name, _lo, _hi in PERIODS] + ["undated"]
+            if any(r["period"] == period for r in human_test)
+        },
+        "by_model": {
+            model: default_stats([r for r in machine_test if str(r["model"]) == model], threshold)
+            for model in sorted({str(r["model"]) for r in machine_test})
+        },
+    }
+
+
 def rule_scorecard(human_rows: list[dict], machine_rows: list[dict]) -> list[dict]:
     """Per rule: share of human dev documents vs share of machine dev documents.
 
@@ -528,6 +587,9 @@ def measure(threshold: int, include_fixture_tp: bool, fpr_cap: float = DEFAULT_F
         "length_bands": length_bands(human_rows, machine_rows),
         "readability": readability_by_register(rows, machine_test),
         "policy_caps": policy_caps(human_dev, rows, machine_test, cap=fpr_cap),
+        "register_defaults": register_default_rates(
+            rows, machine_test, [r for r in polished_rows if r["split"] == "test"], threshold
+        ),
         "top_rules_on_human_text": [
             {"rule": rule, "documents": count} for rule, count in rule_hits.most_common(12)
         ],
@@ -654,6 +716,14 @@ def render_text(result: dict) -> str:
     lines.append(f"Threshold under a {pct(caps['cap'])} FPR cap (chosen on dev, graded on test):")
     for reg, entry in caps["by_register"].items():
         lines.append(f"  {reg:10} {cap_summary(entry)}")
+    defaults = result.get("register_defaults")
+    if defaults and defaults["by_register"]:
+        lines.append("")
+        lines.append("At the --register defaults (test split): false positives / machine caught")
+        for reg, entry in defaults["by_register"].items():
+            lines.append(
+                f"  {reg:10} at {entry['threshold']:3}: {count_cell(entry['human'])} / {count_cell(entry['machine'])}"
+            )
     lines.append("")
     lines.append("Rules firing most often on human text (documents touched):")
     for item in result["top_rules_on_human_text"]:
@@ -709,6 +779,99 @@ def render_text(result: dict) -> str:
             f"detected ({tp['note']})"
         )
     return "\n".join(lines)
+
+
+def count_cell(stats: dict) -> str:
+    """'flagged of n (rate)', or '-' for an empty slice."""
+    if not stats["n"]:
+        return "-"
+    return f"{stats['flagged']} of {stats['n']} ({pct(stats['rate'])})"
+
+
+def ci_cell(stats: dict) -> str:
+    if not stats["n"]:
+        return "-"
+    low, high = stats["rate_ci95"]
+    return f"{pct(low)}–{pct(high)}"
+
+
+def fixed_cell(stats: dict) -> str:
+    if not stats["n"]:
+        return "-"
+    return pct(round(stats["flagged_at_fixed"] / stats["n"], 4))
+
+
+def render_register_defaults_md(defaults: dict) -> list[str]:
+    by_register = defaults["by_register"]
+    if not by_register:
+        return []
+    fixed = defaults["fixed_threshold"]
+    lowered = [reg for reg, entry in by_register.items() if entry["threshold"] != fixed]
+    lines = [
+        "",
+        "## Rates at the register defaults",
+        "",
+        "`humanizer-audit --register NAME` sets the review threshold for that kind",
+        "of writing: "
+        + ", ".join(f"{reg} {entry['threshold']}" for reg, entry in by_register.items())
+        + ". Each document",
+        f"below is checked at its register's threshold; \"At {fixed}\" is the same",
+        "documents at the default, for comparison. Test split.",
+        "",
+        "| Register | Threshold | False positives | 95% CI | At "
+        + str(fixed)
+        + " | Machine caught | 95% CI | At "
+        + str(fixed)
+        + " |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for reg, entry in by_register.items():
+        human, machine = entry["human"], entry["machine"]
+        lines.append(
+            f"| {reg} | {entry['threshold']} | {count_cell(human)} | {ci_cell(human)} | {fixed_cell(human)} | "
+            f"{count_cell(machine)} | {ci_cell(machine)} | {fixed_cell(machine)} |"
+        )
+    overall = defaults["overall"]
+    lines.extend(
+        [
+            "",
+            "All registers together:",
+            f"false positives {count_cell(overall['human'])}, machine caught {count_cell(overall['machine'])}.",
+            "That mix of registers is this corpus's own, so quote the rows above.",
+        ]
+    )
+    if lowered:
+        lines.extend(
+            [
+                "",
+                "Only "
+                + " and ".join(lowered)
+                + " review below the default. The cap table above also picks",
+                "lower thresholds for some other registers, but there they add false",
+                "positives and catch little or nothing more.",
+            ]
+        )
+    polished = {reg: entry["polished"] for reg, entry in by_register.items() if entry["polished"]["n"]}
+    if polished:
+        lines.extend(
+            [
+                "",
+                "Grammar-edited human text (the table further down), all four editing",
+                "models together, at the same thresholds:",
+                "",
+                *(
+                    f"- {reg}: {count_cell(stats)} flagged ({fixed_cell(stats)} at {fixed})"
+                    for reg, stats in polished.items()
+                ),
+            ]
+        )
+    lines.extend(["", "By period, human text:", "", f"| Period | False positives | 95% CI | At {fixed} |", "|---|---|---|---|"])
+    for period, stats in defaults["by_period"].items():
+        lines.append(f"| {period} | {count_cell(stats)} | {ci_cell(stats)} | {fixed_cell(stats)} |")
+    lines.extend(["", "By model, machine text:", "", f"| Model | Caught | 95% CI | At {fixed} |", "|---|---|---|---|"])
+    for model, stats in defaults["by_model"].items():
+        lines.append(f"| `{model}` | {count_cell(stats)} | {ci_cell(stats)} | {fixed_cell(stats)} |")
+    return lines
 
 
 def render_results_md(result: dict) -> str:
@@ -859,6 +1022,8 @@ def render_results_md(result: dict) -> str:
             fpr = "-" if entry["test_fpr"] is None else pct(entry["test_fpr"])
             catch = "-" if entry["catch"] is None else pct(entry["catch"])
             lines.append(f"| {reg} | {entry['dev_n']} | {entry['threshold']} | {fpr} | {catch} |")
+    if result.get("register_defaults"):
+        lines.extend(render_register_defaults_md(result["register_defaults"]))
     lines.extend(["", "## Catch rate on machine text (test split)", ""])
     catch = result["catch_rate"]
     if catch is None:
