@@ -1593,3 +1593,40 @@ def test_measure_reports_false_positives_by_period(tmp_path, monkeypatch) -> Non
     page = fp_measure.render_results_md(result)
     assert "| period: 2018-2022 | 2 | 1 | 50.0% |" in page
     assert "period:pre-1930" in fp_measure.render_text(result)
+
+
+def test_register_defaults_check_each_register_at_its_own_threshold() -> None:
+    human = risk_rows([10, 25], register="chat", period="2018-2022") + risk_rows(
+        [25, 25], register="essay", period="pre-1930"
+    )
+    machine = (
+        risk_rows([25, 70], register="chat", model="m1")
+        + risk_rows([25], register="essay", model="m1")
+        + risk_rows([5], register="docs", model="m2")
+    )
+    polished = risk_rows([22], register="chat")
+    defaults = fp_measure.register_default_rates(human, machine, polished, 60)
+    chat, essay, docs = (defaults["by_register"][reg] for reg in ("chat", "essay", "docs"))
+    assert chat["threshold"] == 20 and essay["threshold"] == 60 and docs["threshold"] == 20
+    assert chat["human"]["flagged"] == 1 and chat["human"]["flagged_at_fixed"] == 0
+    assert chat["machine"]["flagged"] == 2 and chat["machine"]["flagged_at_fixed"] == 1
+    assert chat["polished"]["flagged"] == 1 and chat["polished"]["flagged_at_fixed"] == 0
+    assert essay["human"]["flagged"] == 0 and essay["machine"]["flagged"] == 0
+    assert docs["human"]["n"] == 0 and docs["machine"]["flagged"] == 0
+    assert defaults["overall"]["human"]["flagged"] == 1 and defaults["overall"]["machine"]["flagged"] == 2
+    assert defaults["by_period"]["2018-2022"]["flagged"] == 1 and defaults["by_period"]["pre-1930"]["flagged"] == 0
+    assert defaults["by_model"]["m1"]["flagged"] == 2 and defaults["by_model"]["m2"]["flagged"] == 0
+    blocked = risk_rows([0], blocked=True, register="essay", period="pre-1930")
+    assert fp_measure.register_default_rates(blocked, [], [], 60)["overall"]["human"]["flagged"] == 1
+
+
+def test_register_defaults_render_on_the_results_page(tmp_path, monkeypatch) -> None:
+    result = _measure_fixture(tmp_path, monkeypatch, [
+        (_entry("se-000000000001", "human", register="chat"), PLAIN),
+        (_entry("raid-000000000002", "machine", register="chat", model="raid:gpt4"), SLOP),
+    ])
+    page = fp_measure.render_results_md(result)
+    assert "## Rates at the register defaults" in page
+    assert "| chat | 20 | 0 of 1 (0.0%) |" in page
+    assert "| `raid:gpt4` | 1 of 1 (100.0%) |" in page
+    assert "At the --register defaults" in fp_measure.render_text(result)

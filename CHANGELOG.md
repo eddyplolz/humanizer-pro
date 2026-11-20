@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- `humanizer-audit` adds `--register` (`chat`, `docs`, `essay`, `news`, `wiki`, `commit`), which
+  sets the review threshold for that kind of writing: 20 for chat and docs, 60 for the rest. Without
+  it the threshold stays 60, and an explicit `--fail-score` still wins. The JSON summary now reports
+  `register` and `fail_score`. The GitHub Action adds a `register` input; its `fail-score` input now
+  defaults to empty, which means 60 unless a register is set. `reference/ai-check.md` tells the skill
+  to pass the register it chose. `corpus/RESULTS.md` adds a table of rates at these thresholds, by
+  register, period, and model. On the test split, chat goes from 0.0% to 0.4% false positives (2 of
+  450) and from 5.5% to 23.0% caught (84 of 365); docs from 0.3% to 0.7% (2 of 303) and from 4.7% to
+  25.6% (11 of 43). Most of the gain is on older ChatGPT replies. None of the 297 grammar-edited chat
+  documents is flagged at 20. No rule changed, and the rates at threshold 60 are unchanged.
+
 - `SKILL.md` changes how a revision pass answers compare-mode findings. A dropped name, number,
   date, citation, or quote goes back into the current sentence, in the rewrite's own wording. A
   sentence that compare mode flags only because its words changed stays if it still holds every

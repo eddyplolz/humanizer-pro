@@ -108,6 +108,65 @@ split, so the numbers that picked the threshold do not grade it.
 | news | 87 | 30 | 1.5% | 3.2% |
 | wiki | 2 | none: dev split has 2 human documents; the cap needs at least 50 | - | - |
 
+## Rates at the register defaults
+
+`humanizer-audit --register NAME` sets the review threshold for that kind
+of writing: chat 20, docs 20, essay 60, news 60, wiki 60. Each document
+below is checked at its register's threshold; "At 60" is the same
+documents at the default, for comparison. Test split.
+
+| Register | Threshold | False positives | 95% CI | At 60 | Machine caught | 95% CI | At 60 |
+|---|---|---|---|---|---|---|---|
+| chat | 20 | 2 of 450 (0.4%) | 0.1%–1.6% | 0.0% | 84 of 365 (23.0%) | 19.0%–27.6% | 5.5% |
+| docs | 20 | 2 of 303 (0.7%) | 0.2%–2.4% | 0.3% | 11 of 43 (25.6%) | 14.9%–40.2% | 4.7% |
+| essay | 60 | 0 of 474 (0.0%) | 0.0%–0.8% | 0.0% | 2 of 48 (4.2%) | 1.1%–14.0% | 4.2% |
+| news | 60 | 1 of 263 (0.4%) | 0.1%–2.1% | 0.4% | 0 of 185 (0.0%) | 0.0%–2.0% | 0.0% |
+| wiki | 60 | 0 of 4 (0.0%) | 0.0%–49.0% | 0.0% | 0 of 193 (0.0%) | 0.0%–1.9% | 0.0% |
+
+All registers together:
+false positives 5 of 1494 (0.3%), machine caught 97 of 834 (11.6%).
+That mix of registers is this corpus's own, so quote the rows above.
+
+Only chat and docs review below the default. The cap table above also picks
+lower thresholds for some other registers, but there they add false
+positives and catch little or nothing more.
+
+Grammar-edited human text (the table further down), all four editing
+models together, at the same thresholds:
+
+- chat: 0 of 297 (0.0%) flagged (0.0% at 60)
+- essay: 0 of 298 (0.0%) flagged (0.0% at 60)
+
+By period, human text:
+
+| Period | False positives | 95% CI | At 60 |
+|---|---|---|---|
+| pre-1930 | 0 of 250 (0.0%) | 0.0%–1.5% | 0.0% |
+| 1930-2017 | 3 of 937 (0.3%) | 0.1%–0.9% | 0.2% |
+| 2018-2022 | 2 of 307 (0.7%) | 0.2%–2.3% | 0.0% |
+
+By model, machine text:
+
+| Model | Caught | 95% CI | At 60 |
+|---|---|---|---|
+| `openrouter:anthropic/claude-fable-5.2` | 5 of 49 (10.2%) | 4.4%–21.8% | 4.1% |
+| `openrouter:anthropic/claude-haiku-5.5` | 1 of 44 (2.3%) | 0.4%–11.8% | 0.0% |
+| `openrouter:anthropic/claude-opus-5.5` | 4 of 53 (7.5%) | 3.0%–17.9% | 1.9% |
+| `openrouter:anthropic/claude-sonnet-5.5` | 3 of 50 (6.0%) | 2.1%–16.2% | 2.0% |
+| `raid:chatgpt` | 0 of 58 (0.0%) | 0.0%–6.2% | 0.0% |
+| `raid:cohere-chat` | 0 of 56 (0.0%) | 0.0%–6.4% | 0.0% |
+| `raid:gpt3` | 1 of 56 (1.8%) | 0.3%–9.4% | 0.0% |
+| `raid:gpt4` | 0 of 55 (0.0%) | 0.0%–6.5% | 0.0% |
+| `raid:llama-chat` | 0 of 58 (0.0%) | 0.0%–6.2% | 0.0% |
+| `raid:mistral-chat` | 1 of 56 (1.8%) | 0.3%–9.4% | 1.8% |
+| `raid:mpt-chat` | 0 of 56 (0.0%) | 0.0%–6.4% | 0.0% |
+| `wildchat:gpt-3.5-turbo-0125` | 20 of 49 (40.8%) | 28.2%–54.8% | 4.1% |
+| `wildchat:gpt-3.5-turbo-0301` | 9 of 40 (22.5%) | 12.3%–37.5% | 20.0% |
+| `wildchat:gpt-3.5-turbo-0613` | 38 of 78 (48.7%) | 38.0%–59.6% | 7.7% |
+| `wildchat:gpt-4-0125-preview` | 0 of 3 (0.0%) | 0.0%–56.1% | 0.0% |
+| `wildchat:gpt-4-0314` | 6 of 37 (16.2%) | 7.6%–31.1% | 2.7% |
+| `wildchat:gpt-4-1106-preview` | 9 of 36 (25.0%) | 13.8%–41.1% | 5.6% |
+
 ## Catch rate on machine text (test split)
 
 | Slice | n | Caught | Rate | 95% CI |
