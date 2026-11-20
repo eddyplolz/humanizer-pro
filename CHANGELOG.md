@@ -2,7 +2,8 @@
 
 ## 4.18.0 - 2026-11-20
 
-Feature release. Every scoring change lowers scores on some human text, and none raises a risk score.
+Feature release. No change raises a risk score. The new `--register` option lowers the review
+threshold for chat and docs only when you set it.
 
 - `humanizer-audit` adds `--register` (`chat`, `docs`, `essay`, `news`, `wiki`, `commit`), which
   sets the review threshold for that kind of writing: 20 for chat and docs, 60 for the rest. Without
