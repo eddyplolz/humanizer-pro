@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `SKILL.md` changes how a revision pass answers compare-mode findings. A dropped name, number,
+  date, citation, or quote goes back into the current sentence, in the rewrite's own wording. A
+  sentence that compare mode flags only because its words changed stays if it still holds every
+  fact, who said it, and how strongly. Revision passes had tended to paste the original sentence
+  back, which undid the rewrite. Later passes now edit only the sentences a finding points to. No
+  audit rule changed, and the published false-positive and catch rates are unchanged.
+
 - `corpus/RESULTS.md` adds a table of flag rates on human text that an AI edited for grammar only.
   `scripts/generate_machine.py --task polish --provider openrouter` sends 75 PERSUADE essays and 75 Stack Exchange
   answers from the human test split to four models through OpenRouter, with a request to fix

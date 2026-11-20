@@ -88,10 +88,9 @@ form there — leave it alone.
    Otherwise keep the source's tone. Forced casualness and meta-commentary are tells either way.
 5. **Tells evolve.** Treat word lists as dated clues. Flag a word because it clusters and reads as a
    machine default here, not because it appears on a list.
-6. **Multi-pass until clean.** The first rewrite removes obvious tells and often exposes subtler
-   ones. Re-run the audit after every pass and keep editing while it still finds tells. After
-   each pass, do the anti-swap and restraint checks so facts, names, and numbers never drift
-   and clean sentences are not churned. Stop when the audit is clean or when a pass changes nothing.
+6. **Multi-pass until clean.** Re-run the audit after every pass and keep editing while it finds tells.
+   Later passes touch only the sentences a finding points to, so facts never drift and clean sentences
+   are not churned. Stop when the audit is clean or when a pass changes nothing.
 7. **For wiki/article work, neutrality outranks voice.** Do not add jokes, first person, casualness,
    unsupported significance, or synthetic "human warmth." Preserve or flag sources.
 8. **For style work, clarity outranks rule-worship.** Use Strunk's concrete language, active voice,
@@ -258,9 +257,10 @@ into a text that did not already contain it:
 
 When the installed repo is available, back this mechanically: run `humanizer-audit --compare original.md
 revised.md` after every pass, always against the text the user handed over, never the previous pass.
-Any `compare.*.introduced` finding (a number, date, name, URL, citation, or sourced statement the original
-never had) is an anti-swap failure to fix. A `compare.meaning.*` warning (hedge, negation, causal link, or
-counter-claim changed, or a ranking or scope word lost) means reread that pair: restore the original meaning, or keep the edit if it held.
+Fix each finding in your own wording; pasting the original sentence back restores the machine phrasing the rewrite
+removed. Put a dropped name, number, date, citation, or quote back into your current sentence (quotes stay verbatim);
+cut one the original never had. `compare.source_statement.*` and `compare.meaning.*` pair sentences by shared words, so
+reread the pair: keep your sentence if it holds every fact, who said it, and how strongly; else add only what is missing.
 
 ---
 
