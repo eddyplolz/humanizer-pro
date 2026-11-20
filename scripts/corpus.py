@@ -1759,7 +1759,11 @@ def fetch(args: argparse.Namespace) -> int:
         for start in range(0, len(site_entries), 100):
             batch = site_entries[start : start + 100]
             ids = ";".join(str(e["source"]["answer_id"]) for e in batch)
-            payload = stackexchange_get(f"answers/{ids}", {"site": site}, args.sleep)
+            # The API returns 30 items per call unless told otherwise, so
+            # without pagesize most of a 100-id batch never came back.
+            payload = stackexchange_get(
+                f"answers/{ids}", {"site": site, "pagesize": STACKEXCHANGE_PAGE}, args.sleep
+            )
             by_id = {e["source"]["answer_id"]: e for e in batch}
             for item in payload.get("items", []):
                 entry = by_id.get(int(item.get("answer_id", 0)))
