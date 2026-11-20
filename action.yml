@@ -15,9 +15,13 @@ inputs:
     required: false
     default: block
   fail-score:
-    description: Risk score that counts as review (exit 1).
+    description: Risk score that counts as review (exit 1). Empty means 60, or the register's threshold.
     required: false
-    default: "60"
+    default: ""
+  register:
+    description: "Kind of writing, which sets the review threshold: chat or docs (20), or commit, essay, news, or wiki (60). Empty means 60."
+    required: false
+    default: ""
   sarif-file:
     description: Where to write the SARIF log. Empty to skip.
     required: false
@@ -47,6 +51,7 @@ runs:
         HA_PATHS: ${{ inputs.paths }}
         HA_FAIL_ON: ${{ inputs.fail-on }}
         HA_FAIL_SCORE: ${{ inputs.fail-score }}
+        HA_REGISTER: ${{ inputs.register }}
         HA_SARIF: ${{ inputs.sarif-file }}
         HA_INCLUDE_CODE: ${{ inputs.include-code }}
       run: |
@@ -59,7 +64,9 @@ runs:
           if "$candidate" -c "import sys" > /dev/null 2>&1; then python_bin="$candidate"; break; fi
         done
         if [ -z "$python_bin" ]; then echo "::error::no working python3 or python on PATH"; exit 3; fi
-        args=(--fail-score "$HA_FAIL_SCORE")
+        args=()
+        if [ -n "$HA_FAIL_SCORE" ]; then args+=(--fail-score "$HA_FAIL_SCORE"); fi
+        if [ -n "$HA_REGISTER" ]; then args+=(--register "$HA_REGISTER"); fi
         if [ -n "$HA_SARIF" ]; then
           # Never publish a SARIF file left over from an earlier run.
           rm -f -- "$HA_SARIF"
@@ -79,7 +86,8 @@ runs:
         stop_token="$("$python_bin" -c "import secrets; print(secrets.token_hex(16))")"
         echo "::stop-commands::$stop_token"
         set +e
-        "$python_bin" "$HA_SCRIPT" "${targets[@]}" "${args[@]}"
+        # ${args[@]+...} keeps an empty list safe under set -u on bash 3.2 (macOS).
+        "$python_bin" "$HA_SCRIPT" "${targets[@]}" ${args[@]+"${args[@]}"}
         code=$?
         set -e
         echo "::$stop_token::"
