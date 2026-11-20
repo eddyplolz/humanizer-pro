@@ -1540,6 +1540,37 @@ def test_fetch_rebuilds_wikipedia_and_stackexchange_entries_by_id(tmp_path, monk
     assert corpus.verify(argparse.Namespace()) == 0
 
 
+def test_fetch_asks_stackexchange_for_a_full_batch(tmp_path, monkeypatch) -> None:
+    """The API sends 30 items per call by default; a 100-id batch must ask for all 100."""
+    import argparse
+
+    entries = []
+    bodies = {}
+    for answer_id in range(1, 61):
+        html = f"<p>Answer number {answer_id}. " + "Prose from the answer. " * 20 + "</p>"
+        text = corpus.html_strip(html)
+        bodies[answer_id] = html
+        entries.append(
+            {"id": f"se-{corpus.sha256_text(text)[:12]}", "kind": "stackexchange-answer", "register": "chat",
+             "author": "other", "words": 100, "sha256": corpus.sha256_text(text),
+             "extraction": corpus.HTML_STRIP_VERSION,
+             "source": {"site": "cooking", "answer_id": answer_id, "url": "u"}}
+        )
+    monkeypatch.setattr(corpus, "CORPUS_DIR", tmp_path)
+    monkeypatch.setattr(corpus, "MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(corpus, "CACHE_DIR", tmp_path / "cache")
+    corpus._write_json(tmp_path / "manifest.json", {"schema": corpus.MANIFEST_SCHEMA, "cutoff": corpus.CUTOFF, "entries": entries})
+
+    def fake_se_get(path, params, sleep):
+        ids = [int(i) for i in path.removeprefix("answers/").split(";")]
+        page = ids[: params.get("pagesize", 30)]
+        return {"items": [{"answer_id": i, "body": bodies[i]} for i in page], "has_more": len(page) < len(ids)}
+
+    monkeypatch.setattr(corpus, "stackexchange_get", fake_se_get)
+    assert corpus.fetch(argparse.Namespace(sleep=0)) == 0
+    assert corpus.verify(argparse.Namespace()) == 0
+
+
 def test_fetch_rebuilds_cc_news_entries_by_row(tmp_path, monkeypatch) -> None:
     import argparse
 
