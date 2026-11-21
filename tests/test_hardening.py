@@ -98,7 +98,10 @@ def test_compare_past_the_exact_diff_limit_reports_the_surplus() -> None:
 
 
 OLD_REGEXES = {
-    "REF_TAG_RE": re.compile(r"<ref\b[^>]*(?:/>|>.*?</ref>)", re.I | re.S),
+    # Not the shipped regex: <ref\b[^>]*(?:/>|>.*?</ref>) let a self-closed
+    # <ref name="a" /> run on to a later </ref>. The tag ends at its first ">";
+    # "/>" there self-closes it, otherwise the next </ref> closes it.
+    "REF_TAG_RE": re.compile(r"<ref\b(?:[^>]*/>|[^>]*(?<!/)>.*?</ref>)", re.I | re.S),
     "CITE_TEMPLATE_RE": re.compile(r"{{\s*cite\b.*?}}", re.I | re.S),
     "QUOTE_RE": re.compile(r'"[^"\n]{3,}"|“[^”\n]{3,}”'),
     "CODE_BLOCK_RE": re.compile(r"^[ \t]*(```|~~~)[^\n`~]*\n(?:.*?\n)?[ \t]*\1[ \t]*$", re.M | re.S),

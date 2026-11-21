@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+Fixes from a full code review. One change is breaking for CI: a run that finds no files now exits 3.
+
+- **Breaking:** `humanizer-audit` exits 3 with `no files to audit` when its targets match no `.md`
+  or `.txt` file. It used to exit 0, so a mistyped path in CI passed without auditing anything.
+- Compare mode: a self-closed `<ref name="a" />` no longer runs on to a later `</ref>`. That span
+  hid every line between the two, so a dropped number or name showed up only as a garbled citation.
+- Compare mode: removing one of two links with the same label is no longer reported as the other
+  link being retargeted. Same-label links are now paired by diff alignment, not by position.
+- The GitHub Action checks `fail-on` before the audit runs. A typo now fails fast and leaves no
+  `exit-code` output or SARIF file behind.
+- `family9.chatbot_residue` no longer flags "Best regards", an ordinary letter sign-off.
+- `artifact.ai_tracking_url` matches the whole parameter value, so `utm_source=openaiwatch` no
+  longer counts as `utm_source=openai`.
+- `showcasing`, `vibrant`, `boasts`, `fostering`, and `highlighting` leave the AI vocabulary lists.
+  The family rules already flag them on sight, so each use was scored twice. Scores can only fall.
+- Cleanups with no change in output: `line_column` uses `bisect`, and sentence matching no longer
+  copies term sets for every candidate.
+
 ## 4.18.0 - 2026-11-20
 
 Feature release. No change raises a risk score. The new `--register` option lowers the review

@@ -823,8 +823,10 @@ def test_tilde_fences_are_code_blocks() -> None:
 
 def test_empty_directory_warns_on_stderr(tmp_path: Path) -> None:
     result = run_audit(str(tmp_path))
-    assert result.returncode == 0
+    # Exit 3, not 0: nothing was audited, so CI must not read it as a pass.
+    assert result.returncode == 3
     assert "no .md or .txt files" in result.stderr
+    assert "no files to audit" in result.stderr
 
 
 def test_skill_md_stays_under_line_limit() -> None:
@@ -1766,3 +1768,94 @@ def test_short_text_does_not_change_the_exit_code() -> None:
     returncode, payload = audit_json("--stdin", input_text="Done. citeturn0search0\n")
     assert payload["documents"][0]["short_text"] is True
     assert returncode == 2
+
+
+# --- Regression tests for the 2026-11-20 code review ---
+
+
+def test_self_closing_ref_does_not_swallow_text_up_to_a_later_ref() -> None:
+    # A self-closed <ref name="a" /> used to run to the next </ref>, so the
+    # sentence between them was hidden inside a fake citation span.
+    original = (
+        'See <ref name="a" /> for this.\n\n'
+        "The agency hired 40 staff in 2019 under Jane Smith.\n\n"
+        "Later <ref>Source</ref> text.\n"
+    )
+    revised = original.replace(" 40 staff in 2019 under Jane Smith", " staff")
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert not any(".citation." in found for found in ids), ids
+    assert "compare.number.dropped" in ids, ids
+    module = _load_audit_module()
+    spans = module._ref_tag_spans(original)
+    assert spans[0] == (original.index("<ref"), original.index("/>") + 2)
+
+
+def test_removing_one_of_two_same_label_links_is_not_a_retarget() -> None:
+    original = "Read [docs](https://a.example) and [docs](https://b.example).\n"
+    revised = "Read [docs](https://b.example).\n"
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert "compare.citation.changed_target" not in ids, ids
+    def changed(revised: str) -> int:
+        return [item[0] for item in _compare_ids(original, revised)].count("compare.citation.changed_target")
+
+    assert changed("Read [docs](https://a.example) and [docs](https://c.example).\n") == 1
+    # Retarget onto the other link's target, and a swap: both still count.
+    assert changed("Read [docs](https://b.example) and [docs](https://b.example).\n") == 1
+    assert changed("Read [docs](https://b.example) and [docs](https://a.example).\n") == 2
+    # A retarget next to a removal still counts.
+    assert changed("Read [docs](https://x.example).\n") == 1
+
+
+def test_many_identical_links_compare_quickly() -> None:
+    import time
+
+    original = "[a](http://x) " * 20000
+    started = time.perf_counter()
+    _compare_ids(original, original + "[a](http://y)")
+    assert time.perf_counter() - started < 20
+
+
+def test_letter_signoff_is_not_chatbot_residue() -> None:
+    assert "family9.chatbot_residue" not in _ids_for("Thanks for the update.\n\nBest regards,\nJane\n")
+
+
+def test_tracking_param_needs_the_whole_value() -> None:
+    returncode, payload = audit_json("--stdin", input_text="See https://example.org/a?utm_source=openaiwatch now.")
+    assert "artifact.ai_tracking_url" not in finding_ids(payload["documents"][0])
+    for text in (
+        "See https://example.org/a?utm_source=openai now.",
+        "See https://example.org/a?utm_source=openai&x=1 now.",
+        "It ended at https://example.org/a?utm_source=claude.ai.",
+        "It ended at https://example.org/a?utm_source=openai.",
+    ):
+        returncode, payload = audit_json("--stdin", input_text=text)
+        assert "artifact.ai_tracking_url" in finding_ids(payload["documents"][0]), text
+
+
+def test_action_rejects_bad_fail_on_before_running_the_audit(tmp_path: Path) -> None:
+    sarif = tmp_path / "out.sarif"
+    code, outputs = _run_action(tmp_path, paths="eval/fixtures/ai-slop-general.md", fail_on="sometimes", sarif=str(sarif))
+    assert code == 3
+    assert "exit-code" not in outputs, outputs
+    assert not sarif.exists()
+
+
+def test_ai_vocab_does_not_rescore_family_words() -> None:
+    # These words already score through family1/family3 on sight; counting
+    # them again as vocabulary scored one word twice.
+    module = _load_audit_module()
+    family_hits = {"showcasing", "vibrant", "boasts", "fostering", "highlighting"}
+    assert not (module.AI_VOCAB & family_hits)
+
+
+def test_line_column_maps_offsets_at_line_edges() -> None:
+    module = _load_audit_module()
+    text = "ab\ncd\n\nef"
+    starts = module.line_starts(text)
+    assert starts == [0, 3, 6, 7]
+    assert module.line_column(starts, 0) == (1, 1)
+    assert module.line_column(starts, 2) == (1, 3)
+    assert module.line_column(starts, 3) == (2, 1)
+    assert module.line_column(starts, 6) == (3, 1)
+    assert module.line_column(starts, 7) == (4, 1)
+    assert module.line_column(starts, 8) == (4, 2)

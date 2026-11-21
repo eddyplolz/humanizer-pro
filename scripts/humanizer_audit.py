@@ -270,7 +270,10 @@ ARTIFACT_RULES = [
         9,
         re.compile(
             r"[?&](?:utm_source=(?:chatgpt\.com|claude\.ai|copilot\.com|openai|perplexity\.ai)"
-            r"|referrer=grok\.com)",
+            r"|referrer=grok\.com)"
+            # The value must end there: utm_source=openaiwatch is someone else's
+            # tag. A "." may follow only as sentence punctuation.
+            r"(?![\w-]|\.\w)",
             re.I,
         ),
         "AI-tool tracking parameter in URL",
@@ -533,7 +536,8 @@ FAMILY_RULES = [
             r"\bof course!|\bcertainly!|"
             # Bare "certainly" is an ordinary adverb ("he was certainly right"); it
             # reads as residue only when it opens a reply to a request.
-            r"\b(?:great question|here's a polished|i hope this helps|best regards|"
+            # "best regards" is an ordinary letter sign-off, not residue.
+            r"\b(?:great question|here's a polished|i hope this helps|"
             r"certainly, (?:here(?:'s| is| are)|i can|i'd be happy|i would be happy|let me)|"
             r"let me know if|would you like me|let me walk you through|here's how i'd think about|"
             r"while i understand the appeal|"
@@ -561,26 +565,25 @@ AI_VOCAB_TIER1 = {
     "pivotal",
     "robust",
     "showcase",
-    "showcasing",
     "tapestry",
     "testament",
     "underscore",
-    "vibrant",
 }
+
+# Words that family1.significance_inflation or family3.filler_framing already
+# match on sight (vibrant, boasts, showcasing, fostering, highlighting) stay out
+# of both tiers, so one word is not scored twice.
 
 # Tier 2: legitimate on their own; evidence only in clusters.
 AI_VOCAB_TIER2 = {
     "additionally",
     "align",
-    "boasts",
     "bolstered",
     "cornerstone",
     "crucial",
     "enhance",
     "foster",
-    "fostering",
     "highlight",
-    "highlighting",
     "leverage",
     "unlock",
     "valuable",
@@ -983,8 +986,9 @@ GT_RE = re.compile(">")
 
 
 def _ref_tag_spans(text: str) -> list[tuple[int, int]]:
-    # Same matches as <ref\b[^>]*(?:/>|>.*?</ref>): the tag runs to the first
-    # ">", a later </ref> closes it, and failing that a "/>" self-closes it.
+    # The tag runs to the first ">". A "/>" there self-closes it; otherwise
+    # the next </ref> closes it. Checking </ref> first let a self-closed
+    # <ref name="a" /> swallow every line up to a later <ref>...</ref>.
     tag_ends, closers = _positions(text, GT_RE), _positions(text, REF_CLOSE_RE)
     spans, position = [], 0
     while True:
@@ -994,11 +998,10 @@ def _ref_tag_spans(text: str) -> list[tuple[int, int]]:
         tag_end = _first_after(tag_ends, opener.end())
         if tag_end < 0:
             return spans
-        closer = _first_after(closers, tag_end + 1)
-        if closer >= 0:
-            end = closer + len("</ref>")
-        elif tag_end > opener.end() and text[tag_end - 1] == "/":
+        if tag_end > opener.end() and text[tag_end - 1] == "/":
             end = tag_end + 1
+        elif (closer := _first_after(closers, tag_end + 1)) >= 0:
+            end = closer + len("</ref>")
         else:
             position = opener.start() + 1
             continue
@@ -1303,15 +1306,7 @@ def line_starts(text: str) -> list[int]:
 
 
 def line_column(starts: list[int], offset: int) -> tuple[int, int]:
-    low = 0
-    high = len(starts) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        if starts[mid] <= offset:
-            low = mid + 1
-        else:
-            high = mid - 1
-    line_index = max(0, high)
+    line_index = max(0, bisect_right(starts, offset) - 1)
     return line_index + 1, offset - starts[line_index] + 1
 
 
@@ -1676,6 +1671,30 @@ def markdown_link_targets(text: str) -> dict[str, list[ProtectedToken]]:
     return targets
 
 
+def aligned_replacements(original_tokens: list, revised_tokens: list) -> list[tuple]:
+    """(original, revised) pairs whose target changed.
+
+    With the same number of links on each side, pair by position: that keeps
+    a swap, or a retarget onto another link's target, visible. When links were
+    added or removed, align by diff so the removal is not read as a retarget;
+    _token_opcodes keeps that diff bounded on hostile input.
+    """
+    if len(original_tokens) == len(revised_tokens):
+        return [
+            (original, revised)
+            for original, revised in zip(original_tokens, revised_tokens)
+            if original.value != revised.value
+        ]
+    opcodes = _token_opcodes(
+        [token.value for token in original_tokens], [token.value for token in revised_tokens]
+    )
+    pairs = []
+    for tag, i1, i2, j1, j2 in opcodes:
+        if tag == "replace":
+            pairs.extend(zip(original_tokens[i1:i2], revised_tokens[j1:j2]))
+    return pairs
+
+
 def compare_markdown_targets(
     original_text: str,
     revised_text: str,
@@ -1685,12 +1704,11 @@ def compare_markdown_targets(
     revised_links = markdown_link_targets(revised_text)
     findings = []
     for label, original_tokens in original_links.items():
-        # Pair repeated labels by occurrence; a dict keyed on label alone kept
-        # only the last link and missed a retargeted earlier one.
-        pairs = zip(original_tokens, revised_links.get(label, []))
-        for original_token, revised_token in pairs:
-            if revised_token.value == original_token.value:
-                continue
+        # Pair repeated labels by diff alignment. Pairing by position read a
+        # removed first link as the second link being retargeted.
+        for original_token, _revised_token in aligned_replacements(
+            original_tokens, revised_links.get(label, [])
+        ):
             findings.append(
                 compare_finding(
                     "compare.citation.changed_target",
@@ -1875,7 +1893,7 @@ def best_sentence_match(record: dict[str, object], candidates: list[dict[str, ob
     best_record = None
     best_score = 0.0
     for candidate in candidates:
-        score = overlap_score(set(record["terms"]), set(candidate["terms"]))
+        score = overlap_score(record["terms"], candidate["terms"])
         if score > best_score:
             best_score = score
             best_record = candidate
@@ -3060,6 +3078,10 @@ def run(argv: list[str] | None = None) -> int:
                     if path not in seen:
                         seen.add(path)
                         paths.append(path)
+            if not paths:
+                # Exit 0 here told CI "pass" when a mistyped path matched nothing.
+                print("humanizer-audit: no files to audit", file=sys.stderr)
+                return 3
             documents = audit_paths(paths, args.include_code, args.skip_quoted)
             summary = summarize(documents, fail_score, args.register)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
