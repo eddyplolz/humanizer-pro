@@ -1306,15 +1306,7 @@ def line_starts(text: str) -> list[int]:
 
 
 def line_column(starts: list[int], offset: int) -> tuple[int, int]:
-    low = 0
-    high = len(starts) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        if starts[mid] <= offset:
-            low = mid + 1
-        else:
-            high = mid - 1
-    line_index = max(0, high)
+    line_index = max(0, bisect_right(starts, offset) - 1)
     return line_index + 1, offset - starts[line_index] + 1
 
 

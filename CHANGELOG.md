@@ -17,6 +17,8 @@ Fixes from a full code review. One change is breaking for CI: a run that finds n
   longer counts as `utm_source=openai`.
 - `showcasing`, `vibrant`, `boasts`, `fostering`, and `highlighting` leave the AI vocabulary lists.
   The family rules already flag them on sight, so each use was scored twice. Scores can only fall.
+- Cleanups with no change in output: `line_column` uses `bisect`, and sentence matching no longer
+  copies term sets for every candidate.
 
 ## 4.18.0 - 2026-11-20
 

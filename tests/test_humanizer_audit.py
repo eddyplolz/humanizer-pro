@@ -1846,3 +1846,16 @@ def test_ai_vocab_does_not_rescore_family_words() -> None:
     module = _load_audit_module()
     family_hits = {"showcasing", "vibrant", "boasts", "fostering", "highlighting"}
     assert not (module.AI_VOCAB & family_hits)
+
+
+def test_line_column_maps_offsets_at_line_edges() -> None:
+    module = _load_audit_module()
+    text = "ab\ncd\n\nef"
+    starts = module.line_starts(text)
+    assert starts == [0, 3, 6, 7]
+    assert module.line_column(starts, 0) == (1, 1)
+    assert module.line_column(starts, 2) == (1, 3)
+    assert module.line_column(starts, 3) == (2, 1)
+    assert module.line_column(starts, 6) == (3, 1)
+    assert module.line_column(starts, 7) == (4, 1)
+    assert module.line_column(starts, 8) == (4, 2)
