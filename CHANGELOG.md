@@ -10,6 +10,8 @@ Fixes from a full code review. One change is breaking for CI: a run that finds n
   hid every line between the two, so a dropped number or name showed up only as a garbled citation.
 - Compare mode: removing one of two links with the same label is no longer reported as the other
   link being retargeted. Same-label links are now paired by diff alignment, not by position.
+- The GitHub Action checks `fail-on` before the audit runs. A typo now fails fast and leaves no
+  `exit-code` output or SARIF file behind.
 
 ## 4.18.0 - 2026-11-20
 

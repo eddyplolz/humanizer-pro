@@ -1813,3 +1813,11 @@ def test_many_identical_links_compare_quickly() -> None:
     started = time.perf_counter()
     _compare_ids(original, original + "[a](http://y)")
     assert time.perf_counter() - started < 20
+
+
+def test_action_rejects_bad_fail_on_before_running_the_audit(tmp_path: Path) -> None:
+    sarif = tmp_path / "out.sarif"
+    code, outputs = _run_action(tmp_path, paths="eval/fixtures/ai-slop-general.md", fail_on="sometimes", sarif=str(sarif))
+    assert code == 3
+    assert "exit-code" not in outputs, outputs
+    assert not sarif.exists()

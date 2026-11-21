@@ -56,6 +56,14 @@ runs:
         HA_INCLUDE_CODE: ${{ inputs.include-code }}
       run: |
         set -u
+        # Check fail-on before the audit runs, so a typo fails fast and leaves
+        # no outputs or SARIF file behind.
+        case "$HA_FAIL_ON" in
+          never) threshold=99 ;;
+          review) threshold=1 ;;
+          block) threshold=2 ;;
+          *) echo "::error::fail-on must be block, review, or never (got '$HA_FAIL_ON')"; exit 3 ;;
+        esac
         # The first candidate that can run a one-liner wins. On a Windows
         # runner "python3" can be the Microsoft Store alias, which is on
         # PATH but only prints a hint and exits 49.
@@ -95,12 +103,6 @@ runs:
         if [ -n "$HA_SARIF" ] && [ -f "$HA_SARIF" ]; then
           echo "sarif-file=$HA_SARIF" >> "$GITHUB_OUTPUT"
         fi
-        case "$HA_FAIL_ON" in
-          never) threshold=99 ;;
-          review) threshold=1 ;;
-          block) threshold=2 ;;
-          *) echo "::error::fail-on must be block, review, or never (got '$HA_FAIL_ON')"; exit 3 ;;
-        esac
         if [ "$code" -ge 3 ]; then
           echo "::error::humanizer-audit could not run (exit $code)"
           exit "$code"
