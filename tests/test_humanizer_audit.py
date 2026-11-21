@@ -829,6 +829,14 @@ def test_empty_directory_warns_on_stderr(tmp_path: Path) -> None:
     assert "no files to audit" in result.stderr
 
 
+def test_missing_path_beside_a_good_file_exits_3() -> None:
+    # A typo in one of several targets must fail the run, not just warn
+    # while the other targets pass.
+    result = run_audit("eval/fixtures/clean-human.md", "no/such/file.md")
+    assert result.returncode == 3
+    assert "No such file or directory" in result.stderr
+
+
 def test_skill_md_stays_under_line_limit() -> None:
     # WARP.md: "Keep under 350 lines for v4.x."
     lines = (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
@@ -1788,6 +1796,19 @@ def test_self_closing_ref_does_not_swallow_text_up_to_a_later_ref() -> None:
     module = _load_audit_module()
     spans = module._ref_tag_spans(original)
     assert spans[0] == (original.index("<ref"), original.index("/>") + 2)
+
+
+def test_slash_inside_a_quoted_ref_name_does_not_self_close() -> None:
+    # A "/" just before ">" self-closes a ref only outside quotes: in
+    # <ref name="u/">Source</ref> it ends the attribute value, so the ref
+    # still runs to its </ref>. Unquoted <ref name=u/> stays self-closed.
+    module = _load_audit_module()
+    quoted = 'A <ref name="u/">Source</ref> b.'
+    assert module._ref_tag_spans(quoted) == [(2, quoted.index("</ref>") + 6)]
+    single = "A <ref name='u/'>Source</ref> b."
+    assert module._ref_tag_spans(single) == [(2, single.index("</ref>") + 6)]
+    unquoted = "A <ref name=u/> b <ref>x</ref>."
+    assert module._ref_tag_spans(unquoted)[0] == (2, unquoted.index("/>") + 2)
 
 
 def test_removing_one_of_two_same_label_links_is_not_a_retarget() -> None:
