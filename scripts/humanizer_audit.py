@@ -19,7 +19,7 @@ from typing import Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 
-__version__ = "5.0.0"
+__version__ = "5.0.1"
 SCHEMA = "humanizer-audit.v1"
 DEFAULT_FAIL_SCORE = 60
 # Review threshold per register for --register. Chat replies and docs review

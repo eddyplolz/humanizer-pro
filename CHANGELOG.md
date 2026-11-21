@@ -1,5 +1,18 @@
 # Changelog
 
+## 5.0.1 - 2026-11-20
+
+Patch release. No change to findings or risk scores.
+
+- With `--json`, a run that exits 3 (a missing path, no files to audit, a read or decode error,
+  or a failed SARIF write) prints an object with an `error` message and `summary.exit_code` 3.
+  It used to print nothing, so a program reading stdout got a parse error.
+- No SARIF file is written on exit 3, on purpose: an empty log uploaded by `upload-sarif` with
+  `if: always()` would close every open code-scanning alert. The SARIF file is now written to a
+  temporary name and swapped in, so a failed write leaves no cut-off file.
+- New tests pin two behaviors that were already correct: a missing path beside a good file exits
+  3, and `<ref name="u/">` is not read as self-closing.
+
 ## 5.0.0 - 2026-11-20
 
 Fixes from a full code review. One change is breaking for CI: a run that finds no files now exits 3.
