@@ -230,7 +230,7 @@ humanizer-audit path/to/draft.md
 You can:
 
 - check several files or folders at once (a folder means every `.md` and `.txt` file inside it)
-- add `--json` to get results a program can read
+- add `--json` to get results a program can read. When the run cannot audit (exit 3: a missing path, no files, or a read or write error), the JSON holds an `error` message and a `summary` with only `exit_code`, so check `error` first. No SARIF file is written then
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
 - add `--register chat` (or `docs`, `essay`, `news`, `wiki`, `commit`) to say what kind of writing it is. Chat replies and docs then go to review at a risk score of 20 instead of 60. See [Stricter review for chat and docs](#stricter-review-for-chat-and-docs)
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)
@@ -259,7 +259,7 @@ The score is weak on short text. When a document has fewer than 150 words, the r
 ```yaml
 repos:
   - repo: https://github.com/eddyplolz/humanizer-pro
-    rev: v5.0.0
+    rev: v5.0.1
     hooks:
       - id: humanizer-audit
 ```
@@ -288,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: eddyplolz/humanizer-pro@v5.0.0
+      - uses: eddyplolz/humanizer-pro@v5.0.1
         with:
           paths: docs README.md
           fail-on: block
@@ -479,4 +479,4 @@ It draws on these sources:
 
 ## Version history
 
-Current release: **v5.0.0**. It is a major version because one change can break CI: `humanizer-audit` now exits 3 with `no files to audit` when its targets match no `.md` or `.txt` file, where it used to exit 0. It also carries eight smaller fixes from a full code review, including a self-closed `<ref />` that hid text in compare mode and five words that were scored twice. v4.18.0 added `--register`, which lowers the review threshold to 20 for chat replies and docs when you say what kind of writing you are checking. It also adds one-command installs for Claude Code and for other agents through `npx skills`, labels documents under 150 words as short text, and reports reading grade in the audit stats. Two rules weigh less and one no longer matches the bare word "certainly", which lowers scores on some human text; no change raises a risk score. The skill now fixes compare-mode findings in the rewrite's own wording instead of pasting the original sentence back. v4.17.0 added Family 10, the flat-verdict register of current models, as info notes. Every change is listed in the [changelog](CHANGELOG.md).
+Current release: **v5.0.1**. It makes `--json` print an object with an `error` message when a run exits 3, where it used to print nothing, and it never leaves a cut-off SARIF file behind. v5.0.0 was a major version because one change can break CI: `humanizer-audit` now exits 3 with `no files to audit` when its targets match no `.md` or `.txt` file, where it used to exit 0. It also carries eight smaller fixes from a full code review, including a self-closed `<ref />` that hid text in compare mode and five words that were scored twice. v4.18.0 added `--register`, which lowers the review threshold to 20 for chat replies and docs when you say what kind of writing you are checking. It also adds one-command installs for Claude Code and for other agents through `npx skills`, labels documents under 150 words as short text, and reports reading grade in the audit stats. Two rules weigh less and one no longer matches the bare word "certainly", which lowers scores on some human text; no change raises a risk score. The skill now fixes compare-mode findings in the rewrite's own wording instead of pasting the original sentence back. v4.17.0 added Family 10, the flat-verdict register of current models, as info notes. Every change is listed in the [changelog](CHANGELOG.md).

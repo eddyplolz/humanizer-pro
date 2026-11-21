@@ -33,7 +33,7 @@ inputs:
 
 outputs:
   exit-code:
-    description: "The audit exit code: 0 pass, 1 review, 2 block, 3 usage or read error."
+    description: "The audit exit code: 0 pass, 1 review, 2 block, 3 usage, read, or write error."
     value: ${{ steps.audit.outputs.exit-code }}
   sarif-file:
     description: Path of the SARIF log, if written.
