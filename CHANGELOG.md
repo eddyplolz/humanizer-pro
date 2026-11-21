@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Fixes from a full code review. One change is breaking for CI: a run that finds no files now exits 3.
+
+- **Breaking:** `humanizer-audit` exits 3 with `no files to audit` when its targets match no `.md`
+  or `.txt` file. It used to exit 0, so a mistyped path in CI passed without auditing anything.
 - Compare mode: a self-closed `<ref name="a" />` no longer runs on to a later `</ref>`. That span
   hid every line between the two, so a dropped number or name showed up only as a garbled citation.
 - Compare mode: removing one of two links with the same label is no longer reported as the other

@@ -3083,6 +3083,10 @@ def run(argv: list[str] | None = None) -> int:
                     if path not in seen:
                         seen.add(path)
                         paths.append(path)
+            if not paths:
+                # Exit 0 here told CI "pass" when a mistyped path matched nothing.
+                print("humanizer-audit: no files to audit", file=sys.stderr)
+                return 3
             documents = audit_paths(paths, args.include_code, args.skip_quoted)
             summary = summarize(documents, fail_score, args.register)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}

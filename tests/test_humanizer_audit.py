@@ -823,8 +823,10 @@ def test_tilde_fences_are_code_blocks() -> None:
 
 def test_empty_directory_warns_on_stderr(tmp_path: Path) -> None:
     result = run_audit(str(tmp_path))
-    assert result.returncode == 0
+    # Exit 3, not 0: nothing was audited, so CI must not read it as a pass.
+    assert result.returncode == 3
     assert "no .md or .txt files" in result.stderr
+    assert "no files to audit" in result.stderr
 
 
 def test_skill_md_stays_under_line_limit() -> None:
