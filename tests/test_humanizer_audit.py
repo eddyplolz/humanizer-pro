@@ -1838,3 +1838,11 @@ def test_action_rejects_bad_fail_on_before_running_the_audit(tmp_path: Path) -> 
     assert code == 3
     assert "exit-code" not in outputs, outputs
     assert not sarif.exists()
+
+
+def test_ai_vocab_does_not_rescore_family_words() -> None:
+    # These words already score through family1/family3 on sight; counting
+    # them again as vocabulary scored one word twice.
+    module = _load_audit_module()
+    family_hits = {"showcasing", "vibrant", "boasts", "fostering", "highlighting"}
+    assert not (module.AI_VOCAB & family_hits)

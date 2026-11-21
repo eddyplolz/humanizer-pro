@@ -133,6 +133,10 @@ tapestry (abstract), testament, underscore (verb), vibrant.
 document): additionally (sentence-initial), align with, boasts, bolstered, cornerstone, crucial,
 enhance, foster(ing), highlight(ing) (verb), key (adj), leverage, unlock, valuable.
 
+The CLI does not count showcase/showcasing, vibrant, boasts, fostering, or highlighting toward
+`family4.ai_vocab_cluster`: `family1` and `family3` already flag them, and scoring the same word
+twice inflated the risk. The words still belong in this list for rewriting by hand.
+
 **Problem:** Post-2022 over-represented words. One is coincidence; a *cluster* is a strong tell,
 and a 1A cluster is the strongest vocabulary evidence available.
 **Era (so the skill ages well — tells drift):**

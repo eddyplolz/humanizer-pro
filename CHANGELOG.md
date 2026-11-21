@@ -15,6 +15,8 @@ Fixes from a full code review. One change is breaking for CI: a run that finds n
 - `family9.chatbot_residue` no longer flags "Best regards", an ordinary letter sign-off.
 - `artifact.ai_tracking_url` matches the whole parameter value, so `utm_source=openaiwatch` no
   longer counts as `utm_source=openai`.
+- `showcasing`, `vibrant`, `boasts`, `fostering`, and `highlighting` leave the AI vocabulary lists.
+  The family rules already flag them on sight, so each use was scored twice. Scores can only fall.
 
 ## 4.18.0 - 2026-11-20
 

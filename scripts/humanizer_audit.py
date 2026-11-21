@@ -565,26 +565,25 @@ AI_VOCAB_TIER1 = {
     "pivotal",
     "robust",
     "showcase",
-    "showcasing",
     "tapestry",
     "testament",
     "underscore",
-    "vibrant",
 }
+
+# Words that family1.significance_inflation or family3.filler_framing already
+# match on sight (vibrant, boasts, showcasing, fostering, highlighting) stay out
+# of both tiers, so one word is not scored twice.
 
 # Tier 2: legitimate on their own; evidence only in clusters.
 AI_VOCAB_TIER2 = {
     "additionally",
     "align",
-    "boasts",
     "bolstered",
     "cornerstone",
     "crucial",
     "enhance",
     "foster",
-    "fostering",
     "highlight",
-    "highlighting",
     "leverage",
     "unlock",
     "valuable",

@@ -71,7 +71,7 @@ The command-line checker explains the first version line by line (shortened):
 $ humanizer-audit eval/fixtures/ai-slop-general.md
 eval/fixtures/ai-slop-general.md — risk 60
   WARNING L3:C1 family3.filler_framing — Filler framing or superficial analysis [In today's]
-  WARNING L3:C37 family4.ai_vocab_cluster — AI-vocabulary cluster [cornerstone, crucial, enhance, foster, landscape, robust, unlock, vibrant]
+  WARNING L3:C37 family4.ai_vocab_cluster — AI-vocabulary cluster [cornerstone, crucial, enhance, foster, landscape, robust, unlock]
   WARNING L6:C29 family5.syntactic_tell — Syntactic tell or hedged construction [It is important to note]
   WARNING L6:C75 family7.rhetorical_formula — Rhetorical formula or forced cadence [not just about tools, but]
   WARNING L7:C80 family3.filler_framing — Filler framing or superficial analysis [In conclusion]
