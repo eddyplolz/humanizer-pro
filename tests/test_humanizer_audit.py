@@ -1766,3 +1766,23 @@ def test_short_text_does_not_change_the_exit_code() -> None:
     returncode, payload = audit_json("--stdin", input_text="Done. citeturn0search0\n")
     assert payload["documents"][0]["short_text"] is True
     assert returncode == 2
+
+
+# --- Regression tests for the 2026-11-20 code review ---
+
+
+def test_self_closing_ref_does_not_swallow_text_up_to_a_later_ref() -> None:
+    # A self-closed <ref name="a" /> used to run to the next </ref>, so the
+    # sentence between them was hidden inside a fake citation span.
+    original = (
+        'See <ref name="a" /> for this.\n\n'
+        "The agency hired 40 staff in 2019 under Jane Smith.\n\n"
+        "Later <ref>Source</ref> text.\n"
+    )
+    revised = original.replace(" 40 staff in 2019 under Jane Smith", " staff")
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert not any(".citation." in found for found in ids), ids
+    assert "compare.number.dropped" in ids, ids
+    module = _load_audit_module()
+    spans = module._ref_tag_spans(original)
+    assert spans[0] == (original.index("<ref"), original.index("/>") + 2)

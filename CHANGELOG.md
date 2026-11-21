@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Compare mode: a self-closed `<ref name="a" />` no longer runs on to a later `</ref>`. That span
+  hid every line between the two, so a dropped number or name showed up only as a garbled citation.
+
 ## 4.18.0 - 2026-11-20
 
 Feature release. No change raises a risk score. The new `--register` option lowers the review

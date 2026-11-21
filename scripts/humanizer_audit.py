@@ -983,8 +983,9 @@ GT_RE = re.compile(">")
 
 
 def _ref_tag_spans(text: str) -> list[tuple[int, int]]:
-    # Same matches as <ref\b[^>]*(?:/>|>.*?</ref>): the tag runs to the first
-    # ">", a later </ref> closes it, and failing that a "/>" self-closes it.
+    # The tag runs to the first ">". A "/>" there self-closes it; otherwise
+    # the next </ref> closes it. Checking </ref> first let a self-closed
+    # <ref name="a" /> swallow every line up to a later <ref>...</ref>.
     tag_ends, closers = _positions(text, GT_RE), _positions(text, REF_CLOSE_RE)
     spans, position = [], 0
     while True:
@@ -994,11 +995,10 @@ def _ref_tag_spans(text: str) -> list[tuple[int, int]]:
         tag_end = _first_after(tag_ends, opener.end())
         if tag_end < 0:
             return spans
-        closer = _first_after(closers, tag_end + 1)
-        if closer >= 0:
-            end = closer + len("</ref>")
-        elif tag_end > opener.end() and text[tag_end - 1] == "/":
+        if tag_end > opener.end() and text[tag_end - 1] == "/":
             end = tag_end + 1
+        elif (closer := _first_after(closers, tag_end + 1)) >= 0:
+            end = closer + len("</ref>")
         else:
             position = opener.start() + 1
             continue
