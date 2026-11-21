@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 5.0.0 - 2026-11-20
 
 Fixes from a full code review. One change is breaking for CI: a run that finds no files now exits 3.
 
