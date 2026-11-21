@@ -1819,6 +1819,19 @@ def test_letter_signoff_is_not_chatbot_residue() -> None:
     assert "family9.chatbot_residue" not in _ids_for("Thanks for the update.\n\nBest regards,\nJane\n")
 
 
+def test_tracking_param_needs_the_whole_value() -> None:
+    returncode, payload = audit_json("--stdin", input_text="See https://example.org/a?utm_source=openaiwatch now.")
+    assert "artifact.ai_tracking_url" not in finding_ids(payload["documents"][0])
+    for text in (
+        "See https://example.org/a?utm_source=openai now.",
+        "See https://example.org/a?utm_source=openai&x=1 now.",
+        "It ended at https://example.org/a?utm_source=claude.ai.",
+        "It ended at https://example.org/a?utm_source=openai.",
+    ):
+        returncode, payload = audit_json("--stdin", input_text=text)
+        assert "artifact.ai_tracking_url" in finding_ids(payload["documents"][0]), text
+
+
 def test_action_rejects_bad_fail_on_before_running_the_audit(tmp_path: Path) -> None:
     sarif = tmp_path / "out.sarif"
     code, outputs = _run_action(tmp_path, paths="eval/fixtures/ai-slop-general.md", fail_on="sometimes", sarif=str(sarif))

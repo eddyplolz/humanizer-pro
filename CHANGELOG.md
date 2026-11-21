@@ -13,6 +13,8 @@ Fixes from a full code review. One change is breaking for CI: a run that finds n
 - The GitHub Action checks `fail-on` before the audit runs. A typo now fails fast and leaves no
   `exit-code` output or SARIF file behind.
 - `family9.chatbot_residue` no longer flags "Best regards", an ordinary letter sign-off.
+- `artifact.ai_tracking_url` matches the whole parameter value, so `utm_source=openaiwatch` no
+  longer counts as `utm_source=openai`.
 
 ## 4.18.0 - 2026-11-20
 

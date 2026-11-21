@@ -270,7 +270,10 @@ ARTIFACT_RULES = [
         9,
         re.compile(
             r"[?&](?:utm_source=(?:chatgpt\.com|claude\.ai|copilot\.com|openai|perplexity\.ai)"
-            r"|referrer=grok\.com)",
+            r"|referrer=grok\.com)"
+            # The value must end there: utm_source=openaiwatch is someone else's
+            # tag. A "." may follow only as sentence punctuation.
+            r"(?![\w-]|\.\w)",
             re.I,
         ),
         "AI-tool tracking parameter in URL",
