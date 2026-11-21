@@ -1676,6 +1676,30 @@ def markdown_link_targets(text: str) -> dict[str, list[ProtectedToken]]:
     return targets
 
 
+def aligned_replacements(original_tokens: list, revised_tokens: list) -> list[tuple]:
+    """(original, revised) pairs whose target changed.
+
+    With the same number of links on each side, pair by position: that keeps
+    a swap, or a retarget onto another link's target, visible. When links were
+    added or removed, align by diff so the removal is not read as a retarget;
+    _token_opcodes keeps that diff bounded on hostile input.
+    """
+    if len(original_tokens) == len(revised_tokens):
+        return [
+            (original, revised)
+            for original, revised in zip(original_tokens, revised_tokens)
+            if original.value != revised.value
+        ]
+    opcodes = _token_opcodes(
+        [token.value for token in original_tokens], [token.value for token in revised_tokens]
+    )
+    pairs = []
+    for tag, i1, i2, j1, j2 in opcodes:
+        if tag == "replace":
+            pairs.extend(zip(original_tokens[i1:i2], revised_tokens[j1:j2]))
+    return pairs
+
+
 def compare_markdown_targets(
     original_text: str,
     revised_text: str,
@@ -1685,12 +1709,11 @@ def compare_markdown_targets(
     revised_links = markdown_link_targets(revised_text)
     findings = []
     for label, original_tokens in original_links.items():
-        # Pair repeated labels by occurrence; a dict keyed on label alone kept
-        # only the last link and missed a retargeted earlier one.
-        pairs = zip(original_tokens, revised_links.get(label, []))
-        for original_token, revised_token in pairs:
-            if revised_token.value == original_token.value:
-                continue
+        # Pair repeated labels by diff alignment. Pairing by position read a
+        # removed first link as the second link being retargeted.
+        for original_token, _revised_token in aligned_replacements(
+            original_tokens, revised_links.get(label, [])
+        ):
             findings.append(
                 compare_finding(
                     "compare.citation.changed_target",

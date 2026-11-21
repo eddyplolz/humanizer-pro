@@ -1786,3 +1786,28 @@ def test_self_closing_ref_does_not_swallow_text_up_to_a_later_ref() -> None:
     module = _load_audit_module()
     spans = module._ref_tag_spans(original)
     assert spans[0] == (original.index("<ref"), original.index("/>") + 2)
+
+
+def test_removing_one_of_two_same_label_links_is_not_a_retarget() -> None:
+    original = "Read [docs](https://a.example) and [docs](https://b.example).\n"
+    revised = "Read [docs](https://b.example).\n"
+    ids = [item[0] for item in _compare_ids(original, revised)]
+    assert "compare.citation.changed_target" not in ids, ids
+    def changed(revised: str) -> int:
+        return [item[0] for item in _compare_ids(original, revised)].count("compare.citation.changed_target")
+
+    assert changed("Read [docs](https://a.example) and [docs](https://c.example).\n") == 1
+    # Retarget onto the other link's target, and a swap: both still count.
+    assert changed("Read [docs](https://b.example) and [docs](https://b.example).\n") == 1
+    assert changed("Read [docs](https://b.example) and [docs](https://a.example).\n") == 2
+    # A retarget next to a removal still counts.
+    assert changed("Read [docs](https://x.example).\n") == 1
+
+
+def test_many_identical_links_compare_quickly() -> None:
+    import time
+
+    original = "[a](http://x) " * 20000
+    started = time.perf_counter()
+    _compare_ids(original, original + "[a](http://y)")
+    assert time.perf_counter() - started < 20

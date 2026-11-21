@@ -4,6 +4,8 @@
 
 - Compare mode: a self-closed `<ref name="a" />` no longer runs on to a later `</ref>`. That span
   hid every line between the two, so a dropped number or name showed up only as a garbled citation.
+- Compare mode: removing one of two links with the same label is no longer reported as the other
+  link being retargeted. Same-label links are now paired by diff alignment, not by position.
 
 ## 4.18.0 - 2026-11-20
 
