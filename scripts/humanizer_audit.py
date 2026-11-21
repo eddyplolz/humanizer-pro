@@ -1901,7 +1901,7 @@ def best_sentence_match(record: dict[str, object], candidates: list[dict[str, ob
     best_record = None
     best_score = 0.0
     for candidate in candidates:
-        score = overlap_score(set(record["terms"]), set(candidate["terms"]))
+        score = overlap_score(record["terms"], candidate["terms"])
         if score > best_score:
             best_score = score
             best_record = candidate
