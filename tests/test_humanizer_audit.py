@@ -837,6 +837,29 @@ def test_missing_path_beside_a_good_file_exits_3() -> None:
     assert "No such file or directory" in result.stderr
 
 
+def test_exit_3_still_prints_json_but_writes_no_sarif(tmp_path: Path) -> None:
+    # --json callers parse stdout, so exit 3 must still print a JSON object.
+    # SARIF stays unwritten: an empty log uploaded after a failed run would
+    # tell code scanning that every open alert was fixed.
+    sarif = tmp_path / "out.sarif"
+    for target in ("no/such/file.md", str(tmp_path)):
+        result = run_audit(target, "--json", "--sarif", str(sarif))
+        assert result.returncode == 3
+        payload = json.loads(result.stdout)
+        assert payload["summary"]["exit_code"] == 3
+        assert payload["documents"] == []
+        assert payload["error"]
+        assert not sarif.exists()
+    assert "No such file" in json.loads(run_audit("no/such/file.md", "--json").stdout)["error"]
+    # A failed SARIF write (the target is a folder) prints JSON and leaves
+    # no partial file behind.
+    folder = tmp_path / "is-a-dir.sarif"
+    folder.mkdir()
+    result = run_audit("eval/fixtures/clean-human.md", "--json", "--sarif", str(folder))
+    assert result.returncode == 3 and json.loads(result.stdout)["summary"]["exit_code"] == 3
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["is-a-dir.sarif"]
+
+
 def test_skill_md_stays_under_line_limit() -> None:
     # WARP.md: "Keep under 350 lines for v4.x."
     lines = (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
@@ -1799,9 +1822,10 @@ def test_self_closing_ref_does_not_swallow_text_up_to_a_later_ref() -> None:
 
 
 def test_slash_inside_a_quoted_ref_name_does_not_self_close() -> None:
-    # A "/" just before ">" self-closes a ref only outside quotes: in
-    # <ref name="u/">Source</ref> it ends the attribute value, so the ref
-    # still runs to its </ref>. Unquoted <ref name=u/> stays self-closed.
+    # Pin: in <ref name="u/">Source</ref> the character before ">" is the
+    # quote, so the ref runs to its </ref>. Unquoted <ref name=u/> is
+    # self-closed. The scanner does not parse quotes: <ref name="a/>b">
+    # still ends at its first ">", a known limit.
     module = _load_audit_module()
     quoted = 'A <ref name="u/">Source</ref> b.'
     assert module._ref_tag_spans(quoted) == [(2, quoted.index("</ref>") + 6)]

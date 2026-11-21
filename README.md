@@ -230,7 +230,7 @@ humanizer-audit path/to/draft.md
 You can:
 
 - check several files or folders at once (a folder means every `.md` and `.txt` file inside it)
-- add `--json` to get results a program can read
+- add `--json` to get results a program can read. When the run cannot audit (exit 3: a missing path, no files, or a read or write error), the JSON holds an `error` message and a `summary` with only `exit_code`, so check `error` first. No SARIF file is written then
 - add `--sarif results.sarif` to save results in SARIF, the format GitHub uses to show problems on pull requests
 - add `--register chat` (or `docs`, `essay`, `news`, `wiki`, `commit`) to say what kind of writing it is. Chat replies and docs then go to review at a risk score of 20 instead of 60. See [Stricter review for chat and docs](#stricter-review-for-chat-and-docs)
 - add `--include-code` to check code samples as well (they are skipped by default, but leaked chatbot text inside code is always caught)

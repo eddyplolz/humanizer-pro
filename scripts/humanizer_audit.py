@@ -8,6 +8,7 @@ import difflib
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 from bisect import bisect_right
@@ -3038,6 +3039,20 @@ def main(argv: list[str] | None = None) -> int:
         return 3
 
 
+def _input_error(args: argparse.Namespace, message: str) -> int:
+    """Report an input or write failure as exit 3.
+
+    --json still prints an object, so callers that parse stdout get one.
+    No SARIF is written: an empty log uploaded after a failed run would
+    tell code scanning that every open alert was fixed.
+    """
+    print(f"humanizer-audit: {message}", file=sys.stderr)
+    if args.json:
+        payload = {"schema": SCHEMA, "error": message, "summary": {"exit_code": 3}, "documents": []}
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    return 3
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -3080,18 +3095,23 @@ def run(argv: list[str] | None = None) -> int:
                         paths.append(path)
             if not paths:
                 # Exit 0 here told CI "pass" when a mistyped path matched nothing.
-                print("humanizer-audit: no files to audit", file=sys.stderr)
-                return 3
+                return _input_error(args, "no files to audit")
             documents = audit_paths(paths, args.include_code, args.skip_quoted)
             summary = summarize(documents, fail_score, args.register)
             result = {"schema": SCHEMA, "summary": summary, "documents": documents}
         if args.sarif:
-            Path(args.sarif).write_text(
-                json.dumps(render_sarif(result), indent=2) + "\n", encoding="utf-8"
-            )
+            # Write beside the target, then swap it in, so a failed write
+            # never leaves a cut-off SARIF file for upload-sarif to send.
+            target = Path(args.sarif)
+            partial = target.with_name(target.name + ".partial")
+            try:
+                partial.write_text(json.dumps(render_sarif(result), indent=2) + "\n", encoding="utf-8")
+                os.replace(partial, target)
+            except OSError:
+                partial.unlink(missing_ok=True)
+                raise
     except (OSError, UnicodeDecodeError) as exc:
-        print(f"humanizer-audit: {display_safe(str(exc))}", file=sys.stderr)
-        return 3
+        return _input_error(args, display_safe(str(exc)))
 
     # The text report quotes evidence verbatim, and a Windows pipe or redirect
     # encodes stdout as cp1252, which cannot hold Cyrillic, CJK, or emoji
