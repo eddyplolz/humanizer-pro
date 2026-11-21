@@ -1815,6 +1815,10 @@ def test_many_identical_links_compare_quickly() -> None:
     assert time.perf_counter() - started < 20
 
 
+def test_letter_signoff_is_not_chatbot_residue() -> None:
+    assert "family9.chatbot_residue" not in _ids_for("Thanks for the update.\n\nBest regards,\nJane\n")
+
+
 def test_action_rejects_bad_fail_on_before_running_the_audit(tmp_path: Path) -> None:
     sarif = tmp_path / "out.sarif"
     code, outputs = _run_action(tmp_path, paths="eval/fixtures/ai-slop-general.md", fail_on="sometimes", sarif=str(sarif))

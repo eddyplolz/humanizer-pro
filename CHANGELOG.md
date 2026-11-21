@@ -12,6 +12,7 @@ Fixes from a full code review. One change is breaking for CI: a run that finds n
   link being retargeted. Same-label links are now paired by diff alignment, not by position.
 - The GitHub Action checks `fail-on` before the audit runs. A typo now fails fast and leaves no
   `exit-code` output or SARIF file behind.
+- `family9.chatbot_residue` no longer flags "Best regards", an ordinary letter sign-off.
 
 ## 4.18.0 - 2026-11-20
 
